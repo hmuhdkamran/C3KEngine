@@ -1,0 +1,57 @@
+@host = http://localhost:5000/api
+
+# @name login
+POST {{host}}/auth HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin@sefam.com",
+    "password": "P@ssw0rd"
+}
+
+### Get All Users
+GET {{host}}/role/users
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+### Get User by Id
+GET {{host}}/role/users/"UserId"='5a0dbd23-6635-4c0e-a109-c64e437a97f9'
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+### Insert User
+POST {{host}}/role/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+{
+    "user_id": "5a0dbd23-6635-4c0e-a109-c64e437a97f6",
+    "username": "admin@hmk.com",
+    "display_name": "Muhammad Kamran",
+    "language": "en-US",
+    "password": "f412d10cb133926e32b04ab07ca1c817f2e04ebf41d9399fe7d47dff52637f32",
+    "salt": "98pBTijN66n7ThTD",
+    "status_id": "5ef1874c-b462-4462-b92b-46fdd63c5ba4"
+}
+
+### Update User
+PUT {{host}}/role/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+{
+    "user_id": "5a0dbd23-6635-4c0e-a109-c64e437a97f9",
+    "username": "admin@sefam.com",
+    "display_name": "Muhammad Kamran",
+    "language": "en-US",
+    "password": "f412d10cb133926e32b04ab07ca1c817f2e04ebf41d9399fe7d47dff52637f32",
+    "salt": "98pBTijN66n7ThTD",
+    "status_id": "5ef1874c-b462-4462-b92b-46fdd63c5ba4"
+}
+
+### Update User
+DELETE {{host}}/role/users/5a0dbd23-6635-4c0e-a109-c64e437a97f5
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}

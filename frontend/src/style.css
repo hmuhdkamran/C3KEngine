@@ -1,0 +1,6 @@
+/* ./src/style.css */
+@import "./assets/styles/input.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
