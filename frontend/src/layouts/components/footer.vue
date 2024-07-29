@@ -10,88 +10,209 @@ import logo from "@/assets/vue.svg"
                 <polygon class="text-gray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
             </svg></div>
         <div class="container mx-auto px-4">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-6/12 px-4">
-                    <h4 class="text-3xl font-semibold">
-                        <img :src="logo" alt="C3K Engine Logo" class="h-12 w-auto object-contain inline-block" />
-                        C3K Engine
-                    </h4>
-                    <h5 class="text-lg mt-0 mb-2 text-gray-600">Find us on any of these platforms, we respond 1-2
-                        business days.</h5>
-                    <div class="mt-6">
-                        <a href="https://www.twitter.com/hmuhdkamran" target="_blank">
-                            <i
-                                class="icon-[fa--twitter] bg-white text-blue-400 shadow-lg font-lg p-3 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 inline-block text-center"></i>
-                        </a>
-                        <a href="https://www.facebook.com/hmuhdkamran" target="_blank">
-                            <i
-                                class="icon-[fa--facebook-square] bg-white text-blue-600 shadow-lg font-lg p-3 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 inline-block text-center"></i>
-                        </a>
-                        <a href="https://www.dribbble.com/hmuhdkamran" target="_blank">
-                            <i
-                                class="icon-[fa--dribbble] bg-white text-pink-400 shadow-lg font-lg p-3 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 inline-block text-center"></i>
-                        </a>
-                        <a href="https://www.github.com/hmuhdkamran" target="_blank">
-                            <i
-                                class="icon-[fa--github] bg-white text-gray-800 shadow-lg font-lg p-3 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 inline-block text-center"></i>
-                        </a>
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                <div>
+                    <div class="flex justify-center sm:justify-start">
+                        <h4 class="text-3xl font-semibold">
+                            <img :src="logo" alt="C3K Engine Logo" class="h-12 w-auto object-contain inline-block" />
+                            C3K Engine
+                        </h4>
                     </div>
+                    <p
+                        class="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500 sm:mx-0 sm:max-w-xs sm:text-left">
+                        Find us on any of these platforms, we respond 1-2
+                        business days.
+                    </p>
+                    <ul class="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
+                        <li>
+                            <a href="https://www.facebook.com/hmuhdkamran" target="_blank"
+                                class="text-violet-700 transition hover:text-violet-700/75">
+                                <span class="icon-[ic--outline-facebook]" style="width: 24px; height: 24px;"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/" rel="noreferrer" target="_blank"
+                                class="text-violet-700 transition hover:text-violet-700/75">
+                                <span class="icon-[mdi--instagram]" style="width: 24px; height: 24px;"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://www.twitter.com/hmuhdkamran" target="_blank"
+                                class="text-violet-700 transition hover:text-violet-700/75">
+                                <span class="icon-[grommet-icons--twitter]" style="width: 24px; height: 24px;"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://www.github.com/hmuhdkamran" target="_blank"
+                                class="text-violet-700 transition hover:text-violet-700/75">
+                                <span class="icon-[mdi--github]" style="width: 24px; height: 24px;"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://www.dribbble.com/hmuhdkamran" target="_blank"
+                                class="text-violet-700 transition hover:text-violet-700/75">
+                                <span class="icon-[icon-park-outline--dribble]" style="width: 24px; height: 24px;"></span>
+                            </a>
+                        </li>
+                    </ul>
                     <p class="text-sm mt-6 text-gray-500 font-semibold">Currently v1.1.0. Code<a
                             href="https://github.com/hmuhdkamran" class="text-gray-600" target="_blank">
-                            <!-- -->licensed MIT</a>, docs<a href="https://creativecommons.org/licenses/by/4.0/"
-                            targe="_blank" class="text-gray-600"> <!-- -->CC BY 4.0</a>.</p>
+                            licensed MIT</a>, docs<a href="https://creativecommons.org/licenses/by/4.0/" targe="_blank"
+                            class="text-gray-600"> CC BY 4.0</a>.</p>
                 </div>
-                <div class="w-full md:w-6/12 px-4">
-                    <div class="flex flex-wrap items-top mb-6">
-                        <div class="w-full md:w-6/12 xl:w-4/12 pt-6 md:pt-0 md:px-4 ml-auto"><span
-                                class="block uppercase text-gray-500 text-sm font-semibold mb-2">Useful Links</span>
-                            <ul class="list-unstyled">
+
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
+                    <div class="text-center sm:text-left">
+                        <p class="text-lg font-medium text-gray-900">About Us</p>
+
+                        <nav aria-label="Footer About Nav" class="mt-8">
+                            <ul class="space-y-4 text-sm">
                                 <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="https://combinesoft.net" target="_blank">About Us</a>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Company History
+                                    </a>
                                 </li>
+
                                 <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="https://combinesoft.net" target="_blank">Blog</a>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Meet the Team
+                                    </a>
                                 </li>
+
                                 <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="https://www.github.com/hmuhdkamran" target="_blank">Github</a>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Employee Handbook
+                                    </a>
                                 </li>
-                            </ul>
-                        </div>
-                        <div class="w-full md:w-6/12 xl:w-4/12 pt-6 md:pt-0 md:px-4 ml-auto"><span
-                                class="block uppercase text-gray-500 text-sm font-semibold mb-2">Other
-                                Resources</span>
-                            <ul class="list-unstyled">
+
                                 <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="/" target="_blank">MIT License</a>
-                                </li>
-                                <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="/" target="_blank">Terms &amp; Conditions</a>
-                                </li>
-                                <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="/" target="_blank">Privacy Policy</a>
-                                </li>
-                                <li>
-                                    <a class="text-gray-600 hover:text-gray-800 font-semibold block pb-2 text-sm"
-                                        href="/" target="_blank">Contact Us</a>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Careers
+                                    </a>
                                 </li>
                             </ul>
-                        </div>
+                        </nav>
+                    </div>
+
+                    <div class="text-center sm:text-left">
+                        <p class="text-lg font-medium text-gray-900">Our Services</p>
+
+                        <nav aria-label="Footer Services Nav" class="mt-8">
+                            <ul class="space-y-4 text-sm">
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Web Development
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Web Design
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Software Development
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Google Ads
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="text-center sm:text-left">
+                        <p class="text-lg font-medium text-gray-900">Helpful Links</p>
+
+                        <nav aria-label="Footer Helpful Nav" class="mt-8">
+                            <ul class="space-y-4 text-sm">
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        FAQs
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="text-gray-700 transition hover:text-gray-700/75" href="/">
+                                        Support
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="group flex justify-center gap-1.5 sm:justify-start" href="/">
+                                        <span class="text-gray-700 transition group-hover:text-gray-700/75">
+                                            Live Chat
+                                        </span>
+
+                                        <span class="relative -mr-2 flex h-2 w-2">
+                                            <span
+                                                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75"></span>
+                                            <span class="relative inline-flex h-2 w-2 rounded-full bg-teal-500"></span>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="text-center sm:text-left">
+                        <p class="text-lg font-medium text-gray-900">Contact Us</p>
+
+                        <ul class="mt-8 space-y-4 text-sm">
+                            <li>
+                                <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
+                                    <span class="icon-[wpf--message-outline]" style="width: 24px; height: 24px;"></span>
+                                    <span class="text-gray-700">admin@c3k.org</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
+                                    <span class="icon-[fluent--call-28-regular]" style="width: 24px; height: 24px;"></span>
+                                    <span class="text-gray-700">+012 345 6789</span>
+                                </a>
+                            </li>
+
+                            <li class="flex items-start justify-center gap-1.5 sm:justify-start">
+                                <span class="icon-[ep--location]" style="width: 24px; height: 24px;"></span>
+                                <address class="-mt-0.5 not-italic text-gray-700">
+                                    8 Waris Road, Lahore, Pakistan
+                                </address>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <hr class="my-6 border-gray-300">
-            <div class="flex flex-wrap items-center md:justify-between justify-center">
-                <div class="w-full md:w-4/12 px-4 mx-auto text-center">
-                    <div class="text-sm text-gray-500 font-semibold py-1">Copyright © <!-- -->2024<!-- --> C3K
-                        Engine by<!-- --> <a href="https://combinesoft.net" class="text-gray-500 hover:text-gray-800"
+
+            <div class="mt-12 border-t border-gray-100 pt-6">
+                <div class="text-center sm:flex sm:justify-between sm:text-left">
+                    <p class="text-sm text-gray-500">
+                        <span class="block sm:inline">All rights reserved.</span>
+
+                        <a class="inline-block text-violet-600 underline transition hover:text-violet-600/75" href="/">
+                            Terms &amp; Conditions
+                        </a>
+
+                        <span>·</span>
+
+                        <a class="inline-block text-violet-600 underline transition hover:text-violet-600/75" href="/">
+                            Privacy Policy
+                        </a>
+                    </p>
+                    <p class="mt-4 text-sm text-gray-500 sm:order-first sm:mt-0">
+                        Copyright © 2024 C3K
+                        Engine by <a href="https://combinesoft.net" class="text-gray-500 hover:text-gray-800"
                             target="_blank">COMBINE CHIPSoft</a>.
-                    </div>
+                    </p>
                 </div>
             </div>
         </div>

@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import illustration from '@/assets/hero.png'
+import image1 from '@/assets/image1.jpg'
+import image2 from '@/assets/image2.jpg'
+import image3 from '@/assets/image3.jpg'
+import image4 from '@/assets/image4.jpg'
+import avatar from '@/assets/avatar.jpg'
+
 </script>
 
 <template>
@@ -7,43 +14,347 @@
             <div class="container mx-auto items-center flex flex-wrap">
                 <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
                     <div class="pt-32 sm:pt-0">
-                        <h2 class="font-semibold text-4xl text-gray-600">A progressive framework.</h2>
-                        <p class="mt-4 text-lg leading-relaxed text-gray-500">C3K Engine is a monolithical rust and vue 3,
-                            it is using
-                            <a href="https://tailwindcss.com/?ref=creativetim" class="text-gray-600"
-                                target="_blank">TailwindCSS</a>.</p>
+                        <h2 class="font-semibold text-4xl text-gray-600">Best HR Software to Manage your Employee</h2>
+                        <p class="mt-4 text-lg leading-relaxed text-gray-500">A complete HR software & highly regarded
+                            On-Cloud & On-Premise
+                            HCMS that covers nearly the entire scope of HR management while being strictly compliant
+                            with both local and global best HR Practices
+                        </p>
+                        <a class=" mt-12 group relative inline-flex items-center overflow-hidden rounded bg-violet-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
+                            href="#">
+                            <span class="absolute -end-full transition-all group-hover:end-4">
+                                <span class="icon-[heroicons--arrow-long-right] mt-2" style="width: 24px; height: 24px;"></span>
+                            </span>
+                            <span class="text-sm font-medium transition-all group-hover:me-4"> View All Modules </span>
+                        </a>
                     </div>
                 </div>
-            </div><img class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12"
-                src="https://www.creative-tim.com/learning-lab/tailwind-starter-kit/img/ill_header_3.png" alt="..."
-                style="max-height:860px">
+                <div class="w-full lg:w-6/12">
+                    <div class="lg:text-right lg:ml-auto">
+                        <div class="relative inline-block z-10 pt-11 lg:pt-0">
+                            <img :src="illustration" alt="hero" class="max-w-full lg:ml-auto" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="pb-16 bg-gray-200 relative pt-32">
-            <div class="-mt-20 top-0 bottom-auto left-0 right-0 w-full absolute" style="height:80px"><svg
-                    class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg"
+        <section class="pb-16 bg-gray-200 relative pt-40">
+            <div class="-mt-20 top-0 bottom-auto left-0 right-0 w-full absolute" style="height:80px">
+                <svg class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
                     <polygon class="text-gray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
-                </svg></div>
+                </svg>
+            </div>
             <div class="container mx-auto">
                 <div
                     class="flex flex-wrap justify-center bg-white shadow-xl rounded-lg -mt-64 py-16 px-12 relative z-10">
                     <div class="w-full text-center lg:w-8/12">
-                        <p class="text-4xl text-center"><span role="img" aria-label="love">😍</span></p>
-                        <h3 class="font-semibold text-3xl">Do you love this Starter Kit?</h3>
-                        <p class="text-gray-500 text-lg leading-relaxed mt-4 mb-4">Cause if you do, it can be yours
-                            now. Hit the buttons below to navigate to get the Free version for your next project. Build
-                            a new web app or give an old project a new look!</p>
-                        <div class="sm:block flex flex-col mt-10"><a
-                                class="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-2 bg-pink-500 active:bg-pink-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
-                                href="/learning-lab/tailwind-starter-kit/documentation/quick-start">Get started</a><a
-                                href="https://github.com/creativetimofficial/tailwind-starter-kit" target="_blank"
-                                class="github-star sm:ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-700 active:bg-gray-600 uppercase text-sm shadow hover:shadow-lg"><i
-                                    class="fab fa-github text-lg mr-1"></i><span>Help With a Star</span></a></div>
+                        <p class="text-4xl text-center"><span role="img" aria-label="star">⭐</span></p>
+                        <h3 class="font-semibold text-3xl">Ready to Transform Your HR Management?</h3>
+                        <p class="text-gray-500 text-lg leading-relaxed mt-4 mb-4">
+                            If you’re excited about streamlining your HR processes, our HRMS is here to make it happen.
+                            Click the button below to get started with our advanced solution. Whether you’re upgrading
+                            an existing system or starting fresh, we’ve got you covered!
+                        </p>
+                        <div class="sm:block flex flex-col mt-10">
+                            <a class="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-2 bg-violet-600 active:bg-violet-700 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
+                                href="/get-started">Get Started</a>
+                            <a href="https://github.com/your-repo" target="_blank"
+                                class="github-star sm:ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-700 active:bg-gray-600 uppercase text-sm shadow hover:shadow-lg">
+                                <i class="fab fa-github text-lg mr-1"></i><span>Help With a Star</span>
+                            </a>
+                        </div>
                         <div class="text-center mt-16"></div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <section>
+            <div class="mt-16 bg-gray-50 radius-for-skewed">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-wrap items-center">
+                        <div class="w-full lg:w-1/2 mb-12 lg:mb-0">
+                            <div class="max-w-md lg:mx-auto">
+                                <span class="text-violet-600 font-bold">HRMS Solutions</span>
+                                <h2 class="my-2 text-4xl lg:text-5xl font-bold font-heading">Streamline Your HR
+                                    Processes</h2>
+                                <p class="mb-6 text-violet-500 leading-loose">Our HRMS software simplifies HR tasks,
+                                    enhances efficiency, and provides comprehensive data security.</p>
+                                <ul class="text-gray-500 font-bold">
+                                    <li class="flex mb-4">
+                                        <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                        <span>Efficient Employee Management</span>
+                                    </li>
+                                    <li class="flex mb-4">
+                                        <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                        <span>Automated Payroll Processing</span>
+                                    </li>
+                                    <li class="flex mb-4">
+                                        <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                        <span>Comprehensive Reporting</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-1/2 flex flex-wrap -mx-4">
+                            <div class="mb-8 lg:mb-0 w-full md:w-1/2 px-4">
+                                <div class="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white">
+                                    <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
+                                        <span class="icon-[tabler--photo] w-10 h-10 text-violet-600"></span>
+                                    </span>
+                                    <h4 class="mb-2 text-2xl font-bold font-heading">Employee Self-Service</h4>
+                                    <p class="text-gray-500 leading-loose">Empower employees with self-service features
+                                        for personal data management.</p>
+                                </div>
+                                <div class="py-6 pl-6 pr-4 shadow rounded bg-white">
+                                    <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
+                                        <span class="icon-[fluent--toolbox-32-filled] w-10 h-10 text-violet-600"></span>
+                                    </span>
+                                    <h4 class="mb-2 text-2xl font-bold font-heading">Advanced Recruitment Tools</h4>
+                                    <p class="text-gray-500 leading-loose">Streamline hiring with powerful recruitment
+                                        and onboarding features.</p>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 lg:mt-20 px-4">
+                                <div class="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                                    <span class="mb-4 inline-block p-3 rounded bg-violet-100">
+                                        <span class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
+                                    </span>
+                                    <h4 class="mb-2 text-2xl font-bold font-heading">Training and Development</h4>
+                                    <p class="text-gray-500 leading-loose">Enhance employee skills with integrated
+                                        training and development modules.</p>
+                                </div>
+                                <div class="py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                                    <span class="mb-4 inline-block p-3 rounded bg-violet-100">
+                                        <span class="icon-[mdi--tick-decagram] w-10 h-10 text-violet-600"></span>
+                                    </span>
+                                    <h4 class="mb-2 text-2xl font-bold font-heading">Compliance Management</h4>
+                                    <p class="text-gray-500 leading-loose">Stay compliant with automated policy updates
+                                        and legal requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="relative p-4 px-4 mx-auto bg-white dark:bg-gray-800 sm:px-6 lg:px-8 py-26 lg:mt-20">
+            <div class="relative">
+                <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-8 lg:items-center">
+                    <div class="ml-6 lg:col-start-2 lg:max-w-2xl">
+                        <p class="text-base font-semibold leading-6 text-violet-600 uppercase">
+                            Collaborative HRMS
+                        </p>
+                        <h4
+                            class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 dark:text-white sm:text-3xl sm:leading-9">
+                            Interactivity and Efficiency for Your HR Team
+                        </h4>
+                        <p class="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-300">
+                            Create a seamless and powerful collaborative space for your team. Track, share, and measure
+                            efficiently with full control. It's never been simpler and more effective.
+                        </p>
+                        <ul class="gap-6 mt-8 md:grid md:grid-cols-2">
+                            <li class="mt-6 md:mt-0">
+                                <div class="flex">
+                                    <span
+                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                    </span>
+                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                        Real-time Updates
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="mt-6 md:mt-0">
+                                <div class="flex">
+                                    <span
+                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                    </span>
+                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                        Comprehensive Data Tracking
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="mt-6 md:mt-0">
+                                <div class="flex">
+                                    <span
+                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                    </span>
+                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                        24/7 Support
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="mt-6 md:mt-0">
+                                <div class="flex">
+                                    <span
+                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                    </span>
+                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                        Tips to Optimize Work Time
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="relative space-y-4">
+                        <div class="flex items-end justify-center ml-16 space-x-4 lg:justify-start">
+                            <img class="w-64 rounded-lg shadow-lg md:w-80" width="400" :src="image3" alt="1" />
+                            <img class="w-80 rounded-lg shadow-lg md:w-96" width="500" :src="image2" alt="2" />
+                        </div>
+                        <div class="flex items-start justify-center ml-36 space-x-4 lg:justify-start">
+                            <img class="w-56 rounded-lg shadow-lg md:w-80" width="400" :src="image1" alt="3" />
+                            <img class="w-64 rounded-lg shadow-lg md:w-96" width="500" :src="image4" alt="4" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto my-20 px-6">
+            <section class="text-gray-800">
+                <div class="text-center mb-16">
+                    <p class="text-violet-500 uppercase font-bold text-sm mb-4">Features</p>
+                    <h2 class="text-4xl font-extrabold mb-6">Why is it so great?</h2>
+                    <p class="text-gray-600 text-lg mb-12">
+                        Explore the exceptional features that make our HRMS software a must-have for your business. From
+                        seamless integration to real-time analytics, our solution has it all.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">24/7 Support</p>
+                            <p class="text-gray-500">Our support team is always available to help with any queries or
+                                issues you might have.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Employee Tracking</p>
+                            <p class="text-gray-500">Keep track of employee performance and progress effortlessly.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Comprehensive Reporting</p>
+                            <p class="text-gray-500">Generate detailed reports to gain deeper insights into your
+                                workforce.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Advanced Analytics</p>
+                            <p class="text-gray-500">Leverage data-driven insights to make well-informed HR decisions.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Community Support</p>
+                            <p class="text-gray-500">Join a vast community of users and get help when needed.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Seamless Integration</p>
+                            <p class="text-gray-500">Easily integrate with existing systems and tools.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Customizable Dashboards</p>
+                            <p class="text-gray-500">Tailor dashboards to suit your specific needs and preferences.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4 mb-12">
+                        <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
+                            <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold mb-1">Intuitive User Interface</p>
+                            <p class="text-gray-500">Enjoy a user-friendly interface designed for ease of use and
+                                efficiency.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 py-16 lg:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="pb-4 text-3xl md:text-5xl font-bold text-gray-900 dark:text-white text-center">Get Started
+                    with Our HRMS Today</h2>
+                <p class="mx-auto max-w-3xl pb-8 text-gray-700 dark:text-gray-300 text-lg md:text-xl text-center">
+                    Experience a seamless transition to our HRMS software. With intuitive features and user-friendly
+                    design, our platform simplifies HR management, making it easier for your team to stay organized and
+                    efficient.
+                </p>
+                <div class="lg:flex items-start justify-center lg:space-x-12">
+                    <div class="lg:max-w-xl space-y-4 text-lg md:text-xl leading-7">
+                        <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
+                            <div class="shrink-0 text-violet-500">
+                                <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            </div>
+                            <div>Free to get started with comprehensive features</div>
+                        </div>
+                        <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
+                            <div class="shrink-0 text-violet-500">
+                                <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            </div>
+                            <div>Easy migration checklist</div>
+                        </div>
+                        <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
+                            <div class="shrink-0 text-violet-500">
+                                <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            </div>
+                            <div>Personalized support from our team</div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="lg:border-l border-dashed border-gray-400 lg:px-12 w-full lg:max-w-lg text-center sm:text-left">
+                        <div class="py-6 text-xl lg:text-2xl leading-7 lg:leading-8">
+                            <img :src="avatar" width="150" height="150"
+                                class="block w-32 h-32 rounded-full mx-auto sm:mx-0" alt="Customer Testimonial"
+                                loading="lazy">
+                            <p class="flex-grow py-6 text-gray-600 dark:text-gray-300">
+                                “Adopting this HRMS was straightforward and effective. Its intuitive design and powerful
+                                features have revolutionized our HR management.”
+                            </p>
+                            <div class="text-xl text-gray-700 dark:text-gray-100 font-medium">Omar Ahmed</div>
+                            <div class="text-lg text-gray-500 dark:text-gray-400">HR Manager at Sefam</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
