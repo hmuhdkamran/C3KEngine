@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import illustration from '@/assets/hero.png'
-import image1 from '@/assets/image1.jpg'
-import image2 from '@/assets/image2.jpg'
-import image3 from '@/assets/image3.jpg'
-import image4 from '@/assets/image4.jpg'
-import avatar from '@/assets/avatar.jpg'
+import illustration from '@/assets/images/hero.png'
+import image1 from '@/assets/images/image1.jpg'
+import image2 from '@/assets/images/image2.jpg'
+import image3 from '@/assets/images/image3.jpg'
+import image4 from '@/assets/images/image4.jpg'
+import avatar from '@/assets/images/avatar.jpg'
 
 </script>
 
@@ -19,11 +19,12 @@ import avatar from '@/assets/avatar.jpg'
                             On-Cloud & On-Premise
                             HCMS that covers nearly the entire scope of HR management while being strictly compliant
                             with both local and global best HR Practices
-                        </p>
+                        </p>                        
                         <a class=" mt-12 group relative inline-flex items-center overflow-hidden rounded bg-violet-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
                             href="#">
                             <span class="absolute -end-full transition-all group-hover:end-4">
-                                <span class="icon-[heroicons--arrow-long-right] mt-2" style="width: 24px; height: 24px;"></span>
+                                <span class="icon-[heroicons--arrow-long-right] mt-2"
+                                    style="width: 24px; height: 24px;"></span>                                    
                             </span>
                             <span class="text-sm font-medium transition-all group-hover:me-4"> View All Modules </span>
                         </a>
@@ -120,7 +121,8 @@ import avatar from '@/assets/avatar.jpg'
                             <div class="w-full md:w-1/2 lg:mt-20 px-4">
                                 <div class="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white">
                                     <span class="mb-4 inline-block p-3 rounded bg-violet-100">
-                                        <span class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
+                                        <span
+                                            class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
                                     </span>
                                     <h4 class="mb-2 text-2xl font-bold font-heading">Training and Development</h4>
                                     <p class="text-gray-500 leading-loose">Enhance employee skills with integrated

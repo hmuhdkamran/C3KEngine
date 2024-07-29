@@ -3,7 +3,7 @@ import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/auth/authentication-service";
 
-import logo from "@/assets/vue.svg"
+import logo from "@/assets/images/vue.svg"
 
 interface ICredential {
     username: string

@@ -1715,6 +1715,22 @@ unplugin-auto-import@^0.18.0:
     unimport "^3.9.0"
     unplugin "^1.11.0"
 
+unplugin-vue-components@^0.27.3:
+  version "0.27.3"
+  resolved "https://registry.yarnpkg.com/unplugin-vue-components/-/unplugin-vue-components-0.27.3.tgz#e7a9980f7feb649306aa92afd61b760385479d42"
+  integrity sha512-5wg7lbdg5ZcrAQNzyYK+6gcg/DG8K6rO+f5YeuvqGHs/PhpapBvpA4O/0ex/pFthE5WgRk43iWuRZEMLVsdz4Q==
+  dependencies:
+    "@antfu/utils" "^0.7.10"
+    "@rollup/pluginutils" "^5.1.0"
+    chokidar "^3.6.0"
+    debug "^4.3.5"
+    fast-glob "^3.3.2"
+    local-pkg "^0.5.0"
+    magic-string "^0.30.10"
+    minimatch "^9.0.5"
+    mlly "^1.7.1"
+    unplugin "^1.11.0"
+
 unplugin-vue-define-options@^1.4.5:
   version "1.4.6"
   resolved "https://registry.yarnpkg.com/unplugin-vue-define-options/-/unplugin-vue-define-options-1.4.6.tgz#61d2f9903338eb5c2a230a63a1bd6488304ee919"

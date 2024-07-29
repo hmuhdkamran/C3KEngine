@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import broken from "@/assets/broken-robot.svg";
+import broken from "@/assets/images/broken-robot.svg";
 </script>
 
 <template>
