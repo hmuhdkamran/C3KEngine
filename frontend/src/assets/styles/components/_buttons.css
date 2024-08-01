@@ -1,0 +1,13 @@
+@layer components {
+    .social-link {
+        @apply px-3 py-2 flex items-center text-xs uppercase font-bold text-gray-700 hover:text-blue-500;
+    }
+
+    .social-icon {
+        @apply text-lg text-gray-700;
+    }
+
+    .social-link:hover .social-icon {
+        @apply text-blue-500;
+    }
+}

@@ -19,30 +19,25 @@ import logo from "@/assets/images/vue.svg"
             <div class="lg:flex flex-grow items-center hidden" id="example-navbar-danger">
                 <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
                     <li class="nav-item">
-                        <a href="https://www.facebook.com/hmuhdkamran"
-                            class="px-3 py-2 flex items-center text-xs uppercase font-bold text-gray-700 hover:text-gray-500"
-                            target="_blank">
-                            <span class="icon-[fa--facebook-square] text-lg leading-lg text-gray-400"></span>
+                        <a href="https://www.facebook.com/hmuhdkamran" class="social-link" target="_blank">
+                            <span class="social-icon icon-[fa--facebook-square]"></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://twitter.com/hmuhdkamran"
-                            class="px-3 py-2 flex items-center text-xs uppercase font-bold text-gray-700 hover:text-gray-500"
-                            target="_blank">
-                            <span class="icon-[fa--twitter] text-lg leading-lg text-gray-400"></span>
+                        <a href="https://twitter.com/hmuhdkamran" class="social-link" target="_blank">
+                            <span class="social-icon icon-[fa--twitter]"></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://github.com/hmuhdkamran"
-                            class="px-3 py-2 flex items-center text-xs uppercase font-bold text-gray-700 hover:text-gray-500"
-                            target="_blank">
-                            <span class="icon-[fa--github] text-lg leading-lg text-gray-400"></span>
+                        <a href="https://github.com/hmuhdkamran" class="social-link" target="_blank">
+                            <span class="social-icon icon-[fa--github]"></span>
                         </a>
                     </li>
                     <li class="nav-item cursor-pointer ">
-                        <RouterLink to="/auth/login" class="px-3 py-2 flex items-center text-xs uppercase font-bold text-gray-700 hover:text-gray-500">
-                            <span class="icon-[fa--user] text-lg leading-lg text-gray-400 mr-2"></span>
-                                Login
+                        <RouterLink to="/auth/login"
+                            class="social-link">
+                            <span class="social-icon icon-[fa--user] mr-2"></span>
+                            Login
                         </RouterLink>
                     </li>
                 </ul>

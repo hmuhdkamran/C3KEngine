@@ -19,7 +19,7 @@ import avatar from '@/assets/images/avatar.jpg'
                             On-Cloud & On-Premise
                             HCMS that covers nearly the entire scope of HR management while being strictly compliant
                             with both local and global best HR Practices
-                        </p>                        
+                        </p>
                         <a class=" mt-12 group relative inline-flex items-center overflow-hidden rounded bg-violet-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
                             href="#">
                             <span class="absolute -end-full transition-all group-hover:end-4">
