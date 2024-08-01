@@ -50,13 +50,13 @@ impl IRepository<User> for UserRepository {
 
     async fn add(connection: PgPool, entity: &User) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.user_id.clone());
-        args.add(entity.username.clone());
-        args.add(entity.display_name.clone());
-        args.add(entity.language.clone());
-        args.add(entity.password.clone());
-        args.add(entity.salt.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.user_id.clone());
+        let _ = args.add(entity.username.clone());
+        let _ = args.add(entity.display_name.clone());
+        let _ = args.add(entity.language.clone());
+        let _ = args.add(entity.password.clone());
+        let _ = args.add(entity.salt.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -82,13 +82,13 @@ impl IRepository<User> for UserRepository {
 
     async fn update(connection: PgPool, entity: &User) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.user_id.clone());
-        args.add(entity.username.clone());
-        args.add(entity.display_name.clone());
-        args.add(entity.language.clone());
-        args.add(entity.password.clone());
-        args.add(entity.salt.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.user_id.clone());
+        let _ = args.add(entity.username.clone());
+        let _ = args.add(entity.display_name.clone());
+        let _ = args.add(entity.language.clone());
+        let _ = args.add(entity.password.clone());
+        let _ = args.add(entity.salt.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!("UPDATE {} SET {}", User::TABLE, User::COLUMNS_UPDATE).as_str(),
@@ -109,7 +109,7 @@ impl IRepository<User> for UserRepository {
 
     async fn delete(connection: PgPool, id: &String) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(id);
+        let _ = args.add(id);
 
         sqlx::query_with(
             format!("DELETE FROM {} WHERE {}", User::TABLE, User::PK).as_str(),

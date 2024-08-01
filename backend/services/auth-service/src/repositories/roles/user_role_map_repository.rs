@@ -50,10 +50,10 @@ impl IRepository<UserRoleMap> for UserRoleMapRepository {
 
     async fn add(connection: PgPool, entity: &UserRoleMap) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.user_role_map_id.clone());
-        args.add(entity.role_id.clone());
-        args.add(entity.user_id.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.user_role_map_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.user_id.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -79,10 +79,10 @@ impl IRepository<UserRoleMap> for UserRoleMapRepository {
 
     async fn update(connection: PgPool, entity: &UserRoleMap) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.user_role_map_id.clone());
-        args.add(entity.role_id.clone());
-        args.add(entity.user_id.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.user_role_map_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.user_id.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!("UPDATE {} SET {}", UserRoleMap::TABLE, UserRoleMap::COLUMNS_UPDATE).as_str(),
@@ -103,7 +103,7 @@ impl IRepository<UserRoleMap> for UserRoleMapRepository {
 
     async fn delete(connection: PgPool, id: &String) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(id);
+        let _ = args.add(id);
 
         sqlx::query_with(
             format!("DELETE FROM {} WHERE {}", UserRoleMap::TABLE, UserRoleMap::PK).as_str(),

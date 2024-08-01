@@ -50,11 +50,11 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
 
     async fn add(connection: PgPool, entity: &RoleRouteMap) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.role_route_id.clone());
-        args.add(entity.role_id.clone());
-        args.add(entity.route_id.clone());
-        args.add(entity.operation.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.role_route_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.route_id.clone());
+        let _ = args.add(entity.operation.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -80,11 +80,11 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
 
     async fn update(connection: PgPool, entity: &RoleRouteMap) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.role_route_id.clone());
-        args.add(entity.role_id.clone());
-        args.add(entity.route_id.clone());
-        args.add(entity.operation.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.role_route_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.route_id.clone());
+        let _ = args.add(entity.operation.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!("UPDATE {} SET {}", RoleRouteMap::TABLE, RoleRouteMap::COLUMNS_UPDATE).as_str(),
@@ -105,7 +105,7 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
 
     async fn delete(connection: PgPool, id: &String) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(id);
+        let _ = args.add(id);
 
         sqlx::query_with(
             format!("DELETE FROM {} WHERE {}", RoleRouteMap::TABLE, RoleRouteMap::PK).as_str(),

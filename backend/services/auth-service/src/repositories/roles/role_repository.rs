@@ -50,10 +50,10 @@ impl IRepository<Role> for RoleRepository {
 
     async fn add(connection: PgPool, entity: &Role) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.role_id.clone());
-        args.add(entity.parent_role_id.clone());
-        args.add(entity.full_name.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.parent_role_id.clone());
+        let _ = args.add(entity.full_name.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -79,10 +79,10 @@ impl IRepository<Role> for RoleRepository {
 
     async fn update(connection: PgPool, entity: &Role) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.role_id.clone());
-        args.add(entity.parent_role_id.clone());
-        args.add(entity.full_name.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.role_id.clone());
+        let _ = args.add(entity.parent_role_id.clone());
+        let _ = args.add(entity.full_name.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!("UPDATE {} SET {}", Role::TABLE, Role::COLUMNS_UPDATE).as_str(),
@@ -103,7 +103,7 @@ impl IRepository<Role> for RoleRepository {
 
     async fn delete(connection: PgPool, id: &String) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(id);
+        let _ = args.add(id);
 
         sqlx::query_with(
             format!("DELETE FROM {} WHERE {}", Role::TABLE, Role::PK).as_str(),

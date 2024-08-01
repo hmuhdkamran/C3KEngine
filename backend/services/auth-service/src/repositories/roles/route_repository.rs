@@ -51,11 +51,11 @@ impl IRepository<Route> for RouteRepository {
 
     async fn add(connection: PgPool, entity: &Route) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.route_id.clone());
-        args.add(entity.route_name.clone());
-        args.add(entity.display_name.clone());
-        args.add(entity.operation.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.route_id.clone());
+        let _ = args.add(entity.route_name.clone());
+        let _ = args.add(entity.display_name.clone());
+        let _ = args.add(entity.operation.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -81,11 +81,11 @@ impl IRepository<Route> for RouteRepository {
 
     async fn update(connection: PgPool, entity: &Route) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(entity.route_id.clone());
-        args.add(entity.route_name.clone());
-        args.add(entity.display_name.clone());
-        args.add(entity.operation.clone());
-        args.add(entity.status_id.clone());
+        let _ = args.add(entity.route_id.clone());
+        let _ = args.add(entity.route_name.clone());
+        let _ = args.add(entity.display_name.clone());
+        let _ = args.add(entity.operation.clone());
+        let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!("UPDATE {} SET {}", Route::TABLE, Route::COLUMNS_UPDATE).as_str(),
@@ -106,7 +106,7 @@ impl IRepository<Route> for RouteRepository {
 
     async fn delete(connection: PgPool, id: &String) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        args.add(id);
+        let _ = args.add(id);
 
         sqlx::query_with(
             format!("DELETE FROM {} WHERE {}", Route::TABLE, Route::PK).as_str(),
