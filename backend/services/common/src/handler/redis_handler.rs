@@ -2,18 +2,18 @@ use crate::models::config::app_config::get_json;
 use redis::Commands;
 use std::error::Error as StdError;
 
-pub struct RedisClient {
+pub struct RedisHandler {
     client: redis::Client,
 }
 
-impl RedisClient {
+impl RedisHandler {
     pub fn new() -> Result<Self, Box<dyn StdError>> {
         let json = get_json()?;
         let client = redis::Client::open(format!(
             "redis://{}:{}/",
             json.redis.redis_host, json.redis.redis_port
         ))?;
-        Ok(RedisClient { client })
+        Ok(RedisHandler { client })
     }
 
     pub fn insert_update_key(

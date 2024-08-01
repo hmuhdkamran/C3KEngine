@@ -9,6 +9,10 @@ use actix_web::{
     },
     Error, HttpResponse,
 };
+use c3k_common::{
+    handler::redis_handler::RedisHandler,
+    models::{config::app_config::get_json, response::ApiResponse},
+};
 use futures::future::LocalBoxFuture;
 use jsonwebtoken::{
     decode,
@@ -16,11 +20,7 @@ use jsonwebtoken::{
     Algorithm, DecodingKey, Validation,
 };
 
-use crate::models::{
-    config::app_config::get_json, constants, response::ApiResponse, roles::auth::JwtClaims,
-};
-
-use super::redis_client::RedisClient;
+use crate::models::{constants, roles::auth::JwtClaims};
 
 pub struct InterHandler;
 
@@ -58,7 +58,7 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        let redis_client = match RedisClient::new() {
+        let redis_client = match RedisHandler::new() {
             Ok(client) => client,
             Err(err) => {
                 return Box::pin(async move {

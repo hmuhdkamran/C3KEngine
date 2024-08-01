@@ -1,10 +1,9 @@
-use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
-use sqlx::PgPool;
-
 use crate::{
-    interfaces::iservice::IService, models::roles::user_role_map::UserRoleMap,
-    services::user_role_map_service::UserRoleMapService,
+    models::roles::user_role_map::UserRoleMap, services::user_role_map_service::UserRoleMapService,
 };
+use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use c3k_common::interfaces::iservice::IService;
+use sqlx::PgPool;
 
 #[get("")]
 pub async fn get_all(connection: web::Data<PgPool>) -> Result<impl Responder, actix_web::Error> {

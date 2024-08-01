@@ -1,3 +1,4 @@
+use c3k_common::interfaces::irepository::Model;
 use serde::{Deserialize, Serialize};
 pub use sqlx::{
     pool::PoolConnection,
@@ -5,7 +6,6 @@ pub use sqlx::{
     Arguments, Error, PgPool, Postgres, Row,
 };
 use uuid::Uuid;
-use crate::interfaces::irepository::Model;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Route {

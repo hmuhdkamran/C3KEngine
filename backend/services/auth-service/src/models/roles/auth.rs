@@ -1,11 +1,10 @@
-
+use c3k_common::interfaces::irepository::Model;
 use serde::{Deserialize, Serialize};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
     Arguments, Error, PgPool, Postgres, Row,
 };
-use crate::interfaces::irepository::Model;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Auth {
@@ -15,10 +14,7 @@ pub struct Auth {
 
 impl Auth {
     pub fn new(route: String, allow: String) -> Self {
-        Self {
-            route,
-            allow,
-        }
+        Self { route, allow }
     }
 }
 
@@ -36,10 +32,7 @@ impl Model for Auth {
         let route = row.get("RouteName");
         let allow = row.get("Operation");
 
-        Self {
-            route,
-            allow,
-        }
+        Self { route, allow }
     }
 }
 

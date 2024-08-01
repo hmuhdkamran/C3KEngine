@@ -1,10 +1,7 @@
+use crate::{models::roles::route::Route, services::route_service::RouteService};
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use c3k_common::interfaces::iservice::IService;
 use sqlx::PgPool;
-
-use crate::{
-    interfaces::iservice::IService, models::roles::route::Route,
-    services::route_service::RouteService,
-};
 
 #[get("")]
 pub async fn get_all(connection: web::Data<PgPool>) -> Result<impl Responder, actix_web::Error> {
@@ -55,6 +52,6 @@ pub fn route_routes(cfg: &mut web::ServiceConfig) {
             .service(get_by_filter)
             .service(add)
             .service(update)
-            .service(delete)
+            .service(delete),
     );
 }

@@ -22,3 +22,5 @@ rand = "0.8.5"
 jsonwebtoken = "9.3"
 redis = "0.26.0"
 uuid = { version = "1.10.0", features = ["serde", "v4"] }
+
+c3k-common = { path = "../common" }

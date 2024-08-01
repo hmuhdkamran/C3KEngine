@@ -1,3 +1,4 @@
+use c3k_common::interfaces::irepository::{IRepository, Model};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
@@ -6,7 +7,6 @@ pub use sqlx::{
 use std::error::Error as StdError;
 
 use crate::{
-    interfaces::irepository::{IRepository, Model},
     models::{
         constants::{
             MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
@@ -20,11 +20,18 @@ pub struct UserRoleMapRepository {}
 
 impl IRepository<UserRoleMap> for UserRoleMapRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<UserRoleMap>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", UserRoleMap::COLUMNS, UserRoleMap::TABLE).as_str())
-            .map(|row: PgRow| UserRoleMap::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(
+            format!(
+                "SELECT {} FROM {}",
+                UserRoleMap::COLUMNS,
+                UserRoleMap::TABLE
+            )
+            .as_str(),
+        )
+        .map(|row: PgRow| UserRoleMap::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -85,7 +92,12 @@ impl IRepository<UserRoleMap> for UserRoleMapRepository {
         let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
-            format!("UPDATE {} SET {}", UserRoleMap::TABLE, UserRoleMap::COLUMNS_UPDATE).as_str(),
+            format!(
+                "UPDATE {} SET {}",
+                UserRoleMap::TABLE,
+                UserRoleMap::COLUMNS_UPDATE
+            )
+            .as_str(),
             args,
         )
         .execute(&connection)
@@ -106,7 +118,12 @@ impl IRepository<UserRoleMap> for UserRoleMapRepository {
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", UserRoleMap::TABLE, UserRoleMap::PK).as_str(),
+            format!(
+                "DELETE FROM {} WHERE {}",
+                UserRoleMap::TABLE,
+                UserRoleMap::PK
+            )
+            .as_str(),
             args,
         )
         .execute(&connection)

@@ -1,3 +1,4 @@
+use c3k_common::interfaces::irepository::Model;
 use serde::{Deserialize, Serialize};
 pub use sqlx::{
     pool::PoolConnection,
@@ -5,7 +6,6 @@ pub use sqlx::{
     Arguments, Error, PgPool, Postgres, Row,
 };
 use uuid::Uuid;
-use crate::interfaces::irepository::Model;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -21,7 +21,8 @@ pub struct User {
 impl User {
     pub const TABLE: &'static str = r#""Role"."Users""#;
     pub const PK: &'static str = r#""UserId"::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""UserId", "Username", "DisplayName", "Language", "Password", "Salt", "StatusId""#;
+    pub const COLUMNS: &'static str =
+        r#""UserId", "Username", "DisplayName", "Language", "Password", "Salt", "StatusId""#;
     pub const COLUMNS_UPDATE: &'static str = r#""Username"=$2, "DisplayName"=$3, "Language"=$4, "Password"=$5, "Salt"=$6, "StatusId"=$7 WHERE "UserId"=$1"#;
 
     pub fn get_id(&self) -> Uuid {

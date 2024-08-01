@@ -6,5 +6,14 @@ authors = ["H.Muhammad Kamran"]
 
 [dependencies]
 actix-web = "4.8.0"
+actix-multipart = "^0.7.2"
 serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"
+env_logger = "^0.11.5"
+url = "^2.1.0"
+bytes = "^1.7.0"
+
+[dependencies.reqwest]
+version="^0.12.5"
+default-features = false
+features=["rustls-tls"]

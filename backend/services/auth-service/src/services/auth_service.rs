@@ -6,26 +6,25 @@ use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::{
-    interfaces::irepository::IRepository,
-    models::{
-        config::app_config::get_json,
-        response::ApiResponse,
-        roles::{
-            auth::{Auth, AuthModel, JwtClaims, PasswordCode},
-            user::User,
-        },
+    models::roles::{
+        auth::{Auth, AuthModel, JwtClaims, PasswordCode},
+        user::User,
     },
     repositories::roles::{auth_repository::AuthRepository, user_repository::UserRepository},
-    utilities::redis_client::RedisClient,
+};
+use c3k_common::{
+    handler::redis_handler::RedisHandler,
+    interfaces::irepository::IRepository,
+    models::{config::app_config::get_json, response::ApiResponse},
 };
 
 pub struct AuthService {
-    pub redis_client: RedisClient,
+    pub redis_client: RedisHandler,
     pub db_pool: PgPool,
 }
 
 impl AuthService {
-    pub fn new(db_pool: PgPool, redis_client: RedisClient) -> Self {
+    pub fn new(db_pool: PgPool, redis_client: RedisHandler) -> Self {
         Self {
             db_pool,
             redis_client,
