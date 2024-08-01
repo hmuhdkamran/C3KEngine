@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use c3k_backend::{
+use c3k_auth::{
     controllers::roles::{
         auth_controller::auth_routes, role_controller::role_routes,
         role_route_map_controller::role_route_map_routes, route_controller::route_routes,
@@ -43,7 +43,7 @@ async fn main() -> Result<(), std::io::Error> {
         "{}:{}",
         config.backend_engine.host, config.backend_engine.port
     );
-    let db_pool = create_db_pool(&config.data.connection_string)
+    let db_pool = create_db_pool(&config.data.connection_string[0])
         .await
         .expect("Failed to create pool");
 

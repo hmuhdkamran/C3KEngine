@@ -6,6 +6,7 @@
 
 [workspace]
 members = [
-  "gateway",
+  "services/common",
   "services/auth-service",
 ]
+resolver = "2"

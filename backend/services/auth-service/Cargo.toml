@@ -1,8 +1,9 @@
 [package]
-name = "c3k-backend"
+name = "c3k-auth"
 version = "0.1.0"
 edition = "2021"
 authors = ["H.Muhammad Kamran"]
+resolver = "2"
 
 [dependencies]
 actix-web = "4.8.0"

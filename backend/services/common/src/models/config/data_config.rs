@@ -2,5 +2,5 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DataConfig {
-    pub connection_string: String,
+    pub connection_string: Vec<String>,
 }
