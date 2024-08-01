@@ -1,0 +1,10 @@
+[package]
+name = "c3k-gateway"
+version = "0.1.0"
+edition = "2021"
+authors = ["H.Muhammad Kamran"]
+
+[dependencies]
+actix-web = "4.8.0"
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = "1.0.120"
