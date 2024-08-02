@@ -23,39 +23,39 @@ import logo from "@/assets/images/vue.svg"
                         Find us on any of these platforms, we respond 1-2
                         business days.
                     </p>
-                    <ul class="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
+                    <ul class="mt-8 flex justify-center gap-4 sm:justify-start">
                         <li>
                             <a href="https://www.facebook.com/hmuhdkamran" target="_blank"
-                                class="text-violet-700 transition hover:text-violet-700/75">
-                                <span class="icon-[ic--outline-facebook]" style="width: 24px; height: 24px;"></span>
+                                class="social-link">
+                                <span class="social-icon icon-[ic--outline-facebook]"></span>
                             </a>
                         </li>
 
                         <li>
                             <a href="/" rel="noreferrer" target="_blank"
-                                class="text-violet-700 transition hover:text-violet-700/75">
-                                <span class="icon-[mdi--instagram]" style="width: 24px; height: 24px;"></span>
+                                class="social-link">
+                                <span class="icon-[mdi--instagram]"></span>
                             </a>
                         </li>
 
                         <li>
                             <a href="https://www.twitter.com/hmuhdkamran" target="_blank"
-                                class="text-violet-700 transition hover:text-violet-700/75">
-                                <span class="icon-[grommet-icons--twitter]" style="width: 24px; height: 24px;"></span>
+                                class="social-link">
+                                <span class="social-icon icon-[grommet-icons--twitter]"></span>
                             </a>
                         </li>
 
                         <li>
                             <a href="https://www.github.com/hmuhdkamran" target="_blank"
-                                class="text-violet-700 transition hover:text-violet-700/75">
-                                <span class="icon-[mdi--github]" style="width: 24px; height: 24px;"></span>
+                                class="social-link">
+                                <span class="social-icon icon-[mdi--github]"></span>
                             </a>
                         </li>
 
                         <li>
                             <a href="https://www.dribbble.com/hmuhdkamran" target="_blank"
-                                class="text-violet-700 transition hover:text-violet-700/75">
-                                <span class="icon-[icon-park-outline--dribble]" style="width: 24px; height: 24px;"></span>
+                                class="social-link">
+                                <span class="social-icon icon-[icon-park-outline--dribble]"></span>
                             </a>
                         </li>
                     </ul>
@@ -170,20 +170,20 @@ import logo from "@/assets/images/vue.svg"
                         <ul class="mt-8 space-y-4 text-sm">
                             <li>
                                 <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
-                                    <span class="icon-[wpf--message-outline]" style="width: 24px; height: 24px;"></span>
+                                    <span class="icon-[wpf--message-outline]"></span>
                                     <span class="text-gray-700">admin@c3k.org</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
-                                    <span class="icon-[fluent--call-28-regular]" style="width: 24px; height: 24px;"></span>
+                                    <span class="icon-[fluent--call-28-regular]"></span>
                                     <span class="text-gray-700">+012 345 6789</span>
                                 </a>
                             </li>
 
                             <li class="flex items-start justify-center gap-1.5 sm:justify-start">
-                                <span class="icon-[ep--location]" style="width: 24px; height: 24px;"></span>
+                                <span class="icon-[ep--location]"></span>
                                 <address class="-mt-0.5 not-italic text-gray-700">
                                     8 Waris Road, Lahore, Pakistan
                                 </address>

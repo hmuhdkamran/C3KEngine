@@ -1,24 +1,6 @@
-[package]
-name = "c3k-backend"
-version = "0.1.0"
-edition = "2021"
+[workspace]
 authors = ["H.Muhammad Kamran"]
-
-[dependencies]
-actix-web = "4.8.0"
-actix-cors = "0.7.0"
-futures = "0.3.30"
-sqlx = { version = "0.7.4", features = [
-    "postgres",
-    "macros",
-    "runtime-tokio",
-    "tls-native-tls",
-    "uuid",
-] }
-serde = { version = "1.0.204", features = ["derive"] }
-serde_json = "1.0.120"
-sha2 = "0.10.8"
-rand = "0.8.5"
-jsonwebtoken = "9.3"
-redis = "0.25.4"
-uuid = { version = "1.10.0", features = ["serde", "v4"] }
+members = [
+  "services/auth-service",
+]
+resolver = "2"
