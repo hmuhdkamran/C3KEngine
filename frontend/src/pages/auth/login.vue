@@ -28,7 +28,7 @@ const login = () => {
         .then(response => {
             if (response) {
                 // ability.update(JSON.parse(TokenHelper.getAbilities()))
-                router.replace(route.query.to ? String(route.query.to) : '/app/dashboard')
+                router.replace(route.query.to ? String(route.query.to) : '/app/main')
             } else {
                 console.error('Login failed, response is undefined.')
             }
