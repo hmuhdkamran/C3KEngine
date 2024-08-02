@@ -478,7 +478,6 @@ onUnmounted(() => {
     position: fixed;
 }
 
-
 </style>
 
 <route lang="yaml">
