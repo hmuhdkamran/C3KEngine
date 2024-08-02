@@ -5,6 +5,10 @@ edition = "2021"
 authors = ["H.Muhammad Kamran"]
 resolver = "2"
 
+[[bin]]
+name = "c3k-auth"
+path = "src/main.rs"
+
 [dependencies]
 actix-web = "4.8.0"
 actix-cors = "0.7.0"

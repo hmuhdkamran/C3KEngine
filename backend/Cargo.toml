@@ -1,12 +1,6 @@
-# [package]
-# name = "c3k-gateway"
-# version = "0.1.0"
-# edition = "2021"
-# authors = ["H.Muhammad Kamran"]
-
 [workspace]
+authors = ["H.Muhammad Kamran"]
 members = [
-  "services/common",
   "services/auth-service",
 ]
 resolver = "2"
