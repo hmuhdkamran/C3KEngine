@@ -1,68 +1,120 @@
 <script setup lang="ts">
-import Moduleheader from '@/layouts/components/dashboardheader.vue';
+import { ref, computed } from 'vue';
+import Card from '@/layouts/components/card.vue';
+import Dashboardheader from '@/layouts/components/dashboardheader.vue';
 
+const searchQuery = ref('');
+const selectedCategory = ref('All');
+const showFavorites = ref(false);
+
+const cards = ref([
+    {
+        title: 'HRMS',
+        description: 'Streamline HR with our software',
+        status: 'Installed',
+        buttonText: 'MODULE INFO',
+        iconClass: 'icon-[fluent-mdl2--recruitment-management]',
+        category: 'HRMS',
+    },
+    {
+        title: 'Retail',
+        description: 'Boost retail with streamlined software.',
+        status: 'Activate',
+        buttonText: 'LEARN MORE',
+        iconClass: 'icon-[vaadin--shop]',
+        category: 'Retail',
+    },
+    {
+        title: 'Production',
+        description: 'Looking forward to process improvements.',
+        status: 'Installed',
+        buttonText: 'LEARN MORE',
+        iconClass: 'icon-[mdi--office-building-settings-outline]',
+        category: 'Production',
+    }
+]);
+
+const filteredCards = computed(() => {
+    return cards.value.filter((card) => {
+        const matchesCategory = selectedCategory.value === 'All' || card.category === selectedCategory.value;
+        const matchesSearch = card.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+});
+
+function filterCards() {
+
+}
+
+function filterByCategory(category: string) {
+    selectedCategory.value = category;
+}
+
+function toggleFilters() {
+    alert('Filters button clicked');
+}
+
+function groupByCategory() {
+    alert('Group By button clicked');
+}
+
+function toggleFavorites() {
+    showFavorites.value = !showFavorites.value;
+    alert('Favorites button clicked');
+}
 </script>
 
 <template>
-    <div class="flex justify-center items-center h-screen w-screen space-x-12">
-        <a href="/app/dashboard"
-            class="w-64 p-4 py-6 bg-white shadow-lg rounded-2xl transition transform hover:scale-105 duration-200">
-            <div class="flex flex-col items-center justify-center">
-                <div class="relative w-24 h-24 bg-violet-200 rounded-xl">
-                    <span class="icon-[fluent-mdl2--recruitment-management] absolute w-8 h-8 text-violet-700 transform -translate-x-1/2 
-                    -translate-y-1/2 left-1/2 top-1/2"></span>
-                </div>
-                <p class="mt-4 mb-4 text-xl font-medium text-gray-800">
-                    HRMS
-                </p>
-                <p class="px-2 text-center text-gray-400">
-                    Our HRMS software streamlines your HR processes, making it easier to manage your workforce
-                    effectively and efficiently.
-                </p>
+    <div class="h-screen mt-12 flex flex-col">
+        <div class="bg-gray-200 py-2 px-4 flex items-center justify-between">
+            <div class="text-lg font-semibold">Apps</div>
+            <div class="flex items-center space-x-4">
+                <input type="text" placeholder="Search..." class="px-3 py-1 border rounded" v-model="searchQuery"
+                    @input="filterCards" />
+                <button @click="toggleFilters" class="bg-violet-500 text-white px-3 py-1 rounded">Filters</button>
+                <button @click="groupByCategory" class="bg-violet-500 text-white px-3 py-1 rounded">Group
+                    By</button>
+                <button @click="toggleFavorites" class="bg-violet-500 text-white px-3 py-1 rounded">Favorites</button>
             </div>
-        </a>
+        </div>
 
-        <a href="/app/dashboard"
-            class="w-64 p-4 py-6 bg-white shadow-lg rounded-2xl transition transform hover:scale-105 duration-200">
-            <div class="flex flex-col items-center justify-center">
-                <div class="relative w-24 h-24 bg-violet-200 rounded-full">
-                    <span
-                        class="icon-[vaadin--shop] absolute w-8 h-8 text-violet-700 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"></span>
+        <div class="flex flex-1">
+            <div class="bg-gray-100 w-64 p-4">
+                <div class="text-lg font-semibold mb-4">
+                    <span class="icon-[ion--folder-sharp] text-violet-600"></span> 
+                    <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }"
+                            @click.prevent="filterByCategory('All')"> CATEGORIES</a>        
                 </div>
-                <p class="mt-4 mb-4 text-xl font-medium text-gray-800">
-                    Retail
-                </p>
-                <p class="px-2 text-center text-gray-400">
-                    Elevate your retail operations with our cutting-edge software, designed to streamline
-                    processes and enhance customer satisfaction.
-                </p>
+                <ul class="px-8">
+                    <li class="mb-2">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }"
+                            @click.prevent="filterByCategory('HRMS')"> HRMS</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }"
+                            @click.prevent="filterByCategory('Retail')"> Retail</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }"
+                            @click.prevent="filterByCategory('Production')">Production</a>
+                    </li>
+                </ul>
             </div>
-        </a>
-
-        <a href="/app/dashboard"
-            class="w-64 p-4 py-6 bg-white shadow-lg rounded-2xl transition transform hover:scale-105 duration-200">
-            <div class="flex flex-col items-center justify-center">
-                <div class="relative w-24 h-24 bg-violet-200 rounded-full">
-                    <span
-                        class="icon-[mdi--office-building-settings-outline] absolute w-8 h-8 text-violet-700 transform -translate-x-1/2 
-                        -translate-y-1/2 left-1/2 top-1/2"></span>
+            <div class="flex-1 container mx-auto py-24">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <Card v-for="card in filteredCards" :key="card.title" :title="card.title"
+                        :description="card.description" :status="card.status" :buttonText="card.buttonText"
+                        :iconClass="card.iconClass" />
                 </div>
-                <p class="mt-4 mb-4 text-xl font-medium text-gray-800">
-                    Production
-                </p>
-                <p class="px-2 text-center text-gray-400">
-                    I therefore look forward to further developments in this area so that we can streamline our
-                    processes and improve overall production efficiency.
-
-                </p>
             </div>
-        </a>
+        </div>
     </div>
-    <Moduleheader />
+    <Dashboardheader />
+    
 </template>
 
 <route lang="yaml">
     meta:
       layout: auth
       action: read
-  </route>
+</route>

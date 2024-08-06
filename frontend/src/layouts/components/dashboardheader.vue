@@ -29,7 +29,7 @@ const toggleProfileDropdown = () => {
 </script>
 
 <template>
-    <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-16 items-center bg-violet-500 justify-between">
+    <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-12 items-center bg-violet-500 justify-between">
         <div class="md:flex md:items-center">
             <div class="relative">
                 <button @click="toggleModule"
@@ -73,23 +73,10 @@ const toggleProfileDropdown = () => {
                 <span class="text-white">C3K Engine</span>
             </a>
         </div>
-
-        <div class="hidden md:block">
-                <ul class="flex items-center gap-6 text-md">
-                    <li class="relative">
-                        <a class="text-white transition hover:shadow-lg cursor-pointer">Modules</a>
-                    </li>
-                    <li>
-                        <a class="text-white transition hover:shadow-lg" href="#">Services</a>
-                    </li>
-                    <li>
-                        <a class="text-white transition hover:shadow-lg" href="#">News</a>
-                    </li>
-                    <li>
-                        <a class="text-white transition hover:shadow-lg" href="#">Blog</a>
-                    </li>
-                </ul>
-        </div>
+        <transition name="backdrop">
+            <div v-if="showModuleDropdown" class="fixed inset-0 bg-gray-800 bg-opacity-20 backdrop-blur-sm z-40"
+                @click="toggleModule"></div>
+        </transition>
         <div class="flex items-center">
             <div class="relative">
                 <button class="btn btn-ghost btn-circle">
@@ -107,36 +94,36 @@ const toggleProfileDropdown = () => {
                     </div>
                 </button>
                 <transition name="dropdown">
-                <div v-if="isOpen"
-                    class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50">
-                    <div class="py-2">
-                        <div class="px-4 py-3 border-b border-gray-200">
-                            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+                    <div v-if="isOpen"
+                        class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50">
+                        <div class="py-2">
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto">
+                                <div class="px-4 py-2">
+                                    <p class="text-sm text-gray-600">You have a new message from John Doe</p>
+                                    <span class="text-xs text-gray-500">2 minutes ago</span>
+                                </div>
+                                <div class="px-4 py-2 border-t border-gray-200">
+                                    <p class="text-sm text-gray-600">Your leave request has been approved</p>
+                                    <span class="text-xs text-gray-500">1 hour ago</span>
+                                </div>
+                                <div class="px-4 py-2 border-t border-gray-200">
+                                    <p class="text-sm text-gray-600">You have a meeting at 3 PM</p>
+                                    <span class="text-xs text-gray-500">3 hours ago</span>
+                                </div>
+                                <div class="px-4 py-2 border-t border-gray-200">
+                                    <p class="text-sm text-gray-600">Your password will expire in 5 days</p>
+                                    <span class="text-xs text-gray-500">1 day ago</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="max-h-60 overflow-y-auto">
-                            <div class="px-4 py-2">
-                                <p class="text-sm text-gray-600">You have a new message from John Doe</p>
-                                <span class="text-xs text-gray-500">2 minutes ago</span>
-                            </div>
-                            <div class="px-4 py-2 border-t border-gray-200">
-                                <p class="text-sm text-gray-600">Your leave request has been approved</p>
-                                <span class="text-xs text-gray-500">1 hour ago</span>
-                            </div>
-                            <div class="px-4 py-2 border-t border-gray-200">
-                                <p class="text-sm text-gray-600">You have a meeting at 3 PM</p>
-                                <span class="text-xs text-gray-500">3 hours ago</span>
-                            </div>
-                            <div class="px-4 py-2 border-t border-gray-200">
-                                <p class="text-sm text-gray-600">Your password will expire in 5 days</p>
-                                <span class="text-xs text-gray-500">1 day ago</span>
-                            </div>
+                        <div class="px-4 py-3 bg-gray-100 text-center">
+                            <button class="text-sm text-blue-500 hover:underline">View All</button>
                         </div>
                     </div>
-                    <div class="px-4 py-3 bg-gray-100 text-center">
-                        <button class="text-sm text-blue-500 hover:underline">View All</button>
-                    </div>
-                </div>
-            </transition>
+                </transition>
             </div>
 
             <div class="relative">
@@ -147,12 +134,12 @@ const toggleProfileDropdown = () => {
                     <span class="icon-[ri--arrow-drop-down-line] text-white h-7 w-7"></span>
                 </button>
                 <transition name="dropdown">
-                <ul v-if="showProfileDropdown" class="absolute right-0 mt-2 w-52 bg-white shadow-lg rounded-lg z-10">
-                    <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a></li>
-                </ul>
-            </transition>
+                    <ul v-if="showProfileDropdown" class="absolute right-0 mt-2 w-52 bg-white shadow-lg rounded-lg z-10">
+                        <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a></li>
+                        <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a></li>
+                    </ul>
+                </transition>
             </div>
         </div>
     </div>
@@ -169,13 +156,25 @@ const toggleProfileDropdown = () => {
     transform: translateX(-100%);
 }
 
-.dropdown-enter-active, .dropdown-leave-active {
-  transition: opacity 0.3s ease;
-}
-.dropdown-enter-from, .dropdown-leave-to {
-  opacity: 0;
+.backdrop-enter-active,
+.backdrop-leave-active {
+    transition: opacity 0.3s ease;
 }
 
+.backdrop-enter,
+.backdrop-leave-to {
+    opacity: 0;
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+    opacity: 0;
+}
 </style>
 <route lang="yaml">
       meta:
