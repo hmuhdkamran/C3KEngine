@@ -81,9 +81,9 @@ function toggleFavorites() {
         <div class="flex flex-1">
             <div class="bg-gray-100 w-64 p-4">
                 <div class="text-lg font-semibold mb-4">
-                    <span class="icon-[ion--folder-sharp] text-violet-600"></span> 
+                    <span class="icon-[ion--folder-sharp] text-violet-600"></span>
                     <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }"
-                            @click.prevent="filterByCategory('All')"> CATEGORIES</a>        
+                        @click.prevent="filterByCategory('All')"> CATEGORIES</a>
                 </div>
                 <ul class="px-8">
                     <li class="mb-2">
@@ -104,13 +104,23 @@ function toggleFavorites() {
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card v-for="card in filteredCards" :key="card.title" :title="card.title"
                         :description="card.description" :status="card.status" :buttonText="card.buttonText"
-                        :iconClass="card.iconClass" />
+                        :iconClass="card.iconClass">
+                        <!-- <template #header>
+                            <div class="flex-1">
+                                <div class="font-bold text-xl mb-1 flex items-center justify-between">
+                                    <span>{{ card.title }}</span>
+                                    <span class="icon-[ph--dots-three-vertical-bold]"></span>
+                                </div>
+                                <p class="text-gray-500">{{ card.description }}</p>
+                            </div>
+                        </template> -->
+                    </Card>
                 </div>
             </div>
         </div>
     </div>
     <Dashboardheader />
-    
+
 </template>
 
 <route lang="yaml">
