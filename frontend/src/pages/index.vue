@@ -10,28 +10,37 @@ import avatar from '@/assets/images/avatar.jpg'
 
 <template>
     <div>
-        <section class="header relative pt-16 items-center flex h-screen" style="max-height:860px">
+        <section class="header relative items-center flex h-screen">
             <div class="container mx-auto items-center flex flex-wrap">
-                <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
-                    <div class="pt-32 sm:pt-0">
-                        <h2 class="font-semibold text-4xl text-gray-600">Best HR Software to Manage your Employee</h2>
-                        <p class="mt-4 text-lg leading-relaxed text-gray-500">A complete HR software & highly regarded
-                            On-Cloud & On-Premise
-                            HCMS that covers nearly the entire scope of HR management while being strictly compliant
-                            with both local and global best HR Practices
+                <div class="absolute w-full lg:w-1/2 inset-y-0 lg:right-0 hidden lg:block">
+                    <span class="absolute -left-12 top-24 w-40 h-40 rounded-full bg-gradient-to-r from-purple-500 
+                    to-violet-500 blur-3xl opacity-50 transform rotate-45 lg:block hidden"></span>
+                </div>
+                <span class="w-3/12 lg:w-2/12 aspect-square bg-gradient-to-r from-violet-600 to-purple-400 
+                absolute -top-5 lg:left-0 rounded-full blur-3xl opacity-50 transform rotate-45"></span>
+                <div class="w-full md:w-8/12 lg:w-6/12 px-4 relative z-10">
+                    <div class="pt-16 md:pt-24 lg:pt-32">
+                        <h2 class="font-semibold text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-gray-800">
+                            Best <span class="bg-gradient-to-tr from-violet-800 to-violet-400 bg-clip-text text-transparent">
+                                HR Software</span> to Manage Your Employees
+                        </h2>
+                        <p class="mt-4 md:mt-6 text-base md:text-lg lg:text-xl leading-relaxed text-gray-500 max-w-md">
+                            A complete HR software & highly regarded On-Cloud & On-Premise HCMS that covers nearly the
+                            entire scope of HR management while being strictly compliant with both local and global best
+                            HR Practices.
                         </p>
-                        <a class=" mt-12 group relative inline-flex items-center overflow-hidden rounded bg-violet-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
+                        <a class="mt-8 md:mt-12 group relative inline-flex items-center overflow-hidden rounded bg-gradient-to-r from-violet-600 to-indigo-500 px-6 md:px-8 py-2 md:py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
                             href="#">
                             <span class="absolute -end-full transition-all group-hover:end-4">
                                 <span class="icon-[heroicons--arrow-long-right] mt-2"
-                                    style="width: 24px; height: 24px;"></span>                                    
+                                    style="width: 24px; height: 24px;"></span>
                             </span>
-                            <span class="text-sm font-medium transition-all group-hover:me-4"> View All Modules </span>
+                            <span class="text-sm font-medium transition-all group-hover:me-4">View All Modules</span>
                         </a>
                     </div>
                 </div>
-                <div class="w-full lg:w-6/12">
-                    <div class="lg:text-right lg:ml-auto">
+                <div class="w-full lg:w-6/12 mt-10 lg:mt-0">
+                    <div class="text-center lg:text-right lg:ml-auto">
                         <div class="relative inline-block z-10 pt-11 lg:pt-0">
                             <img :src="illustration" alt="hero" class="max-w-full lg:ml-auto" />
                         </div>
@@ -40,33 +49,47 @@ import avatar from '@/assets/images/avatar.jpg'
             </div>
         </section>
 
-        <section class="pb-16 bg-gray-200 relative pt-40">
+        <section class="py-2 bg-gray-200 relative sm:mt-36">
             <div class="-mt-20 top-0 bottom-auto left-0 right-0 w-full absolute" style="height:80px">
                 <svg class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
                     <polygon class="text-gray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
                 </svg>
             </div>
-            <div class="container mx-auto">
-                <div
-                    class="flex flex-wrap justify-center bg-white shadow-xl rounded-lg -mt-64 py-16 px-12 relative z-10">
-                    <div class="w-full text-center lg:w-8/12">
-                        <p class="text-4xl text-center"><span role="img" aria-label="star">⭐</span></p>
-                        <h3 class="font-semibold text-3xl">Ready to Transform Your HR Management?</h3>
-                        <p class="text-gray-500 text-lg leading-relaxed mt-4 mb-4">
-                            If you’re excited about streamlining your HR processes, our HRMS is here to make it happen.
-                            Click the button below to get started with our advanced solution. Whether you’re upgrading
-                            an existing system or starting fresh, we’ve got you covered!
-                        </p>
-                        <div class="sm:block flex flex-col mt-10">
-                            <a class="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-2 bg-violet-600 active:bg-violet-700 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
-                                href="/get-started">Get Started</a>
-                            <a href="https://github.com/your-repo" target="_blank"
-                                class="github-star sm:ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-700 active:bg-gray-600 uppercase text-sm shadow hover:shadow-lg">
-                                <i class="fab fa-github text-lg mr-1"></i><span>Help With a Star</span>
-                            </a>
-                        </div>
-                        <div class="text-center mt-16"></div>
+        </section>
+
+        <section class="py-2 bg-gray-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center py-4">
+                    <p class="text-base font-semibold leading-6 text-violet-600 uppercase">Features</p>
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6">Key Benefits of Our HRMS</h2>
+                    <p class="text-gray-500">Simplify HR processes and boost productivity with our all-in-one HR
+                        platform.</p>
+                </div>
+                <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
+                            <span class="icon-[eos-icons--secure-data] w-10 h-10 text-violet-600"></span>
+                        </span>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-800">Centralized HR Data</h3>
+                        <p class="text-gray-500 mt-2">Keep all your employee records, payroll, and performance data in
+                            one secure place.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
+                            <span class="icon-[mdi--recurring-payment] w-10 h-10 text-violet-600"></span>
+                        </span>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-800">Automated Payroll</h3>
+                        <p class="text-gray-500 mt-2">Ensure accuracy and timeliness in payroll processing with
+                            automated calculations.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
+                            <span class="icon-[clarity--employee-group-solid] w-10 h-10 text-violet-600"></span>
+                        </span>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-800">Employee Self-Service</h3>
+                        <p class="text-gray-500 mt-2">Enable employees to manage personal data, requests, and time-off
+                            seamlessly.</p>
                     </div>
                 </div>
             </div>
@@ -143,81 +166,88 @@ import avatar from '@/assets/images/avatar.jpg'
             </div>
         </section>
 
-        <div class="relative p-4 px-4 mx-auto bg-white dark:bg-gray-800 sm:px-6 lg:px-8 py-26 lg:mt-20">
-            <div class="relative">
-                <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-2 lg:gap-8 lg:items-center">
-                    <div class="ml-6 lg:col-start-2 lg:max-w-2xl">
-                        <p class="text-base font-semibold leading-6 text-violet-600 uppercase">
-                            Collaborative HRMS
-                        </p>
-                        <h4
-                            class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 dark:text-white sm:text-3xl sm:leading-9">
-                            Interactivity and Efficiency for Your HR Team
-                        </h4>
-                        <p class="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-300">
-                            Create a seamless and powerful collaborative space for your team. Track, share, and measure
-                            efficiently with full control. It's never been simpler and more effective.
-                        </p>
-                        <ul class="gap-6 mt-8 md:grid md:grid-cols-2">
-                            <li class="mt-6 md:mt-0">
-                                <div class="flex">
-                                    <span
-                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
-                                    </span>
-                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                        Real-time Updates
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="mt-6 md:mt-0">
-                                <div class="flex">
-                                    <span
-                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
-                                    </span>
-                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                        Comprehensive Data Tracking
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="mt-6 md:mt-0">
-                                <div class="flex">
-                                    <span
-                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
-                                    </span>
-                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                        24/7 Support
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="mt-6 md:mt-0">
-                                <div class="flex">
-                                    <span
-                                        class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
-                                    </span>
-                                    <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
-                                        Tips to Optimize Work Time
-                                    </span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="relative space-y-4">
-                        <div class="flex items-end justify-center ml-16 space-x-4 lg:justify-start">
-                            <img class="w-64 rounded-lg shadow-lg md:w-80" width="400" :src="image3" alt="1" />
-                            <img class="w-80 rounded-lg shadow-lg md:w-96" width="500" :src="image2" alt="2" />
+        <section>
+            <div class="relative p-4 px-6 mx-auto bg-white dark:bg-gray-800 sm:px-6 md:px-8 lg:px-8 py-26 lg:mt-20">
+                <div class="container mx-auto px-4">
+                    <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-1 lg:gap-8 lg:items-center">
+                        <div class="ml-16 lg:col-start-2 lg:max-w-2xl lg:ml-36">
+                            <p class="text-base font-semibold leading-6 text-violet-600 uppercase">
+                                Collaborative HRMS
+                            </p>
+                            <h4
+                                class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 dark:text-white sm:text-3xl sm:leading-9">
+                                Interactivity and Efficiency for Your HR Team
+                            </h4>
+                            <p class="mt-4 text-lg leading-6 text-gray-500 dark:text-gray-300">
+                                Create a seamless and powerful collaborative space for your team. Track, share, and
+                                measure
+                                efficiently with full control. It's never been simpler and more effective.
+                            </p>
+                            <ul class="gap-6 mt-8 md:grid md:grid-cols-2">
+                                <li class="mt-6 md:mt-0">
+                                    <div class="flex">
+                                        <span
+                                            class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                            <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        </span>
+                                        <span
+                                            class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                            Real-time Updates
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="mt-6 md:mt-0">
+                                    <div class="flex">
+                                        <span
+                                            class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                            <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        </span>
+                                        <span
+                                            class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                            Comprehensive Data Tracking
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="mt-6 md:mt-0">
+                                    <div class="flex">
+                                        <span
+                                            class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                            <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        </span>
+                                        <span
+                                            class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                            24/7 Support
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="mt-6 md:mt-0">
+                                    <div class="flex">
+                                        <span
+                                            class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 drark:bg-transparent">
+                                            <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        </span>
+                                        <span
+                                            class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
+                                            Tips to Optimize Work Time
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="flex items-start justify-center ml-36 space-x-4 lg:justify-start">
-                            <img class="w-56 rounded-lg shadow-lg md:w-80" width="400" :src="image1" alt="3" />
-                            <img class="w-64 rounded-lg shadow-lg md:w-96" width="500" :src="image4" alt="4" />
+                        <div class="relative mt-12 lg:mt-0 space-y-4">
+                            <div class="flex items-end justify-center space-x-4 sm:justify-start">
+                                <img class="w-28 sm:w-32 md:w-56 lg:w-72 rounded-lg shadow-lg" :src="image3" alt="1" />
+                                <img class="w-36 sm:w-40 md:w-64 lg:w-80 rounded-lg shadow-lg" :src="image2" alt="2" />
+                            </div>
+                            <div class="flex items-start justify-center space-x-4 sm:justify-start">
+                                <img class="w-36 sm:w-40 md:w-64 lg:w-80 rounded-lg shadow-lg" :src="image4" alt="4" />
+                                <img class="w-28 sm:w-32 md:w-56 lg:w-72 rounded-lg shadow-lg" :src="image1" alt="3" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <div class="container mx-auto my-20 px-6">
             <section class="text-gray-800">
