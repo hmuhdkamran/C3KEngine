@@ -24,7 +24,7 @@ import avatar from '@/assets/images/avatar.jpg'
                             href="#">
                             <span class="absolute -end-full transition-all group-hover:end-4">
                                 <span class="icon-[heroicons--arrow-long-right] mt-2"
-                                    style="width: 24px; height: 24px;"></span>                                    
+                                    style="width: 24px; height: 24px;"></span>
                             </span>
                             <span class="text-sm font-medium transition-all group-hover:me-4"> View All Modules </span>
                         </a>
@@ -47,7 +47,7 @@ import avatar from '@/assets/images/avatar.jpg'
                     <polygon class="text-gray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
                 </svg>
             </div>
-            <div class="container mx-auto">
+            <Card :showHeader="false" :showFooter="false" containerClass="container mx-auto">
                 <div
                     class="flex flex-wrap justify-center bg-white shadow-xl rounded-lg -mt-64 py-16 px-12 relative z-10">
                     <div class="w-full text-center lg:w-8/12">
@@ -69,7 +69,7 @@ import avatar from '@/assets/images/avatar.jpg'
                         <div class="text-center mt-16"></div>
                     </div>
                 </div>
-            </div>
+            </Card>
         </section>
 
         <section>
@@ -101,25 +101,28 @@ import avatar from '@/assets/images/avatar.jpg'
                         </div>
                         <div class="w-full lg:w-1/2 flex flex-wrap -mx-4">
                             <div class="mb-8 lg:mb-0 w-full md:w-1/2 px-4">
-                                <div class="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white">
+                                <Card :showHeader="false" :showFooter="false"
+                                    containerClass="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white">
                                     <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
                                         <span class="icon-[tabler--photo] w-10 h-10 text-violet-600"></span>
                                     </span>
                                     <h4 class="mb-2 text-2xl font-bold font-heading">Employee Self-Service</h4>
                                     <p class="text-gray-500 leading-loose">Empower employees with self-service features
                                         for personal data management.</p>
-                                </div>
-                                <div class="py-6 pl-6 pr-4 shadow rounded bg-white">
+                                </Card>
+                                <Card :showHeader="false" :showFooter="false"
+                                    containerClass="py-6 pl-6 pr-4 shadow rounded bg-white">
                                     <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
                                         <span class="icon-[fluent--toolbox-32-filled] w-10 h-10 text-violet-600"></span>
                                     </span>
                                     <h4 class="mb-2 text-2xl font-bold font-heading">Advanced Recruitment Tools</h4>
                                     <p class="text-gray-500 leading-loose">Streamline hiring with powerful recruitment
                                         and onboarding features.</p>
-                                </div>
+                                </Card>
                             </div>
                             <div class="w-full md:w-1/2 lg:mt-20 px-4">
-                                <div class="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                                <Card :showHeader="false" :showFooter="false"
+                                    containerClass="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white">
                                     <span class="mb-4 inline-block p-3 rounded bg-violet-100">
                                         <span
                                             class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
@@ -127,15 +130,16 @@ import avatar from '@/assets/images/avatar.jpg'
                                     <h4 class="mb-2 text-2xl font-bold font-heading">Training and Development</h4>
                                     <p class="text-gray-500 leading-loose">Enhance employee skills with integrated
                                         training and development modules.</p>
-                                </div>
-                                <div class="py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                                </Card>
+                                <Card :showHeader="false" :showFooter="false"
+                                    containerClass="py-6 pl-6 pr-4 shadow rounded-lg bg-white">
                                     <span class="mb-4 inline-block p-3 rounded bg-violet-100">
                                         <span class="icon-[mdi--tick-decagram] w-10 h-10 text-violet-600"></span>
                                     </span>
                                     <h4 class="mb-2 text-2xl font-bold font-heading">Compliance Management</h4>
                                     <p class="text-gray-500 leading-loose">Stay compliant with automated policy updates
                                         and legal requirements.</p>
-                                </div>
+                                </Card>
                             </div>
                         </div>
                     </div>
