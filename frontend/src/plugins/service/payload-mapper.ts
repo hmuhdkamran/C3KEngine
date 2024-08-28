@@ -6,11 +6,8 @@ export class PayloadMapper {
   private fromError<T>(o: Error): IPayload<T> {
     return {
       data: {} as T,
-      message: {
-        result: PayloadMessageTypes.error,
-        data: o.message,
-        description: o.name,
-      },
+      result: PayloadMessageTypes.error,
+      description: o.name,
     }
   }
 
@@ -22,11 +19,8 @@ export class PayloadMapper {
 
     return {
       data,
-      message: {
-        messageTypeId: PayloadMessageTypes.error,
-        text: o.message,
-        title: `Code:${o.code}. ${o.name}`,
-      },
+      result: PayloadMessageTypes.error,
+      description: `Code:${o.code}. ${o.name} = ${o.message}`,
     }
   }
 
@@ -37,10 +31,8 @@ export class PayloadMapper {
     else {
       value = {
         data: <any>o.data,
-        message: {
-          messageTypeId: PayloadMessageTypes.success,
-          text: '',
-        },
+        result: PayloadMessageTypes.success,
+        description: '',
       }
     }
 
@@ -64,11 +56,11 @@ export class PayloadMapper {
 function isAxiosResponse(o: any): o is AxiosResponse {
   return (
     o instanceof Object
-        && 'data' in o
-        && 'config' in o
-        && 'status' in o
-        && 'statusText' in o
-        && 'headers' in o
+    && 'data' in o
+    && 'config' in o
+    && 'status' in o
+    && 'statusText' in o
+    && 'headers' in o
   )
 }
 

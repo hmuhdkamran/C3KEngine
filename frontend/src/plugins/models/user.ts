@@ -1,4 +1,4 @@
-import {IRouteMeta} from "@/router/route-meta";
+import { IRouteMeta } from "./route-meta"
 
 export interface IUser {
   authenticated: boolean

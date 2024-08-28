@@ -8,8 +8,6 @@ import { PayloadMessageTypes } from '../models'
 import type { IStoreService } from './iservice'
 import { PayloadMapper } from './payload-mapper'
 
-import { message } from '@/plugins/helper'
-
 interface IProcessPayloadOptions {
   timeout?: number
   uri?: string
@@ -55,7 +53,7 @@ export abstract class StoreService implements IStoreService {
     const messageTypeId = messageTypeIds.find(o => o === msg.result)
 
     if (messageTypeId) {
-      message('Failed', `${msg}`, messageTypeId)
+      alert(`Failed: ${msg}`)
       return Promise.reject({} as T)
     }
     else {

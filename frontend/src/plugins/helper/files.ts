@@ -33,9 +33,9 @@ export const exportToCsv = (filename: string, rows: object[], headers?: string[]
       }).join(separator);
     }).join('\n');
 
-  const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-  if (navigator.msSaveBlob) {
-    navigator.msSaveBlob(blob, filename);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  if ((navigator as any).msSaveBlob) {
+    (navigator as any).msSaveBlob(blob, filename);
   } else {
     const link = document.createElement('a');
     if (link.download !== undefined) {

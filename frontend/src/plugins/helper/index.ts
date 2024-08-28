@@ -1,21 +1,10 @@
 import { useSystemStore } from '../store/system-store'
-import type { IPayloadMessage } from '../models'
 
 export { mapKeys } from './mapKeys'
 export { pick } from './pick'
 export * from './text'
 
 export * from './files'
-
-export const message = (title: string, text: string, messageTypeId: string) => {
-  const store = useSystemStore()
-
-  const msg: IPayloadMessage = {
-    title, text, messageTypeId,
-  }
-
-  store.updateMsg(msg)
-}
 
 export const shouldAllow = (find: string, operation: string) => {
   const store = useSystemStore()

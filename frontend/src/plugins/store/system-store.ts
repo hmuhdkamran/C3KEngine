@@ -1,5 +1,4 @@
-import { newGuid } from '../helper'
-import type { IPayloadMessage, IUser } from '../models'
+import type { IUser } from '../models'
 import { DefaultUser } from '../models'
 import { TokenHelper } from '../helper/token-helper'
 import { defineStore } from 'pinia'
@@ -7,7 +6,6 @@ import { defineStore } from 'pinia'
 export interface ICommonState {
   isLoading: boolean
   user: IUser
-  messages: Map<string, IPayloadMessage>
   passwordChanged: boolean
 }
 
@@ -15,7 +13,6 @@ export const useSystemStore = defineStore('system', {
   state: (): ICommonState => ({
     isLoading: false,
     user: DefaultUser,
-    messages: new Map(),
     passwordChanged: false,
   }),
 
@@ -33,17 +30,6 @@ export const useSystemStore = defineStore('system', {
 
     updatePasswordChanged(changed: boolean) {
       this.passwordChanged = changed
-    },
-
-    updateMsg(msg: IPayloadMessage) {
-      const messageId = newGuid()
-
-      this.messages.set(messageId, msg)
-      setTimeout(() => this.removeMessage(messageId), 3000)
-    },
-
-    removeMessage(messageId: string) {
-      this.messages.delete(messageId)
     },
   },
 })
