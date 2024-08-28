@@ -1,4 +1,7 @@
-use c3k_common::interfaces::irepository::{IRepository, Model};
+use c3k_common::{
+    handler::error_display::ParseError,
+    interfaces::irepository::{IRepository, Model},
+};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
@@ -6,14 +9,11 @@ pub use sqlx::{
 };
 use std::error::Error as StdError;
 
-use crate::{
-    models::{
-        constants::{
-            MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
-        },
-        roles::role::Role,
+use crate::models::{
+    constants::{
+        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
     },
-    utilities::error_display::ParseError,
+    roles::role::Role,
 };
 
 pub struct RoleRepository {}

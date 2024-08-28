@@ -1,9 +1,3 @@
-use crate::models::{
-    constants::{
-        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
-    },
-    roles::role_route_map::RoleRouteMap,
-};
 use c3k_common::{
     handler::error_display::ParseError,
     interfaces::irepository::{IRepository, Model},
@@ -15,38 +9,21 @@ pub use sqlx::{
 };
 use std::error::Error as StdError;
 
-pub struct RoleRouteMapRepository {}
+use crate::models::{
+    constants::{
+        MESSAGE_CAN_NOT_DELETE_DATA, 
+        MESSAGE_CAN_NOT_INSERT_DATA, 
+        MESSAGE_CAN_NOT_UPDATE_DATA,
+    },
+    $SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$,
+};
 
-impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
-    async fn get_all(connection: PgPool) -> Result<Vec<RoleRouteMap>, Box<dyn StdError>> {
-        let result = sqlx::query(
-            format!(
-                "SELECT {} FROM {}",
-                RoleRouteMap::COLUMNS,
-                RoleRouteMap::TABLE
-            )
-            .as_str(),
-        )
-        .map(|row: PgRow| RoleRouteMap::from_row(&row))
-        .fetch_all(&connection)
-        .await
-        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+pub struct $TABLE_NAME$Repository {}
 
-        Ok(result)
-    }
-
-    async fn get_by_filter(
-        connection: PgPool,
-        filter: &String,
-    ) -> Result<Vec<RoleRouteMap>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            RoleRouteMap::COLUMNS,
-            RoleRouteMap::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| RoleRouteMap::from_row(&row))
+impl IRepository<$TABLE_NAME$> for $TABLE_NAME$Repository {
+    async fn get_all(connection: PgPool) -> Result<Vec<$TABLE_NAME$>, Box<dyn StdError>> {
+        let result = sqlx::query(format!("SELECT {} FROM {}", $TABLE_NAME$::COLUMNS, $TABLE_NAME$::TABLE).as_str())
+            .map(|row: PgRow| $TABLE_NAME$::from_row(&row))
             .fetch_all(&connection)
             .await
             .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
@@ -54,19 +31,34 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
         Ok(result)
     }
 
-    async fn add(connection: PgPool, entity: &RoleRouteMap) -> Result<bool, Box<dyn StdError>> {
+    async fn get_by_filter(
+        connection: PgPool,
+        filter: &String,
+    ) -> Result<Vec<$TABLE_NAME$>, Box<dyn StdError>> {
+        let query = format!(
+            r#"SELECT {} FROM {} WHERE {}"#,
+            $TABLE_NAME$::COLUMNS,
+            $TABLE_NAME$::TABLE,
+            filter
+        );
+        let result = sqlx::query(query.as_str())
+            .map(|row: PgRow| $TABLE_NAME$::from_row(&row))
+            .fetch_all(&connection)
+            .await
+            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+
+        Ok(result)
+    }
+
+    async fn add(connection: PgPool, entity: &$TABLE_NAME$) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        let _ = args.add(entity.role_route_id.clone());
-        let _ = args.add(entity.role_id.clone());
-        let _ = args.add(entity.route_id.clone());
-        let _ = args.add(entity.operation.clone());
-        let _ = args.add(entity.status_id.clone());
+        $TABLE_COLUMNS_REPOSITORY$
 
         sqlx::query_with(
             format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4, $5)",
-                RoleRouteMap::TABLE,
-                RoleRouteMap::COLUMNS
+                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
+                $TABLE_NAME$::TABLE,
+                $TABLE_NAME$::COLUMNS
             )
             .as_str(),
             args,
@@ -84,21 +76,12 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
         .unwrap_or_else(|e| Err(e))
     }
 
-    async fn update(connection: PgPool, entity: &RoleRouteMap) -> Result<bool, Box<dyn StdError>> {
+    async fn update(connection: PgPool, entity: &$TABLE_NAME$) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
-        let _ = args.add(entity.role_route_id.clone());
-        let _ = args.add(entity.role_id.clone());
-        let _ = args.add(entity.route_id.clone());
-        let _ = args.add(entity.operation.clone());
-        let _ = args.add(entity.status_id.clone());
+        $TABLE_COLUMNS_REPOSITORY$
 
         sqlx::query_with(
-            format!(
-                "UPDATE {} SET {}",
-                RoleRouteMap::TABLE,
-                RoleRouteMap::COLUMNS_UPDATE
-            )
-            .as_str(),
+            format!("UPDATE {} SET {}", $TABLE_NAME$::TABLE, $TABLE_NAME$::COLUMNS_UPDATE).as_str(),
             args,
         )
         .execute(&connection)
@@ -119,12 +102,7 @@ impl IRepository<RoleRouteMap> for RoleRouteMapRepository {
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!(
-                "DELETE FROM {} WHERE {}",
-                RoleRouteMap::TABLE,
-                RoleRouteMap::PK
-            )
-            .as_str(),
+            format!("DELETE FROM {} WHERE {}", $TABLE_NAME$::TABLE, $TABLE_NAME$::PK).as_str(),
             args,
         )
         .execute(&connection)

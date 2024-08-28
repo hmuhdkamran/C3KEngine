@@ -1,0 +1,49 @@
+pub use sqlx::PgPool;
+
+use crate::{
+    models::$SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$, 
+    repositories::$SCHEMA_SML$::$TABLE_NAME_SML$_repository::$TABLE_NAME$Repository
+};
+use c3k_common::{
+    interfaces::{irepository::IRepository, iservice::IService},
+    models::response::ApiResponse,
+};
+
+pub struct $TABLE_NAME$Service {}
+
+impl IService<$TABLE_NAME$> for $TABLE_NAME$Service {
+    async fn get_all(connection: PgPool) -> ApiResponse<Vec<$TABLE_NAME$>> {
+        match $TABLE_NAME$Repository::get_all(connection).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    async fn get_by_filter(connection: PgPool, filter: &String) -> ApiResponse<Vec<$TABLE_NAME$>> {
+        match $TABLE_NAME$Repository::get_by_filter(connection, filter).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    async fn add(connection: PgPool, entity: &$TABLE_NAME$) -> ApiResponse<bool> {
+        match $TABLE_NAME$Repository::add(connection, entity).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    async fn update(connection: PgPool, entity: &$TABLE_NAME$) -> ApiResponse<bool> {
+        match $TABLE_NAME$Repository::update(connection, entity).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    async fn delete(connection: PgPool, id: &String) -> ApiResponse<bool> {
+        match $TABLE_NAME$Repository::delete(connection, id).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+}

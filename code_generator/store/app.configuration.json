@@ -1,11 +1,41 @@
 {
-    "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowDb",
+    "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/HRISDb",
     "module_configuration": [
         {
             "property_name": "MODEL_FILE",
             "file_path": "store/model_template.sk3",
             "property_string": "SCHEMA/TABLE_NAME",
-            "distination": "store/modules",
+            "distination": "/media/hafiz-muhammad-kamran/Extended/Projects/Final/C3KEngine/backend/services/hrms-service/src/models",
+            "language": "rust",
+            "extension": "rs",
+            "export_text": "pub mod",
+            "common_file": "mod.rs"
+        },
+        {
+            "property_name": "CONTROLLER_FILE",
+            "file_path": "store/controller_template.sk3",
+            "property_string": "SCHEMA/TABLE_NAME",
+            "distination": "/media/hafiz-muhammad-kamran/Extended/Projects/Final/C3KEngine/backend/services/hrms-service/src/controllers",
+            "language": "rust",
+            "extension": "rs",
+            "export_text": "pub mod",
+            "common_file": "mod.rs"
+        },
+        {
+            "property_name": "SERVICE_FILE",
+            "file_path": "store/service_template.sk3",
+            "property_string": "SCHEMA/TABLE_NAME",
+            "distination": "/media/hafiz-muhammad-kamran/Extended/Projects/Final/C3KEngine/backend/services/hrms-service/src/services",
+            "language": "rust",
+            "extension": "rs",
+            "export_text": "pub mod",
+            "common_file": "mod.rs"
+        },
+        {
+            "property_name": "REPOSITORY_FILE",
+            "file_path": "store/repository_template.sk3",
+            "property_string": "SCHEMA/TABLE_NAME",
+            "distination": "/media/hafiz-muhammad-kamran/Extended/Projects/Final/C3KEngine/backend/services/hrms-service/src/repositories",
             "language": "rust",
             "extension": "rs",
             "export_text": "pub mod",
@@ -14,9 +44,33 @@
     ],
     "column_configurations": [
         {
+            "property_name": "$SCHEMA$",
+            "property_string": "SCHEMA",
+            "display_type": "casual",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$SCHEMA_SML$",
+            "property_string": "SCHEMA",
+            "display_type": "rust",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
             "property_name": "$TABLE_NAME$",
             "property_string": "TABLE_NAME",
             "display_type": "casual",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$TABLE_NAME_SML$",
+            "property_string": "TABLE_NAME",
+            "display_type": "rust",
             "recursive": "false",
             "horizontal": "false",
             "ends_with": ""
@@ -89,6 +143,14 @@
             "property_name": "$TABLE_COLUMN_ASSIGN_VALUE$",
             "property_string": "let COLUMN_NAME = row.get(\"COLUMN_NAME\")",
             "display_type": "rust+postgresql",
+            "recursive": "true",
+            "horizontal": "true",
+            "ends_with": ";"
+        },
+        {
+            "property_name": "$TABLE_COLUMNS_REPOSITORY$",
+            "property_string": "let _ = args.add(entity.COLUMN_NAME.clone());",
+            "display_type": "rust",
             "recursive": "true",
             "horizontal": "true",
             "ends_with": ";"
