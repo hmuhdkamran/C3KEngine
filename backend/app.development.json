@@ -30,7 +30,13 @@
       "name": "api/auth",
       "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowSetupDb",
       "host": "127.0.0.1",
-      "port": "5000"
+      "port": "1981"
+    },
+    {
+      "name": "api/hrms",
+      "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/HRISDb",
+      "host": "127.0.0.1",
+      "port": "1991"
     }
   ]
 }

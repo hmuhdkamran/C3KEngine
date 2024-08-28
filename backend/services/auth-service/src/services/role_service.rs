@@ -1,10 +1,9 @@
-pub use sqlx::PgPool;
-
 use crate::{models::roles::role::Role, repositories::roles::role_repository::RoleRepository};
 use c3k_common::{
     interfaces::{irepository::IRepository, iservice::IService},
     models::response::ApiResponse,
 };
+pub use sqlx::PgPool;
 
 pub struct RoleService {}
 

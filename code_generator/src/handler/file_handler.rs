@@ -142,10 +142,12 @@ impl FileHandler {
 
         if result.contains("TABLE_NAME") && result.contains("SCHEMA") {
             result = result
-                .replace("TABLE_NAME", &table.table_name)
-                .replace("SCHEMA", schema);
+                .replace("TABLE_NAME", &convert_case(&table.table_name, &config.display_type))
+                .replace("SCHEMA", &convert_case(schema, &config.display_type));
         } else if result.contains("TABLE_NAME") {
-            result = result.replace("TABLE_NAME", &table.table_name)
+            result = result.replace("TABLE_NAME", &convert_case(&table.table_name, &config.display_type))
+        } else if result.contains("SCHEMA") {
+            result = result.replace("SCHEMA", &convert_case(schema, &config.display_type))
         } else if result.contains("PRIMARY_KEY") {
             result = result.replace(
                 "PRIMARY_KEY",

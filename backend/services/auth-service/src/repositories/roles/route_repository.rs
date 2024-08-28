@@ -1,12 +1,10 @@
-use crate::models::{
-    constants::{
-        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
-    },
-    roles::route::Route,
-};
+use crate::models::roles::route::Route;
 use c3k_common::{
     handler::error_display::ParseError,
     interfaces::irepository::{IRepository, Model},
+    models::constants::{
+        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
+    },
 };
 pub use sqlx::{
     pool::PoolConnection,

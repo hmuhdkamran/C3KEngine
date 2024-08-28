@@ -6,13 +6,14 @@ pub use sqlx::{
     Arguments, Error, PgPool, Postgres, Row,
 };
 use uuid::Uuid;
+use chrono::prelude::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct $TABLE_NAME$ {
     $TABLE_COLUMNS$
 }
 
-impl Role {
+impl $TABLE_NAME$ {
     pub const TABLE: &'static str = r#"$TABLE_NAME_TEXT$"#;
     pub const PK: &'static str = r#"$PRIMARY_KEY$::TEXT=$1"#;
     pub const COLUMNS: &'static str = r#"$TABLE_COLUMNS_TEXT$"#;
@@ -29,14 +30,14 @@ impl Role {
     }
 }
 
-impl PartialEq for Role {
+impl PartialEq for $TABLE_NAME$ {
     fn eq(&self, other: &Self) -> bool {
         self.$PRIMARY_KEY_RUST$ == other.$PRIMARY_KEY_RUST$
     }
 }
 
-impl Model for Role {
-    fn from_row(row: &PgRow) -> Role
+impl Model for $TABLE_NAME$ {
+    fn from_row(row: &PgRow) -> $TABLE_NAME$
     where
         Self: Sized,
     {

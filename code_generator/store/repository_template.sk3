@@ -1,6 +1,10 @@
+use crate::models::$SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$;
 use c3k_common::{
     handler::error_display::ParseError,
     interfaces::irepository::{IRepository, Model},
+    models::constants::{
+        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
+    },
 };
 pub use sqlx::{
     pool::PoolConnection,
@@ -8,15 +12,6 @@ pub use sqlx::{
     Arguments, PgPool, Postgres, Row,
 };
 use std::error::Error as StdError;
-
-use crate::models::{
-    constants::{
-        MESSAGE_CAN_NOT_DELETE_DATA, 
-        MESSAGE_CAN_NOT_INSERT_DATA, 
-        MESSAGE_CAN_NOT_UPDATE_DATA,
-    },
-    $SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$,
-};
 
 pub struct $TABLE_NAME$Repository {}
 
@@ -53,7 +48,6 @@ impl IRepository<$TABLE_NAME$> for $TABLE_NAME$Repository {
     async fn add(connection: PgPool, entity: &$TABLE_NAME$) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         $TABLE_COLUMNS_REPOSITORY$
-
         sqlx::query_with(
             format!(
                 "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
@@ -79,7 +73,6 @@ impl IRepository<$TABLE_NAME$> for $TABLE_NAME$Repository {
     async fn update(connection: PgPool, entity: &$TABLE_NAME$) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         $TABLE_COLUMNS_REPOSITORY$
-
         sqlx::query_with(
             format!("UPDATE {} SET {}", $TABLE_NAME$::TABLE, $TABLE_NAME$::COLUMNS_UPDATE).as_str(),
             args,

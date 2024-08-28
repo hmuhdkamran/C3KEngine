@@ -149,7 +149,7 @@
         },
         {
             "property_name": "$TABLE_COLUMNS_REPOSITORY$",
-            "property_string": "let _ = args.add(entity.COLUMN_NAME.clone());",
+            "property_string": "let _ = args.add(entity.COLUMN_NAME.clone())",
             "display_type": "rust",
             "recursive": "true",
             "horizontal": "true",
@@ -223,18 +223,23 @@
             "typescript": "Date"
         },
         {
+            "postgresql": "time with time zone",
+            "rust": "DateTime",
+            "typescript": "Date"
+        },
+        {
             "postgresql": "timestamp without time zone",
             "rust": "DateTime",
             "typescript": "Date"
         },
         {
             "postgresql": "date",
-            "rust": "Date",
+            "rust": "DateTime",
             "typescript": "Date"
         },
         {
             "postgresql": "time",
-            "rust": "Time",
+            "rust": "DateTime",
             "typescript": "Time"
         },
         {

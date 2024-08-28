@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "services/auth-service",
+  "services/hrms-service",
   "gate_way"
 ]
 resolver = "2"

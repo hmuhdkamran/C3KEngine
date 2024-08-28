@@ -102,7 +102,7 @@ impl PostgreSqlHandler {
         table_name: &str,
     ) -> Result<Vec<Column>, Box<dyn StdError>> {
         let column_query = r#"
-            SELECT 
+            SELECT DISTINCT
                 c.ordinal_position,
                 c.column_name, 
                 c.data_type, 
