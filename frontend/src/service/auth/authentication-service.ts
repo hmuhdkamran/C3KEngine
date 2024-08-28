@@ -5,8 +5,8 @@ import Axios from 'axios'
 
 export class AuthenticationService extends StoreService {
     login(credentials: ICredential) {
-        const onSuccess = (token: IPayload<string>) => {
-            if (token) {
+        const processResponse = (token: IPayload<string>) => {
+            if (token.data != null) {
               TokenHelper.setAccessToken(token.data)
               const parsed = TokenHelper.parseUserToken(token.data)
 
@@ -22,6 +22,6 @@ export class AuthenticationService extends StoreService {
       
           return this.exec<IPayload<string>>(Axios.post(`${GlobalConfig.uri.auth}`, credentials))
             .then(value => this.processPayload(value))
-            .then(onSuccess)
+            .then(processResponse)
     }
 }
