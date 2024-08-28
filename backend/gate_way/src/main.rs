@@ -58,7 +58,6 @@ async fn forward_request(
         .path_and_query()
         .map(|pq| pq.as_str())
         .unwrap_or("");
-    println!("Path and Query: {path_and_query}");
 
     // Find the matching service from the config
     let target_url = config
@@ -67,8 +66,6 @@ async fn forward_request(
         .find(|service| path_and_query.starts_with(&format!("/{}", service.name)))
         .map(|service| format!("http://{}:{}{}", service.host, service.port, path_and_query))
         .unwrap_or_else(|| return format!("Invalid API section"));
-
-    println!("Forwarding to: {target_url}");
 
     // Forward the request to the appropriate service
     let mut forward_request = client
