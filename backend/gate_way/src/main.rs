@@ -48,7 +48,7 @@ async fn main() -> Result<(), std::io::Error> {
 async fn forward_request(
     req: HttpRequest,
     payload: web::Payload,
-    config: web::Data<Arc<AppConfig>>,
+    config: web::Data<Arc<AppConfig>>, // Config injected into handler
 ) -> HttpResponse {
     let client = Client::new();
 
@@ -58,8 +58,9 @@ async fn forward_request(
         .path_and_query()
         .map(|pq| pq.as_str())
         .unwrap_or("");
+    println!("Path and Query: {path_and_query}");
 
-    // Get the path after /api/
+    // Find the matching service from the config
     let target_url = config
         .services
         .iter()
@@ -67,11 +68,14 @@ async fn forward_request(
         .map(|service| format!("http://{}:{}{}", service.host, service.port, path_and_query))
         .unwrap_or_else(|| return format!("Invalid API section"));
 
+    println!("Forwarding to: {target_url}");
+
     // Forward the request to the appropriate service
     let mut forward_request = client
         .request(req.method().clone(), target_url)
         .append_header(("User-Agent", "Actix-web"));
 
+    // Copy original request headers to the forwarded request
     for (key, value) in req.headers().iter() {
         forward_request = forward_request.append_header((key.clone(), value.clone()));
     }
@@ -81,9 +85,20 @@ async fn forward_request(
 
     match response {
         Ok(mut res) => {
+            // Extract the content type before moving the mutable borrow
+            let content_type = res
+                .headers()
+                .get("Content-Type")
+                .map(|ct| ct.to_str().unwrap_or("application/json"))
+                .unwrap_or("application/json")
+                .to_string(); // Ensure it's a String to avoid lifetime issues
+
+            // Read the response body
             let body = res.body().await;
             match body {
-                Ok(bytes) => HttpResponse::build(res.status()).body(bytes),
+                Ok(bytes) => HttpResponse::build(res.status())
+                    .content_type(content_type)
+                    .body(bytes),
                 Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
             }
         }
