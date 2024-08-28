@@ -1,0 +1,19 @@
+[package]
+name = "sk3-code-generator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = "1.0.120"
+futures = "0.3.30"
+uuid = { version = "1.10.0", features = ["serde", "v4"] }
+sqlx = { version = "0.8.0", features = [
+    "postgres",
+    "macros",
+    "runtime-tokio",
+    "tls-native-tls",
+    "uuid",
+] }
+tokio = { version = "1.39.3", features = ["full"] }
+convert_case = "0.6.0"

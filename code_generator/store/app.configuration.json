@@ -1,0 +1,299 @@
+{
+    "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowDb",
+    "module_configuration": [
+        {
+            "property_name": "MODEL_FILE",
+            "file_path": "store/model_template.sk3",
+            "property_string": "SCHEMA/TABLE_NAME",
+            "distination": "store/modules",
+            "language": "rust",
+            "extension": "rs",
+            "export_text": "pub mod",
+            "common_file": "mod.rs"
+        }
+    ],
+    "column_configurations": [
+        {
+            "property_name": "$TABLE_NAME$",
+            "property_string": "TABLE_NAME",
+            "display_type": "casual",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$TABLE_NAME_TEXT$",
+            "property_string": "\"SCHEMA\".\"TABLE_NAME\"",
+            "display_type": "casual",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$PRIMARY_KEY$",
+            "property_string": "PRIMARY_KEY",
+            "display_type": "casual",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$PRIMARY_KEY_RUST$",
+            "property_string": "PRIMARY_KEY",
+            "display_type": "rust",
+            "recursive": "false",
+            "horizontal": "false",
+            "ends_with": ""
+        },
+        {
+            "property_name": "$TABLE_COLUMNS$",
+            "property_string": "pub COLUMN_NAME: DATA_TYPE",
+            "display_type": "rust",
+            "recursive": "true",
+            "horizontal": "true",
+            "ends_with": ","
+        },
+        {
+            "property_name": "$TABLE_COLUMNS_TEXT$",
+            "property_string": "\"COLUMN_NAME\"",
+            "display_type": "postgresql",
+            "recursive": "true",
+            "horizontal": "false",
+            "ends_with": ","
+        },
+        {
+            "property_name": "$TABLE_COLUMNS_UPDATE$",
+            "property_string": "\"COLUMN_NAME\"=$COLUMN_INDEX",
+            "display_type": "postgresql",
+            "recursive": "true",
+            "horizontal": "false",
+            "ends_with": ","
+        },
+        {
+            "property_name": "$TABLE_COLUMN_RUST$",
+            "property_string": "COLUMN_NAME: DATA_TYPE",
+            "display_type": "rust",
+            "recursive": "true",
+            "horizontal": "false",
+            "ends_with": ","
+        },
+        {
+            "property_name": "$TABLE_COLUMNS_RUST$",
+            "property_string": "COLUMN_NAME",
+            "display_type": "rust",
+            "recursive": "true",
+            "horizontal": "true",
+            "ends_with": ","
+        },
+        {
+            "property_name": "$TABLE_COLUMN_ASSIGN_VALUE$",
+            "property_string": "let COLUMN_NAME = row.get(\"COLUMN_NAME\")",
+            "display_type": "rust+postgresql",
+            "recursive": "true",
+            "horizontal": "true",
+            "ends_with": ";"
+        }
+    ],
+    "data_types": [
+        {
+            "postgresql": "integer",
+            "rust": "i32",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "bigint",
+            "rust": "i64",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "smallint",
+            "rust": "i16",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "serial",
+            "rust": "i32",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "bigserial",
+            "rust": "i64",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "numeric",
+            "rust": "f64",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "real",
+            "rust": "f32",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "double precision",
+            "rust": "f64",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "boolean",
+            "rust": "bool",
+            "typescript": "boolean"
+        },
+        {
+            "postgresql": "character varying",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "character",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "text",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "timestamp",
+            "rust": "DateTime",
+            "typescript": "Date"
+        },
+        {
+            "postgresql": "timestamp without time zone",
+            "rust": "DateTime",
+            "typescript": "Date"
+        },
+        {
+            "postgresql": "date",
+            "rust": "Date",
+            "typescript": "Date"
+        },
+        {
+            "postgresql": "time",
+            "rust": "Time",
+            "typescript": "Time"
+        },
+        {
+            "postgresql": "interval",
+            "rust": "Duration",
+            "typescript": "number"
+        },
+        {
+            "postgresql": "bytea",
+            "rust": "Vec<u8>",
+            "typescript": "Uint8Array"
+        },
+        {
+            "postgresql": "uuid",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "json",
+            "rust": "serde_json::Value",
+            "typescript": "any"
+        },
+        {
+            "postgresql": "jsonb",
+            "rust": "serde_json::Value",
+            "typescript": "any"
+        },
+        {
+            "postgresql": "xml",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "point",
+            "rust": "Point",
+            "typescript": "Point"
+        },
+        {
+            "postgresql": "line",
+            "rust": "Line",
+            "typescript": "Line"
+        },
+        {
+            "postgresql": "polygon",
+            "rust": "Polygon",
+            "typescript": "Polygon"
+        },
+        {
+            "postgresql": "circle",
+            "rust": "Circle",
+            "typescript": "Circle"
+        },
+        {
+            "postgresql": "box",
+            "rust": "Box",
+            "typescript": "Box"
+        },
+        {
+            "postgresql": "path",
+            "rust": "Path",
+            "typescript": "Path"
+        },
+        {
+            "postgresql": "enum",
+            "rust": "enum",
+            "typescript": "enum"
+        },
+        {
+            "postgresql": "array",
+            "rust": "Vec<T>",
+            "typescript": "Array<T>"
+        },
+        {
+            "postgresql": "range",
+            "rust": "Range",
+            "typescript": "Range"
+        },
+        {
+            "postgresql": "tsvector",
+            "rust": "TsVector",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "tsquery",
+            "rust": "TsQuery",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "hstore",
+            "rust": "HashMap<String,String>",
+            "typescript": "Map<string,string>"
+        },
+        {
+            "postgresql": "macaddr",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "inet",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "cidr",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "macaddr8",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "inet8",
+            "rust": "String",
+            "typescript": "string"
+        },
+        {
+            "postgresql": "cidr8",
+            "rust": "String",
+            "typescript": "string"
+        }
+    ]
+}
