@@ -1,10 +1,11 @@
-use c3k_common::interfaces::irepository::Model;
 use serde::{Deserialize, Serialize};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
     Arguments, Error, PgPool, Postgres, Row,
 };
+
+use crate::interfaces::irepository::Model;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Auth {

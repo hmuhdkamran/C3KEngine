@@ -9,10 +9,7 @@ use actix_web::{
     },
     Error, HttpResponse,
 };
-use c3k_common::{
-    handler::redis_handler::RedisHandler,
-    models::{config::app_config::get_json, response::ApiResponse},
-};
+
 use futures::future::LocalBoxFuture;
 use jsonwebtoken::{
     decode,
@@ -20,7 +17,10 @@ use jsonwebtoken::{
     Algorithm, DecodingKey, Validation,
 };
 
-use crate::models::{constants, roles::auth::JwtClaims};
+use crate::{
+    handler::redis_handler::RedisHandler,
+    models::{auth::JwtClaims, config::app_config::get_json, constants, response::ApiResponse},
+};
 
 pub struct InterHandler;
 

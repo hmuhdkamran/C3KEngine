@@ -7,9 +7,9 @@ export class PayloadMapper {
     return {
       data: {} as T,
       message: {
-        messageTypeId: PayloadMessageTypes.error,
-        text: o.message,
-        title: o.name,
+        result: PayloadMessageTypes.error,
+        data: o.message,
+        description: o.name,
       },
     }
   }

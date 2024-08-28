@@ -1,6 +1,6 @@
 [workspace]
-authors = ["H.Muhammad Kamran"]
 members = [
   "services/auth-service",
+  "gate_way"
 ]
 resolver = "2"

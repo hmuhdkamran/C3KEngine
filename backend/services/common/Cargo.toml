@@ -5,6 +5,8 @@ edition = "2021"
 authors = ["H.Muhammad Kamran"]
 
 [dependencies]
+actix-web = "4.8.0"
+jsonwebtoken = "9.3"
 futures = "0.3.30"
 sqlx = { version = "0.8.0", features = [
     "postgres",

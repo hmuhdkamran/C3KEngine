@@ -3,7 +3,6 @@ name = "c3k-auth"
 version = "0.1.0"
 edition = "2021"
 authors = ["H.Muhammad Kamran"]
-resolver = "2"
 
 [[bin]]
 name = "c3k-auth"

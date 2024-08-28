@@ -1,3 +1,4 @@
+use c3k_common::models::auth::{Auth, AuthModel, JwtClaims, PasswordCode};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use sha2::{Digest, Sha256};
@@ -6,10 +7,7 @@ use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::{
-    models::roles::{
-        auth::{Auth, AuthModel, JwtClaims, PasswordCode},
-        user::User,
-    },
+    models::roles::user::User,
     repositories::roles::{auth_repository::AuthRepository, user_repository::UserRepository},
 };
 use c3k_common::{

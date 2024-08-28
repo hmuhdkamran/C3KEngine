@@ -1,8 +1,8 @@
 use actix_web::{post, web, HttpResponse, Responder};
-use c3k_common::handler::redis_handler::RedisHandler;
+use c3k_common::{handler::redis_handler::RedisHandler, models::auth::AuthModel};
 use sqlx::PgPool;
 
-use crate::{models::roles::auth::AuthModel, services::auth_service::AuthService};
+use crate::services::auth_service::AuthService;
 
 #[post("")]
 pub async fn login(

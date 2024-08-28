@@ -43,7 +43,7 @@ export abstract class StoreService implements IStoreService {
      * @returns A Promise resolving to the extracted data.
      */
   processPayload<T>(payload: IPayload<T>, options?: IProcessPayloadOptions): Promise<T> {
-    const msg = payload.message
+    const msg = payload
 
     options = options || {}
 
@@ -52,10 +52,10 @@ export abstract class StoreService implements IStoreService {
       PayloadMessageTypes.failure,
     ]
 
-    const messageTypeId = messageTypeIds.find(o => o === msg.messageTypeId)
+    const messageTypeId = messageTypeIds.find(o => o === msg.result)
 
     if (messageTypeId) {
-      message('Failed', msg.text, messageTypeId)
+      message('Failed', `${msg}`, messageTypeId)
       return Promise.reject({} as T)
     }
     else {

@@ -1,5 +1,4 @@
 // Role Schema
-pub mod auth;
 pub mod role_route_map;
 pub mod role;
 pub mod user;

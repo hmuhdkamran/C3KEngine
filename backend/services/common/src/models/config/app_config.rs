@@ -4,18 +4,18 @@ use std::error::Error;
 use std::fs;
 
 use super::{
-    backend_config::BackendEngineConfig, data_config::DataConfig, ftp_config::FtpConfig,
-    radis_config::RedisConfig, toekn_provider_config::TokenProviderConfig,
+    ftp_config::FtpConfig, gateway_config::GatewayConfig, radis_config::RedisConfig,
+    services_config::ServiceConfig, toekn_provider_config::TokenProviderConfig,
 };
 
 #[derive(Debug, Deserialize, Clone)]
-pub struct AppConfig {
-    pub data: DataConfig,
+pub struct AppConfig {    
     pub redis: RedisConfig,
     pub ftp: FtpConfig,
     pub claims_namespace: String,
     pub token_provider: TokenProviderConfig,
-    pub backend_engine: BackendEngineConfig,
+    pub gateway: GatewayConfig,
+    pub services: Vec<ServiceConfig>,
 }
 
 pub fn get_json() -> Result<AppConfig, Box<dyn Error>> {

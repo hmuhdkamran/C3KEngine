@@ -1,10 +1,4 @@
 {
-  "data": {
-    "connection_string": [
-      "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowSetupDb",
-      "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowDb"
-    ]
-  },
   "redis": {
     "redis_host": "10.10.33.39",
     "redis_port": "6379"
@@ -23,12 +17,20 @@
     "token_audience": "schemas.c3kframework.skn",
     "salt_length": 32
   },
-  "backend_engine": {
-    "port": "5000",
+  "gateway": {
+    "port": "8292",
     "host": "127.0.0.1",
     "cors": [
       "http://localhost:5001",
       "http://127.0.0.1:5001"
     ]
-  }
+  },
+  "services": [
+    {
+      "name": "api/auth",
+      "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowSetupDb",
+      "host": "127.0.0.1",
+      "port": "5000"
+    }
+  ]
 }

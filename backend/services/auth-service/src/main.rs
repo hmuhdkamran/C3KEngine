@@ -1,12 +1,9 @@
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use c3k_auth::{
-    controllers::roles::{
-        auth_controller::auth_routes, role_controller::role_routes,
-        role_route_map_controller::role_route_map_routes, route_controller::route_routes,
-        user_controller::user_routes, user_role_map_controller::user_role_map_routes,
-    },
-    utilities::middleware::InterHandler,
+use c3k_auth::controllers::roles::{
+    auth_controller::auth_routes, role_controller::role_routes,
+    role_route_map_controller::role_route_map_routes, route_controller::route_routes,
+    user_controller::user_routes, user_role_map_controller::user_role_map_routes,
 };
 use c3k_common::models::config::app_config::get_json;
 pub use sqlx::{
@@ -39,11 +36,10 @@ async fn main() -> Result<(), std::io::Error> {
         }
     };
 
-    let addr = format!(
-        "{}:{}",
-        config.backend_engine.host, config.backend_engine.port
-    );
-    let db_pool = create_db_pool(&config.data.connection_string[0])
+    let service = config.services.iter().find(|f| f.name == "auth").unwrap();
+
+    let addr = format!("{}:{}", service.host, service.port);
+    let db_pool = create_db_pool(&service.connection_string)
         .await
         .expect("Failed to create pool");
 
@@ -53,14 +49,17 @@ async fn main() -> Result<(), std::io::Error> {
             .allow_any_header()
             .supports_credentials();
 
-        for origin in &config.backend_engine.cors {
-            cors = cors.allowed_origin(origin);
+        cors = cors.allowed_origin(
+            format!("http://{}:{}", config.gateway.host, config.gateway.port).as_str(),
+        );
+
+        for origin in &config.services {
+            cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
         App::new()
             .wrap(cors)
             .wrap(Logger::default())
-            .wrap(InterHandler)
             .app_data(web::Data::new(db_pool.clone()))
             .configure(auth_routes)
             .configure(user_routes)

@@ -1,12 +1,10 @@
-use c3k_common::interfaces::irepository::Model;
+use c3k_common::{interfaces::irepository::Model, models::auth::Auth};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
     Arguments, PgPool, Postgres, Row,
 };
 use std::error::Error as StdError;
-
-use crate::models::roles::auth::Auth;
 
 pub struct AuthRepository {}
 
