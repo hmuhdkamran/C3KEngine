@@ -5,8 +5,4 @@ edition = "2021"
 authors = ["H.Muhammad Kamran"]
 
 [dependencies]
-actix-web = "4.8.0"
-actix-cors = "0.7.0"
-awc = { version = "3.5.1", features = [ "openssl" ] }
-
 c3k-common = { path = "../services/common" }
