@@ -36,7 +36,7 @@ async fn main() -> Result<(), std::io::Error> {
         }
     };
 
-    let service = config.services.iter().find(|f| f.name == "auth").unwrap();
+    let service = config.services.iter().find(|f| f.name == "api/auth").unwrap();
 
     let addr = format!("{}:{}", service.host, service.port);
     let db_pool = create_db_pool(&service.connection_string)

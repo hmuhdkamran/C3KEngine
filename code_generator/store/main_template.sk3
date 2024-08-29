@@ -1,0 +1,67 @@
+use actix_cors::Cors;
+use actix_web::{middleware::Logger, web, App, HttpServer};
+use c3k_hrms_service::controllers::{
+    attendance::attendamce_exclude_employees::attendamce_exclude_employees_routes
+};
+use c3k_common::models::config::app_config::get_json;
+pub use sqlx::{
+    pool::PoolConnection,
+    postgres::{PgArguments, PgPoolOptions, PgRow},
+    Arguments, PgPool, Postgres, Row,
+};
+
+use std::io::{Error, ErrorKind};
+use std::sync::Arc;
+
+async fn create_db_pool(connection_string: &str) -> Result<PgPool, sqlx::Error> {
+    PgPoolOptions::new()
+        .max_connections(5)
+        .connect(connection_string)
+        .await
+        .map_err(|e| {
+            eprintln!("Failed to create database pool: {}", e);
+            e
+        })
+}
+
+#[actix_web::main]
+async fn main() -> Result<(), std::io::Error> {
+    let config = match get_json() {
+        Ok(cfg) => Arc::new(cfg),
+        Err(err) => {
+            eprintln!("Error loading configuration: {}", err);
+            return Err(Error::new(ErrorKind::Other, "Configuration error"));
+        }
+    };
+
+    let service = config.services.iter().find(|f| f.name == "auth").unwrap();
+
+    let addr = format!("{}:{}", service.host, service.port);
+    let db_pool = create_db_pool(&service.connection_string)
+        .await
+        .expect("Failed to create pool");
+
+    let server = HttpServer::new(move || {
+        let mut cors = Cors::default()
+            .allow_any_method()
+            .allow_any_header()
+            .supports_credentials();
+
+        cors = cors.allowed_origin(
+            format!("http://{}:{}", config.gateway.host, config.gateway.port).as_str(),
+        );
+
+        for origin in &config.services {
+            cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
+        }
+
+        App::new()
+            .wrap(cors)
+            .wrap(Logger::default())
+            .app_data(web::Data::new(db_pool.clone()))
+            .configure(attendamce_exclude_employees_routes)
+    });
+
+    println!("App is Running on http://{}", addr);
+    server.bind(addr)?.run().await
+}

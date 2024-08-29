@@ -1,0 +1,11 @@
+pub mod job_types;
+pub mod job_shifts;
+pub mod job_experiences;
+pub mod functional_areas;
+pub mod candidate_spouses;
+pub mod job_posts;
+pub mod job_applications;
+pub mod candidates;
+pub mod recruitment_job_statuses;
+pub mod candidate_addresses;
+pub mod candidate_contacts;

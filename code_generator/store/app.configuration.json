@@ -219,27 +219,27 @@
         },
         {
             "postgresql": "timestamp",
-            "rust": "DateTime",
+            "rust": "DateTime<Utc>",
             "typescript": "Date"
         },
         {
             "postgresql": "time with time zone",
-            "rust": "DateTime",
+            "rust": "DateTime<Utc>",
             "typescript": "Date"
         },
         {
             "postgresql": "timestamp without time zone",
-            "rust": "DateTime",
+            "rust": "DateTime<Utc>",
             "typescript": "Date"
         },
         {
             "postgresql": "date",
-            "rust": "DateTime",
+            "rust": "DateTime<Utc>",
             "typescript": "Date"
         },
         {
             "postgresql": "time",
-            "rust": "DateTime",
+            "rust": "DateTime<Utc>",
             "typescript": "Time"
         },
         {
@@ -254,7 +254,7 @@
         },
         {
             "postgresql": "uuid",
-            "rust": "String",
+            "rust": "Uuid",
             "typescript": "string"
         },
         {

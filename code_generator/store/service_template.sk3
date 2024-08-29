@@ -1,4 +1,7 @@
-use crate::{models::$SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$, repositories::$TABLE_NAME_SML$::$TABLE_NAME$Repository};
+use crate::{
+    models::$SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$,
+    repositories::$SCHEMA_SML$::$TABLE_NAME_SML$::$TABLE_NAME$Repository,
+};
 use c3k_common::{
     interfaces::{irepository::IRepository, iservice::IService},
     models::response::ApiResponse,

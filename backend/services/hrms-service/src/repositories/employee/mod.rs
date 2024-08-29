@@ -1,0 +1,16 @@
+pub mod employee_bank_infos;
+pub mod personal_informations;
+pub mod employee_documents;
+pub mod employee_educations;
+pub mod spouses;
+pub mod employee_job_infos;
+pub mod employee_leave_entitlements;
+pub mod employee_references;
+pub mod employee_reporting_tos;
+pub mod employee_skills;
+pub mod employee_addresses;
+pub mod employee_contacts;
+pub mod employee_experiences;
+pub mod employee_document_apporovals;
+pub mod spouse_contacts;
+pub mod employee_id_types;

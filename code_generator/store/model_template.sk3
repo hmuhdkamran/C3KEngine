@@ -4,9 +4,9 @@ pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
     Arguments, Error, PgPool, Postgres, Row,
+    types::chrono::{DateTime, Utc},
 };
 use uuid::Uuid;
-use chrono::prelude::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct $TABLE_NAME$ {
