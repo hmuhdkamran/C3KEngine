@@ -10,3 +10,18 @@ path = "src/main.rs"
 
 [dependencies]
 c3k-common = { path = "../common" }
+actix-web = "4.9.0"
+actix-cors = "0.7.0"
+sqlx = { version = "0.8.1", features = [
+    "postgres",
+    "macros",
+    "runtime-tokio",
+    "tls-native-tls",
+    "uuid",
+    "chrono",
+] }
+serde = { version = "1.0.209", features = ["derive"] }
+sha2 = "0.10.8"
+rand = "0.8.5"
+jsonwebtoken = "9.3"
+uuid = { version = "1.10.0", features = ["serde", "v4"] }
