@@ -1,7 +1,9 @@
 use actix_web::http::Method;
-use serde::{Deserialize, Serialize};
 use awc::Client;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+
+use crate::models::{config::app_config::AppConfig, response::ApiResponse};
 
 pub struct ServiceCommunicator {
     config: Arc<AppConfig>,
@@ -51,7 +53,6 @@ impl ServiceCommunicator {
 
             match response {
                 Ok(mut res) => {
-                    // Read the response body
                     let body = res.json::<ApiResponse<T>>().await;
 
                     match body {
