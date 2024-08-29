@@ -16,7 +16,7 @@ Key Features
         Handles user authentication and authorization across all services.
         Supports various authentication methods (e.g., OAuth, JWT).
 
-###Business Setup Service
+### Business Setup Service
         Manages the core configuration and setup for businesses.
         Provides APIs for setting up business entities, roles, and permissions.
 
