@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use c3k_common::models::config::app_config::get_json;
+use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::get_json};
 use c3k_hrms_service::controllers::{
     attendance::attendamce_exclude_employees::attendamce_exclude_employees_routes,
     attendance::attendance_policies::attendance_policies_routes,
@@ -127,10 +127,13 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
+        let communicator = ServiceCommunicator::new(config.clone());
+
         App::new()
             .wrap(cors)
             .wrap(Logger::default())
             .app_data(web::Data::new(db_pool.clone()))
+            .app_data(web::Data::new(communicator))
             .configure(attendamce_exclude_employees_routes)
             .configure(attendance_policies_routes)
             .configure(attendance_statuses_routes)

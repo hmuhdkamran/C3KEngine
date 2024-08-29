@@ -5,7 +5,7 @@ use c3k_auth::controllers::roles::{
     role_route_map_controller::role_route_map_routes, route_controller::route_routes,
     user_controller::user_routes, user_role_map_controller::user_role_map_routes,
 };
-use c3k_common::models::config::app_config::get_json;
+use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::get_json};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
@@ -41,7 +41,7 @@ async fn main() -> Result<(), std::io::Error> {
     let addr = format!("{}:{}", service.host, service.port);
     let db_pool = create_db_pool(&service.connection_string)
         .await
-        .expect("Failed to create pool");
+        .expect("Failed to create pool");    
 
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
@@ -57,10 +57,13 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
+        let communicator = ServiceCommunicator::new(config.clone());
+
         App::new()
             .wrap(cors)
             .wrap(Logger::default())
             .app_data(web::Data::new(db_pool.clone()))
+            .app_data(web::Data::new(communicator))
             .configure(auth_routes)
             .configure(user_routes)
             .configure(role_routes)

@@ -1,9 +1,8 @@
-use actix_web::http::Method;
-use awc::Client;
+use crate::models::{config::app_config::AppConfig, response::ApiResponse};
+use actix_web::{http::Method, HttpResponse};
+use awc::{body::to_bytes, Client};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-
-use crate::models::{config::app_config::AppConfig, response::ApiResponse};
 
 pub struct ServiceCommunicator {
     config: Arc<AppConfig>,
@@ -19,7 +18,7 @@ impl ServiceCommunicator {
         path_and_query: &str,
         method: Method,
         payload: Option<T>,
-    ) -> ApiResponse<T> {
+    ) -> HttpResponse {
         let client = Client::new();
 
         // Find the matching service from the config
@@ -31,10 +30,9 @@ impl ServiceCommunicator {
             .map(|service| format!("http://{}:{}{}", service.host, service.port, path_and_query));
 
         if let Some(url) = target_url {
-            let mut request = client.request(method.clone(), url);
-
-            // Set the appropriate headers
-            request = request.append_header(("User-Agent", "Actix-web"));
+            let request = client
+                .request(method.clone(), url)
+                .append_header(("User-Agent", "Actix-web"));
 
             // Send the request with the payload if provided
             let response = match method {
@@ -47,23 +45,41 @@ impl ServiceCommunicator {
                 }
                 Method::GET => request.send().await,
                 _ => {
-                    return ApiResponse::error("Unsupported HTTP method".to_string());
+                    return HttpResponse::InternalServerError()
+                        .body("Unsupported HTTP method".to_string());
                 }
             };
 
             match response {
                 Ok(mut res) => {
-                    let body = res.json::<ApiResponse<T>>().await;
+                    // Read the response body
+                    let body = res.body().await;
 
                     match body {
-                        Ok(api_response) => api_response,
-                        Err(_) => ApiResponse::error("Failed to parse response".to_string()),
+                        Ok(api_response) => HttpResponse::Ok().body(api_response),
+                        Err(_) => HttpResponse::InternalServerError()
+                            .body("Failed to parse response".to_string()),
                     }
                 }
-                Err(err) => ApiResponse::error(err.to_string()),
+                Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
             }
         } else {
-            ApiResponse::error("Invalid API section".to_string())
+            HttpResponse::InternalServerError().body("Invalid API section".to_string())
         }
+    }
+
+    pub async fn get_data<T: Serialize + for<'de> Deserialize<'de>>(
+        &self,
+        response: HttpResponse,
+    ) -> Result<ApiResponse<T>, actix_web::Error> {
+        // Convert the response body to bytes
+        let body_bytes = to_bytes(response.into_body()).await?;
+
+        // Deserialize the body into ApiResponse<T>
+        let api_response: ApiResponse<T> = serde_json::from_slice(&body_bytes)
+            .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+        // Return the ApiResponse<T> directly
+        Ok(api_response)
     }
 }
