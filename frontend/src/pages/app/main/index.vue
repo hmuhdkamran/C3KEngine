@@ -2,10 +2,18 @@
 import { ref, computed } from 'vue';
 import Card from '@/layouts/components/card.vue';
 import Dashboardheader from '@/layouts/components/dashboardheader.vue';
+import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
+import Retailmodule from '@/layouts/components/Retailmodule.vue';
+import Productionmodule from '@/layouts/components/Productionmodule.vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const searchQuery = ref('');
 const selectedCategory = ref('All');
 const showFavorites = ref(false);
+const showModulePage = ref(false);
+const selectedCardTitle = ref('');
+const currentModule = ref('');
 
 const cards = ref([
     {
@@ -62,12 +70,40 @@ function toggleFavorites() {
     showFavorites.value = !showFavorites.value;
     alert('Favorites button clicked');
 }
+
+function handleCardClick(cardTitle: string) {
+    showModulePage.value = true;
+    selectedCardTitle.value = cardTitle;
+    currentModule.value = cardTitle;
+}
+
+const moduleComponent = computed(() => {
+    switch (currentModule.value) {
+        case 'HRMS':
+            return HRMSmodule;
+        case 'Retail':
+            return Retailmodule;
+        case 'Production':
+            return Productionmodule;
+        default:
+            return null;
+    }
+});
+
+function goToMain() {
+    router.push('/app/main');
+}
+
 </script>
 
 <template>
     <div class="h-screen mt-12 flex flex-col">
         <div class="bg-gray-200 py-2 px-4 flex items-center justify-between">
-            <div class="text-lg font-semibold">Apps</div>
+            <div class="text-lg font-semibold">
+                <a href="#" @click.prevent="goToMain">Apps</a>
+                <span class="mx-2">/</span>
+                {{ selectedCardTitle }}
+            </div>
             <div class="flex items-center space-x-4">
                 <input type="text" placeholder="Search..." class="px-3 py-1 border rounded" v-model="searchQuery"
                     @input="filterCards" />
@@ -78,7 +114,7 @@ function toggleFavorites() {
             </div>
         </div>
 
-        <div class="flex flex-1">
+        <div v-if="!showModulePage" class="flex flex-1">
             <div class="bg-gray-100 w-64 p-4">
                 <div class="text-lg font-semibold mb-4">
                     <span class="icon-[ion--folder-sharp] text-violet-600"></span>
@@ -104,7 +140,7 @@ function toggleFavorites() {
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card v-for="card in filteredCards" :key="card.title" :title="card.title"
                         :description="card.description" :status="card.status" :buttonText="card.buttonText"
-                        :iconClass="card.iconClass">
+                        :iconClass="card.iconClass" @click="handleCardClick(card.title)">
                         <!-- <template #header>
                             <div class="flex-1">
                                 <div class="font-bold text-xl mb-1 flex items-center justify-between">
@@ -118,9 +154,12 @@ function toggleFavorites() {
                 </div>
             </div>
         </div>
+
+        <div v-else>
+            <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
+        </div>
     </div>
     <Dashboardheader />
-
 </template>
 
 <route lang="yaml">
