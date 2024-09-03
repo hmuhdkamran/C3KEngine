@@ -29,11 +29,25 @@ function toggleProfileDropdown() {
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-12 items-center bg-violet-500 justify-between">
-    <div class="md:flex md:items-center">
+  <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-12 items-center bg-pink-900 justify-between">
+    <div class="sm:flex sm:items-center md:flex md:items-center">
       <div class="relative">
-        <button @click="toggleModule" class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-          <span class="icon-[fluent--navigation-unread-20-filled] text-white h-7 w-7"></span>
+        <button @click="toggleModule"
+          class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
+
+          <svg class="h-8 w-8 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <circle cx="5" cy="5" r="1" />
+            <circle cx="12" cy="5" r="1" />
+            <circle cx="19" cy="5" r="1" />
+            <circle cx="5" cy="12" r="1" />
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="19" cy="12" r="1" />
+            <circle cx="5" cy="19" r="1" />
+            <circle cx="12" cy="19" r="1" />
+            <circle cx="19" cy="19" r="1" />
+          </svg>
         </button>
       </div>
       <Sidebar @toggleModule="toggleModule" :showModuleDropdown="showModuleDropdown" />
@@ -43,12 +57,9 @@ function toggleProfileDropdown() {
       </a>
     </div>
     <div class="flex items-center">
-      <button class="btn btn-ghost btn-circle">
-        <div class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-          <span class="icon-[ic--baseline-search] text-white h-6 w-6"></span>
-        </div>
-      </button>
+
       <Notifications @toggleDropdown="toggleDropdown" :isOpen="isOpen" />
+
       <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" />
     </div>
   </div>
