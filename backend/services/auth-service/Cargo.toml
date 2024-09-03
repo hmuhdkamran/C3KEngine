@@ -1,11 +1,11 @@
 [package]
-name = "c3k-auth"
+name = "c3k-auth-service"
 version = "0.1.0"
 edition = "2021"
 authors = ["H.Muhammad Kamran"]
 
 [[bin]]
-name = "c3k-auth"
+name = "c3k-auth-service"
 path = "src/main.rs"
 
 [dependencies]
