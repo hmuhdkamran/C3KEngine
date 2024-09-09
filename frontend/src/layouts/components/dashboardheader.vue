@@ -29,24 +29,20 @@ function toggleProfileDropdown() {
 </script>
 
 <template>
-  <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-12 items-center bg-violet-500 justify-between">
-    <div class="md:flex md:items-center">
-      <div class="relative">
-        <button @click="toggleModule" class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-          <span class="icon-[fluent--navigation-unread-20-filled] text-white h-7 w-7"></span>
-        </button>
-      </div>
+  <div class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex h-16 items-center bg-gradient-to-r from-violet-600 to-blue-500 justify-between shadow-lg z-50">
+    <div class="flex items-center">
+      <button @click="toggleModule" class="flex items-center text-white hover:text-gray-200 focus:outline-none">
+        <span class="icon-[fluent--navigation-unread-20-filled] h-8 w-8"></span>
+      </button>
       <Sidebar @toggleModule="toggleModule" :showModuleDropdown="showModuleDropdown" />
-      <a href="/" class="text-xl font-semibold text-gray-800 flex items-center space-x-2 ml-4">
-        <img :src="logo" alt="C3K Engine Logo" class="h-12 w-auto object-contain" />
-        <span class="text-white">C3K Engine</span>
+      <a href="/" class="text-2xl font-semibold text-white flex items-center space-x-2">
+        <img :src="logo" alt="C3K Engine Logo" class="h-10 w-auto object-contain" />
+        <span>C3K Engine</span>
       </a>
     </div>
     <div class="flex items-center">
-      <button class="btn btn-ghost btn-circle">
-        <div class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-          <span class="icon-[ic--baseline-search] text-white h-6 w-6"></span>
-        </div>
+      <button class="flex items-center text-white hover:text-gray-200 focus:outline-none">
+        <span class="icon-[ic--baseline-search] h-6 w-6"></span>
       </button>
       <Notifications @toggleDropdown="toggleDropdown" :isOpen="isOpen" />
       <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" />

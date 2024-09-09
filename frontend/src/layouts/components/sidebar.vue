@@ -7,7 +7,7 @@ defineEmits(['toggleModule']);
 
 <template>
   <transition name="slide">
-    <div v-if="showModuleDropdown" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
+    <div v-if="showModuleDropdown" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50 rounded-2xl">
       <div class="flex flex-col h-full style-basic">
         <div class="flex justify-end p-4">
           <button @click="$emit('toggleModule')" class="text-gray-600 hover:text-gray-800 focus:outline-none">
