@@ -1,40 +1,22 @@
 {
-  "name": "c3k-frontend",
+  "name": "micro",
+  "version": "1.0.0",
+  "main": "index.js",
   "private": true,
-  "version": "0.1.0",
-  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "axios": "^1.7.2",
-    "jwt-decode": "^4.0.0",
-    "pinia": "^2.1.7",
-    "vue": "^3.4.33",
-    "vue-i18n": "^9.13.1",
-    "vue-router": "^4.4.0"
+    "dev": "npm run start",
+    "start": "npm-run-all --parallel start:*",
+    "build": "npm-run-all build:* && bash ./scripts/bundle.sh",
+    "start:root": "cd packages/root && yarn start"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.230",
-    "@iconify/tailwind": "^1.1.1",
-    "@intlify/unplugin-vue-i18n": "^4.0.0",
-    "@types/node": "^20.14.11",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@vueuse/core": "^10.11.0",
-    "autoprefixer": "^10.4.19",
-    "dayjs": "^1.11.12",
-    "dotenv": "^16.4.5",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6",
-    "typescript": "^5.5.3",
-    "unplugin-auto-import": "^0.18.0",
-    "unplugin-vue-define-options": "^1.4.5",
-    "unplugin-vue-components": "^0.27.3",
-    "vite": "^5.3.4",
-    "vite-plugin-pages": "^0.32.3",
-    "vite-plugin-vue-layouts": "^0.11.0",
-    "vue-tsc": "^2.0.28"
-  }
+    "npm-run-all": "^4.1.5"
+  },
+  "keywords": [],
+  "author": "H.Muhammad Kamran",
+  "license": "ISC",
+  "description": ""
 }
