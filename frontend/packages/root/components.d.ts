@@ -10,6 +10,8 @@ declare module 'vue' {
     BaseIcon: typeof import('./src/components/base/BaseIcon.vue')['default']
     Card: typeof import('./src/components/base/Card.vue')['default']
     Loader: typeof import('./src/components/Loader.vue')['default']
+    Moduleform: typeof import('./src/components/forms/moduleform.vue')['default']
+    Modules: typeof import('./src/components/base/modules.vue')['default']
     Picker: typeof import('./src/components/forms/picker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
