@@ -105,12 +105,11 @@ function goToMain() {
                 {{ selectedCardTitle }}
             </div>
             <div class="flex items-center space-x-4">
-                <input type="text" placeholder="Search..." class="px-3 py-1 border rounded" v-model="searchQuery"
+                <input type="text" placeholder="Search..." class="c3k-input" v-model="searchQuery"
                     @input="filterCards" />
-                <button @click="toggleFilters" class="bg-violet-500 text-white px-3 py-1 rounded">Filters</button>
-                <button @click="groupByCategory" class="bg-violet-500 text-white px-3 py-1 rounded">Group
-                    By</button>
-                <button @click="toggleFavorites" class="bg-violet-500 text-white px-3 py-1 rounded">Favorites</button>
+                <button @click="toggleFilters" class="c3k-btn-primary px-4">Filters</button>
+                <button @click="groupByCategory" class="c3k-btn-secondary px-4 w-48">Group By</button>
+                <button @click="toggleFavorites" class="c3k-btn-danger px-4">Favorites</button>
             </div>
         </div>
 

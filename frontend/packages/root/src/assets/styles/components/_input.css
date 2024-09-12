@@ -1,9 +1,32 @@
 @layer components {
-    .c3k-input {
-      @apply appearance-none border border-b-2 border-gray-300 rounded-md w-full py-2 px-2 text-gray-700 mt-1 leading-tight shadow-md transition-all duration-300 ease-out focus:outline-none focus:ring-0 focus:border-gray-300 focus:border-b-2 focus:border-b-purple-600;
-    }
-  
-    .c3k-btn {
-      @apply cursor-pointer border border-purple-600 text-purple-600 py-1.5 px-2 my-2 font-medium rounded-md hover:bg-purple-600 hover:text-white transition-all duration-300;
-    }
+  /* Common variables for shared styles */
+  .common-input {
+    @apply appearance-none bg-transparent border-0 border-b-2 border-gray-300 rounded-sm w-full py-1 px-2 text-gray-700 mt-1 leading-tight transition-all duration-300 ease-out focus:outline-none focus:ring-0;
   }
+
+  .common-btn {
+    @apply cursor-pointer py-1 px-1 my-1 font-medium rounded-sm transition-all duration-300;
+  }
+
+  /* Input styles with focus */
+  .c3k-input {
+    @apply common-input focus:border-b-purple-600;
+  }
+
+  /* Button options */
+  .c3k-btn-primary {
+    @apply common-btn border border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white;
+  }
+
+  .c3k-btn-secondary {
+    @apply common-btn border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white;
+  }
+
+  .c3k-btn-outline {
+    @apply common-btn border border-gray-300 text-gray-700 hover:bg-gray-300;
+  }
+
+  .c3k-btn-danger {
+    @apply common-btn border border-red-600 text-red-600 hover:bg-red-600 hover:text-white;
+  }
+}

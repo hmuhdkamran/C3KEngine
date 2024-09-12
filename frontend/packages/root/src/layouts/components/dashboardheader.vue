@@ -67,13 +67,13 @@ const filteredServices = computed(() =>
           origin-top scale-95 transition-transform duration-300">
             <div class="col-span-full mb-4 relative">
               <input v-model="searchQuery" type="text" placeholder="Search Modules..."
-                class="w-full p-3 pl-10 border rounded-md shadow-sm focus:ring-2 focus:ring-violet-600 focus:border-violet-600" />
+                class="c3k-input pl-5" />
               <span
-                class="icon-[ic--baseline-search] h-6 w-6 text-gray-400 absolute top-1/2 transform -translate-y-1/2 left-3"></span>
+                class="icon-[ic--baseline-search] -pl-5 h-6 w-6 text-gray-400 absolute top-1/2 transform -translate-y-1/2 left-3"></span>
             </div>
 
             <div v-if="filteredServices.length" v-for="(service, index) in filteredServices" :key="index"
-              class="flex items-center bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 hover:shadow-xl transition-all duration-300 relative">
+              class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">
 
               <span :class="service.icon + ' text-violet-600 h-8 w-8 mr-4'"></span>
               <div>
