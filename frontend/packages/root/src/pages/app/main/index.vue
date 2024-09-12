@@ -115,7 +115,7 @@ function goToMain() {
         </div>
 
         <div v-if="!showModulePage" class="flex flex-1">
-            <div class="bg-gray-100 w-64 p-4">
+            <!-- <div class="bg-gray-100 w-64 p-4">
                 <div class="text-lg font-semibold mb-4">
                     <span class="icon-[ion--folder-sharp] text-violet-600"></span>
                     <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }"
@@ -135,7 +135,7 @@ function goToMain() {
                             @click.prevent="filterByCategory('Production')">Production</a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
             <div class="flex-1 container mx-auto py-24">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card v-for="card in filteredCards" :key="card.title" :title="card.title"
@@ -159,7 +159,7 @@ function goToMain() {
             <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
     </div>
-    <Dashboardheader />
+    <Dashboardheader :selectedCardTitle="selectedCardTitle"/>
 </template>
 
 <route lang="yaml">
