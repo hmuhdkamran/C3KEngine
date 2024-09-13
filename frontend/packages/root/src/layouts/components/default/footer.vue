@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import logo from "@/assets/images/vue.svg"
+import { config } from '@/plugins/config';
+import { VNodeRenderer } from '@/components/base/VNodeRenderer';
 </script>
 
 <template>
@@ -14,8 +15,8 @@ import logo from "@/assets/images/vue.svg"
                 <div>
                     <div class="flex justify-center sm:justify-start">
                         <h4 class="text-3xl font-semibold">
-                            <img :src="logo" alt="C3K Engine Logo" class="h-12 w-auto object-contain inline-block" />
-                            C3K Engine
+                            <VNodeRenderer :nodes="config.logo" />
+                            {{ config.application }}
                         </h4>
                     </div>
                     <p
@@ -24,45 +25,12 @@ import logo from "@/assets/images/vue.svg"
                         business days.
                     </p>
                     <ul class="mt-8 flex justify-center gap-4 sm:justify-start">
-                        <li>
-                            <a href="https://www.facebook.com/hmuhdkamran" target="_blank"
-                                class="social-link">
-                                <span class="social-icon icon-[ic--outline-facebook]"></span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="/" rel="noreferrer" target="_blank"
-                                class="social-link">
-                                <span class="icon-[mdi--instagram]"></span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="https://www.twitter.com/hmuhdkamran" target="_blank"
-                                class="social-link">
-                                <span class="social-icon icon-[grommet-icons--twitter]"></span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="https://www.github.com/hmuhdkamran" target="_blank"
-                                class="social-link">
-                                <span class="social-icon icon-[mdi--github]"></span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="https://www.dribbble.com/hmuhdkamran" target="_blank"
-                                class="social-link">
-                                <span class="social-icon icon-[icon-park-outline--dribble]"></span>
+                        <li class="nav-item" v-for="item in config.socialMedia">
+                            <a :href="item.link" class="btn-rounded" target="_blank">
+                                <span :class="item.icon"></span>
                             </a>
                         </li>
                     </ul>
-                    <p class="text-sm mt-6 text-gray-500 font-semibold">Currently v1.1.0. Code<a
-                            href="https://github.com/hmuhdkamran" class="text-gray-600" target="_blank">
-                            licensed MIT</a>, docs<a href="https://creativecommons.org/licenses/by/4.0/" targe="_blank"
-                            class="text-gray-600"> CC BY 4.0</a>.</p>
                 </div>
 
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
