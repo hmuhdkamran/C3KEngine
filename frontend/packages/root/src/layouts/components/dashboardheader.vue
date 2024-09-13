@@ -73,7 +73,7 @@ const filteredServices = computed(() =>
             </div>
 
             <div v-if="filteredServices.length" v-for="(service, index) in filteredServices" :key="index"
-              class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">
+              class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm border-l-4 p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">
 
               <span :class="service.icon + ' text-violet-600 h-8 w-8 mr-4'"></span>
               <div>
