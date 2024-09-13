@@ -1,9 +1,0 @@
-@layer components {
-    .c3k-input {
-      @apply appearance-none border border-b-2 border-gray-300 rounded-md w-full py-2 px-2 text-gray-700 mt-1 leading-tight shadow-md transition-all duration-300 ease-out focus:outline-none focus:ring-0 focus:border-gray-300 focus:border-b-2 focus:border-b-purple-600;
-    }
-  
-    .c3k-btn {
-      @apply cursor-pointer border border-purple-600 text-purple-600 py-1.5 px-2 my-2 font-medium rounded-md hover:bg-purple-600 hover:text-white transition-all duration-300;
-    }
-  }

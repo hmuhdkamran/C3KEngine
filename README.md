@@ -82,6 +82,20 @@ Build and run the services:
 docker-compose up --build
 ```
 
+### Issue with SSL in Windows
+```typescript
+git clone https://github.com/microsoft/vcpkg.git
+bootstrap-vcpkg.bat
+
+vcpkg.exe install openssl-windows:x64-windows
+or
+vcpkg.exe install openssl:x64-windows-static
+
+vcpkg.exe integrate install
+
+run set VCPKGRS_DYNAMIC=1 (or simply set it as your environment variable)
+```
+
 ### Usage
 Each service exposes its own set of RESTful APIs. Documentation for each service can be found in the docs/ directory.
 The Authentication Service is required to obtain tokens for accessing other services.
