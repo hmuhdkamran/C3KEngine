@@ -17,7 +17,7 @@ import { VNodeRenderer } from '@/components/base/VNodeRenderer';
                 </button>
             </div>
             <div class="lg:flex flex-grow items-center hidden" id="example-navbar-danger">
-                <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
+                <ul class="flex flex-col lg:flex-row list-none lg:ml-auto gap-4">
                     <li class="nav-item" v-for="item in config.socialMedia">
                         <a :href="item.link" class="btn-rounded" target="_blank">
                             <span :class="item.icon"></span>

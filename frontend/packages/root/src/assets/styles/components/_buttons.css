@@ -5,7 +5,7 @@
 
     /* Common button styles */
     .common-btn {
-        @apply cursor-pointer py-2 px-4 font-medium transition-all duration-300 ease-in-out;
+        @apply cursor-pointer py-2 font-medium transition-all duration-300 ease-in-out;
     }
 
     /* Button types with hover states */
