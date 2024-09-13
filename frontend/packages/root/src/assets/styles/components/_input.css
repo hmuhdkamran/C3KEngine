@@ -9,17 +9,26 @@
     @apply common-input border border-solid border-gray-300 rounded-sm;
   }
 
-  .input-complete:focus {
+  .input-complete:focus {    
     border-color: var(--primary-color);
   }
 
   /* Input with border only at the bottom */
   .input-bottom {
-    @apply common-input border-0 border-b-2 border-gray-300;
+    @apply common-input border border-b-2 border-gray-300 rounded-sm;
   }
 
   .input-bottom:focus {
     border-bottom-color: var(--primary-color);
+  }
+
+  /* Input with border only at the left */
+  .input-left {
+    @apply common-input border border-l-2 border-gray-300 rounded-sm;
+  }
+
+  .input-left:focus {
+    border-left-color: var(--primary-color);
   }
 
   /* Input in danger state */
