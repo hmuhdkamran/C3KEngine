@@ -42,27 +42,27 @@ const password: Ref<string> = ref('')
                             <div class="flex flex-col pt-4">
                                 <label for="name" class="text-lg text-gray-800">Name</label>
                                 <input type="text" id="name" placeholder="John Smith" v-model="name"
-                                    class="c3k-input" />
+                                    class="input-bottom" />
                             </div>
 
                             <div class="flex flex-col pt-4">
                                 <label for="email" class="text-lg text-gray-800">Email</label>
                                 <input type="email" id="email" placeholder="your@email.com" v-model="email"
-                                    class="c3k-input" />
+                                    class="input-bottom" />
                             </div>
 
                             <div class="flex flex-col pt-4">
                                 <label for="password" class="text-lg text-gray-800">Password</label>
                                 <input type="password" id="password" placeholder="Password" v-model="password"
-                                    class="c3k-input" />
+                                    class="input-bottom" />
                             </div>
 
                             <div class="flex flex-col pt-4">
                                 <label for="confirm-password" class="text-lg text-gray-800">Confirm Password</label>
-                                <input type="password" id="confirm-password" placeholder="Password" class="c3k-input" />
+                                <input type="password" id="confirm-password" placeholder="Password" class="input-bottom" />
                             </div>
 
-                            <input type="submit" value="Register" class="c3k-btn mt-6" />
+                            <input type="submit" value="Register" class="btn-primary mt-6" />
                         </div>
                         <div class="text-center pt-12 pb-12">
                             <p class="text-gray-800">

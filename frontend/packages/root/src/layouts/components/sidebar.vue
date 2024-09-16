@@ -15,13 +15,12 @@ defineEmits(['toggleSidebar']);
         </button>
       </div>
 
-      <!-- Logo and Menu -->
-      <!-- <a href="/" class="flex items-center space-x-2 p-4">
+      <a href="/" class="flex items-center space-x-2 p-4">
         <img :src="logo" alt="Logo" class="h-12 w-auto object-contain" />
         <span v-if="!collapsed" class="text-xl font-semibold text-gray-800">C3K Engine</span>
       </a>
 
-      <hr /> -->
+      <hr />
 
       <div class="px-3 py-4 overflow-y-auto">
         <ul class="space-y-2">

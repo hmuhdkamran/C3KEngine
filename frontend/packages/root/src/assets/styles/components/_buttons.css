@@ -10,9 +10,8 @@
 
     /* Button types with hover states */
     .btn-primary {
-        @apply text-white;
-        background-color: var(--primary-color);
-        border: border var(--primary-color);
+        @apply rounded-full py-2 px-4 text-white bg-gradient-to-r from-violet-600 to-indigo-500;
+        transition: background-color 0.3s, border-color 0.3s;
     }
 
     .btn-primary:hover {

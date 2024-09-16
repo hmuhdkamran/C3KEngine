@@ -71,16 +71,16 @@ const login = () => {
                             <div class="flex flex-col pt-4">
                                 <label for="email" class="text-lg text-gray-800">Email</label>
                                 <input type="email" id="email" placeholder="your@email.com" v-model="email"
-                                    class="c3k-input">
+                                    class="input-bottom">
                             </div>
 
                             <div class="flex flex-col pt-4">
                                 <label for="password" class="text-lg text-gray-800">Password</label>
                                 <input type="password" id="password" placeholder="Password" v-model="password"
-                                    class="c3k-input">
+                                    class="input-bottom">
                             </div>
 
-                            <button @click="login" class="c3k-btn mt-6">Login</button>
+                            <button @click="login" class="btn-primary mt-6">Login</button>
                         </div>
 
                         <div class="text-center pt-12 pb-12">
