@@ -91,28 +91,37 @@ const moduleComponent = computed(() => {
 });
 
 function goToMain() {
-    router.push('/app/main');
+    router.replace('/app/main');
 }
 
 </script>
 
 <template>
-    <div class="h-screen mt-12 flex flex-col">
-        <div class="bg-gray-200 py-2 px-4 flex items-center justify-between">
-            <div class="text-lg font-semibold">
-                <a href="#" @click.prevent="goToMain">Apps</a>
-                <span class="mx-2">/</span>
-                {{ selectedCardTitle }}
+    <div class="bg-white mt-16 flex flex-col">
+        <div
+            class="py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-md space-y-4 sm:space-y-0">
+            <div class="text-base sm:text-lg md:text-xl font-semibold flex items-center space-x-2 sm:space-x-4">
+                <div @click.prevent="goToMain" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+                    Apps
+                </div>
+                <span>/</span>
+                <span>{{ selectedCardTitle }}</span>
             </div>
-            <div class="flex items-center space-x-4">
-                <input type="text" placeholder="Search..." class="input-bottom" v-model="searchQuery"
+            <div class="flex flex-wrap items-center space-x-4 space-y-2 sm:space-y-0 mt-4 sm:mt-0">
+                <input type="text" placeholder="Search..." class="input-bottom sm:w-64 md:w-80" v-model="searchQuery"
                     @input="filterCards" />
-                <button @click="toggleFilters" class="btn-hyper px-4">Filters</button>
-                <button @click="groupByCategory" class="btn-secondary px-4 w-48">Group By</button>
-                <button @click="toggleFavorites" class="btn-danger px-4">Favorites</button>
+
+                <button @click="toggleFilters" class="flex items-center btn-hyper px-1 py-1 rounded-md">
+                    <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
+                </button>
+                <button @click="groupByCategory" class="flex items-center btn-secondary px-1 py-1 rounded-md">
+                    <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
+                </button>
+                <button @click="toggleFavorites" class="flex items-center btn-danger px-1 py-1 rounded-md">
+                    <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
+                </button>
             </div>
         </div>
-
         <div v-if="!showModulePage" class="flex flex-1">
             <!-- <div class="bg-gray-100 w-64 p-4">
                 <div class="text-lg font-semibold mb-4">
@@ -158,7 +167,7 @@ function goToMain() {
             <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
     </div>
-    <Dashboardheader :selectedCardTitle="selectedCardTitle"/>
+    <Dashboardheader :selectedCardTitle="selectedCardTitle" />
 </template>
 
 <route lang="yaml">
