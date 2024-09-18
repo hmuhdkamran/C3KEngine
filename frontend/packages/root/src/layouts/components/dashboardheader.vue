@@ -45,7 +45,7 @@ function toggleProfileDropdown() {
 
 <template>
   <div
-    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-md z-50">
+    class="fixed top-0 left-0 w-full sm:px-6 lg:px-8 flex items-center justify-between h-16 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-md z-50">
     <div class="flex items-center space-x-4 sm:space-x-6">
       <button @click="toggleSidebar" class="p-2 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[fluent--navigation-unread-20-filled] h-8 w-8"></span>
