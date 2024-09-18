@@ -101,7 +101,7 @@ function goToMain() {
         <div
             class="py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-md space-y-4 sm:space-y-0">
             <div class="text-base sm:text-lg md:text-xl font-semibold flex items-center space-x-2 sm:space-x-4">
-                <div @click.prevent="goToMain" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+                <div @click.prevent="goToMain" class="text-indigo-600 hover:text-indigo-700 cursor-pointer">
                     Apps
                 </div>
                 <span>/</span>

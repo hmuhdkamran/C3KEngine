@@ -18,13 +18,16 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div v-if="isVisible" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="absolute inset-0 bg-gray-500 opacity-75" @click="closeModal"></div>
-    <div class="bg-white rounded-lg shadow-lg p-6 relative z-10 w-full max-w-lg">
-      <button @click="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+  <div v-if="isVisible" class="relative w-full bg-white rounded-lg shadow-md p-6 space-y-4 border border-gray-300">
+    <div class="flex justify-between items-center p-2 border-b border-gray-300">
+      <button @click="closeModal" class="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+        <span class="icon-[mdi--arrow-left] text-xl"></span>
+        <span>Back</span>
+      </button>
+      <button @click="closeModal" class="text-gray-600 hover:text-gray-900">
         <span class="icon-[ph--x-bold] text-xl"></span>
       </button>
-      <FormContent :moduleTitle="props.moduleTitle" />
     </div>
+   <FormContent :moduleTitle="props.moduleTitle" />
   </div>
 </template>
