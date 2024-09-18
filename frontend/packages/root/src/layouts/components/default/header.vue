@@ -24,7 +24,7 @@ import { VNodeRenderer } from '@/components/base/VNodeRenderer';
                         </a>
                     </li>
                     <li class="nav-item cursor-pointer ">
-                        <RouterLink to="/auth/login" class="btn-primary px-4 py-2">
+                        <RouterLink to="/auth/login" class="btn-gradient px-4 py-2">
                             Login
                         </RouterLink>
                     </li>

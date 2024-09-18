@@ -62,7 +62,7 @@ const password: Ref<string> = ref('')
                                 <input type="password" id="confirm-password" placeholder="Password" class="input-bottom" />
                             </div>
 
-                            <input type="submit" value="Register" class="btn-primary mt-6" />
+                            <input type="submit" value="Register" class="btn-gradient mt-6" />
                         </div>
                         <div class="text-center pt-12 pb-12">
                             <p class="text-gray-800">

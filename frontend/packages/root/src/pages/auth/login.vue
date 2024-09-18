@@ -80,7 +80,7 @@ const login = () => {
                                     class="input-bottom">
                             </div>
 
-                            <button @click="login" class="btn-primary mt-6">Login</button>
+                            <button @click="login" class="btn-gradient mt-6">Login</button>
                         </div>
 
                         <div class="text-center pt-12 pb-12">
