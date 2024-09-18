@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import logo from "@/assets/images/vue.svg";
 
-defineProps<{ showModuleDropdown: boolean }>();
-defineEmits(['toggleModule']);
+interface Props {
+  showSidebarDropdown: boolean
+}
+
+interface Emit {
+  (e: 'toggleSidebar'): void;
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
 </script>
 
 <template>
   <transition name="slide">
-    <div v-if="showModuleDropdown" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
+    <div v-if="props.showSidebarDropdown" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
       <div class="flex flex-col h-full style-basic">
         <div class="flex justify-end p-4">
-          <button @click="$emit('toggleModule')" class="text-gray-600 hover:text-gray-800 focus:outline-none">
+          <button @click="emit('toggleSidebar')" class="text-gray-600 hover:text-gray-800 focus:outline-none">
             <span class="icon-[fluent--dismiss-20-filled] h-5 w-5"></span>
           </button>
         </div>
@@ -59,7 +67,7 @@ defineEmits(['toggleModule']);
     </div>
   </transition>
   <transition name="fade">
-      <div v-if="showModuleDropdown" class="fixed inset-0 bg-black opacity-50 z-40" @click="$emit('toggleModule')"></div>
+      <div v-if="props.showSidebarDropdown" class="fixed inset-0 bg-black opacity-50 z-40" @click="emit('toggleSidebar')"></div>
     </transition>
 </template>
 
@@ -74,4 +82,8 @@ defineEmits(['toggleModule']);
   transform: translateX(-100%);
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
 </style>

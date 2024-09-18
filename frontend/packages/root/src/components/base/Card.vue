@@ -22,7 +22,7 @@ const slots = useSlots();
 </script>
 
 <template>
-    <div class="transition transform hover:scale-105 duration-200" :class="containerClass">
+    <div class="transition transform shadow-lg hover:scale-105 duration-200" :class="containerClass">
 
         <div v-if="props.showHeader">
             <div v-if="slots.header">

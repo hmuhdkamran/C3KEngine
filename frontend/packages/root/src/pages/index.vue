@@ -33,7 +33,7 @@ import avatar from '@/assets/images/avatar.jpg'
                             business management, streamlining your processes while ensuring compliance with best
                             practices worldwide.
                         </p>
-                        <a class="mt-8 md:mt-12 group relative inline-flex items-center overflow-hidden rounded bg-gradient-to-r from-violet-600 to-indigo-500 px-6 md:px-8 py-2 md:py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
+                        <a class="mt-8 md:mt-12 group relative inline-flex items-center overflow-hidden rounded btn-gradient px-6 md:px-8 py-2 md:py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
                             href="#">
                             <span class="absolute -end-full transition-all group-hover:end-4">
                                 <span class="icon-[heroicons--arrow-long-right] mt-2"

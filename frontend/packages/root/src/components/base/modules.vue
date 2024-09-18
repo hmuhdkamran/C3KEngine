@@ -74,52 +74,50 @@ const handleAction = (action: 'add' | 'edit' | 'delete', card: Record<string, an
 
 
 <template>
-  <div class="h-screen p-6 bg-gray-100">
-    <div class="mb-6 flex flex-col md:flex-row md:justify-between items-start md:items-center">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ cardTitle }} - Modules</h1>
-      <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+  <div class="h-screen py-2 px-16 bg-gray-100">
+    <div class="mb-4 flex flex-col md:flex-row md:justify-between items-start md:items-center">
+      <h1 class="text-xl md:text-2xl font-bold text-gray-800">{{ cardTitle }} - Modules</h1>
+      <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
         <button @click="handleAction('add', {} as Record<string, any>)"
-          class="text-black py-2 px-4 rounded-full hover:bg-gray-200 transition-colors flex items-center">
-          <span class="icon-[mdi--plus] w-5 h-5"></span>
+          class="text-black py-2 px-3 rounded-full hover:bg-gray-200 transition-all flex items-center">
+          <span class="icon-[mdi--plus] w-4 h-4"></span>
         </button>
         <input v-model="searchQuery" type="text" placeholder="Search..."
-          class="border border-gray-300 rounded-md p-2 w-full md:max-w-xs focus:ring-2 focus:ring-violet-500 focus:outline-none" />
+          class="input-complete rounded-md p-2 w-full md:w-64" />
       </div>
     </div>
 
-    <div class="overflow-x-auto shadow-lg">
-      <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+    <div class="overflow-x-auto shadow-md bg-white rounded-lg">
+      <table class="min-w-full bg-white border border-gray-200">
         <thead>
           <tr class="bg-gray-200 border-b border-gray-300">
             <th v-for="column in props.columns" :key="column.key"
-              class="p-4 text-left text-gray-600 cursor-pointer"
+              class="p-3 text-left text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors"
               @click="changeSort(column.key)">
               {{ column.label }}
               <span v-if="sortColumn === column.key" class="ml-2">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
             </th>
-            <th class="p-4 text-center text-gray-600">Actions</th>
+            <th class="p-2 text-center text-gray-600">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="card in paginatedCards" :key="card[props.columns[0].key]"
-            class="border-b border-gray-300 hover:bg-gray-100 transition-transform transform hover:scale-103">
-            <td class="p-4">{{ card.title }}</td>
-            <td class="p-4">{{ card.description }}</td>
-            <td class="p-4">
-              <slot name="status" :status="card.status">
-                <span :class="card.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
-                  class="px-2 py-1 rounded-full text-xs font-semibold">
-                  {{ card.status }}
-                </span>
-              </slot>
+            class="border-b border-gray-300 hover:bg-gray-50 transition-all">
+            <td class="p-2">{{ card.title }}</td>
+            <td class="p-2">{{ card.description }}</td>
+            <td class="p-2">
+              <span :class="card.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+                class="px-2 py-1 rounded-full text-xs font-semibold">
+                {{ card.status }}
+              </span>
             </td>
-            <td class="p-4 text-center">
+            <td class="p-2 text-center">
               <button @click="openModal(card)"
-                class="transition-colors focus:outline-none">
+                class="transition-all focus:outline-none hover:bg-gray-200 rounded-full py-1 px-2 items-center">
                 <span class="icon-[mdi--edit-outline] w-5 h-5"></span>
               </button>
               <button @click="handleAction('delete', card)"
-                class="transition-colors focus:outline-none ml-2">
+                class="transition-all focus:outline-none ml-2 hover:bg-gray-200 rounded-full py-1 px-2 items-center">
                 <span class="icon-[material-symbols--delete-outline] w-5 h-5"></span>
               </button>
             </td>
@@ -134,11 +132,11 @@ const handleAction = (action: 'add' | 'edit' | 'delete', card: Record<string, an
       </div>
       <div class="flex space-x-2">
         <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-          class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+          class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
           Previous
         </button>
         <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
-          class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+          class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
           Next
         </button>
       </div>
@@ -152,10 +150,21 @@ const handleAction = (action: 'add' | 'edit' | 'delete', card: Record<string, an
 
 <style scoped>
 table tbody tr {
- transition: transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 table tbody tr:hover {
- transform: scale(1.02);
+  background-color: #f0f0f0;
+  transform: scale(1.005); 
+}
+
+button {
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.02); 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
 }
 </style>

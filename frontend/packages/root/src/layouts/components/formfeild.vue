@@ -38,6 +38,7 @@ const inputAttributes = computed(() => {
     <component
       :is="componentType"
       v-bind="inputAttributes"
+      class="input-complete"
       :placeholder="`Enter ${props.field.label.toLowerCase()}...`"
     >
       <template v-if="props.field.type === 'select'">

@@ -2,14 +2,14 @@
 import { defineProps, defineEmits } from 'vue';
 
 defineProps<{ isOpen: boolean }>();
-defineEmits(['toggleDropdown']);
+defineEmits(['toggleNotifications']);
 </script>
 
 <template>
-  <div @click.stop="$emit('toggleDropdown')" class="relative">
+  <div @click.stop="$emit('toggleNotifications')" class="relative">
     <button class="btn btn-ghost btn-circle">
       <div class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-        <span class="icon-[mdi--bell-outline] text-white h-6 w-6"></span>
+        <span class="icon-[mdi--bell-outline] text-white h-5 w-5 sm:h-6 sm:w-6"></span>
         <span
           class="absolute top-0 right-0 block w-4 h-4 text-xs text-white bg-red-600 rounded-full flex items-center justify-center">4</span>
       </div>
