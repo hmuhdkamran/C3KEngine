@@ -85,8 +85,9 @@ const login = () => {
 
                         <div class="text-center pt-12 pb-12">
                             <p class="text-gray-800">Don't have an account?
-                                <a href="/auth/register" class="underline font-semibold text-violet-700">
-                                    Register here.</a>
+                                <RouterLink to="/auth/register" class="underline font-semibold text-violet-700">
+                                    Register here.
+                                </RouterLink>
                             </p>
                         </div>
                     </div>
