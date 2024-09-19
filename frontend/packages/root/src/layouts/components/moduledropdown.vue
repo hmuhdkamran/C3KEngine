@@ -42,27 +42,27 @@ function toggleModuleDropdown() {
         <button @click="toggleModuleDropdown"
             class="flex items-center space-x-2 text-white hover:text-gray-300 focus:outline-none">
             <span class="icon-[ri--arrow-drop-down-line] text-white h-7 w-7"></span>
-            <h1 class="text-white text-xl sm:text-2xl font-bold py-4 px-2 sm:px-4">{{ props.selectedCardTitle }}</h1>
+            <h1 class="text-white text-md sm:text-2xl font-semibold py-2 sm:px-4">{{ props.selectedCardTitle }}</h1>
         </button>
         <transition name="fade">
             <div v-if="props.showModuleDropdown"
-                class="absolute left-0 mt-4 w-[80vw] sm:w-[600px] bg-white rounded-lg shadow-lg z-50 p-4 sm:p-6 
-                grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 transform origin-top scale-95 transition-transform duration-300">
-                <div class="col-span-full mb-4 relative">
+                class="absolute left-0 mt-2 w-[75vw] sm:w-[600px] bg-white rounded-lg shadow-lg z-50 p-2 sm:p-4 
+                grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 transform origin-top scale-95 transition-transform duration-300">
+                <div class="col-span-full mb-2 relative">
                     <input v-model="searchQuery" type="text" placeholder="Search Modules..."
-                        class="input-complete px-4 py-2 text-sm sm:text-base border rounded-lg" />
+                        class="input-complete text-xm sm:text-sm border rounded-lg" />
                 </div>
                 <div v-if="filteredServices.length" v-for="(service, index) in filteredServices" :key="index"
-                    class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm border-l-4 p-2 sm:p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">
-                    <span :class="service.icon + ' text-violet-600 h-6 w-6 sm:h-8 sm:w-8 mr-4'"></span>
+                    class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm border-l-4 p-1 sm:p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">
+                    <span :class="service.icon + ' text-violet-600 h-5 w-5 sm:h-8 sm:w-8 mr-4'"></span>
                     <div>
                         <h4 class="text-sm sm:text-md font-semibold text-gray-700">{{ service.name }}</h4>
                         <p class="text-xs sm:text-sm text-gray-500">{{ service.description }}</p>
                     </div>
                     <span v-if="service.name === 'HRMS Service'"
-                        class="absolute top-2 right-2 text-xs font-semibold text-white bg-red-500 rounded-full px-2 py-1">New</span>
+                        class="absolute top-2 right-2 text-xs text-white bg-red-500 rounded-full px-1 py-1">New</span>
                 </div>
-                <div v-if="!filteredServices.length" class="col-span-full text-center text-gray-500">
+                <div v-if="!filteredServices.length" class="text-sm col-span-full text-center text-gray-500">
                     <p>No modules found.</p>
                 </div>
             </div>

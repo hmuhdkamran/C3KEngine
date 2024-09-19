@@ -26,11 +26,11 @@ const slots = useSlots();
                     :class="`${iconClass} absolute w-6 h-6 text-violet-700 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2`"></span>
             </div>
             <div class="flex-1">
-                <div class="font-bold text-xl mb-1 flex items-center justify-between">
+                <div class="font-bold text-md mb-1 flex items-center justify-between">
                     <span>{{ title }}</span>
                     <span class="icon-[ph--dots-three-vertical-bold]"></span>
                 </div>
-                <p class="text-gray-500">{{ description }}</p>
+                <p class="text-gray-500 text-xm">{{ description }}</p>
             </div>
         </div>
 
@@ -45,7 +45,7 @@ const slots = useSlots();
         </div>
         <div v-else class="px-2 py-1 text-green-500 text-sm flex justify-between">
             <span>{{ status }}</span>
-            <button class="bg-transparent hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-2 rounded">{{
+            <button class="bg-transparent hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-2 rounded text-xm">{{
                 buttonText }}</button>
         </div>
     </div>
