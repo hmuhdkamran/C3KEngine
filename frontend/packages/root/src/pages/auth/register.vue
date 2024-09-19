@@ -67,9 +67,9 @@ const password: Ref<string> = ref('')
                         <div class="text-center pt-12 pb-12">
                             <p class="text-gray-800">
                                 Already have an account?
-                                <a href="/auth/login" class="underline font-semibold text-violet-700">
-                                    Log in here.
-                                </a>
+                                <RouterLink to="/auth/login" class="underline font-semibold text-violet-700">
+                                    Login here.
+                                </RouterLink>
                             </p>
                         </div>
                     </div>
