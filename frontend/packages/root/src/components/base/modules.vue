@@ -97,22 +97,18 @@ function goToMain() {
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-bold text-gray-800">{{ cardTitle }} - Modules</h1>
       <div class="flex items-center space-x-4">
-
+        <button @click="reloadPage" class="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition-all">
+          <span class="icon-[mage--reload] w-5 h-5"></span>
+        </button>
+        <button @click="handleAction('add', {} as Record<string, any>)" class="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition-all">
+          <span class="icon-[mdi--plus] w-5 h-5"></span>
+        </button>
       </div>
     </div>
     <div v-if="!isEditing">
-      <div class="flex justify-between text-sm items-center mb-4">
+      <div class="flex justify-end mb-4">
         <input v-model="searchQuery" type="text" placeholder="Search modules..."
-          class="input-complete w-full md:w-1/3 px-4 py-2 border rounded-md shadow-sm bg-white" />
-        <div class="flex items-center">
-          <button @click="reloadPage" class="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition-all">
-            <span class="icon-[mage--reload] w-5 h-5"></span>
-          </button>
-          <button @click="handleAction('add', {} as Record<string, any>)"
-            class="text-gray-600 hover:bg-gray-200 rounded-full p-2 transition-all">
-            <span class="icon-[mdi--plus] w-5 h-5"></span>
-          </button>
-        </div>
+          class="input-complete text-sm w-full md:w-1/3 px-4 py-1.5 border rounded-md shadow-sm bg-white" />
       </div>
       <div class="overflow-x-auto shadow-md bg-white rounded-lg">
         <table class="min-w-full bg-white border border-gray-200">
@@ -154,18 +150,41 @@ function goToMain() {
         </table>
       </div>
 
-      <div class="mt-4 flex flex-col md:flex-row justify-between items-center">
-        <div class="text-gray-600 text-sm mb-4 md:mb-0">
+      <div class="mt-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div class="text-gray-600 text-sm">
           Page {{ currentPage }} of {{ totalPages }}
         </div>
-        <div class="flex space-x-2">
-          <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-            class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 text-sm disabled:cursor-not-allowed transition-all">
-            Previous
+        <div class="flex items-center space-x-2">
+          <button @click="goToPage(1)" :disabled="currentPage === 1"
+            class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="icon-[material-symbols--first-page] w-5 h-5"></span>
           </button>
+          <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+            class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="icon-[material-symbols--keyboard-arrow-left] w-5 h-5"></span>
+          </button>
+          <template v-if="totalPages > 2">
+            <button v-for="page in [currentPage, currentPage + 1]" :key="page" @click="goToPage(page)" :class="{
+              'px-2.5 py-1 rounded-full transition-all text-sm': true,
+              'bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-lg': page === currentPage,
+              'bg-gray-200 text-gray-600 hover:bg-gray-300': page !== currentPage,
+              'hidden': page < 1 || page > totalPages,
+            }">
+              {{ page }}
+            </button>
+            <span v-if="currentPage + 1 < totalPages" class="text-gray-600">...</span>
+            <button v-if="totalPages > currentPage + 1" @click="goToPage(totalPages)"
+              class="bg-gray-200 text-gray-600 hover:bg-gray-300 px-2.5 py-1 rounded-full">
+              {{ totalPages }}
+            </button>
+          </template>
           <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
-            class="px-4 py-2 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 disabled:opacity-50 text-sm disabled:cursor-not-allowed transition-all">
-            Next
+            class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="icon-[material-symbols--keyboard-arrow-right] w-5 h-5"></span>
+          </button>
+          <button @click="goToPage(totalPages)" :disabled="currentPage === totalPages"
+            class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="icon-[material-symbols--last-page] w-5 h-5"></span>
           </button>
         </div>
       </div>
@@ -194,6 +213,14 @@ table tbody tr {
 
 table tbody tr:hover {
   background-color: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+button {
+  transition: transform 0.2s ease-in-out;
+}
+
+button:hover {
   transform: translateY(-2px);
 }
 </style>
