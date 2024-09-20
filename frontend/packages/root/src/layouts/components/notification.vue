@@ -9,7 +9,7 @@ defineEmits(['toggleNotifications']);
   <div @click.stop="$emit('toggleNotifications')" class="relative">
     <button class="btn btn-ghost btn-circle">
       <div class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
-        <span class="icon-[mdi--bell-outline] text-white h-5 w-5 sm:h-6 sm:w-6"></span>
+        <span class="icon-[mdi--bell-outline] text-white h-4 w-4 sm:h-5 sm:w-5"></span>
         <span
           class="absolute top-0 right-0 block w-4 h-4 text-xs text-white bg-red-600 rounded-full flex items-center justify-center">4</span>
       </div>
@@ -18,35 +18,35 @@ defineEmits(['toggleNotifications']);
       <div v-if="isOpen" class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50">
         <div class="py-2">
           <div class="px-4 py-3 bg-gray-100 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Notifications</h3>
+            <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
           </div>
           <div class="max-h-60 overflow-y-auto">
-            <div class="px-4 py-3 flex items-start space-x-3 border-b border-gray-200">
-              <span class="icon-[mdi--email] text-blue-500 h-5 w-5"></span>
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--email] text-blue-500 h-4 w-4"></span>
               <div>
                 <p class="text-sm text-gray-700">You have a new message from John Doe</p>
                 <span class="text-xs text-gray-500">2 minutes ago</span>
               </div>
             </div>
 
-            <div class="px-4 py-3 flex items-start space-x-3 border-b border-gray-200">
-              <span class="icon-[mdi--bell-ring] text-yellow-500 h-5 w-5"></span>
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--bell-ring] text-yellow-500 h-4 w-4"></span>
               <div>
                 <p class="text-sm text-gray-700">Reminder: Meeting at 3 PM</p>
                 <span class="text-xs text-gray-500">10 minutes ago</span>
               </div>
             </div>
 
-            <div class="px-4 py-3 flex items-start space-x-3 border-b border-gray-200">
-              <span class="icon-[mdi--file-document] text-green-500 h-5 w-5"></span>
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--file-document] text-green-500 h-4 w-4"></span>
               <div>
                 <p class="text-sm text-gray-700">New report available: Sales Summary</p>
                 <span class="text-xs text-gray-500">30 minutes ago</span>
               </div>
             </div>
 
-            <div class="px-4 py-3 flex items-start space-x-3 border-b border-gray-200">
-              <span class="icon-[mdi--account] text-purple-500 h-5 w-5"></span>
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--account] text-purple-500 h-4 w-4"></span>
               <div>
                 <p class="text-sm text-gray-700">Jane Smith updated her profile</p>
                 <span class="text-xs text-gray-500">1 hour ago</span>
@@ -55,7 +55,7 @@ defineEmits(['toggleNotifications']);
           </div>
 
         </div>
-        <div class="px-4 py-3 bg-gray-100 text-center">
+        <div class="px-3 py-2 bg-gray-100 text-center">
           <button class="text-sm text-blue-500 hover:underline">View All</button>
         </div>
       </div>

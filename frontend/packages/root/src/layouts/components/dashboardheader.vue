@@ -45,10 +45,10 @@ function toggleProfileDropdown() {
 
 <template>
   <div
-    class="fixed top-0 left-0 w-full sm:px-6 lg:px-8 flex items-center justify-between h-16 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-md z-50">
-    <div class="flex items-center space-x-4 sm:space-x-6">
-      <button @click="toggleSidebar" class="p-2 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[fluent--navigation-unread-20-filled] h-8 w-8"></span>
+    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-md z-50">
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      <button @click="toggleSidebar" class="p-1 text-white hover:text-gray-300 focus:outline-none">
+        <span class="icon-[fluent--navigation-unread-20-filled] h-6 w-6"></span>
       </button>
       <Moduledropdown 
         :selectedCardTitle="selectedCardTitle" 
@@ -63,16 +63,16 @@ function toggleProfileDropdown() {
         <a href="#" class="text-white font-medium hover:text-gray-200 transition duration-200">Pipeline Management</a>
       </nav>
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center space-x-2">
       <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" />
-      <button class="p-2 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-chat] h-5 w-5 sm:h-6 sm:w-6"></span>
+      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+        <span class="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <button class="p-2 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-help] h-5 w-5 sm:h-6 sm:w-6"></span>
+      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+        <span class="icon-[ic--baseline-help] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <button class="p-2 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-settings] h-5 w-5 sm:h-6 sm:w-6"></span>
+      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+        <span class="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
       <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" />
     </div>
@@ -90,6 +90,15 @@ function toggleProfileDropdown() {
 @media (min-width: 768px) {
   .mobile-menu-button {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .h-10 {
+    height: 8vh;
+  }
+  .text-sm {
+    font-size: 0.75rem;
   }
 }
 </style>

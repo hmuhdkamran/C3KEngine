@@ -19,10 +19,10 @@ const formContent = computed(() => hrmsform[props.moduleTitle] || {
 
 <template>
   <div>
-    <h2 class="text-xl font-bold mb-4">{{ formContent.title }} Form</h2>
+    <h2 class="text-md font-bold mb-4">{{ formContent.title }} Form</h2>
     <form>
       <FormField v-for="field in formContent.fields" :key="field.label" :field="field" />
-      <button type="submit" class="btn-gradient rounded-lg">Submit</button>
+      <button type="submit" class="btn-gradient py-1 px-2 text-sm rounded-lg">Submit</button>
     </form>
   </div>
 </template>

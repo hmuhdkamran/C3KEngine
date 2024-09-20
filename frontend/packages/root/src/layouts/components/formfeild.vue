@@ -34,11 +34,11 @@ const inputAttributes = computed(() => {
 
 <template>
   <div class="mb-4">
-    <label class="block text-gray-700">{{ props.field.label }}</label>
+    <label class="block text-sm text-gray-700">{{ props.field.label }}</label>
     <component
       :is="componentType"
       v-bind="inputAttributes"
-      class="input-complete"
+      class="input-complete text-sm"
       :placeholder="`Enter ${props.field.label.toLowerCase()}...`"
     >
       <template v-if="props.field.type === 'select'">

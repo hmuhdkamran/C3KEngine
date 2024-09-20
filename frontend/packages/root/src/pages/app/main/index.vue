@@ -97,11 +97,11 @@ function goToMain() {
 </script>
 
 <template>
-    <div class="bg-white mt-16 flex flex-col">
-        <div
+    <div class="bg-white mt-12 flex flex-col">
+        <!-- <div
             class="py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-md space-y-4 sm:space-y-0">
             <div class="text-base sm:text-lg md:text-xl font-semibold flex items-center space-x-2 sm:space-x-4">
-                <div @click.prevent="goToMain" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+                <div @click.prevent="goToMain" class="text-indigo-600 hover:text-indigo-700 cursor-pointer">
                     Apps
                 </div>
                 <span>/</span>
@@ -121,7 +121,7 @@ function goToMain() {
                     <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
                 </button>
             </div>
-        </div>
+        </div> -->
         <div v-if="!showModulePage" class="flex flex-1">
             <!-- <div class="bg-gray-100 w-64 p-4">
                 <div class="text-lg font-semibold mb-4">
