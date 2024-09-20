@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, defineProps, defineEmits, watch } from 'vue';
 
-const props = defineProps<{ 
+const props = defineProps<{
     selectedCardTitle: string;
     showModuleDropdown: boolean;
 }>();
@@ -41,8 +41,10 @@ function toggleModuleDropdown() {
     <div class="relative">
         <button @click="toggleModuleDropdown"
             class="flex items-center space-x-2 text-white hover:text-gray-300 focus:outline-none">
+            <span v-if="!props.selectedCardTitle">Dashboard</span>
+            <h1 v-else >{{ props.selectedCardTitle }}
+            </h1>
             <span class="icon-[ri--arrow-drop-down-line] text-white h-7 w-7"></span>
-            <h1 class="text-white text-md sm:text-2xl font-semibold py-2 sm:px-4">{{ props.selectedCardTitle }}</h1>
         </button>
         <transition name="fade">
             <div v-if="props.showModuleDropdown"
@@ -83,6 +85,7 @@ function toggleModuleDropdown() {
 }
 
 @media (min-width: 640px) {
+
     .fade-enter-active,
     .fade-leave-active {
         transition: opacity 0.3s ease, transform 0.3s ease;

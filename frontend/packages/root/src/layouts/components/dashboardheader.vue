@@ -45,7 +45,7 @@ function toggleProfileDropdown() {
 
 <template>
   <div
-    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-md z-50">
+    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-50">
     <div class="flex items-center space-x-2 sm:space-x-4">
       <button @click="toggleSidebar" class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[fluent--navigation-unread-20-filled] h-6 w-6"></span>
@@ -56,11 +56,11 @@ function toggleProfileDropdown() {
         @toggleModuleDropdown="toggleModuleDropdown"
       />
       <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown" />
-      <nav class="hidden md:flex space-x-4">
-        <a href="#" class="text-white font-medium hover:text-gray-200 transition duration-200">CRM Dashboard</a>
-        <a href="#" class="text-white font-medium hover:text-gray-200 transition duration-200">Sales Overview</a>
-        <a href="#" class="text-white font-medium hover:text-gray-200 transition duration-200">Customer Engagement</a>
-        <a href="#" class="text-white font-medium hover:text-gray-200 transition duration-200">Pipeline Management</a>
+      <nav class="hidden justify-between md:flex space-x-4">
+        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">CRM Dashboard</a>
+        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Sales Overview</a>
+        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Customer Engagement</a>
+        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Pipeline Management</a>
       </nav>
     </div>
     <div class="flex items-center space-x-2">
