@@ -1,0 +1,89 @@
+<script setup lang="ts">
+import logo from "@/assets/images/vue.svg";
+
+interface Props {
+  showSidebarDropdown: boolean
+}
+
+interface Emit {
+  (e: 'toggleSidebar'): void;
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+</script>
+
+<template>
+  <transition name="slide">
+    <div v-if="props.showSidebarDropdown" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
+      <div class="flex flex-col h-full style-basic">
+        <div class="flex justify-end p-3">
+          <button @click="emit('toggleSidebar')" class="text-gray-600 hover:text-gray-800 focus:outline-none">
+            <span class="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
+          </button>
+        </div>
+        <a href="/" class="text-md font-semibold text-gray-800 flex items-center space-x-2 ml-3">
+          <img :src="logo" alt="C3K Engine Logo" class="h-11 w-auto object-contain" />
+          <span>C3K Engine</span>
+        </a>
+        <hr />
+        <div class="overflow-y-auto rounded">
+          <ul class="py-4 space-y-2">
+            <li><a href="dashboard" class="text-sm block rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[fluent-mdl2--recruitment-management] bg-violet-600 mx-2 w-4 h-4"></span>
+                HRMS</a></li>
+            <li><a href="dashboard" class="text-sm block rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[vaadin--shop] bg-violet-600 mx-2 w-4 h-4"></span>
+                Retail</a></li>
+            <li><a href="dashboard" class=" text-sm block rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[mdi--office-building-settings-outline] bg-violet-600 mx-2 w-4 h-4"></span>
+                Production</a></li>
+          </ul>
+        </div>
+        <div class="mt-auto py-3">
+          <hr />
+          <ul class="space-y-2">
+            <li>
+              <a href="/profile" class="text-sm flex items-center rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[ic--baseline-person] bg-violet-600 mx-2 w-4 h-4"></span>
+                Profile
+              </a>
+            </li>
+            <li>
+              <a href="/settings" class="text-sm flex items-center rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[ic--baseline-settings] bg-violet-600 mx-2 w-4 h-4"></span>
+                Settings
+              </a>
+            </li>
+            <li>
+              <a href="/logout" class="text-sm flex items-center rounded-lg px-4 py-2 text-gray-800 hover:bg-violet-100">
+                <span class="icon-[ic--baseline-logout] bg-violet-600 mx-2 w-4 h-4"></span>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </transition>
+  <transition name="fade">
+      <div v-if="props.showSidebarDropdown" class="fixed inset-0 bg-black opacity-50 z-40" @click="emit('toggleSidebar')"></div>
+    </transition>
+</template>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.4s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+</style>
