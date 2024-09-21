@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use c3k_auth::controllers::roles::{
+use c3k_auth_service::controllers::roles::{
     auth_controller::auth_routes, role_controller::role_routes,
     role_route_map_controller::role_route_map_routes, route_controller::route_routes,
     user_controller::user_routes, user_role_map_controller::user_role_map_routes,
