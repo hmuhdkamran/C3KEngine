@@ -110,7 +110,7 @@ function goToMain() {
         <input v-model="searchQuery" type="text" placeholder="Search modules..."
           class="input-complete text-sm w-full md:w-1/3 px-4 py-1.5 border rounded-md shadow-sm bg-white" />
       </div>
-      <div class="overflow-x-auto shadow-md bg-white rounded-lg">
+      <div class="overflow-x-auto shadow-md bg-white rounded-sm">
         <table class="min-w-full bg-white border border-gray-200">
           <thead>
             <tr class="bg-gray-200 border-b border-gray-300">
@@ -127,15 +127,15 @@ function goToMain() {
           <tbody>
             <tr v-for="card in paginatedCards" :key="card[props.columns[0].key]"
               class="border-b border-gray-300 hover:bg-gray-50 transition-all text-md">
-              <td class="p-2">{{ card.title }}</td>
-              <td class="p-2">{{ card.description }}</td>
-              <td class="p-2 text-xs">
+              <td class="p-1">{{ card.title }}</td>
+              <td class="p-1">{{ card.description }}</td>
+              <td class="p-1 text-xs">
                 <span :class="card.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
-                  class="px-2 py-0.5 rounded-full">
+                  class="px-1 py-0.5 rounded-full">
                   {{ card.status }}
                 </span>
               </td>
-              <td class="p-2 text-center">
+              <td class="p-1 text-center">
                 <button @click="openModal(card)"
                   class="transition-all text-gray-600 focus:outline-none hover:bg-gray-200 rounded-full">
                   <span class="icon-[mdi--edit-outline] w-5 h-5"></span>

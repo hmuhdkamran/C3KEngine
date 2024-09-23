@@ -58,14 +58,14 @@ const login = () => {
             -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl transition transform hover:scale-105 duration-500">
             </div>
             <div
-                class="relative bg-white shadow-lg sm:rounded-3xl sm:p-5 transition transform hover:scale-105 duration-700">
+                class="relative bg-white shadow-lg sm:rounded-3xl sm:p-5 transition transform hover:scale-105 duration-500">
                 <div class="flex flex-col bg-white">
                     <div class="flex justify-center md:justify-start md:pl-6 md:-mb-12">
                         <a href="/" class="text-white font-bold text-xl p-2">
                             <img :src="logo" alt="Logo" class="h-8 md:h-24">
                         </a>
                     </div>
-                    <div class="fflex flex-col justify-center md:justify-start px-2 my-auto md:pt-0 md:px-12">
+                    <div class="flex flex-col justify-center md:justify-start px-2 my-auto md:pt-0 md:px-12">
                         <p class="text-center text-2xl text-gray-800">Welcome.</p>
                         <div class="flex flex-col pt-3 md:pt-8">
                             <div class="flex flex-col pt-4">
