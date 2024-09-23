@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Sidebar from './sidebar.vue';
 import Moduledropdown from './moduledropdown.vue';
 import Notifications from './notification.vue';
@@ -10,6 +10,7 @@ const isOpen = ref(false);
 const showSidebarDropdown = ref(false);
 const showModuleDropdown = ref(false);
 const showProfileDropdown = ref(false);
+const isSmallScreen = ref(false);
 
 defineProps<{ selectedCardTitle: string }>();
 
@@ -41,6 +42,37 @@ function toggleProfileDropdown() {
   showModuleDropdown.value = false;
 }
 
+const checkScreenSize = () => {
+  isSmallScreen.value = window.innerWidth < 640;
+};
+
+function useClickOutside(callback: () => void) {
+  const handleClickOutside = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown, .notification, .profile')) {
+      callback();
+    }
+  };
+
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+    checkScreenSize();
+  window.addEventListener('resize', checkScreenSize);
+  });
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+    window.removeEventListener('resize', checkScreenSize);
+  });
+}
+
+
+useClickOutside(() => {
+  showModuleDropdown.value = false;
+  isOpen.value = false;
+  showProfileDropdown.value = false;
+});
+
 </script>
 
 <template>
@@ -53,9 +85,10 @@ function toggleProfileDropdown() {
       <Moduledropdown 
         :selectedCardTitle="selectedCardTitle" 
         :showModuleDropdown="showModuleDropdown" 
+        class="dropdown" 
         @toggleModuleDropdown="toggleModuleDropdown"
       />
-      <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown" />
+      <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown"/>
       <nav class="hidden justify-between md:flex space-x-4">
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">CRM Dashboard</a>
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Sales Overview</a>
@@ -64,7 +97,7 @@ function toggleProfileDropdown() {
       </nav>
     </div>
     <div class="flex items-center space-x-2">
-      <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" />
+      <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" :isSmallScreen="isSmallScreen" class="notification" />
       <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
@@ -74,7 +107,7 @@ function toggleProfileDropdown() {
       <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" />
+      <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" class="profile" />
     </div>
   </div>
 </template>

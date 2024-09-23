@@ -12,12 +12,12 @@ import avatar from "@/assets/images/avatar.jpg"
     <button @click="$emit('toggleProfileDropdown')"
       class="flex items-center p-1 text-gray-600 hover:text-gray-800 focus:outline-none gap-1">
       <img :src="avatar" alt="Profile" class="w-8 h-8 rounded-full border-2 border-gray-200" />
-      <span class="text-sm text-white">Mitchell Admin</span>
+      <span class="text-sm text-white truncate md:whitespace-normal">Mitchell Admin</span>
       <span class="icon-[ri--arrow-drop-down-line] text-white h-5 w-5"></span>
     </button>
     <transition name="dropdown">
       <div v-if="showProfileDropdown"
-        class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-10 overflow-hidden">
+        class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 overflow-hidden">
         <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
           <div class="flex items-center">
             <img :src="avatar" alt="Profile" class="w-9 h-9 rounded-full border-2 border-gray-200" />
