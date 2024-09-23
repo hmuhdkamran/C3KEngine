@@ -21,13 +21,17 @@
     }
 
     .btn-gradient {
-        @apply rounded-full py-2 px-4 text-white bg-gradient-to-r from-violet-600 to-indigo-500;
+        @apply rounded-md py-2 px-4 text-white bg-gradient-to-r from-violet-600 to-indigo-500;
         transition: background-color 0.3s, border-color 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
     }
 
     .btn-gradient:hover {
         background-color: var(--primary-color-dark);
         border-color: var(--primary-color-darker);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
 
     .btn-secondary {

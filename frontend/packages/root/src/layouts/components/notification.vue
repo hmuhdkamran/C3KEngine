@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 
-defineProps<{ isOpen: boolean }>();
+defineProps<{ isOpen: boolean; isSmallScreen: boolean }>();
 defineEmits(['toggleNotifications']);
 </script>
 
@@ -15,9 +15,12 @@ defineEmits(['toggleNotifications']);
       </div>
     </button>
     <transition name="dropdown">
-      <div v-if="isOpen" class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50">
-        <div class="py-2">
-          <div class="px-4 py-3 bg-gray-100 border-b border-gray-200">
+      <div v-if="isOpen" :class="[
+        'absolute mt-2 w-72 sm:w-80 bg-white shadow-lg rounded-md overflow-hidden z-50',
+        isSmallScreen ? 'left-1/2 transform -translate-x-1/2 top-10' : 'right-0'
+      ]">
+        <div class="py-1">
+          <div class="px-4 py-2 bg-gray-100 border-b border-gray-200">
             <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
           </div>
           <div class="max-h-60 overflow-y-auto">

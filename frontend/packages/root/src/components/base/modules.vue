@@ -23,6 +23,8 @@ const itemsPerPage = ref(8);
 const sortColumn = ref<string>('');
 const sortOrder = ref<'asc' | 'desc'>('asc');
 const isEditing = ref(false);
+const selectedCards = ref<Record<string, any>[]>([]);
+const selectAll = ref(false);
 
 const filteredCards = computed(() => {
   const query = searchQuery.value.toLowerCase();
@@ -83,11 +85,19 @@ const reloadPage = () => {
 function goToMain() {
   router.replace('/app/main');
 }
+
+const toggleSelectAll = () => {
+  if (selectAll.value) {
+    selectedCards.value = [...paginatedCards.value];
+  } else {
+    selectedCards.value = [];
+  }
+};
 </script>
 
 
 <template>
-  <div class="h-screen py-2 px-16 bg-gray-50">
+ <div class="h-screen py-2 px-16 bg-gray-50">
     <nav class="flex py-4 text-gray-600 text-sm">
       <button @click="goToMain" class="hover:underline">Dashboard</button>
       <span class="mx-2">/</span>
@@ -107,41 +117,46 @@ function goToMain() {
     </div>
     <div v-if="!isEditing">
       <div class="flex justify-end mb-4">
-        <input v-model="searchQuery" type="text" placeholder="Search modules..."
-          class="input-complete text-sm w-full md:w-1/3 px-4 py-1.5 border rounded-md shadow-sm bg-white" />
+        <input v-model="searchQuery" type="text" placeholder="Search modules..." 
+        class="input-complete text-sm w-full md:w-1/3 px-4 py-1.5 border rounded-md shadow-sm bg-white" />
       </div>
       <div class="overflow-x-auto shadow-md bg-white rounded-sm">
         <table class="min-w-full bg-white border border-gray-200">
           <thead>
             <tr class="bg-gray-200 border-b border-gray-300">
-              <th v-for="column in props.columns" :key="column.key"
-                class="p-2 text-left text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors text-md font-medium"
-                @click="changeSort(column.key)">
+              <th class="p-2 text-center text-gray-600 hover:bg-gray-300 transition-colors text-md font-medium">
+                <input class="cursor-pointer" type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
+              </th>
+              <th v-for="column in props.columns" :key="column.key" 
+              class="p-2 text-left text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors text-md font-medium" 
+              @click="changeSort(column.key)">
                 {{ column.label }}
                 <span v-if="sortColumn === column.key" class="ml-1 text-md">{{ sortOrder === 'asc' ? '↑' : '↓' }}</span>
               </th>
-              <th class="p-2 text-center text-gray-600 text-md font-medium 
+              <th class="p-1 text-center text-gray-600 text-md font-medium 
               cursor-pointer hover:bg-gray-300 transition-colors">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="card in paginatedCards" :key="card[props.columns[0].key]"
-              class="border-b border-gray-300 hover:bg-gray-50 transition-all text-md">
+            <tr v-for="card in paginatedCards" :key="card[props.columns[0].key]" 
+            class="border-b border-gray-300 hover:bg-gray-50 transition-all text-md">
+              <td class="p-1 text-center">
+                <input class="cursor-pointer" type="checkbox" v-model="selectedCards" :value="card" />
+              </td>
               <td class="p-1">{{ card.title }}</td>
               <td class="p-1">{{ card.description }}</td>
               <td class="p-1 text-xs">
-                <span :class="card.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
-                  class="px-1 py-0.5 rounded-full">
+                <span :class="card.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'" class="px-1 py-0.5 rounded-full">
                   {{ card.status }}
                 </span>
               </td>
               <td class="p-1 text-center">
-                <button @click="openModal(card)"
-                  class="transition-all text-gray-600 focus:outline-none hover:bg-gray-200 rounded-full">
+                <button @click="openModal(card)" 
+                class="transition-all text-gray-600 focus:outline-none hover:bg-gray-200 rounded-full">
                   <span class="icon-[mdi--edit-outline] w-5 h-5"></span>
                 </button>
-                <button @click="handleAction('delete', card)"
-                  class="transition-all text-gray-600 focus:outline-none ml-1 hover:bg-gray-200 rounded-full">
+                <button @click="handleAction('delete', card)" 
+                class="transition-all text-gray-600 focus:outline-none ml-1 hover:bg-gray-200 rounded-full">
                   <span class="icon-[material-symbols--delete-outline] w-5 h-5"></span>
                 </button>
               </td>
