@@ -120,7 +120,7 @@ const toggleSelectAll = () => {
         <input v-model="searchQuery" type="text" placeholder="Search modules..." 
         class="input-complete text-sm w-full md:w-1/3 px-4 py-1.5 border rounded-md shadow-sm bg-white" />
       </div>
-      <div class="overflow-x-auto shadow-md bg-white rounded-lg">
+      <div class="overflow-x-auto shadow-md bg-white rounded-sm">
         <table class="min-w-full bg-white border border-gray-200">
           <thead>
             <tr class="bg-gray-200 border-b border-gray-300">
