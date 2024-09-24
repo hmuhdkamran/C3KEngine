@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "@casl/vue": "^2.2.2",
     "axios": "^1.7.7",
     "common-lib": "file:../common-lib",
     "jwt-decode": "^4.0.0",

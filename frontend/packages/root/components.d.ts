@@ -15,5 +15,6 @@ declare module 'vue' {
     Picker: typeof import('./src/components/forms/picker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TokenStatus: typeof import('./src/components/base/TokenStatus.vue')['default']
   }
 }

@@ -57,7 +57,7 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 5000,
-    outDir: '../production/c3k-engine',
+    outDir: '../production/root',
     emptyOutDir: true,
     manifest: true,
     target: 'esnext',
