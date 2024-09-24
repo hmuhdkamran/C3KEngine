@@ -12,7 +12,7 @@
     "@casl/ability": "^6.7.1",
     "@casl/vue": "^2.2.2",
     "axios": "^1.7.7",
-    "common-lib": "file:../common-lib",
+    "c3k-library": "1.0.1",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.2.2",
     "vue": "^3.5.4",

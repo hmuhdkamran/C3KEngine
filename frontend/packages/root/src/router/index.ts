@@ -1,9 +1,8 @@
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import type { IRouteGuardOptions } from './route-guard-option'
-import { RouteGuards } from './route-guards'
 import routes from '~pages'
-import { DefaultUser } from '@/plugins/models'
+import { DefaultUser } from '@/plugins/models';
+import { IRouteGuardOptions, RouteGuards } from 'c3k-library'
 
 const options: IRouteGuardOptions = {
   resolveUser: () => DefaultUser, // store.user,
