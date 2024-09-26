@@ -35,6 +35,8 @@ pub struct ColumnConfiguration {
 #[derive(Debug, Deserialize, Clone)]
 pub struct Configuration {
     pub connection_string: String,
+    pub service: String,
+    pub base_path: String,
     pub module_configuration: Vec<Modules>,
     pub column_configurations: Vec<ColumnConfiguration>,
     pub data_types: Vec<DataType>

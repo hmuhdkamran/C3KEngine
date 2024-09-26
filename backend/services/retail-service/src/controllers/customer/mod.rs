@@ -1,0 +1,9 @@
+pub mod customer_types;
+pub mod customer_loyalty_points;
+pub mod customers;
+pub mod customer_contacts;
+pub mod package_types;
+pub mod customer_packages;
+pub mod package_rules;
+pub mod packages;
+pub mod customers_addresses;

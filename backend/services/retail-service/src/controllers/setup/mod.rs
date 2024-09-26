@@ -1,0 +1,12 @@
+pub mod statuses;
+pub mod countries;
+pub mod states;
+pub mod cities;
+pub mod locations;
+pub mod warehouses;
+pub mod contact_types;
+pub mod expense_types;
+pub mod branches;
+pub mod currencies;
+pub mod address_types;
+pub mod tax_rates;

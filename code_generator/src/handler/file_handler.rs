@@ -18,16 +18,15 @@ impl FileHandler {
 
     pub fn process_files(&self) -> io::Result<()> {
         for module in &self.config.module_configuration {
-            // Read the file template
-            let distination_path = Path::new(&module.distination);
+            let path = format!("{}{}", self.config.base_path, module.distination);
+            let distination_path = Path::new(&path);
             if !distination_path.exists() {
                 create_dir_all(distination_path)?;
             }
 
             let file_contents = read_to_string(&module.file_path)?;
 
-            // Create mod.rs at the root of module.distination
-            let root_mod_file_path = Path::new(&module.distination).join(&module.common_file);
+            let root_mod_file_path = Path::new(&path).join(&module.common_file);
             let mut root_mod_file = OpenOptions::new()
                 .write(true)
                 .create(true)
@@ -36,11 +35,7 @@ impl FileHandler {
 
             // Process each schema
             for schema in &self.schemas {
-                let schema_folder = format!(
-                    "{}/{}",
-                    module.distination,
-                    schema.schema_name.to_lowercase()
-                );
+                let schema_folder = format!("{}/{}", path, schema.schema_name.to_case(Case::Snake));
                 let schema_path = Path::new(&schema_folder);
 
                 // Check if folder exists, create it if not
@@ -101,6 +96,10 @@ impl FileHandler {
         for config in &self.config.column_configurations {
             let replacement = self.get_replacement_value(&config, schema, table);
             modified_template = modified_template.replace(&config.property_name, &replacement);
+
+            if modified_template.contains("$SERVICE$") {
+                modified_template = modified_template.replace("$SERVICE$", &self.config.service);
+            }
         }
 
         modified_template
@@ -142,10 +141,16 @@ impl FileHandler {
 
         if result.contains("TABLE_NAME") && result.contains("SCHEMA") {
             result = result
-                .replace("TABLE_NAME", &convert_case(&table.table_name, &config.display_type))
+                .replace(
+                    "TABLE_NAME",
+                    &convert_case(&table.table_name, &config.display_type),
+                )
                 .replace("SCHEMA", &convert_case(schema, &config.display_type));
         } else if result.contains("TABLE_NAME") {
-            result = result.replace("TABLE_NAME", &convert_case(&table.table_name, &config.display_type))
+            result = result.replace(
+                "TABLE_NAME",
+                &convert_case(&table.table_name, &config.display_type),
+            )
         } else if result.contains("SCHEMA") {
             result = result.replace("SCHEMA", &convert_case(schema, &config.display_type))
         } else if result.contains("PRIMARY_KEY") {
