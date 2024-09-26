@@ -14,33 +14,66 @@ const showFavorites = ref(false);
 const showModulePage = ref(false);
 const selectedCardTitle = ref('');
 const currentModule = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(20);
 
 const cards = ref([
-    {
-        title: 'HRMS',
-        description: 'Streamline HR with our software',
-        status: 'Installed',
-        buttonText: 'MODULE INFO',
-        iconClass: 'icon-[fluent-mdl2--recruitment-management]',
-        category: 'HRMS',
-    },
-    {
-        title: 'Retail',
-        description: 'Boost retail with streamlined software.',
-        status: 'Activate',
-        buttonText: 'LEARN MORE',
-        iconClass: 'icon-[vaadin--shop]',
-        category: 'Retail',
-    },
-    {
-        title: 'Production',
-        description: 'Looking forward to process improvements.',
-        status: 'Installed',
-        buttonText: 'LEARN MORE',
-        iconClass: 'icon-[mdi--office-building-settings-outline]',
-        category: 'Production',
-    }
+    // HRMS
+    { title: 'Employee Management', description: 'Manage employee data and HR operations', category: 'HRMS', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--account-group]' },
+    { title: 'Payroll', description: 'Handle payroll processing and compliance', category: 'HRMS', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--cash-register]' },
+    { title: 'Attendance Tracking', description: 'Track employee attendance and leaves', category: 'HRMS', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--calendar-check]' },
+
+    // Retail
+    { title: 'Inventory Management', description: 'Manage stock levels and supplier information', category: 'Retail', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--storefront]' },
+    { title: 'Point of Sale', description: 'Handle retail transactions and sales data', category: 'Retail', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--cart-outline]' },
+    { title: 'Customer Relationship', description: 'Manage customer data and interactions', category: 'Retail', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--account-multiple]' },
+
+    // Production
+    { title: 'Production Planning', description: 'Plan and manage production schedules', category: 'Production', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--factory]' },
+    { title: 'Quality Control', description: 'Monitor and ensure product quality', category: 'Production', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--check-decagram]' },
+    { title: 'Supply Chain Management', description: 'Coordinate supply chain and logistics', category: 'Production', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--truck-delivery]' },
+
+    // Finance
+    { title: 'Accounts Payable', description: 'Manage supplier payments and liabilities', category: 'Finance', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--bank-transfer-in]' },
+    { title: 'Accounts Receivable', description: 'Track customer payments and receivables', category: 'Finance', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--bank-transfer-out]' },
+    { title: 'Budgeting', description: 'Create and manage financial budgets', category: 'Finance', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--finance]' },
+
+    // Marketing
+    { title: 'Campaign Management', description: 'Create and track marketing campaigns', category: 'Marketing', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--bullhorn]' },
+    { title: 'Lead Management', description: 'Capture and nurture sales leads', category: 'Marketing', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--account-star]' },
+    { title: 'Market Analytics', description: 'Analyze market trends and performance', category: 'Marketing', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--chart-line]' },
+
+    // Point of Sales
+    { title: 'Transaction Management', description: 'Process and track sales transactions', category: 'Point of Sales', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--credit-card]' },
+    { title: 'Sales Reporting', description: 'Generate sales and revenue reports', category: 'Point of Sales', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--file-chart-outline]' },
+
+    // Healthcare
+    { title: 'Patient Management', description: 'Manage patient records and history', category: 'Healthcare', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--stethoscope]' },
+    { title: 'Appointment Scheduling', description: 'Schedule and manage appointments', category: 'Healthcare', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--calendar-clock]' },
+    { title: 'Billing & Insurance', description: 'Manage billing and insurance claims', category: 'Healthcare', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--file-document]' },
+
+    // Education
+    { title: 'Student Management', description: 'Manage student data and academic records', category: 'Education', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--school]' },
+    { title: 'Course Management', description: 'Create and track courses and schedules', category: 'Education', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--book-open]' },
+
+    // Technology
+    { title: 'IT Helpdesk', description: 'Support ticketing and issue tracking', category: 'Technology', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--headset]' },
+    { title: 'Project Management', description: 'Plan and execute technology projects', category: 'Technology', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--file-cog]' },
+
+    // Logistics
+    { title: 'Fleet Management', description: 'Manage fleet and transportation logistics', category: 'Logistics', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--truck-outline]' },
+    { title: 'Warehouse Management', description: 'Oversee warehouse operations and storage', category: 'Logistics', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--warehouse]' },
+
+    // Customer Support
+    { title: 'Support Ticketing', description: 'Track and resolve customer support issues', category: 'Customer Support', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--ticket-account]' },
+    { title: 'Knowledge Base', description: 'Create and maintain help articles', category: 'Customer Support', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--library-books]' },
 ]);
+
+function filterCards() {
+
+}
+
+const totalPages = computed(() => Math.ceil(filteredCards.value.length / itemsPerPage.value));
 
 const filteredCards = computed(() => {
     return cards.value.filter((card) => {
@@ -50,13 +83,22 @@ const filteredCards = computed(() => {
     });
 });
 
-function filterCards() {
-
-}
+const paginatedFilteredCards = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredCards.value.slice(start, end);
+});
 
 function filterByCategory(category: string) {
     selectedCategory.value = category;
+    currentPage.value = 1;
 }
+
+const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
+    }
+};
 
 function toggleFilters() {
     alert('Filters button clicked');
@@ -79,11 +121,11 @@ function handleCardClick(cardTitle: string) {
 
 const moduleComponent = computed(() => {
     switch (currentModule.value) {
-        case 'HRMS':
+        case 'Employee Management':
             return HRMSmodule;
-        case 'Retail':
+        case 'Inventory Management':
             return Retailmodule;
-        case 'Production':
+        case 'Production Planning':
             return Productionmodule;
         default:
             return null;
@@ -98,66 +140,144 @@ function goToMain() {
 
 <template>
     <div class="bg-white mt-12 flex flex-col">
-        <!-- <div
-            class="py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-md space-y-4 sm:space-y-0">
-            <div class="text-base sm:text-lg md:text-xl font-semibold flex items-center space-x-2 sm:space-x-4">
-                <div @click.prevent="goToMain" class="text-indigo-600 hover:text-indigo-700 cursor-pointer">
-                    Apps
+        <div class="border-b border-gray-300 py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row sm:items-center 
+            justify-between shadow-md space-y-4 sm:space-y-0">
+            <nav class="sm:text-md text-md flex space-x-2">
+                <div @click.prevent="goToMain"
+                    class="hover:underline cursor-pointer text-gray-600 flex items-center">
+                    <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
                 </div>
-                <span>/</span>
-                <span>{{ selectedCardTitle }}</span>
+                <span class="text-gray-400">/</span>
+                <div class="hover:underline cursor-pointer text-gray-600">
+                    {{ selectedCategory }}
+                </div>
+                <span class="text-gray-400">/</span>
+                <span class="hover:underline cursor-pointer text-gray-600">{{ selectedCardTitle }}</span>
+            </nav>
+            <div class="flex flex-col space-y-2">
+                <div class="relative">
+                    <i class="icon-[mdi--magnify] absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" placeholder="Search..." class="input-bottom  pl-10 w-full" v-model="searchQuery"
+                        @input="filterCards" />
+                </div>
+                <div class="flex flex-wrap items-center justify-between lg:space-x-96 sm:space-x-80 md:space-x-12">
+                    <div class="flex justify-start space-x-1 items-center text-sm ">
+                        <button @click="toggleFilters"
+                            class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-md shadow-md">
+                            <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
+                        </button>
+                        <button @click="groupByCategory"
+                            class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-md shadow-md">
+                            <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
+                        </button>
+                        <button @click="toggleFavorites"
+                            class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-md shadow-md">
+                            <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
+                        </button>
+                    </div>
+                    <div class="flex items-center text-gray-600 space-x-2">
+                        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+                        <button @click="goToPage(currentPage - 1)" class="p-1 rounded-md hover:bg-gray-200"
+                            :disabled="currentPage === 1">
+                            <i class="icon-[mdi--chevron-left]"></i>
+                        </button>
+                        <button @click="goToPage(currentPage + 1)" class="p-1 rounded-md hover:bg-gray-200"
+                            :disabled="currentPage === totalPages">
+                            <i class="icon-[mdi--chevron-right]"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="flex flex-wrap items-center space-x-4 space-y-2 sm:space-y-0 mt-4 sm:mt-0">
-                <input type="text" placeholder="Search..." class="input-bottom sm:w-64 md:w-80" v-model="searchQuery"
-                    @input="filterCards" />
-
-                <button @click="toggleFilters" class="flex items-center btn-hyper px-1 py-1 rounded-md">
-                    <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
-                </button>
-                <button @click="groupByCategory" class="flex items-center btn-secondary px-1 py-1 rounded-md">
-                    <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
-                </button>
-                <button @click="toggleFavorites" class="flex items-center btn-danger px-1 py-1 rounded-md">
-                    <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
-                </button>
-            </div>
-        </div> -->
+        </div>
         <div v-if="!showModulePage" class="flex flex-1">
-            <!-- <div class="bg-gray-100 w-64 p-4">
-                <div class="text-lg font-semibold mb-4">
+            <div class="h-screen border-r border-gray-300 w-64 p-4 hidden sm:block">
+                <div class="text-md font-semibold mb-2">
                     <span class="icon-[ion--folder-sharp] text-violet-600"></span>
-                    <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }"
-                        @click.prevent="filterByCategory('All')"> CATEGORIES</a>
+                    <span class="text-violet-600">
+                        CATEGORIES
+                    </span>
                 </div>
-                <ul class="px-8">
-                    <li class="mb-2">
+                <ul class="px-2 text-sm">
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }"
+                            @click.prevent="filterByCategory('All')">
+                            ALL
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
                         <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }"
-                            @click.prevent="filterByCategory('HRMS')"> HRMS</a>
+                            @click.prevent="filterByCategory('HRMS')">
+                            HRMS
+                        </a>
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
                         <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }"
-                            @click.prevent="filterByCategory('Retail')"> Retail</a>
+                            @click.prevent="filterByCategory('Retail')">
+                            Retail
+                        </a>
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
                         <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }"
-                            @click.prevent="filterByCategory('Production')">Production</a>
+                            @click.prevent="filterByCategory('Production')">
+                            Production
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Finance' }"
+                            @click.prevent="filterByCategory('Finance')">
+                            Finance
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Marketing' }"
+                            @click.prevent="filterByCategory('Marketing')">
+                            Marketing
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Point of Sales' }"
+                            @click.prevent="filterByCategory('Point of Sales')">
+                            Point of Sales
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Healthcare' }"
+                            @click.prevent="filterByCategory('Healthcare')">
+                            Healthcare
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Education' }"
+                            @click.prevent="filterByCategory('Education')">
+                            Education
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Technology' }"
+                            @click.prevent="filterByCategory('Technology')">
+                            Technology
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Logistics' }"
+                            @click.prevent="filterByCategory('Logistics')">
+                            Logistics
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Customer Support' }"
+                            @click.prevent="filterByCategory('Customer Support')">
+                            Customer Support
+                        </a>
                     </li>
                 </ul>
-            </div> -->
-            <div class="flex-1 container mx-auto py-24">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <Card v-for="card in filteredCards" :key="card.title" :title="card.title"
+            </div>
+
+            <div class="bg-gray-50 flex-1  mx-auto py-6 px-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
                         :description="card.description" :status="card.status" :buttonText="card.buttonText"
                         :iconClass="card.iconClass" @click="handleCardClick(card.title)">
-                        <!-- <template #header>
-                            <div class="flex-1">
-                                <div class="font-bold text-xl mb-1 flex items-center justify-between">
-                                    <span>{{ card.title }}</span>
-                                    <span class="icon-[ph--dots-three-vertical-bold]"></span>
-                                </div>
-                                <p class="text-gray-500">{{ card.description }}</p>
-                            </div>
-                        </template> -->
                     </Card>
                 </div>
             </div>
@@ -166,6 +286,15 @@ function goToMain() {
         <div v-else>
             <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
+        <footer class="fixed text-xs w-auto justify-end bottom-0 right-0 bg-gray-50 py-2 px-4 flex items-center">
+            <p class="text-gray-500">
+                Copyright © 2024 C3K
+                Engine by
+                <a href="https://combinesoft.net" class="text-gray-500 hover:text-gray-800" target="_blank">
+                    COMBINE CHIPSoft
+                </a>
+            </p>
+        </footer>
     </div>
     <Dashboardheader :selectedCardTitle="selectedCardTitle" />
 </template>
