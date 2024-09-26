@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["H.Muhammad Kamran"]
 
 [[bin]]
-name = "c3k-hrms-service"
+name = "c3k-retail-service"
 path = "src/main.rs"
 
 [dependencies]
