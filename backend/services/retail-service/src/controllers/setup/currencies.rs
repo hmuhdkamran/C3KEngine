@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn currencies_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/hrms/currencies")
+        web::scope("/api/retail/currencies")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

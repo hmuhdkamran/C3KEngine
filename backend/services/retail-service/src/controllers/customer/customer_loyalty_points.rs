@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn customer_loyalty_points_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/hrms/customer_loyalty_points")
+        web::scope("/api/retail/customer_loyalty_points")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

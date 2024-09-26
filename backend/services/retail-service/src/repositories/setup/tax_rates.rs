@@ -48,7 +48,6 @@ impl IRepository<TaxRates> for TaxRatesRepository {
     async fn add(connection: PgPool, entity: &TaxRates) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         let _ = args.add(entity.tax_rate_id.clone());
-let _ = args.add(entity.tax_rate_id.clone());
 let _ = args.add(entity.full_name.clone());
 let _ = args.add(entity.tax_rate.clone());
 let _ = args.add(entity.status_id.clone());
@@ -78,7 +77,6 @@ let _ = args.add(entity.status_id.clone());
     async fn update(connection: PgPool, entity: &TaxRates) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         let _ = args.add(entity.tax_rate_id.clone());
-let _ = args.add(entity.tax_rate_id.clone());
 let _ = args.add(entity.full_name.clone());
 let _ = args.add(entity.tax_rate.clone());
 let _ = args.add(entity.status_id.clone());

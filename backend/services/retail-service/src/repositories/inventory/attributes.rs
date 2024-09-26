@@ -17,13 +17,11 @@ pub struct AttributesRepository {}
 
 impl IRepository<Attributes> for AttributesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Attributes>, Box<dyn StdError>> {
-        let result = sqlx::query(
-            format!("SELECT {} FROM {}", Attributes::COLUMNS, Attributes::TABLE).as_str(),
-        )
-        .map(|row: PgRow| Attributes::from_row(&row))
-        .fetch_all(&connection)
-        .await
-        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(format!("SELECT {} FROM {}", Attributes::COLUMNS, Attributes::TABLE).as_str())
+            .map(|row: PgRow| Attributes::from_row(&row))
+            .fetch_all(&connection)
+            .await
+            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -50,9 +48,9 @@ impl IRepository<Attributes> for AttributesRepository {
     async fn add(connection: PgPool, entity: &Attributes) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         let _ = args.add(entity.attribute_id.clone());
-        let _ = args.add(entity.abbreviation.clone());
-        let _ = args.add(entity.full_name.clone());
-        let _ = args.add(entity.status_id.clone());
+let _ = args.add(entity.abbreviation.clone());
+let _ = args.add(entity.full_name.clone());
+let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
             format!(
@@ -79,17 +77,12 @@ impl IRepository<Attributes> for AttributesRepository {
     async fn update(connection: PgPool, entity: &Attributes) -> Result<bool, Box<dyn StdError>> {
         let mut args = PgArguments::default();
         let _ = args.add(entity.attribute_id.clone());
-        let _ = args.add(entity.abbreviation.clone());
-        let _ = args.add(entity.full_name.clone());
-        let _ = args.add(entity.status_id.clone());
+let _ = args.add(entity.abbreviation.clone());
+let _ = args.add(entity.full_name.clone());
+let _ = args.add(entity.status_id.clone());
 
         sqlx::query_with(
-            format!(
-                "UPDATE {} SET {}",
-                Attributes::TABLE,
-                Attributes::COLUMNS_UPDATE
-            )
-            .as_str(),
+            format!("UPDATE {} SET {}", Attributes::TABLE, Attributes::COLUMNS_UPDATE).as_str(),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn attributes_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/hrms/attributes")
+        web::scope("/api/retail/attributes")
             .service(get_all)
             .service(get_by_filter)
             .service(add)
