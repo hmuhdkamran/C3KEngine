@@ -10,8 +10,7 @@
     "dev": "npm run start",
     "start": "npm-run-all --parallel start:*",
     "build": "npm-run-all build:* && bash ./scripts/bundle.sh",
-    "start:root": "cd packages/root && npm run start",
-    "start:back": "cd ../backend && ./run_all.sh"
+    "start:root": "cd packages/root && npm run start"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
@@ -19,5 +18,8 @@
   "keywords": [],
   "author": "H.Muhammad Kamran",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "c3k-library": "^1.0.1"
+  }
 }
