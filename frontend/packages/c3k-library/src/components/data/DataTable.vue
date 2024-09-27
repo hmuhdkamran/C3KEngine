@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTableStore } from '@/plugins/store/table-store';
+import { useTableStore } from '@/plugins/store';
 import { ref, computed } from 'vue';
 
 const props = defineProps({
@@ -35,7 +35,7 @@ const selectAll = ref(false);
 
 const filteredRecords = computed(() => {
     const query = tableStore.searchQuery.toLowerCase();
-    return props.data.filter(record =>
+    const filteredReocrds = props.data.filter(record =>
         Object.values(record).some(value =>
             value.toString().toLowerCase().includes(query)
         )
@@ -46,6 +46,9 @@ const filteredRecords = computed(() => {
         if (compareA > compareB) return sortOrder.value === 'asc' ? 1 : -1;
         return 0;
     });
+
+    tableStore.updateTotalRecords(filteredReocrds.values.length);
+    return filteredReocrds;
 });
 
 const paginatedRecords = computed(() => {
@@ -53,8 +56,6 @@ const paginatedRecords = computed(() => {
     const end = start + itemsPerPage.value;
     return filteredRecords.value.slice(start, end);
 });
-
-tableStore.totalPages = computed(() => Math.ceil(filteredRecords.value.length / itemsPerPage.value)).value;
 
 const changeSort = (column: string, sort: boolean = true) => {
     if (!sort) {

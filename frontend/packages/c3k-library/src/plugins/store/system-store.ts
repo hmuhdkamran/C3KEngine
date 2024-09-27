@@ -1,7 +1,8 @@
+import { defineStore } from 'pinia'
+
 import type { IUser } from '../models'
 import { DefaultUser } from '../models'
 import { TokenHelper } from '../helper/token-helper'
-import { defineStore } from 'pinia'
 
 export interface ICommonState {
   isLoading: boolean

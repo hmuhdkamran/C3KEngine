@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Modules from '../../components/base/modules.vue';
+import { DataTable } from 'c3k-library';
 
 const hrmsCards = [
   {

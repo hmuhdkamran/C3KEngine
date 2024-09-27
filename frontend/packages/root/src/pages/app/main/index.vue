@@ -6,7 +6,7 @@ import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
 import Retailmodule from '@/layouts/components/Retailmodule.vue';
 import Productionmodule from '@/layouts/components/Productionmodule.vue';
 import { useRouter } from 'vue-router';
-import { useTableStore } from '@/plugins/store/table-store';
+import { Pagination, useTableStore } from 'c3k-library';
 
 const tableStore = useTableStore();
 
@@ -78,8 +78,7 @@ const filteredCards = computed(() => {
     });
 });
 
-tableStore.currentPage = 1;
-tableStore.totalPages = computed(() => Math.ceil(filteredCards.value.length / itemsPerPage.value)).value;
+tableStore.updateTotalRecords(filteredCards.value.length);
 
 const paginatedFilteredCards = computed(() => {
     const start = (tableStore.currentPage - 1) * itemsPerPage.value;
@@ -89,7 +88,7 @@ const paginatedFilteredCards = computed(() => {
 
 function filterByCategory(category: string) {
     selectedCategory.value = category;
-    tableStore.currentPage= 1;
+    tableStore.setPage(1);
 }
 
 function toggleFilters() {
@@ -147,47 +146,26 @@ function goToMain() {
             </nav>
             <div class="flex flex-col space-y-2">
                 <div class="relative">
-                    <i class="icon-[mdi--magnify] absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" placeholder="Search..." class="input-bottom  pl-10 w-full" v-model="tableStore.searchQuery"/>
+                    <i class="icon-[mdi--magnify] absolute left-2 top-3 text-gray-400"></i>
+                    <input type="text" placeholder="Search..." class="input-bottom pl-6 w-full"
+                        v-model="tableStore.searchQuery" />
                 </div>
                 <div class="flex flex-wrap items-center justify-between lg:space-x-96 sm:space-x-80 md:space-x-12">
                     <div class="flex justify-start space-x-1 items-center text-sm ">
                         <button @click="toggleFilters"
-                            class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-md shadow-md">
+                            class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
                         </button>
                         <button @click="groupByCategory"
-                            class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-md shadow-md">
+                            class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
                         </button>
                         <button @click="toggleFavorites"
-                            class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-md shadow-md">
+                            class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
                         </button>
                     </div>
-                    <div class="mt-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                        <div class="flex items-center space-x-2">
-                            <button @click="tableStore.goToPage(1)" :disabled="tableStore.currentPage === 1"
-                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span class="icon-[material-symbols--first-page] w-5 h-5"></span>
-                            </button>
-                            <button @click="tableStore.goToPage(tableStore.currentPage - 1)" :disabled="tableStore.currentPage === 1"
-                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span class="icon-[material-symbols--keyboard-arrow-left] w-5 h-5"></span>
-                            </button>
-                            <div class="text-gray-600 text-sm">
-                                <span class="text-bold">Page</span> {{ tableStore.currentPage }} of {{ tableStore.totalPages }}
-                            </div>
-                            <button @click="tableStore.goToPage(tableStore.currentPage + 1)" :disabled="tableStore.currentPage === tableStore.totalPages"
-                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span class="icon-[material-symbols--keyboard-arrow-right] w-5 h-5"></span>
-                            </button>
-                            <button @click="tableStore.goToPage(tableStore.totalPages)" :disabled="tableStore.currentPage === tableStore.totalPages"
-                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span class="icon-[material-symbols--last-page] w-5 h-5"></span>
-                            </button>
-                        </div>
-                    </div>
+                    <Pagination />
                 </div>
             </div>
         </div>
