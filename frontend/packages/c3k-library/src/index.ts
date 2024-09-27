@@ -15,5 +15,7 @@ export * from './plugins';
 export { default as DefaultHeader } from './components/layouts/default/header.vue';
 export { default as DefaultFooter } from './components/layouts/default/footer.vue';
 
+export { default as Filter } from './components/layouts/gernal/filter.vue';
+
 export { default as DataTable } from './components/data/DataTable.vue';
 export { default as Pagination } from './components/data/Pagination.vue';
