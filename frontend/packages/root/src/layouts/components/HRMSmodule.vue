@@ -145,13 +145,40 @@ const hrmsCards = [
 ];
 
 const columns = [
-  { key: 'title', label: 'Title' },
-  { key: 'description', label: 'Description' },
-  { key: 'status', label: 'Status' }
+  { key: 'check', label: 'check', sort: false, check: true },
+  { key: 'title', label: 'Title', sort: true },
+  { key: 'description', label: 'Description', sort: true },
+  { key: 'status', label: 'Status', sort: false, width: '100px', class: 'text-center' },
+  { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' }
 ];
+
+const openModal = (row: any) => {
+  // Open modal with card details
+  console.log('Open modal for:', row);
+}
 
 </script>
 
 <template>
-  <Modules :cardTitle="'HRMS'" :cardsData="hrmsCards" :columns="columns" />
+  <div>
+    <!-- <Modules :cardTitle="'HRMS'" :cardsData="hrmsCards" :columns="columns" /> -->
+    <DataTable :data="hrmsCards" :columns="columns" :check-column="true">
+      <template #status="{ row }">
+        <span :class="row.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+          class="px-1 py-0.5 rounded-full">
+          {{ row.status }}
+        </span>
+      </template>
+      <template #action="{ row }">
+        <button @click="openModal(row)"
+          class="transition-all text-gray-600 focus:outline-none hover:bg-gray-200 rounded-full">
+          <span class="icon-[mdi--edit-outline] w-5 h-5"></span>
+        </button>
+        <button @click="openModal(row)"
+          class="transition-all text-gray-600 focus:outline-none ml-1 hover:bg-gray-200 rounded-full">
+          <span class="icon-[material-symbols--delete-outline] w-5 h-5"></span>
+        </button>
+      </template>
+    </DataTable>
+  </div>
 </template>

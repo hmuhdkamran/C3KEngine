@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BaseIcon: typeof import('./src/components/base/BaseIcon.vue')['default']
     Card: typeof import('./src/components/base/Card.vue')['default']
+    DataTable: typeof import('./src/components/forms/DataTable.vue')['default']
     Loader: typeof import('./src/components/Loader.vue')['default']
     Moduleform: typeof import('./src/components/forms/moduleform.vue')['default']
     Modules: typeof import('./src/components/base/modules.vue')['default']

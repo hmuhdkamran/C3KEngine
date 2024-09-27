@@ -6,15 +6,16 @@ import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
 import Retailmodule from '@/layouts/components/Retailmodule.vue';
 import Productionmodule from '@/layouts/components/Productionmodule.vue';
 import { useRouter } from 'vue-router';
+import { useTableStore } from '@/plugins/store/table-store';
+
+const tableStore = useTableStore();
 
 const router = useRouter()
-const searchQuery = ref('');
 const selectedCategory = ref('All');
 const showFavorites = ref(false);
 const showModulePage = ref(false);
 const selectedCardTitle = ref('');
 const currentModule = ref('');
-const currentPage = ref(1);
 const itemsPerPage = ref(20);
 
 const cards = ref([
@@ -69,36 +70,27 @@ const cards = ref([
     { title: 'Knowledge Base', description: 'Create and maintain help articles', category: 'Customer Support', status: 'Active', buttonText: 'Explore', iconClass: 'icon-[mdi--library-books]' },
 ]);
 
-function filterCards() {
-
-}
-
-const totalPages = computed(() => Math.ceil(filteredCards.value.length / itemsPerPage.value));
-
 const filteredCards = computed(() => {
     return cards.value.filter((card) => {
         const matchesCategory = selectedCategory.value === 'All' || card.category === selectedCategory.value;
-        const matchesSearch = card.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+        const matchesSearch = card.title.toLowerCase().includes(tableStore.searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 });
 
+tableStore.currentPage = 1;
+tableStore.totalPages = computed(() => Math.ceil(filteredCards.value.length / itemsPerPage.value)).value;
+
 const paginatedFilteredCards = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const start = (tableStore.currentPage - 1) * itemsPerPage.value;
     const end = start + itemsPerPage.value;
     return filteredCards.value.slice(start, end);
 });
 
 function filterByCategory(category: string) {
     selectedCategory.value = category;
-    currentPage.value = 1;
+    tableStore.currentPage= 1;
 }
-
-const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages.value) {
-        currentPage.value = page;
-    }
-};
 
 function toggleFilters() {
     alert('Filters button clicked');
@@ -143,8 +135,7 @@ function goToMain() {
         <div class="border-b border-gray-300 py-2 px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex flex-col sm:flex-row sm:items-center 
             justify-between shadow-md space-y-4 sm:space-y-0">
             <nav class="sm:text-md text-md flex space-x-2">
-                <div @click.prevent="goToMain"
-                    class="hover:underline cursor-pointer text-gray-600 flex items-center">
+                <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-600 flex items-center">
                     <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
                 </div>
                 <span class="text-gray-400">/</span>
@@ -157,8 +148,7 @@ function goToMain() {
             <div class="flex flex-col space-y-2">
                 <div class="relative">
                     <i class="icon-[mdi--magnify] absolute left-3 top-3 text-gray-400"></i>
-                    <input type="text" placeholder="Search..." class="input-bottom  pl-10 w-full" v-model="searchQuery"
-                        @input="filterCards" />
+                    <input type="text" placeholder="Search..." class="input-bottom  pl-10 w-full" v-model="tableStore.searchQuery"/>
                 </div>
                 <div class="flex flex-wrap items-center justify-between lg:space-x-96 sm:space-x-80 md:space-x-12">
                     <div class="flex justify-start space-x-1 items-center text-sm ">
@@ -175,16 +165,28 @@ function goToMain() {
                             <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
                         </button>
                     </div>
-                    <div class="flex items-center text-gray-600 space-x-2">
-                        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                        <button @click="goToPage(currentPage - 1)" class="p-1 rounded-md hover:bg-gray-200"
-                            :disabled="currentPage === 1">
-                            <i class="icon-[mdi--chevron-left]"></i>
-                        </button>
-                        <button @click="goToPage(currentPage + 1)" class="p-1 rounded-md hover:bg-gray-200"
-                            :disabled="currentPage === totalPages">
-                            <i class="icon-[mdi--chevron-right]"></i>
-                        </button>
+                    <div class="mt-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                        <div class="flex items-center space-x-2">
+                            <button @click="tableStore.goToPage(1)" :disabled="tableStore.currentPage === 1"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="icon-[material-symbols--first-page] w-5 h-5"></span>
+                            </button>
+                            <button @click="tableStore.goToPage(tableStore.currentPage - 1)" :disabled="tableStore.currentPage === 1"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="icon-[material-symbols--keyboard-arrow-left] w-5 h-5"></span>
+                            </button>
+                            <div class="text-gray-600 text-sm">
+                                <span class="text-bold">Page</span> {{ tableStore.currentPage }} of {{ tableStore.totalPages }}
+                            </div>
+                            <button @click="tableStore.goToPage(tableStore.currentPage + 1)" :disabled="tableStore.currentPage === tableStore.totalPages"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="icon-[material-symbols--keyboard-arrow-right] w-5 h-5"></span>
+                            </button>
+                            <button @click="tableStore.goToPage(tableStore.totalPages)" :disabled="tableStore.currentPage === tableStore.totalPages"
+                                class="text-gray-600 hover:text-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="icon-[material-symbols--last-page] w-5 h-5"></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
