@@ -27,7 +27,6 @@ const props = defineProps({
 const tableStore = useTableStore();
 tableStore.currentPage = 1;
 
-const checkColumn = ref<Boolean>(props.checkColumn);
 const itemsPerPage = ref(15);
 const sortColumn = ref<string>('');
 const sortOrder = ref<'asc' | 'desc'>('asc');
