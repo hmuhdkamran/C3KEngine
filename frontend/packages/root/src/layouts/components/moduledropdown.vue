@@ -40,7 +40,7 @@ function toggleModuleDropdown() {
 <template>
     <div class="relative">
         <button @click="toggleModuleDropdown"
-            class="flex items-center space-x-2 text-white hover:text-gray-300 focus:outline-none">
+            class="flex items-center space-x-1 font-semibold text-white hover:text-gray-300 focus:outline-none">
             <span v-if="!props.selectedCardTitle">Dashboard</span>
             <h1 v-else >{{ props.selectedCardTitle }}
             </h1>

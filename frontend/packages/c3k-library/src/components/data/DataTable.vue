@@ -25,9 +25,9 @@ const props = defineProps({
 });
 
 const tableStore = useTableStore();
-tableStore.currentPage = 1;
+// tableStore.currentPage = 1;
 
-const itemsPerPage = ref(15);
+const itemsPerPage = computed(() => tableStore.itemsPerPage);
 const sortColumn = ref<string>('');
 const sortOrder = ref<'asc' | 'desc'>('asc');
 const selectedRecords = ref<Record<string, any>[]>([]);
@@ -35,7 +35,7 @@ const selectAll = ref(false);
 
 const filteredRecords = computed(() => {
     const query = tableStore.searchQuery.toLowerCase();
-    const filteredReocrds = props.data.filter(record =>
+    const filteredRecords  = props.data.filter(record =>
         Object.values(record).some(value =>
             value.toString().toLowerCase().includes(query)
         )
@@ -47,8 +47,8 @@ const filteredRecords = computed(() => {
         return 0;
     });
 
-    tableStore.updateTotalRecords(filteredReocrds.values.length);
-    return filteredReocrds;
+    tableStore.updateTotalRecords(filteredRecords.length);
+    return filteredRecords ;
 });
 
 const paginatedRecords = computed(() => {
@@ -103,7 +103,7 @@ const toggleSelectAll = () => {
                 <tbody>
                     <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]"
                         class="border-b border-dashed border-gray-300 transition-all hover:shadow-md text-md">
-                        <template v-for="column in columns">
+                        <template v-for="column in props.columns">
                             <template v-if="column.check">
                                 <td class="p-1 text-center">
                                     <input class="cursor-pointer" type="checkbox" v-model="selectedRecords"
