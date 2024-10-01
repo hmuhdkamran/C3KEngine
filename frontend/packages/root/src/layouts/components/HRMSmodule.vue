@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { DataTable } from 'c3k-library';
+import { DataTable,useTableStore } from 'c3k-library';
+import { onMounted } from 'vue';
+const tableStore = useTableStore();
 
 const hrmsCards = [
   {
@@ -152,8 +154,11 @@ const columns = [
   { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' }
 ];
 
+onMounted(() => {
+  tableStore.updateTotalRecords(hrmsCards.length);
+});
+
 const openModal = (row: any) => {
-  // Open modal with card details
   console.log('Open modal for:', row);
 }
 

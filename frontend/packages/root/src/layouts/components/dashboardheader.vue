@@ -89,7 +89,7 @@ useClickOutside(() => {
         @toggleModuleDropdown="toggleModuleDropdown"
       />
       <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown"/>
-      <nav class="hidden justify-between md:flex space-x-4">
+      <nav class="hidden justify-between md:flex space-x-6">
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">CRM Dashboard</a>
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Sales Overview</a>
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Customer Engagement</a>

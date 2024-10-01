@@ -140,8 +140,11 @@ function goToMain() {
 
 <template>
     <div class="bg-white mt-12 flex flex-col">
-        <div class="border-b border-gray-300 py-2 px-2 flex flex-col sm:flex-row justify-between shadow-md space-y-4 sm:space-y-0">
-            <div class="flex flex-col space-y-2">
+        <div class="border-b border-gray-300 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
+            <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
+                <div class="px-3">
+                    <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
+                </div>
                 <nav class="sm:text-md px-2 text-sm flex space-x-2">
                     <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-600 flex items-center">
                         <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
@@ -157,26 +160,25 @@ function goToMain() {
                     <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-600">{{
                         selectedCardTitle }}</span>
                 </nav>
-                <div class="p-4">
-                    <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
-                </div>
             </div>
-            <Filter>
-                <template #action>
-                    <button @click="toggleFilters"
-                        class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
-                        <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
-                    </button>
-                    <button @click="groupByCategory"
-                        class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-sm shadow-md">
-                        <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
-                    </button>
-                    <button @click="toggleFavorites"
-                        class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-sm shadow-md">
-                        <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
-                    </button>
-                </template>
-            </Filter>
+            <div class="w-full md:w-1/2 flex flex-col space-y-2">
+                <Filter>
+                    <template #action>
+                        <button @click="toggleFilters"
+                            class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
+                        </button>
+                        <button @click="groupByCategory"
+                            class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
+                        </button>
+                        <button @click="toggleFavorites"
+                            class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
+                        </button>
+                    </template>
+                </Filter>
+            </div>
         </div>
         <div v-if="!showModulePage" class="flex flex-1">
             <div class="h-screen border-r border-gray-300 w-64 p-4 hidden sm:block">
