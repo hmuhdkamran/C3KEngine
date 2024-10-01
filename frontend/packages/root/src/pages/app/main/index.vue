@@ -140,8 +140,8 @@ function goToMain() {
 
 <template>
     <div class="bg-white mt-12 flex flex-col">
-        <div class="border-b border-gray-300 py-2 px-4 flex flex-col sm:flex-row justify-between shadow-md w-full space-x-8">
-            <div class="flex flex-col justify-center flex-grow space-y-6">
+        <div class="border-b border-gray-300 py-2 px-4 flex justify-between shadow-md w-full space-x-8">
+            <div class="w-1/2 flex flex-col justify-center space-y-6">
                 <div class="px-3">
                     <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
                 </div>
@@ -161,7 +161,7 @@ function goToMain() {
                         selectedCardTitle }}</span>
                 </nav>
             </div>
-            <div class="flex flex-col flex-grow space-y-2">
+            <div class="w-1/2 flex flex-col space-y-2">
                 <Filter>
                     <template #action>
                         <button @click="toggleFilters"
