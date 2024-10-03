@@ -16,6 +16,20 @@ interface IProcessPayloadOptions {
 
 export abstract class StoreService implements IStoreService {
   constructor() { }
+
+   /**
+     * Generates page parameters for API calls based on the page number.
+     * @param page Page number.
+     * @returns Page parameters string.
+     */
+   public PageParameters(page: number, max: number): string {
+    let start_index = 0
+    if (page > 1)
+      start_index = (page - 1) * max
+
+    return `?start_index=${start_index}&limit=${max}`
+  }
+  
   /**
      * Handles a successful API response by converting the data to an IPayload object.
      * @param data The response data.
