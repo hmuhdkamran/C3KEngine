@@ -1,5 +1,5 @@
 import { useDataContext } from "@/plugins/store";
-import { FC, useState, useMemo } from "react";
+import { FC, useState, useMemo, useEffect } from "react";
 
 interface Column {
   key: string;
@@ -56,9 +56,12 @@ const DataTable: FC<TableProps> = ({ data, columns }) => {
       return 0;
     });
 
-    updateTotalRecords(sorted.length);
     return sorted;
-  }, [data, searchQuery, sortColumn, sortOrder, updateTotalRecords]);
+  }, [data, searchQuery, sortColumn, sortOrder]);
+
+  useEffect(() => {
+    updateTotalRecords(filteredRecords.length);
+  }, [filteredRecords, updateTotalRecords]);
 
   const paginatedRecords = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -128,32 +131,41 @@ const DataTable: FC<TableProps> = ({ data, columns }) => {
               ))}
             </tr>
           </thead>
+
           <tbody>
-            {paginatedRecords.map((record) => (
-              <tr
-                key={record[columns[0].key] as string}
-                className="border-b border-dashed border-gray-300 transition-all hover:shadow-md text-md"
-              >
-                {columns.map((column) => (
-                  <td key={column.key} className={`p-1 ${column.class || ""}`}>
-                    {column.check ? (
-                      <input
-                        type="checkbox"
-                        className="cursor-pointer"
-                        checked={selectedRecords.includes(record)}
-                        onChange={() => handleSelectRecord(record)}
-                      />
-                    ) : (
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: record[column.key] as string,
-                        }}
-                      />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {paginatedRecords.map(
+              (
+                record,
+                index
+              ) => (
+                <tr
+                  key={(record[columns[0].key] as string) || index}
+                  className="border-b border-dashed border-gray-300 transition-all hover:shadow-md text-md"
+                >
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className={`p-1 ${column.class || ""}`}
+                    >
+                      {column.check ? (
+                        <input
+                          type="checkbox"
+                          className="cursor-pointer"
+                          checked={selectedRecords.includes(record)}
+                          onChange={() => handleSelectRecord(record)}
+                        />
+                      ) : (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: record[column.key] as string,
+                          }}
+                        />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>

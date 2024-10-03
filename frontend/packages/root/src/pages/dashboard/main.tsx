@@ -20,9 +20,8 @@ const DashboardIndex: FC = () => {
       ],
     };
     updatePageState(newState);
-  }, [updatePageState]);
+  }, []);
 
-  // Memoized computation for paginated filtered cards
   const paginatedFilteredCards = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;

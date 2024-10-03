@@ -14,7 +14,6 @@ import { ProtectedRoute } from "./protected-route";
 
 const AppRoutes = () => {
   return (
-    <>
       <Routes>
         <Route path={routePath.LOGIN} element={<Login />} />
         <Route path={routePath.REGISTER} element={<RegisterForm />} />
@@ -33,7 +32,6 @@ const AppRoutes = () => {
           />
         </Route>
       </Routes>
-    </>
   );
 };
 

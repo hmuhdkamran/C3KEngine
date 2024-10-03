@@ -1,5 +1,5 @@
 import { DefaultUser, IUser } from "@/types/axios";
-import { createContext, FC, ReactNode, useState } from "react";
+import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import { TokenHelper } from "@/plugins/helper/token-helper";
 import { IService } from "@/components/extra/service-dropdown";
 import { MenuItem } from "@/components/extra/menu-items";
@@ -11,7 +11,7 @@ export interface ICommonContext {
   menuItems: MenuItem[];
   sidebarMenu: MenuItem[];
   updateLoading: (loading: boolean) => void;
-  updateUser: (user: IUser | string) => void;
+  updateUser: (user: IUser) => void;
   updateServices: (values: IService[]) => void;
   updateMenuItems: (values: MenuItem[]) => void;
   updateSidebarMenu: (values: MenuItem[]) => void;
@@ -28,16 +28,31 @@ export const SystemProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [sidebarMenu, setSidebarMenu] = useState<MenuItem[]>([]);
 
+  useEffect(() => {
+    const token = TokenHelper.getAccessToken();
+    if (token) {
+      const decodedToken = TokenHelper.parseUserToken(token);
+      if (decodedToken) {
+        const userExp = new Date(decodedToken.exp);
+        if (userExp > new Date()) {
+          setUser(decodedToken);
+        } else {
+          setUser(DefaultUser);
+        }
+      } else {
+        setUser(DefaultUser);
+      }
+    } else {
+      setUser(DefaultUser);
+    }
+  }, []);
+
   const updateLoading = (loading: boolean) => {
     setIsLoading(loading);
   };
 
-  const updateUser = (user: IUser | string) => {
-    if (typeof user === "string") {
-      setUser(TokenHelper.parseUserToken(user));
-    } else {
-      setUser(user);
-    }
+  const updateUser = (user: IUser) => {
+    setUser(user);
   };
 
   const updateServices = (values: IService[]) => {
@@ -62,7 +77,7 @@ export const SystemProvider: FC<{ children: ReactNode }> = ({ children }) => {
     updateUser,
     updateServices,
     updateMenuItems,
-    updateSidebarMenu
+    updateSidebarMenu,
   };
 
   return (

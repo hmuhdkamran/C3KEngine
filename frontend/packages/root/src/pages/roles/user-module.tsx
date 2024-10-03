@@ -12,7 +12,7 @@ const UserModule: FC = () => {
       breadcrumbItems: [{ title: "Authentication", route: "/", icon: "home" }],
     };
     updatePageState(newState);
-  }, [updatePageState]);
+  }, []);
 
   const goToMain = () => {
     console.log("Going to main page");
