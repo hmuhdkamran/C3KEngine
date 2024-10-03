@@ -1,73 +1,83 @@
-import type { AxiosError, AxiosResponse } from 'axios'
-import type { IPayload } from '../models'
-import { PayloadMessageTypes } from '../models'
+import type { AxiosError, AxiosResponse } from 'axios';
+import type { IPayload } from '@/types/axios';
 
 export class PayloadMapper {
-  private fromError<T>(o: Error): IPayload<T> {
+  private fromError<T>(error: Error): IPayload<T> {
     return {
       data: {} as T,
-      result: PayloadMessageTypes.error,
-      description: o.name,
-    }
+      result: 'error',
+      description: error.name,
+    };
   }
 
-  private fromAxiosError<T>(o: AxiosError): IPayload<T> {
-    let data: T = {} as T
+  private fromAxiosError<T>(error: AxiosError): IPayload<T> {
+    let data: T = {} as T;
 
-    if (o.response && isAxiosResponse(o.response))
-      data = this.fromAxiosResponse<T>(o.response).data
+    if (error.response && isAxiosResponse(error.response)) {
+      data = this.fromAxiosResponse<T>(error.response).data;
+    }
 
     return {
       data,
-      result: PayloadMessageTypes.error,
-      description: `Code:${o.code}. ${o.name} = ${o.message}`,
-    }
+      result: 'error',
+      description: `Code: ${error.code}. ${error.name} = ${error.message}`,
+    };
   }
 
-  private fromAxiosResponse<T>(o: AxiosResponse): IPayload<T> {
-    let value: IPayload<T> | null = null
-
-    if (isPayload<T>(o.data)) { value = o.data }
-    else {
-      value = {
-        data: <any>o.data,
-        result: PayloadMessageTypes.success,
-        description: '',
-      }
+  private fromAxiosResponse<T>(response: AxiosResponse): IPayload<T> {
+    if (isPayload<T>(response.data)) {
+      return response.data;
     }
 
-    return value
+    return {
+      data: response.data as T, // Use type assertion here instead of 'any'
+      result: 'success',
+      description: '',
+    };
   }
 
-  public fromObject<T>(o: any): IPayload<T | null> | null {
-    if (isAxiosError(o))
-      return this.fromAxiosError<T>(o)
+  public fromObject<T>(obj: unknown): IPayload<T | null> | null {
+    if (isAxiosError(obj)) {
+      return this.fromAxiosError<T>(obj);
+    }
 
-    if (o instanceof Error)
-      return this.fromError<T>(o)
+    if (obj instanceof Error) {
+      return this.fromError<T>(obj);
+    }
 
-    if (isAxiosResponse(o))
-      return this.fromAxiosResponse<T>(o)
+    if (isAxiosResponse(obj)) {
+      return this.fromAxiosResponse<T>(obj);
+    }
 
-    return null
+    return null;
   }
 }
 
-function isAxiosResponse(o: any): o is AxiosResponse {
+function isAxiosResponse(obj: unknown): obj is AxiosResponse {
   return (
-    o instanceof Object
-    && 'data' in o
-    && 'config' in o
-    && 'status' in o
-    && 'statusText' in o
-    && 'headers' in o
-  )
+    typeof obj === 'object' &&
+    obj !== null &&
+    'data' in obj &&
+    'config' in obj &&
+    'status' in obj &&
+    'statusText' in obj &&
+    'headers' in obj
+  );
 }
 
-function isAxiosError(o: any): o is AxiosError {
-  return o instanceof Object && o instanceof Error && 'config' in o
+function isAxiosError(obj: unknown): obj is AxiosError {
+  return (
+    typeof obj === 'object' &&
+    obj instanceof Error &&
+    'config' in obj
+  );
 }
 
-function isPayload<T>(o: any): o is IPayload<T> {
-  return o instanceof Object && 'data' in o && 'message' in o
+function isPayload<T>(obj: unknown): obj is IPayload<T> {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'data' in obj &&
+    'message' in obj
+  );
 }

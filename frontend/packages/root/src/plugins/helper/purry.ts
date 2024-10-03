@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Creates a function with `data-first` and `data-last` signatures.
  *
- * `purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.
+ * `purry` is a dynamic function and it's not type safe. It should be wrapped by a function that has proper typings.
  * Refer to the example below for correct usage.
  *
  * @param fn the function to purry.
  * @param args the arguments
- * @signature R.purry(fn, arguments);
- * @example-raw
- *    function _findIndex(array, fn) {
+ * @signature purry(fn, arguments);
+ * @example
+ *    function _findIndex<T>(array: T[], fn: (item: T) => boolean): number {
  *      for (let i = 0; i < array.length; i++) {
  *        if (fn(array[i])) {
  *          return i;
@@ -24,24 +25,35 @@
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
  *    function findIndex() {
- *      return R.purry(_findIndex, arguments);
+ *      return purry(_findIndex, arguments);
  *    }
  * @category Function
  */
-export function purry(fn: any, args: IArguments | readonly any[], lazy?: any) {
-  const diff = fn.length - args.length
-  const arrayArgs = Array.from(args)
-  if (diff === 0)
-    return fn(...arrayArgs)
+export function purry<T extends (...args: any[]) => any>(
+  fn: T,
+  args: IArguments | readonly any[],
+  lazy?: boolean
+): ReturnType<T> | ((data: any) => ReturnType<T>) {
+  const diff = fn.length - args.length;
+  const arrayArgs = Array.from(args as any[]); // Ensure args is treated as an array
+  
+  if (diff === 0) {
+    // If the number of arguments match, call the function with the provided arguments
+    return fn(...arrayArgs);
+  }
 
   if (diff === 1) {
-    const ret: any = (data: any) => fn(data, ...arrayArgs)
-    if (lazy || fn.lazy) {
-      ret.lazy = lazy || fn.lazy
-      ret.lazyArgs = args
+    // If the function needs one more argument, return a new function that accepts `data`
+    const ret = (data: any) => fn(data, ...arrayArgs);
+
+    // Handle lazy execution if applicable
+    if (lazy || (fn as any).lazy) {
+      (ret as any).lazy = lazy || (fn as any).lazy;
+      (ret as any).lazyArgs = args;
     }
 
-    return ret
+    return ret;
   }
-  throw new Error('Wrong number of arguments')
+
+  throw new Error('Wrong number of arguments');
 }

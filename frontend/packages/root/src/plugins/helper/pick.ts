@@ -1,4 +1,6 @@
-import { purry } from './purry'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { purry } from './purry';
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -10,10 +12,10 @@ import { purry } from './purry'
  * @data_first
  * @category Object
  */
-export function pick<T extends {}, K extends keyof T>(
+export function pick<T extends Record<string, any>, K extends keyof T>(
   object: T,
   names: readonly K[]
-): Pick<T, K>
+): Pick<T, K>;
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -24,21 +26,23 @@ export function pick<T extends {}, K extends keyof T>(
  * @data_last
  * @category Object
  */
-export function pick<T extends {}, K extends keyof T>(
+export function pick<T extends Record<string, any>, K extends keyof T>(
   names: readonly K[]
-): (object: T) => Pick<T, K>
+): (object: T) => Pick<T, K>;
 
-export function pick() {
-  return purry(_pick, arguments)
+export function pick<T extends Record<string, any>, K extends keyof T>(
+  ...args: [T, readonly K[]] | [readonly K[]]
+): any {
+  return purry(_pick, args);
 }
 
-function _pick(object: any, names: string[]) {
-  if (object == null)
-    return {}
+function _pick<T extends Record<string, any>, K extends keyof T>(object: T | null | undefined, names: K[]) {
+  if (object == null) return {};
 
   return names.reduce((acc, name) => {
-    acc[name] = object[name]
-
-    return acc
-  }, {} as any)
+    if (name in object) {
+      acc[name] = object[name];
+    }
+    return acc;
+  }, {} as Pick<T, K>);
 }
