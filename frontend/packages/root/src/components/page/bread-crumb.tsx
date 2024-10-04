@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export interface BreadcrumbItem {
   title: string;
@@ -24,12 +25,11 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, homeClick }) => {
       {items.map((item, index) => (
         <React.Fragment key={index}>
           <span className="text-gray-400">/</span>
-          <div
-            onClick={() => (item.route ? null : null)}
-            className="hover:underline cursor-pointer text-gray-600"
-          >
-            {item.title}
-          </div>
+          <Link to={item.route}>
+            <div className="hover:underline cursor-pointer text-gray-600">
+              {item.title}
+            </div>
+          </Link>
         </React.Fragment>
       ))}
     </nav>

@@ -43,6 +43,7 @@ const ProductSection: FC = () => {
                   <Card
                     showHeader={false}
                     showFooter={false}
+                    borderColor="transparent"
                     containerClass={
                       "mb-8 py-6 pl-6 pr-4 shadow rounded bg-white"
                     }
@@ -62,6 +63,7 @@ const ProductSection: FC = () => {
                   <Card
                     showHeader={false}
                     showFooter={false}
+                    borderColor="transparent"
                     containerClass={"py-6 pl-6 pr-4 shadow rounded bg-white"}
                   >
                     <span className="mb-4 inline-block p-3 rounded-lg bg-violet-100">
@@ -81,6 +83,7 @@ const ProductSection: FC = () => {
                   <Card
                     showHeader={false}
                     showFooter={false}
+                    borderColor="transparent"
                     containerClass={
                       "mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white"
                     }
@@ -101,6 +104,7 @@ const ProductSection: FC = () => {
                   <Card
                     showHeader={false}
                     showFooter={false}
+                    borderColor="transparent"
                     containerClass={"py-6 pl-6 pr-4 shadow rounded-lg bg-white"}
                   >
                     <span className="mb-4 inline-block p-3 rounded bg-violet-100">
