@@ -44,10 +44,10 @@ const SidebarMenu: FC<SidebarProps> = ({
           onTransitionEnd={handleTransitionEnd}
         >
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between px-5 py-4 bg-white border-b border-gray-200 shadow-sm">
-              <a href="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-between px-3 py-4 bg-white border-b border-gray-200 shadow-sm">
+              <a className="flex items-center space-x-2">
                 <VNodeRenderer nodes={config.logo} />
-                <span className="text-md font-semibold text-gray-700">
+                <span className="text-sm font-semibold text-gray-900">
                   {config.application}
                 </span>
               </a>
@@ -55,7 +55,7 @@ const SidebarMenu: FC<SidebarProps> = ({
                 onClick={onToggleSidebar}
                 className="text-gray-400 hover:text-gray-600 focus:outline-none"
               >
-                <span className="icon-[fluent--dismiss-20-filled] h-5 w-5"></span>
+                <span className="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
               </button>
             </div>
             <div className="overflow-y-auto flex-grow px-4 py-3">

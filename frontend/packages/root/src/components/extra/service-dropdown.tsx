@@ -6,6 +6,7 @@ export interface IService {
   icon: string;
   description: string;
   route: string;
+  category?: string;
 }
 
 export interface ServiceDropdownProps {
@@ -13,6 +14,7 @@ export interface ServiceDropdownProps {
   selectedCardTitle?: string;
   showDropdown: boolean;
   toggleDropdown: () => void;
+  getCategories: () => Promise<string[]>;
 }
 
 const ServiceDropdown: FC<ServiceDropdownProps> = ({

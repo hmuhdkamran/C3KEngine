@@ -12,7 +12,7 @@ const GettingStart: FC = () => {
                 </svg>
             </div>
 
-            <Card showHeader={false} showFooter={false} containerClass={"container mx-auto"}>
+            <Card showHeader={false} showFooter={false}  borderColor="transparent" containerClass={"container mx-auto"}>
                 <div
                     className="flex flex-wrap justify-center bg-white shadow-xl rounded-lg -mt-64 py-16 px-12 relative z-10">
                     <div className="w-full text-center lg:w-8/12">

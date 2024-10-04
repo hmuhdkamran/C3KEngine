@@ -12,42 +12,49 @@ const Login: FC = () => {
   const services: IService[] = [
     {
       name: "Authentication Service",
+      category: "HRMS",
       icon: "icon-[mdi--account-check]",
       description: "Manage user authentication",
       route: "/roles/user-module",
     },
     {
       name: "Business Setup Service",
+      category: "Business",
       icon: "icon-[mdi--office-building]",
       description: "Setup business essentials",
       route: "/business-setup",
     },
     {
       name: "HRMS Service",
+      category: "HRMS",
       icon: "icon-[clarity--employee-group-solid]",
       description: "Human resource management",
       route: "/hrms",
     },
     {
       name: "Retail Service",
+      category: "Retail",
       icon: "icon-[mdi--store]",
       description: "Manage retail operations",
       route: "/retail",
     },
     {
       name: "Point of Sale Service",
+      category: "Sale",
       icon: "icon-[mdi--cash-register]",
       description: "Point of Sale functionality",
       route: "/pos",
     },
     {
       name: "Supply Chain Service",
+      category: "Retail",
       icon: "icon-[mdi--truck-delivery]",
       description: "Manage supply chain",
       route: "/supply-chain",
     },
     {
       name: "Finance Service",
+      category: "Finance",
       icon: "icon-[mdi--currency-usd]",
       description: "Financial services",
       route: "/finance",
@@ -136,7 +143,7 @@ const Login: FC = () => {
         { name: "Live Chat", icon: "icon-[ic--baseline-chat]", path: "/support/chat" },
       ]
     }
-  ];  
+  ];
 
   const service = new AuthenticationService();
   const location = useLocation();
@@ -154,7 +161,7 @@ const Login: FC = () => {
 
     service.login(credentials).then((response) => {
       if (response?.authenticated) {
-        
+
         updateUser(response);
         updateServices(services);
         updateMenuItems(menuItems);

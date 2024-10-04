@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import HeaderArea from "@/components/page/header-area";
 import {
   useDataContext,
@@ -12,25 +12,52 @@ const DashboardIndex: FC = () => {
   const { currentPage, itemsPerPage } = useDataContext();
   const { services } = useSystemContext();
 
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showModulePage, setShowModulePage] = useState(false);
+  const [selectedCardTitle, setSelectedCardTitle] = useState("");
+
   useEffect(() => {
-    const newState = {
-      pageTitle: "Dashboard",
-      breadcrumbItems: [
-        { title: "Human Resource Management", route: "/", icon: "home" },
-      ],
-    };
-    updatePageState(newState);
-  }, []);
+    const breadcrumbItems = [
+      { title: "Dashboard", route: "#", icon: "home" },
+    ];
+
+    if (selectedCategory !== "All") {
+      breadcrumbItems.push({ title: selectedCategory, route: "#", icon: "folder" });
+    }
+
+    if (showModulePage && selectedCardTitle) {
+      breadcrumbItems.push({ title: selectedCardTitle, route: "#", icon: "file" });
+    }
+
+    updatePageState({
+      pageTitle: showModulePage ? selectedCardTitle : "Dashboard",
+      breadcrumbItems,
+    });
+  }, [selectedCategory, showModulePage, selectedCardTitle, updatePageState]);
+
+  const filteredCards = useMemo(() => {
+    return services.filter((card) => {
+      return selectedCategory === "All" || card.category === selectedCategory;
+    });
+  }, [services, selectedCategory]);
 
   const paginatedFilteredCards = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return services.slice(start, end);
-  }, [services, currentPage, itemsPerPage]);
+    return filteredCards.slice(start, end);
+  }, [filteredCards, currentPage, itemsPerPage]);
 
-  // Handle card click, capturing both card title and index
-  const handleCardClick = (title: string, index: number) => {
-    console.log(`Card clicked: ${title} at index: ${index}`);
+  const categories = ["All", ...new Set(services.map((service) => service.category || ""))];
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+    setShowModulePage(false);
+    // setSelectedCardTitle(""); 
+  };
+
+  const handleCardClick = (title: string) => {
+    setShowModulePage(true);
+    setSelectedCardTitle(title);
   };
 
   const goToMain = () => {
@@ -75,19 +102,43 @@ const DashboardIndex: FC = () => {
           </div>
         </HeaderArea>
 
-        <div className="bg-gray-50 flex-1 mx-auto mt-4 py-6 px-6 w-full h-full">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {paginatedFilteredCards.map((card, index) => (
-              <Card
-                key={index}
-                title={card.name}
-                description={card.description}
-                status="active"
-                buttonText="Proceed"
-                iconClass=""
-                onClick={() => handleCardClick(card.name, index)}
-              />
-            ))}
+        <div className="flex flex-row">
+          <div className="h-screen border-r border-gray-300 w-64 p-4 hidden sm:block">
+            <div className="text-md font-semibold mb-2">
+              <span className="icon-[ion--folder-sharp] text-violet-600"></span>
+              <span className="text-violet-600"> CATEGORIES </span>
+            </div>
+            <ul className="px-2 text-sm">
+              {categories.map((category) => (
+                <li
+                  key={category}
+                  className={`mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer ${selectedCategory === category ? "bg-violet-100 text-violet-700 rounded-md" : ""}`}
+                  onClick={() => {
+                    if (category) {
+                      handleCategoryClick(category);
+                    }
+                  }}
+                >
+                  <span>{category}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-gray-100 flex-1 mx-auto py-6 px-6 min-h-screen">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {paginatedFilteredCards.map((card, index) => (
+                <Card
+                  key={index}
+                  title={card.name}
+                  description={card.description}
+                  status="active"
+                  buttonText="Proceed"
+                  iconClass={card.icon}
+                  onClick={() => handleCardClick(card.name)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

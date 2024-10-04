@@ -13,6 +13,7 @@ interface CardProps {
   headerSlot?: React.ReactNode;
   footerSlot?: React.ReactNode;
   onClick?: () => void; // Added the onClick prop
+  borderColor?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -21,36 +22,41 @@ const Card: React.FC<CardProps> = ({
   status,
   buttonText,
   iconClass,
-  containerClass = "max-w-sm rounded overflow-hidden shadow-lg bg-white transition transform hover:scale-105 duration-200 sm:max-w-full lg:max-w-sm",
+  containerClass = "max-w-sm rounded-md overflow-hidden shadow-lg bg-white sm:max-w-full lg:max-w-sm relative group border border-gray-200 border-l-4 border-l-violet-500",
   showHeader = true,
   showFooter = true,
   headerSlot,
   footerSlot,
   children,
   onClick,
+  borderColor = "#7c3aed",
 }) => {
   return (
     <div
-      className={`transition transform shadow-lg hover:scale-105 duration-200 ${containerClass}`}
+      className={`transition duration-300 transform hover:translate-y-[-2px] hover:shadow-xl ${containerClass}`}
       onClick={onClick}
+      style={{
+        borderColor: "#e2e8f0",
+        borderLeftWidth: "3px",
+        borderLeftColor: borderColor,
+      }}
     >
       {showHeader && (
         <div>
           {headerSlot ? (
             headerSlot
           ) : (
-            <div className="px-2 py-1 flex items-center gap-3">
-              <div className="relative w-10 h-10 bg-violet-200 rounded-full">
+            <div className="px-4 py-2 flex items-center gap-3 border-b border-gray-100 bg-gray-50">
+              <div className="relative w-12 h-12 bg-violet-200 rounded-full flex items-center justify-center transition-all duration-500 ease-in-out">
                 <span
-                  className={`${iconClass} absolute w-6 h-6 text-violet-700 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2`}
-                />
+                  className={`${iconClass} text-violet-700 text-lg`} />
               </div>
               <div className="flex-1">
-                <div className="font-bold text-xl mb-1 flex items-center justify-between">
+                <div className="font-bold text-md flex items-center justify-between">
                   <span>{title}</span>
-                  <span className="icon-[ph--dots-three-vertical-bold]" />
+                  <span className="icon-[ph--dots-three-vertical-bold] cursor-pointer" />
                 </div>
-                <p className="text-gray-500">{description}</p>
+                <p className="text-gray-500 text-sm">{description}</p>
               </div>
             </div>
           )}
@@ -64,9 +70,9 @@ const Card: React.FC<CardProps> = ({
           {footerSlot ? (
             footerSlot
           ) : (
-            <div className="px-2 py-1 text-green-500 text-sm flex justify-between">
+            <div className="px-4 py-2 text-green-500 text-sm flex justify-between items-center border-t border-gray-100">
               <span>{status}</span>
-              <button className="bg-transparent hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-2 rounded">
+              <button className="bg-violet-100 hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-3 rounded text-sm transition-colors duration-300">
                 {buttonText}
               </button>
             </div>

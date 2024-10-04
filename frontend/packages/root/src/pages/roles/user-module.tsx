@@ -12,7 +12,7 @@ const UserModule: FC = () => {
   useEffect(() => {
     const newState = {
       pageTitle: "User Module",
-      breadcrumbItems: [{ title: "Authentication", route: "/", icon: "home" }],
+      breadcrumbItems: [{ title: "Authentication", route: "#", icon: "home" }],
     };
     updatePageState(newState);
   }, []);
