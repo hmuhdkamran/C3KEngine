@@ -1,10 +1,13 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import HeaderArea from "@/components/page/header-area";
 import { usePageContext } from "@/plugins/store";
 import DataTable from "@/components/data/data-table";
+import UserEditModule from "./user-edit";
 
 const UserModule: FC = () => {
   const { pageTitle, updatePageState } = usePageContext();
+  const [isEditModuleVisible, setEditModuleVisible] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   useEffect(() => {
     const newState = {
@@ -171,20 +174,20 @@ const UserModule: FC = () => {
       render: (record: unknown) => (
         <div className="flex justify-center space-x-2">
           <button
-            className="text-indigo-800 hover:text-indigo-600 focus:outline-none"
-            onClick={() => handleDelete(record)}
+            className="grid-action-btn hover-btn-warning"
+            onClick={() => handleView(record)}
           >
             <span className="icon-[ep--view]"></span>
           </button>
 
           <button
-            className="text-blue-800 hover:text-blue-600 focus:outline-none"
+            className="grid-action-btn hover-btn-primary"
             onClick={() => handleEdit(record)}
           >
             <span className="icon-[akar-icons--edit]"></span>
           </button>
           <button
-            className="text-red-800 hover:text-red-600 focus:outline-none"
+            className="grid-action-btn hover-btn-danger"
             onClick={() => handleDelete(record)}
           >
             <span className="icon-[hugeicons--delete-02]"></span>
@@ -201,15 +204,26 @@ const UserModule: FC = () => {
       sort: false,
       width: "100px",
       class: "text-center",
-    }
+    },
   ];
 
   const handleEdit = (record: unknown) => {
-    console.log("Editing:", JSON.stringify(record));
+    setSelectedCard(record);
+    setEditModuleVisible(true);
+  };
+
+  const handleView = (record: unknown) => {
+    setSelectedCard(record);
+    setEditModuleVisible(true);
   };
 
   const handleDelete = (record: unknown) => {
     console.log("Deleting:", JSON.stringify(record));
+    setEditModuleVisible(false);
+  };
+
+  const handleClose = () => {
+    setEditModuleVisible(false);
   };
 
   return (
@@ -222,6 +236,9 @@ const UserModule: FC = () => {
         </HeaderArea>
         <div className="bg-gray-50 flex-1 mx-auto py-1 px-1 w-full h-full">
           <DataTable data={hrmsCards} columns={columns} />
+          {isEditModuleVisible && (
+            <UserEditModule card={selectedCard} onClose={handleClose} />
+          )}
         </div>
       </div>
     </>
