@@ -162,6 +162,36 @@ const UserModule: FC = () => {
   ];
 
   const columns = [
+    {
+      key: "action",
+      label: "Action",
+      sort: false,
+      width: "70px",
+      class: "w-[100px]",
+      render: (record: unknown) => (
+        <div className="flex justify-center space-x-2">
+          <button
+            className="text-indigo-800 hover:text-indigo-600 focus:outline-none"
+            onClick={() => handleDelete(record)}
+          >
+            <span className="icon-[ep--view]"></span>
+          </button>
+
+          <button
+            className="text-blue-800 hover:text-blue-600 focus:outline-none"
+            onClick={() => handleEdit(record)}
+          >
+            <span className="icon-[akar-icons--edit]"></span>
+          </button>
+          <button
+            className="text-red-800 hover:text-red-600 focus:outline-none"
+            onClick={() => handleDelete(record)}
+          >
+            <span className="icon-[hugeicons--delete-02]"></span>
+          </button>
+        </div>
+      ),
+    },
     { key: "check", label: "check", sort: false, check: true },
     { key: "title", label: "Title", sort: true },
     { key: "description", label: "Description", sort: true },
@@ -171,37 +201,14 @@ const UserModule: FC = () => {
       sort: false,
       width: "100px",
       class: "text-center",
-    },
-    {
-      key: "action",
-      label: "Action",
-      sort: false,
-      width: "100px",
-      class: "text-center",
-      render: (record: unknown) => (
-        <div className="flex justify-center space-x-2">
-          <button
-            className="bg-blue-500 text-white px-2 py-1 rounded-md"
-            onClick={() => handleEdit(record)}
-          >
-            Edit
-          </button>
-          <button
-            className="bg-red-500 text-white px-2 py-1 rounded-md"
-            onClick={() => handleDelete(record)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
+    }
   ];
 
-  const handleEdit = (record: any) => {
+  const handleEdit = (record: unknown) => {
     console.log("Editing:", JSON.stringify(record));
   };
 
-  const handleDelete = (record: any) => {
+  const handleDelete = (record: unknown) => {
     console.log("Deleting:", JSON.stringify(record));
   };
 
@@ -210,16 +217,11 @@ const UserModule: FC = () => {
       <div className="bg-white mt-12 flex flex-col">
         <HeaderArea pageHeading={pageTitle} goToMain={goToMain}>
           <button className="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
-            <i className="icon-[fluent--filter-16-filled] mr-1"></i> Add
-          </button>
-          <button className="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-sm shadow-md">
-            <i className="icon-[fluent--group-24-filled] mr-1"></i> Remove
+            <i className="icon-[akar-icons--edit] mr-1"></i> Add
           </button>
         </HeaderArea>
-        <div>
-        </div>
-        <div className="bg-gray-50 flex-1 mx-auto mt-4 py-6 px-6 w-full h-full">
-        <DataTable data={hrmsCards} columns={columns} />
+        <div className="bg-gray-50 flex-1 mx-auto py-1 px-1 w-full h-full">
+          <DataTable data={hrmsCards} columns={columns} />
         </div>
       </div>
     </>
