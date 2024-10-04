@@ -1,5 +1,5 @@
+import { FC, useState, useMemo, useEffect, ReactNode } from "react";
 import { useDataContext } from "@/plugins/store";
-import { FC, useState, useMemo, useEffect } from "react";
 
 interface Column {
   key: string;
@@ -8,14 +8,16 @@ interface Column {
   width?: string;
   class?: string;
   check?: boolean;
+  render?: (record: Record<string, unknown>) => ReactNode;
 }
 
 interface TableProps {
   data: Record<string, unknown>[];
   columns: Column[];
+  onSelectionChange?: (selected: Record<string, unknown>[]) => void;
 }
 
-const DataTable: FC<TableProps> = ({ data, columns }) => {
+const DataTable: FC<TableProps> = ({ data, columns, onSelectionChange }) => {
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedRecords, setSelectedRecords] = useState<
@@ -81,10 +83,11 @@ const DataTable: FC<TableProps> = ({ data, columns }) => {
 
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
-    if (!selectAll) {
-      setSelectedRecords([...paginatedRecords]);
-    } else {
-      setSelectedRecords([]);
+    const newSelectedRecords = !selectAll ? [...paginatedRecords] : [];
+    setSelectedRecords(newSelectedRecords);
+
+    if (onSelectionChange) {
+      onSelectionChange(newSelectedRecords);
     }
   };
 
@@ -98,78 +101,72 @@ const DataTable: FC<TableProps> = ({ data, columns }) => {
     });
   };
 
+  const renderColumnContent = (
+    record: Record<string, unknown>,
+    column: Column
+  ): ReactNode => {
+    if (column.render) {
+      return column.render(record);
+    }
+    return (record[column.key] as ReactNode) || null;
+  };
+
   return (
-    <div className="h-screen w-screen">
-      <div className="overflow-x-auto shadow-md bg-white rounded-sm">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr className="bg-gray-200 border-b border-gray-300">
-              {columns.map((column) => (
-                <th
-                  key={column.key}
-                  className="p-2 text-left text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors text-md font-medium"
-                  onClick={() => changeSort(column.key, column.sort)}
-                >
-                  {column.check ? (
+    <table>
+      <thead>
+        <tr className="bg-gray-200 border-b border-gray-300">
+          {columns.map((column) => (
+            <th
+              key={column.key}
+              onClick={() => changeSort(column.key, column.sort)}
+            >
+              {column.check ? (
+                <input
+                  type="checkbox"
+                  className="cursor-pointer"
+                  checked={selectAll}
+                  onChange={toggleSelectAll}
+                />
+              ) : (
+                <>
+                  {column.label}
+                  {sortColumn === column.key && column.sort && (
+                    <span className="ml-1 text-md">
+                      {sortOrder === "asc" ? "↑" : "↓"}
+                    </span>
+                  )}
+                </>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+      <tbody>
+        {paginatedRecords.map((record, index) => (
+          <tr
+            key={(record[columns[0].key] as string) || index}
+          >
+            {columns.map((column) => (
+              <td key={column.key} className={`p-1 ${column.class || ""}`}>
+                {column.check ? (
+                  <div className="flex items-center justify-center h-full">
                     <input
                       type="checkbox"
                       className="cursor-pointer"
-                      checked={selectAll}
-                      onChange={toggleSelectAll}
+                      checked={selectedRecords.includes(record)}
+                      onChange={() => handleSelectRecord(record)}
                     />
-                  ) : (
-                    <>
-                      {column.label}
-                      {sortColumn === column.key && column.sort && (
-                        <span className="ml-1 text-md">
-                          {sortOrder === "asc" ? "↑" : "↓"}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {paginatedRecords.map(
-              (
-                record,
-                index
-              ) => (
-                <tr
-                  key={(record[columns[0].key] as string) || index}
-                  className="border-b border-dashed border-gray-300 transition-all hover:shadow-md text-md"
-                >
-                  {columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className={`p-1 ${column.class || ""}`}
-                    >
-                      {column.check ? (
-                        <input
-                          type="checkbox"
-                          className="cursor-pointer"
-                          checked={selectedRecords.includes(record)}
-                          onChange={() => handleSelectRecord(record)}
-                        />
-                      ) : (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: record[column.key] as string,
-                          }}
-                        />
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                  </div>
+                ) : (
+                  renderColumnContent(record, column)
+                )}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
