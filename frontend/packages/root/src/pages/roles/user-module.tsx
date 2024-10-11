@@ -8,6 +8,7 @@ const UserModule: FC = () => {
   const { pageTitle, updatePageState } = usePageContext();
   const [isEditModuleVisible, setEditModuleVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [mode, setMode] = useState<"view" | "edit">("view");
 
   useEffect(() => {
     const newState = {
@@ -204,16 +205,29 @@ const UserModule: FC = () => {
       sort: false,
       width: "100px",
       class: "text-center",
+      render: (record: any) => (
+        <span
+        className={`py-0.5 px-1 rounded-full text-xs font-semibold border ${
+          record.status === "Installed"
+            ? "bg-green-100 text-green-600 border-green-600"
+            : "bg-yellow-100 text-yellow-600 border-yellow-600"
+        }`}
+        >
+          {record.status}
+        </span>
+      ),
     },
   ];
 
   const handleEdit = (record: unknown) => {
     setSelectedCard(record);
+    setMode("edit");
     setEditModuleVisible(true);
   };
 
   const handleView = (record: unknown) => {
     setSelectedCard(record);
+    setMode("view");
     setEditModuleVisible(true);
   };
 
@@ -237,7 +251,11 @@ const UserModule: FC = () => {
         <div className="bg-gray-50 flex-1 mx-auto py-1 px-1 w-full h-full">
           <DataTable data={hrmsCards} columns={columns} />
           {isEditModuleVisible && (
-            <UserEditModule card={selectedCard} onClose={handleClose} />
+            <UserEditModule
+              card={selectedCard}
+              mode={mode}
+              onClose={handleClose}
+            />
           )}
         </div>
       </div>

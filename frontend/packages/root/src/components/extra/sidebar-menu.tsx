@@ -68,7 +68,7 @@ const SidebarMenu: FC<SidebarProps> = ({
                     >
                       <span className="flex items-center space-x-2">
                         <span
-                          className={`${section.icon} h-5 w-5 text-violet-600`}
+                          className={`${section.icon} h-5 w-5 text-violet-500`}
                         ></span>
                         <span className="text-sm font-semibold text-gray-700">
                           {section.name}

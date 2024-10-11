@@ -69,7 +69,7 @@ const ServiceDropdown: FC<ServiceDropdownProps> = ({
 
       {showDropdown && (
         <div ref={dropdownRef}
-          className="absolute left-0 mt-4 w-[75vw] sm:w-[600px] bg-white rounded-lg shadow-lg z-50 sm:p-4 
+          className="absolute left-0 mt-4 w-[75vw] sm:w-[600px] bg-white rounded-lg shadow-lg z-50 p-3 
           grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 transform origin-top scale-95 transition-transform duration-300"
         >
           <div className="col-span-full mb-2 relative">
