@@ -3,21 +3,32 @@ import { FC, useState } from "react";
 type UserEditModuleProps = {
   card: any;
   onClose: () => void;
-  mode: "view" | "edit";
+  mode: "view" | "edit" | "add";
 };
 
 const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
   const [openSection, setOpenSection] = useState(false);
-
-  if (!card) return null;
+  const [formValues, setFormValues] = useState({
+    title: card ? card.title : "",
+    description: card ? card.description : "",
+    status: card ? card.status : "Activate",
+  });
 
   const isViewMode = mode === "view";
+  const isAddMode = mode === "add";
 
   const toggleDropdown = () => {
     setOpenSection(!openSection);
   };
+
   const handleSave = () => {
-    console.log("Data saved");
+    console.log("Data saved:", formValues);
+    onClose();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
   };
 
   return (
@@ -26,7 +37,7 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
       <div className="relative bg-white w-[600px] min-h-screen flex flex-col shadow-lg">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">
-            {isViewMode ? "View" : "Edit"}
+            {isViewMode ? "View" : isAddMode ? "Add" : "Edit"}
           </h2>
           <button onClick={onClose}>
             <span className="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
@@ -36,8 +47,10 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Title</label>
             <input
+              name="title"
               type="text"
-              defaultValue={card.title}
+              value={formValues.title}
+              onChange={handleInputChange}
               className="w-full px-2 py-1 input-complete"
               disabled={isViewMode}
             />
@@ -45,7 +58,9 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Description</label>
             <textarea
-              defaultValue={card.description}
+              name="description"
+              value={formValues.description}
+              onChange={handleInputChange}
               className="w-full px-2 py-1 input-complete"
               disabled={isViewMode}
             />
@@ -54,7 +69,9 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
             <label className="block text-sm font-medium mb-2">Status</label>
             <div className="relative flex items-center">
               <select
-                defaultValue={card.status}
+                name="status"
+                value={formValues.status}
+                onChange={handleInputChange}
                 className="w-full px-2 py-1 input-complete appearance-none"
                 disabled={isViewMode}
                 onClick={toggleDropdown}
@@ -74,16 +91,18 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
             </div>
           </div>
         </div>
-          {!isViewMode && (
-            <div className="flex justify-end items-center p-4 border-t space-x-2">
+        {!isViewMode && (
+          <div className="flex justify-end items-center p-4 border-t space-x-2">
             <button onClick={onClose} className="px-3 py-1 btn-secondary">
               Cancel
             </button>
-            <button onClick={handleSave} className="px-3 py-1 btn-primary">Save</button>
+            <button onClick={handleSave} className="px-3 py-1 btn-primary">
+              {isAddMode ? "Save" : "Save"}
+            </button>
           </div>
-          )}
-        </div>
+        )}
       </div>
+    </div>
   );
 };
 
