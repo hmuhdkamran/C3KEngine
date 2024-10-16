@@ -6,11 +6,16 @@ import {
   ServiceDropdown,
   useSystemContext,
   SidebarMenu,
+  usePageContext,
 } from "c3k-utilities";
 import { useNavigate } from "react-router-dom";
 
 const Header: FC = () => {
   const { services, menuItems } = useSystemContext();
+  const navigate = useNavigate();
+
+  const { breadcrumbItems } = usePageContext();
+  console.log("breadcrumbItems:", breadcrumbItems);
 
   const [showModuleDropdown, setShowModuleDropdown] = useState(false);
   const toggleModuleDropdown = () => setShowModuleDropdown((prev) => !prev);
@@ -23,8 +28,6 @@ const Header: FC = () => {
 
   const [sidebarDropdown, setSidebarDropdown] = useState(false);
   const toggleSidebarDropdown = () => setSidebarDropdown((prev) => !prev);
-
-  const navigate = useNavigate();
 
   return (
     <>
@@ -46,9 +49,11 @@ const Header: FC = () => {
             showDropdown={showModuleDropdown}
             navigate={navigate}
             toggleDropdown={toggleModuleDropdown}
-            selectedCardTitle={showModuleDropdown ? "Dashboard" : undefined} getCategories={function (): Promise<string[]> {
+            selectedCardTitle={showModuleDropdown ? "Dashboard" : undefined}
+            getCategories={function (): Promise<string[]> {
               throw new Error("Function not implemented.");
-            } }          />
+            }}
+          />
         </div>
 
         <div className="flex-grow justify-center hidden lg:flex">

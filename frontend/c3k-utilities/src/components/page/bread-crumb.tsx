@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BreadcrumbProps } from '../../types/models';
+import { usePageContext } from 'c3k-utilities';
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, homeClick }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ homeClick }) => {
+  const { breadcrumbItems = [] } = usePageContext();
+
   return (
     <nav className="sm:text-md px-2 text-sm flex space-x-2 items-center">
       <div
@@ -12,7 +15,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, homeClick }) => {
         <i className="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
       </div>
 
-      {items.map((item, index) => (
+      {breadcrumbItems.map((item, index) => (
         <React.Fragment key={index}>
           <span className="text-gray-400">/</span>
           <Link to={item.route}>
@@ -25,5 +28,6 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items, homeClick }) => {
     </nav>
   );
 };
+
 
 export default Breadcrumb;

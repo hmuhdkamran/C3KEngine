@@ -69,7 +69,6 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbProps {
-    items: BreadcrumbItem[];
     homeClick: () => void;
 }
 export interface HeaderAreaProps {
