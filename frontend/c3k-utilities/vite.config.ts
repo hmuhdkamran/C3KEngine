@@ -1,9 +1,14 @@
-/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { peerDependencies } from "./package.json";
+import dotenv from 'dotenv'
+
+const envFile = '.env'
+
+dotenv.config({ path: envFile })
 
 export default defineConfig({
+  define: { 'process.env': {} },
   build: {
     lib: {
       entry: "./src/index.ts", // Specifies the entry point for building the library.

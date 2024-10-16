@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import Axios from 'axios';
-import { TokenHelper } from '../helper/token-helper';
+// import { TokenHelper } from '../helper/token-helper';
 
 let initialized = false;
 
@@ -14,13 +14,12 @@ export function useAxios(navigate: ReturnType<typeof useNavigate>) {
     if (!initialized) {
         // Axios request interceptor
         Axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-            // Example: Add bearer token to headers if needed
-            if (!config.headers?.Authorization) {
-                const bearerToken = TokenHelper.getBearerToken();
-                if (bearerToken.Authorization) {
-                    config.headers.Authorization = bearerToken.Authorization;
-                }
-            }
+            // if (!config.headers?.Authorization) {
+            //     const bearerToken = TokenHelper.getBearerToken();
+            //     if (bearerToken.Authorization) {
+            //         config.headers.Authorization = bearerToken.Authorization;
+            //     }
+            // }
 
             config.headers = config.headers || {};
 
