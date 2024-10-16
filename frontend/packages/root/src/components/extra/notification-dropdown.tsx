@@ -40,7 +40,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
         className="btn btn-ghost btn-circle"
         onClick={toggleDropdown}
       >
-        <div className="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
+        <div className="relative flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
           <span className="icon-[mdi--bell-outline] text-white h-4 w-4 sm:h-5 sm:w-5"></span>
           <span className="absolute top-0 right-0 block w-4 h-4 text-xs text-white bg-red-600 rounded-full">
             4
@@ -50,7 +50,10 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
 
       {showDropdown && (
         <div
-          className={`absolute mt-2 w-72 sm:w-80 bg-white shadow-lg rounded-md overflow-hidden z-50 right-0`}
+          className={`absolute mt-2 w-64 sm:w-80 bg-white shadow-lg rounded-md overflow-hidden z-50 sm:right-auto sm:left-0 md:right-auto md:left-0 ${
+            showDropdown ? "left-1/2 transform -translate-x-1/2 md:left-1/2 md:transform -translate-x-1/2 sm:left-auto" : ""
+          }`} 
+          style={{ maxWidth: '90vw' }}
         >
           <div className="py-1">
             <div className="px-4 py-2 bg-gray-100 border-b border-gray-200">
@@ -58,25 +61,25 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                 Notifications
               </h3>
             </div>
-            <div className="max-h-60 overflow-y-auto">
+            <div className="max-h-60 sm:max-h-80 overflow-y-auto">
               {[
                 {
-                  icon: "mdi-email",
+                  icon: "icon-[mdi--email]",
                   message: "You have a new message from John Doe",
                   time: "2 minutes ago",
                 },
                 {
-                  icon: "mdi-bell-ring",
+                  icon: "icon-[mdi--bell-ring]",
                   message: "Reminder: Meeting at 3 PM",
                   time: "10 minutes ago",
                 },
                 {
-                  icon: "mdi-file-document",
+                  icon: "icon-[mdi--file-document]",
                   message: "New report available: Sales Summary",
                   time: "30 minutes ago",
                 },
                 {
-                  icon: "mdi-account",
+                  icon: "icon-[mdi--account]",
                   message: "Jane Smith updated her profile",
                   time: "1 hour ago",
                 },
@@ -86,9 +89,9 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                   className="px-3 py-2 flex items-start space-x-2 border-b border-gray-200"
                 >
                   <span
-                    className={`icon-[${notification.icon}] text-blue-500 h-4 w-4`}
+                    className={`${notification.icon} text-violet-500 h-4 w-4`}
                   ></span>
-                  <div>
+                  <div className="flex-1">
                     <p className="text-sm text-gray-700">
                       {notification.message}
                     </p>

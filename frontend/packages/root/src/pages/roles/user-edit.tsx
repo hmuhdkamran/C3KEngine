@@ -1,115 +1,105 @@
-import { ChangeEvent, FC, useState } from "react";
+import { FC, useState } from "react";
 
-// Generic interface with a type T
-interface UserEditModuleProps<T> {
-  card: T;
+type UserEditModuleProps = {
+  card: any;
   onClose: () => void;
-}
+  mode: "view" | "edit" | "add";
+};
 
-const UserEditModule: FC<UserEditModuleProps<{ [key: string]: any }>> = ({
-  card,
-  onClose,
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedCard, setEditedCard] = useState(card);
+const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
+  const [openSection, setOpenSection] = useState(false);
+  const [formValues, setFormValues] = useState({
+    title: card ? card.title : "",
+    description: card ? card.description : "",
+    status: card ? card.status : "Activate",
+  });
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
+  const isViewMode = mode === "view";
+  const isAddMode = mode === "add";
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setEditedCard((prevCard) => ({
-      ...prevCard,
-      [name]: value,
-    }));
+  const toggleDropdown = () => {
+    setOpenSection(!openSection);
   };
 
   const handleSave = () => {
-    console.log("Saved data", editedCard);
-    setIsEditing(false);
+    console.log("Data saved:", formValues);
+    onClose();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
   };
 
   return (
-    <div className="border rounded-lg shadow-md p-4 bg-white dark:bg-gray-800 w-full lg:w-1/3 mx-auto">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
-          <span
-            className={`${editedCard.iconClass} text-4xl text-indigo-500 mr-3`}
-          ></span>
-          {isEditing ? (
-            <input
-              type="text"
-              name="title"
-              value={editedCard.title}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-md px-2 py-1 w-full"
-            />
-          ) : (
-            <h3 className="text-xl font-semibold">{editedCard.title}</h3>
-          )}
+    <div className="fixed inset-0 z-50 flex justify-end">
+      <div className="fixed inset-0 bg-black opacity-50"></div>
+      <div className="relative bg-white w-[600px] min-h-screen flex flex-col shadow-lg">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-semibold">
+            {isViewMode ? "View" : isAddMode ? "Add" : "Edit"}
+          </h2>
+          <button onClick={onClose}>
+            <span className="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
+          </button>
         </div>
-
-        {/* Toggle between Edit and Close */}
-        <button
-          onClick={isEditing ? handleEditToggle : onClose}
-          className="text-blue-500 hover:text-blue-700 focus:outline-none"
-        >
-          {isEditing ? "Cancel" : "Close"}
-        </button>
-      </div>
-
-      <div className="mt-3">
-        {isEditing ? (
-          <textarea
-            name="description"
-            value={editedCard.description}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md px-2 py-1"
-          />
-        ) : (
-          <p>{editedCard.description}</p>
-        )}
-      </div>
-
-      <div className="mt-3 flex justify-between">
-        {isEditing ? (
-          <select
-            name="status"
-            value={editedCard.status}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-md px-2 py-1"
-          >
-            <option value="Installed">Installed</option>
-            <option value="Not Installed">Not Installed</option>
-            <option value="Pending">Pending</option>
-          </select>
-        ) : (
-          <span
-            className={`text-sm font-medium px-2 py-1 rounded ${
-              editedCard.status === "Installed"
-                ? "bg-green-100 text-green-800"
-                : editedCard.status === "Pending"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
-            }`}
-          >
-            {editedCard.status}
-          </span>
-        )}
-        {isEditing ? (
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-          >
-            Save
-          </button>
-        ) : (
-          <button className="text-indigo-500 hover:text-indigo-600 focus:outline-none">
-            {editedCard.buttonText}
-          </button>
+        <div className="p-4 flex-grow">
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Title</label>
+            <input
+              name="title"
+              type="text"
+              value={formValues.title}
+              onChange={handleInputChange}
+              className="w-full px-2 py-1 input-complete"
+              disabled={isViewMode}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Description</label>
+            <textarea
+              name="description"
+              value={formValues.description}
+              onChange={handleInputChange}
+              className="w-full px-2 py-1 input-complete"
+              disabled={isViewMode}
+            />
+          </div>
+          <div className="mb-4 relative">
+            <label className="block text-sm font-medium mb-2">Status</label>
+            <div className="relative flex items-center">
+              <select
+                name="status"
+                value={formValues.status}
+                onChange={handleInputChange}
+                className="w-full px-2 py-1 input-complete appearance-none"
+                disabled={isViewMode}
+                onClick={toggleDropdown}
+              >
+                <option value="Activate">Activate</option>
+                <option value="Installed">Installed</option>
+              </select>
+              <span className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                <span
+                  className={
+                    openSection
+                      ? "icon-[mdi--chevron-up] text-gray-600"
+                      : "icon-[mdi--chevron-down] text-gray-500"
+                  }
+                ></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        {!isViewMode && (
+          <div className="flex justify-end items-center p-4 border-t space-x-2">
+            <button onClick={onClose} className="px-3 py-1 btn-secondary">
+              Cancel
+            </button>
+            <button onClick={handleSave} className="px-3 py-1 btn-primary">
+              {isAddMode ? "Save" : "Save"}
+            </button>
+          </div>
         )}
       </div>
     </div>

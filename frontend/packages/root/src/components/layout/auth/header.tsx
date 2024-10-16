@@ -44,7 +44,7 @@ const Header: FC = () => {
           />
         </div>
 
-        <div className="flex-grow flex justify-center">
+        <div className="flex-grow justify-center hidden lg:flex">
           <MenuItems items={menuItems} />
         </div>
 
@@ -53,15 +53,17 @@ const Header: FC = () => {
             showDropdown={showNotificationDropdown}
             toggleDropdown={toggleNotifications}
           />
-          <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
-            <span className="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
-          </button>
-          <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
-            <span className="icon-[ic--baseline-help] h-4 w-4 sm:h-5 sm:w-5"></span>
-          </button>
-          <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
-            <span className="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
-          </button>
+          <div className="flex space-x-2 sm:space-x-4 sm:flex hidden">
+            <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
+              <span className="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
+            </button>
+            <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
+              <span className="icon-[ic--baseline-help] h-4 w-4 sm:h-5 sm:w-5"></span>
+            </button>
+            <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
+              <span className="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
+            </button>
+          </div>
           <ProfileDropdown
             showDropdown={showProfileDropdown}
             toggleDropdown={toggleProfileDropdown}

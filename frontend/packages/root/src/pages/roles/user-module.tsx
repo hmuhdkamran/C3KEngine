@@ -3,11 +3,14 @@ import HeaderArea from "@/components/page/header-area";
 import { usePageContext } from "@/plugins/store";
 import DataTable from "@/components/data/data-table";
 import UserEditModule from "./user-edit";
+import ConfirmDialog  from '@/components/extra/confirm-dialog'
 
 const UserModule: FC = () => {
   const { pageTitle, updatePageState } = usePageContext();
   const [isEditModuleVisible, setEditModuleVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [mode, setMode] = useState<"view" | "edit" | "add">("view");
+  const [isConfirmVisible, setConfirmVisible] = useState(false);
 
   useEffect(() => {
     const newState = {
@@ -188,7 +191,7 @@ const UserModule: FC = () => {
           </button>
           <button
             className="grid-action-btn hover-btn-danger"
-            onClick={() => handleDelete(record)}
+            onClick={() => confirmDelete(record)} 
           >
             <span className="icon-[hugeicons--delete-02]"></span>
           </button>
@@ -204,22 +207,47 @@ const UserModule: FC = () => {
       sort: false,
       width: "100px",
       class: "text-center",
+      render: (record: any) => (
+        <span
+          className={`py-0.5 px-1 rounded-full text-xs font-semibold ${
+            record.status === "Installed"
+              ? "bg-green-100 text-green-700"
+              : "bg-yellow-100 text-yellow-700"
+          }`}
+        >
+          {record.status}
+        </span>
+      ),
     },
   ];
 
+  const handleAdd = () => {
+    setSelectedCard(null);
+    setMode("add");
+    setEditModuleVisible(true);
+  };
+
   const handleEdit = (record: unknown) => {
     setSelectedCard(record);
+    setMode("edit");
     setEditModuleVisible(true);
   };
 
   const handleView = (record: unknown) => {
     setSelectedCard(record);
+    setMode("view");
     setEditModuleVisible(true);
   };
 
-  const handleDelete = (record: unknown) => {
-    console.log("Deleting:", JSON.stringify(record));
-    setEditModuleVisible(false);
+  const confirmDelete = (record: unknown) => {
+    setSelectedCard(record);
+    setConfirmVisible(true); 
+  };
+
+  const handleDelete = () => {
+    console.log("Deleting:", JSON.stringify(selectedCard));
+    setConfirmVisible(false);
+    setSelectedCard(null);
   };
 
   const handleClose = () => {
@@ -230,14 +258,28 @@ const UserModule: FC = () => {
     <>
       <div className="bg-white mt-12 flex flex-col">
         <HeaderArea pageHeading={pageTitle} goToMain={goToMain}>
-          <button className="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
+          <button
+            onClick={handleAdd}
+            className="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md"
+          >
             <i className="icon-[akar-icons--edit] mr-1"></i> Add
           </button>
         </HeaderArea>
         <div className="bg-gray-50 flex-1 mx-auto py-1 px-1 w-full h-full">
           <DataTable data={hrmsCards} columns={columns} />
           {isEditModuleVisible && (
-            <UserEditModule card={selectedCard} onClose={handleClose} />
+            <UserEditModule
+              card={selectedCard}
+              mode={mode}
+              onClose={handleClose}
+            />
+          )}
+          {isConfirmVisible && (
+            <ConfirmDialog
+              message="Are you sure you want to delete this user?"
+              onConfirm={handleDelete}
+              onCancel={() => setConfirmVisible(false)}
+            />
           )}
         </div>
       </div>
