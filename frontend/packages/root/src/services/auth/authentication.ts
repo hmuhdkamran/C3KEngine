@@ -1,5 +1,5 @@
 import Axios, { AxiosResponse } from "axios";
-import { StoreService, TokenHelper, DefaultUser, IAccessToken, ICredential, IPayload, IUser } from "c3k-utilities";
+import { StoreService, TokenHelper, DefaultUser, IAccessToken, ICredential, IPayload, IUser, GlobalConfig } from "c3k-utilities";
 
 export class AuthenticationService extends StoreService {
     login(credentials: ICredential): Promise<IUser> {

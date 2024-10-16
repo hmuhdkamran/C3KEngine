@@ -1,15 +1,14 @@
 import { FC, useState, useMemo, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { ServiceDropdownProps } from "../../types/models";
 
 const ServiceDropdown: FC<ServiceDropdownProps> = ({
   services,
   showDropdown,
   selectedCardTitle,
+  navigate,
   toggleDropdown,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const filteredServices = useMemo(() => {

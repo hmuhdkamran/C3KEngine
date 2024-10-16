@@ -1,12 +1,12 @@
 import AppRoute from "@/router";
-import { SystemProvider, useAxios } from "c3k-utilities";
+import { SystemProvider } from "c3k-utilities";
+import AxiosSetupComponent from "./components/utilities/axios-setup";
 
 function App() {
-  useAxios();
-
   return (
     <>
       <SystemProvider>
+        <AxiosSetupComponent />
         <AppRoute />
       </SystemProvider>
     </>

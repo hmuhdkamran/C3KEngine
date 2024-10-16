@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { IUser } from "./axios";
 
 export interface IService {
@@ -13,6 +14,7 @@ export interface ServiceDropdownProps {
     services: IService[];
     selectedCardTitle?: string;
     showDropdown: boolean;
+    navigate: ReturnType<typeof useNavigate>;
     toggleDropdown: () => void;
     getCategories: () => Promise<string[]>;
 }

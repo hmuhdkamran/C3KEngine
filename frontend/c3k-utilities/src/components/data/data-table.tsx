@@ -47,12 +47,18 @@ const DataTable: FC<TableProps> = ({ data, columns, onSelectionChange }) => {
     const sorted = filtered.sort((a, b) => {
       const compareA =
         typeof a[sortColumn] === "string"
-          ? a[sortColumn]?.toString().toLowerCase()
-          : "";
+          ? (a[sortColumn] as string).toLowerCase()
+          : typeof a[sortColumn] === "number"
+          ? (a[sortColumn] as number).toString().toLowerCase()
+          : ""; // Default to empty string if not string or number
+    
       const compareB =
         typeof b[sortColumn] === "string"
-          ? b[sortColumn]?.toString().toLowerCase()
-          : "";
+          ? (b[sortColumn] as string).toLowerCase()
+          : typeof b[sortColumn] === "number"
+          ? (b[sortColumn] as number).toString().toLowerCase()
+          : ""; // Default to empty string if not string or number
+    
       if (compareA < compareB) return sortOrder === "asc" ? -1 : 1;
       if (compareA > compareB) return sortOrder === "asc" ? 1 : -1;
       return 0;

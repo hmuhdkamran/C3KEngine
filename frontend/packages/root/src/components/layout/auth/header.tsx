@@ -7,6 +7,7 @@ import {
   useSystemContext,
   SidebarMenu,
 } from "c3k-utilities";
+import { useNavigate } from "react-router-dom";
 
 const Header: FC = () => {
   const { services, menuItems } = useSystemContext();
@@ -22,6 +23,8 @@ const Header: FC = () => {
 
   const [sidebarDropdown, setSidebarDropdown] = useState(false);
   const toggleSidebarDropdown = () => setSidebarDropdown((prev) => !prev);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -41,6 +44,7 @@ const Header: FC = () => {
           <ServiceDropdown
             services={services}
             showDropdown={showModuleDropdown}
+            navigate={navigate}
             toggleDropdown={toggleModuleDropdown}
             selectedCardTitle={showModuleDropdown ? "Dashboard" : undefined} getCategories={function (): Promise<string[]> {
               throw new Error("Function not implemented.");
