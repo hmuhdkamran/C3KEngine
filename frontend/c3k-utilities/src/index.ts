@@ -1,10 +1,10 @@
 import './styles/main.css';
-import config from "./plugins/Api/config";
+
 
 export * from "./components";
 
 export * from "./plugins/Api/axios";
-export { config as GlobalConfig };
+export * from "./plugins/Api/config";
 export * from "./plugins/helper/pick";
 export * from "./plugins/helper/purry";
 export * from "./plugins/helper/token-helper";

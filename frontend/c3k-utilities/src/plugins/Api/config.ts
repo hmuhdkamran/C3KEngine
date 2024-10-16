@@ -1,9 +1,4 @@
-interface IUriConfig {
-    auth?: string;
-    content?: string;
-    site?: string;
-    services?: string;
-}
+import { IUriConfig } from "../../types/models";
 
 const uri: IUriConfig = {};
 

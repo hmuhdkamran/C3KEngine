@@ -91,4 +91,11 @@ export interface ICommonContext {
     updateServices: (values: IService[]) => void;
     updateMenuItems: (values: MenuItem[]) => void;
     updateSidebarMenu: (values: MenuItem[]) => void;
-  }
+}
+
+export interface IUriConfig {
+    auth?: string;
+    content?: string;
+    site?: string;
+    services?: string;
+}
