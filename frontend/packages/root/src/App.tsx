@@ -1,6 +1,6 @@
 import AppRoute from "@/router";
-import { useAxios } from "@/plugins/Api/axios";
-import { SystemProvider } from "@/plugins/store/system";
+import { SystemProvider, useAxios } from "c3k-utilities";
+
 function App() {
   useAxios();
 

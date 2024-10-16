@@ -1,0 +1,214 @@
+@import '../common/_variables.css';
+/* Import color variables */
+
+@layer components {
+
+    /* Common button styles */
+    .common-btn {
+        @apply cursor-pointer py-2 font-medium transition-all duration-300 ease-in-out;
+    }
+
+    /* Button types with hover states */
+    .btn-primary {
+        @apply text-white;
+        background-color: var(--primary-color);
+        border: border var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-color-dark);
+        border-color: var(--primary-color-darker);
+    }
+
+    .btn-gradient {
+        @apply rounded-md py-2 px-4 text-white bg-gradient-to-r from-violet-600 to-indigo-500;
+        transition: background-color 0.3s, border-color 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .btn-gradient:hover {
+        background-color: var(--primary-color-dark);
+        border-color: var(--primary-color-darker);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+        @apply text-gray-700;
+        background-color: var(--secondary-color);
+        border: 1px solid var(--secondary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--secondary-color-dark);
+        border-color: var(--secondary-color-darker);
+    }
+
+    .btn-danger {
+        @apply text-white;
+        background-color: var(--danger-color);
+        border: 1px solid var(--danger-color);
+    }
+
+    .btn-danger:hover {
+        background-color: var(--danger-color-dark);
+        border-color: var(--danger-color-darker);
+    }
+
+    .btn-info {
+        @apply text-white;
+        background-color: var(--info-color);
+        border: 1px solid var(--info-color);
+    }
+
+    .btn-info:hover {
+        background-color: var(--info-color-dark);
+        border-color: var(--info-color-darker);
+    }
+
+    .btn-disabled {
+        @apply text-gray-400;
+        background-color: var(--disabled-color);
+        border: 1px solid var(--disabled-color);
+        cursor: not-allowed;
+    }
+
+    /* Button Variations */
+    /* Solid */
+    .btn-solid {
+        @apply common-btn;
+    }
+
+    /* Outline */
+    .btn-outline {
+        @apply common-btn bg-transparent;
+    }
+
+    .btn-outline.btn-primary {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-outline.btn-primary:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color-darker);
+    }
+
+    .btn-outline.btn-secondary {
+        color: var(--secondary-color-darker);
+        border: 1px solid var(--secondary-color);
+    }
+
+    .btn-outline.btn-secondary:hover {
+        background-color: var(--secondary-color-dark);
+        color: white;
+        border-color: var(--secondary-color-darker);
+    }
+
+    .btn-outline.btn-danger {
+        color: var(--danger-color);
+        border: 1px solid var(--danger-color);
+    }
+
+    .btn-outline.btn-danger:hover {
+        background-color: var(--danger-color);
+        color: white;
+        border-color: var(--danger-color-darker);
+    }
+
+    .btn-outline.btn-info {
+        color: var(--info-color);
+        border: 1px solid var(--info-color);
+    }
+
+    .btn-outline.btn-info:hover {
+        background-color: var(--info-color);
+        color: white;
+        border-color: var(--info-color-darker);
+    }
+
+    /* Hyperlink-style */
+    .btn-hyper {
+        color: var(--primary-color);
+        @apply bg-transparent underline border-none;
+    }
+
+    .btn-hyper:hover {
+        color: var(--primary-color-dark);
+    }
+
+    /* Rounded Button */
+    .btn-rounded {
+        @apply common-btn rounded-full;
+    }
+
+    .btn-rounded.btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-rounded.btn-primary:hover {
+        background-color: var(--primary-color-dark);
+        border-color: var(--primary-color-darker);
+    }
+
+    .btn-rounded.btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--secondary-color-darker);
+    }
+
+    .btn-rounded.btn-secondary:hover {
+        background-color: var(--secondary-color-dark);
+        border-color: var(--secondary-color-darker);
+    }
+
+    .btn-rounded.btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+    .btn-rounded.btn-danger:hover {
+        background-color: var(--danger-color-dark);
+        border-color: var(--danger-color-darker);
+    }
+
+    .btn-rounded.btn-info {
+        background-color: var(--info-color);
+        color: white;
+    }
+
+    .btn-rounded.btn-info:hover {
+        background-color: var(--info-color-dark);
+        border-color: var(--info-color-darker);
+    }
+
+    /* Disabled Button */
+    .btn-disabled {
+        @apply text-gray-400;
+        background-color: var(--disabled-color);
+        border-color: var(--disabled-color);
+        cursor: not-allowed;
+    }
+
+    .grid-action-btn {
+        @apply relative focus:outline-none transition-all duration-300 hover:border-l-2 hover:border-r-2 border-transparent rounded-md px-1;
+    }
+
+    .hover-btn-primary {
+        @apply text-indigo-800 hover:text-indigo-600 hover:border-indigo-400;
+    }
+
+    .hover-btn-info {
+        @apply text-blue-800 hover:text-blue-600 hover:border-blue-400;
+    }
+
+    .hover-btn-warning {
+        @apply text-yellow-800 hover:text-yellow-600 hover:border-yellow-400;
+    }
+
+    .hover-btn-danger {
+        @apply text-red-800 hover:text-red-600 hover:border-red-400;
+    }
+}

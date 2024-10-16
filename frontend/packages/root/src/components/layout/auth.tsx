@@ -2,8 +2,7 @@ import { FC } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./auth/header";
 import Footer from "./auth/footer";
-import { DataProvider } from "@/plugins/store/data";
-import { PageProvider } from "@/plugins/store/page";
+import { DataProvider, PageProvider } from "c3k-utilities";
 
 const AuthenticatedLayout: FC = () => {
   return (

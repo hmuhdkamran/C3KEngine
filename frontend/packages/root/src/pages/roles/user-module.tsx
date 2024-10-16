@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import HeaderArea from "@/components/page/header-area";
-import { usePageContext } from "@/plugins/store";
-import DataTable from "@/components/data/data-table";
 import UserEditModule from "./user-edit";
-import ConfirmDialog  from '@/components/extra/confirm-dialog'
+import {
+  ConfirmDialog,
+  DataTable,
+  HeaderArea,
+  usePageContext,
+} from "c3k-utilities";
 
 const UserModule: FC = () => {
   const { pageTitle, updatePageState } = usePageContext();
@@ -191,7 +193,7 @@ const UserModule: FC = () => {
           </button>
           <button
             className="grid-action-btn hover-btn-danger"
-            onClick={() => confirmDelete(record)} 
+            onClick={() => confirmDelete(record)}
           >
             <span className="icon-[hugeicons--delete-02]"></span>
           </button>
@@ -241,7 +243,7 @@ const UserModule: FC = () => {
 
   const confirmDelete = (record: unknown) => {
     setSelectedCard(record);
-    setConfirmVisible(true); 
+    setConfirmVisible(true);
   };
 
   const handleDelete = () => {

@@ -1,5 +1,5 @@
+import { Card } from "c3k-utilities";
 import { FC } from "react";
-import Card from "@/components/extra/card";
 
 const GettingStart: FC = () => {
     return (

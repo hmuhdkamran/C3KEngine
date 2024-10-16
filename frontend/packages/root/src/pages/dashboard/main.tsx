@@ -1,11 +1,11 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import HeaderArea from "@/components/page/header-area";
 import {
+  Card,
+  HeaderArea,
   useDataContext,
   usePageContext,
   useSystemContext,
-} from "@/plugins/store";
-import Card from "@/components/extra/card";
+} from "c3k-utilities";
+import { FC, useEffect, useMemo, useState } from "react";
 
 const DashboardIndex: FC = () => {
   const { pageTitle, updatePageState } = usePageContext();
@@ -17,16 +17,22 @@ const DashboardIndex: FC = () => {
   const [selectedCardTitle, setSelectedCardTitle] = useState("");
 
   useEffect(() => {
-    const breadcrumbItems = [
-      { title: "Dashboard", route: "#", icon: "home" },
-    ];
+    const breadcrumbItems = [{ title: "Dashboard", route: "#", icon: "home" }];
 
     if (selectedCategory !== "All") {
-      breadcrumbItems.push({ title: selectedCategory, route: "#", icon: "folder" });
+      breadcrumbItems.push({
+        title: selectedCategory,
+        route: "#",
+        icon: "folder",
+      });
     }
 
     if (showModulePage && selectedCardTitle) {
-      breadcrumbItems.push({ title: selectedCardTitle, route: "#", icon: "file" });
+      breadcrumbItems.push({
+        title: selectedCardTitle,
+        route: "#",
+        icon: "file",
+      });
     }
 
     updatePageState({
@@ -47,12 +53,15 @@ const DashboardIndex: FC = () => {
     return filteredCards.slice(start, end);
   }, [filteredCards, currentPage, itemsPerPage]);
 
-  const categories = ["All", ...new Set(services.map((service) => service.category || ""))];
+  const categories = [
+    "All",
+    ...new Set(services.map((service) => service.category || "")),
+  ];
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
     setShowModulePage(false);
-    // setSelectedCardTitle(""); 
+    // setSelectedCardTitle("");
   };
 
   const handleCardClick = (title: string) => {
@@ -112,7 +121,11 @@ const DashboardIndex: FC = () => {
               {categories.map((category) => (
                 <li
                   key={category}
-                  className={`mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer ${selectedCategory === category ? "bg-violet-100 text-violet-700 rounded-md" : ""}`}
+                  className={`mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer ${
+                    selectedCategory === category
+                      ? "bg-violet-100 text-violet-700 rounded-md"
+                      : ""
+                  }`}
                   onClick={() => {
                     if (category) {
                       handleCategoryClick(category);

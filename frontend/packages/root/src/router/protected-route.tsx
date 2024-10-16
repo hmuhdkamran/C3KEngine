@@ -1,7 +1,7 @@
 import { routePath } from "@/pages";
-import { useSystemContext } from "@/plugins/store";
 import { Navigate } from "react-router-dom";
 import { FC, ReactNode } from "react";
+import { useSystemContext } from "c3k-utilities";
 
 interface ProtectedRouteProps {
   element: ReactNode;

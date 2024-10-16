@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { config } from "@/plugins/config";
-import VNodeRenderer from "@/components/extra/node-renderer";
+import { VNodeRenderer } from "c3k-utilities";
 
 const RegisterForm: FC = () => {
   const [name, setName] = useState<string>("");

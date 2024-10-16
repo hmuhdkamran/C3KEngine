@@ -1,4 +1,4 @@
-import type { IConfiguration } from '@/types/configuration';
+import { IConfiguration } from "c3k-utilities"
 import logo from '@/assets/react.svg';
 
 export const config: IConfiguration = {

@@ -1,8 +1,7 @@
 import { FC, useContext } from "react";
-import { config } from "@/plugins/config";
-import VNodeRenderer from "@/components/extra/node-renderer";
+import { VNodeRenderer, SystemContext } from "c3k-utilities";
 import { Link } from "react-router-dom";
-import { SystemContext } from "@/plugins/store/system";
+import { config } from "@/plugins/config";
 
 const Header: FC = () => {
   const context = useContext(SystemContext);

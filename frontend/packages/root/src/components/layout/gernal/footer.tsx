@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { config } from "@/plugins/config";
-import VNodeRenderer from "@/components/extra/node-renderer";
+import { VNodeRenderer } from "c3k-utilities";
 
 const Footer: FC = () => {
   return (
