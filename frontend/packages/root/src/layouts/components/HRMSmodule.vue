@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DataTable,useTableStore } from 'c3k-library';
+import { DataTable, useTableStore } from 'c3k-library';
 import { onMounted } from 'vue';
 const tableStore = useTableStore();
 
@@ -148,10 +148,10 @@ const hrmsCards = [
 
 const columns = [
   { key: 'check', label: 'check', sort: false, check: true },
+  { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' },
   { key: 'title', label: 'Title', sort: true },
   { key: 'description', label: 'Description', sort: true },
-  { key: 'status', label: 'Status', sort: false, width: '100px', class: 'text-center' },
-  { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' }
+  { key: 'status', label: 'Status', sort: false, width: '100px', class: 'text-center' },  
 ];
 
 onMounted(() => {
@@ -175,14 +175,18 @@ const openModal = (row: any) => {
         </span>
       </template>
       <template #action="{ row }">
-        <button @click="openModal(row)"
-          class="transition-all text-gray-600 focus:outline-none hover:bg-gray-200 rounded-full">
-          <span class="icon-[mdi--edit-outline] w-5 h-5"></span>
-        </button>
-        <button @click="openModal(row)"
-          class="transition-all text-gray-600 focus:outline-none ml-1 hover:bg-gray-200 rounded-full">
-          <span class="icon-[material-symbols--delete-outline] w-5 h-5"></span>
-        </button>
+        <div className="flex justify-center space-x-2">
+          <button className="grid-action-btn hover-btn-warning" @click="openModal(row)">
+            <span className="icon-[ep--view]"></span>
+          </button>
+
+          <button className="grid-action-btn hover-btn-primary" @click="openModal(row)">
+            <span className="icon-[akar-icons--edit]"></span>
+          </button>
+          <button className="grid-action-btn hover-btn-danger" @click="openModal(row)">
+            <span className="icon-[hugeicons--delete-02]"></span>
+          </button>
+        </div>
       </template>
     </DataTable>
   </div>

@@ -25,7 +25,6 @@ const props = defineProps({
 });
 
 const tableStore = useTableStore();
-// tableStore.currentPage = 1;
 
 const itemsPerPage = computed(() => tableStore.itemsPerPage);
 const sortColumn = ref<string>('');
@@ -35,7 +34,7 @@ const selectAll = ref(false);
 
 const filteredRecords = computed(() => {
     const query = tableStore.searchQuery.toLowerCase();
-    const filteredRecords  = props.data.filter(record =>
+    const filteredRecords = props.data.filter(record =>
         Object.values(record).some(value =>
             value.toString().toLowerCase().includes(query)
         )
@@ -48,7 +47,7 @@ const filteredRecords = computed(() => {
     });
 
     tableStore.updateTotalRecords(filteredRecords.length);
-    return filteredRecords ;
+    return filteredRecords;
 });
 
 const paginatedRecords = computed(() => {
@@ -79,52 +78,45 @@ const toggleSelectAll = () => {
 </script>
 
 <template>
-    <div class="h-screen">
-        <div class="overflow-x-auto shadow-md bg-white rounded-sm">
-            <table class="min-w-full bg-white border border-gray-200">
-                <thead>
-                    <tr class="bg-gray-200 border-b border-gray-300">
-                        <template v-for="column in props.columns" :key="column.key">
-                            <th v-if="column.check"
-                                class="p-2 text-center text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors text-md font-medium">
-                                <input class="cursor-pointer" type="checkbox" v-model="selectAll"
-                                    @change="toggleSelectAll" />
-                            </th>
-                            <th v-else @click="changeSort(column.key, column.sort)"
-                                class="p-2 text-left text-gray-600 cursor-pointer hover:bg-gray-300 transition-colors text-md font-medium">
-                                {{ column.label }}
-                                <span v-if="sortColumn === column.key && column.sort" class="ml-1 text-md">
-                                    {{ sortOrder === 'asc' ? '↑' : '↓' }}
-                                </span>
-                            </th>
-                        </template>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]"
-                        class="border-b border-dashed border-gray-300 transition-all hover:shadow-md text-md">
-                        <template v-for="column in props.columns">
-                            <template v-if="column.check">
-                                <td class="p-1 text-center">
-                                    <input class="cursor-pointer" type="checkbox" v-model="selectedRecords"
-                                        :value="record" />
-                                </td>
-                            </template>
-                            <template v-else>
-                                <td class="p-1" :class="column.class" :key="column.key"
-                                    v-if="typeof $slots[column.key] !== 'undefined'">
-                                    <slot :name="column.key" :field="column.key" :row="record"></slot>
-                                </td>
-                                <td class="p-1" :class="column.class" :key="column.key + `-els`" v-else>
-                                    <span v-html="record[column.key]"></span>
-                                </td>
-                            </template>
-                        </template>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table>
+        <thead>
+            <tr class="bg-gray-200 border-b border-gray-300">
+                <template v-for="column in props.columns" :key="column.key">
+                    <th v-if="column.check"
+                        class="cursor-pointer">
+                        <input class="cursor-pointer" type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
+                    </th>
+                    <th v-else @click="changeSort(column.key, column.sort)"
+                        class="cursor-pointer ">
+                        {{ column.label }}
+                        <span v-if="sortColumn === column.key && column.sort" class="ml-1 text-md">
+                            {{ sortOrder === 'asc' ? '↑' : '↓' }}
+                        </span>
+                    </th>
+                </template>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]">
+                <template v-for="column in props.columns">
+                    <template v-if="column.check">
+                        <td class="p-1 flex items-center justify-center h-full">
+                            <input class="cursor-pointer" type="checkbox" v-model="selectedRecords" :value="record" />
+                        </td>
+                    </template>
+                    <template v-else>
+                        <td class="p-1" :class="column.class" :key="column.key"
+                            v-if="typeof $slots[column.key] !== 'undefined'">
+                            <slot :name="column.key" :field="column.key" :row="record"></slot>
+                        </td>
+                        <td class="p-1" :class="column.class" :key="column.key + `-els`" v-else>
+                            <span v-html="record[column.key]"></span>
+                        </td>
+                    </template>
+                </template>
+            </tr>
+        </tbody>
+    </table>
 </template>
 
 <style scoped></style>

@@ -1376,6 +1376,11 @@ bundle-name@^4.1.0:
   dependencies:
     run-applescript "^7.0.0"
 
+"c3k-library@file:./packages/c3k-library", "c3k-library@file:packages/c3k-library":
+  version "1.0.1"
+  dependencies:
+    vue "^3.5.8"
+
 call-bind@^1.0.2, call-bind@^1.0.5, call-bind@^1.0.6, call-bind@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.7.tgz#06016599c40c56498c18769d2730be242b6fa3b9"
