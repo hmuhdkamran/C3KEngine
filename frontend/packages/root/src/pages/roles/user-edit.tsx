@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 type UserEditModuleProps = {
   card: any;
@@ -13,9 +13,14 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
     description: card ? card.description : "",
     status: card ? card.status : "Activate",
   });
-
+  
+  const [isOpen, setIsOpen] = useState(false);
   const isViewMode = mode === "view";
   const isAddMode = mode === "add";
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
 
   const toggleDropdown = () => {
     setOpenSection(!openSection);
@@ -23,7 +28,7 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
 
   const handleSave = () => {
     console.log("Data saved:", formValues);
-    onClose();
+    handleClose();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -31,15 +36,26 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setTimeout(onClose, 300);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="relative bg-white w-[600px] min-h-screen flex flex-col shadow-lg">
+      <div className={`fixed inset-0 bg-black transition-opacity duration-300 pointer-events-none ${
+          isOpen ? "opacity-50" : "opacity-0"
+        }`}
+      ></div>
+      <div className={`relative bg-white w-[600px] min-h-screen flex flex-col shadow-lg transform transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">
             {isViewMode ? "View" : isAddMode ? "Add" : "Edit"}
           </h2>
-          <button onClick={onClose}>
+          <button onClick={handleClose}>
             <span className="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
           </button>
         </div>
@@ -93,7 +109,7 @@ const UserEditModule: FC<UserEditModuleProps> = ({ card, onClose, mode }) => {
         </div>
         {!isViewMode && (
           <div className="flex justify-end items-center p-4 border-t space-x-2">
-            <button onClick={onClose} className="px-3 py-1 btn-secondary">
+            <button onClick={handleClose} className="px-3 py-1 btn-secondary">
               Cancel
             </button>
             <button onClick={handleSave} className="px-3 py-1 btn-primary">
