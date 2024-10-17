@@ -4,8 +4,7 @@
   "main": "index.js",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "c3k-utilities"
+    "packages/*"
   ],
   "scripts": {
     "dev": "npm run start",
@@ -14,16 +13,13 @@
     "start:root": "cd packages/root && npm run start"
   },
   "devDependencies": {
-    "@reduxjs/toolkit": "^2.3.0",
-    "vite-plugin-dts": "^4.2.4",
-    "react-redux": "^9.1.2",    
-    "npm-run-all": "^4.1.5"    
+    "npm-run-all": "^4.1.5"
   },
   "keywords": [],
   "author": "H.Muhammad Kamran",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "c3k-utilities": "file:./c3k-utilities"
+    "c3k-library": "^1.0.1"
   }
 }

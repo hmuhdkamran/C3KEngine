@@ -8,7 +8,7 @@
     .checkbox input[type='checkbox'],
     .radio input[type='radio'],
     .switch input[type='checkbox'] {
-        @apply absolute left-0 opacity-0;
+        @apply absolute left-0 opacity-0 -z-1;
     }
 
     .checkbox input[type='checkbox']+.check,

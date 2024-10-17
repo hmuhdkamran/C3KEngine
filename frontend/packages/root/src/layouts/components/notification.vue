@@ -1,0 +1,79 @@
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
+defineProps<{ isOpen: boolean; isSmallScreen: boolean }>();
+defineEmits(['toggleNotifications']);
+</script>
+
+<template>
+  <div @click.stop="$emit('toggleNotifications')" class="relative">
+    <button class="btn btn-ghost btn-circle">
+      <div class="flex items-center p-2 text-gray-600 hover:text-gray-800 focus:outline-none">
+        <span class="icon-[mdi--bell-outline] text-white h-4 w-4 sm:h-5 sm:w-5"></span>
+        <span
+          class="absolute top-0 right-0 block w-4 h-4 text-xs text-white bg-red-600 rounded-full flex items-center justify-center">4</span>
+      </div>
+    </button>
+    <transition name="dropdown">
+      <div v-if="isOpen" :class="[
+        'absolute mt-2 w-72 sm:w-80 bg-white shadow-lg rounded-md overflow-hidden z-50',
+        isSmallScreen ? 'left-1/2 transform -translate-x-1/2 top-10' : 'right-0'
+      ]">
+        <div class="py-1">
+          <div class="px-4 py-2 bg-gray-100 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-800">Notifications</h3>
+          </div>
+          <div class="max-h-60 overflow-y-auto">
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--email] text-blue-500 h-4 w-4"></span>
+              <div>
+                <p class="text-sm text-gray-700">You have a new message from John Doe</p>
+                <span class="text-xs text-gray-500">2 minutes ago</span>
+              </div>
+            </div>
+
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--bell-ring] text-yellow-500 h-4 w-4"></span>
+              <div>
+                <p class="text-sm text-gray-700">Reminder: Meeting at 3 PM</p>
+                <span class="text-xs text-gray-500">10 minutes ago</span>
+              </div>
+            </div>
+
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--file-document] text-green-500 h-4 w-4"></span>
+              <div>
+                <p class="text-sm text-gray-700">New report available: Sales Summary</p>
+                <span class="text-xs text-gray-500">30 minutes ago</span>
+              </div>
+            </div>
+
+            <div class="px-3 py-2 flex items-start space-x-2 border-b border-gray-200">
+              <span class="icon-[mdi--account] text-purple-500 h-4 w-4"></span>
+              <div>
+                <p class="text-sm text-gray-700">Jane Smith updated her profile</p>
+                <span class="text-xs text-gray-500">1 hour ago</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="px-3 py-2 bg-gray-100 text-center">
+          <button class="text-sm text-blue-500 hover:underline">View All</button>
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+
+<style scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+}
+</style>

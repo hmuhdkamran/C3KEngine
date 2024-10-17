@@ -1,51 +1,5 @@
-# Frontend
+# Vue 3 + TypeScript + Vite
 
-## Usage of DataTable
-```ts
-const columns = [
-  { key: "check", label: "check", sort: false, check: true },
-  { key: "title", label: "Title", sort: true },
-  {
-    key: "action",
-    label: "Action",
-    sort: false,
-    width: "100px",
-    class: "text-center",
-    render: (record: unknown) => (
-      <div className="flex justify-center space-x-2">
-        <button
-          className="bg-blue-500 text-white px-2 py-1 rounded-md"
-          onClick={() => handleEdit(record)}
-        >
-          Edit
-        </button>
-        <button
-          className="bg-red-500 text-white px-2 py-1 rounded-md"
-          onClick={() => handleDelete(record)}
-        >
-          Delete
-        </button>
-      </div>
-    ),
-  },
-];
+This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-const handleEdit = (record: any) => {
-  console.log("Editing:", JSON.stringify(record));
-};
-
-const handleDelete = (record: any) => {
-  console.log("Deleting:", JSON.stringify(record));
-};
-
-const [_selectedRecords, setSelectedRecords] = useState<Record<string, unknown>[]>([]);
-
-const handleSelectionChange = (selected: Record<string, unknown>[]) => {
-  setSelectedRecords(selected);
-};
-```
-
-```html
-<DataTable data={hrmsCards} columns={columns} onSelectionChange={handleSelectionChange} />
-```
-
+Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
