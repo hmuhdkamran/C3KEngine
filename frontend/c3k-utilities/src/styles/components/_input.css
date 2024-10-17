@@ -1,0 +1,65 @@
+@layer components {
+  /* Common input style */
+  .common-input {
+    @apply appearance-none bg-transparent w-full py-1 px-2 text-gray-700 mt-1 leading-tight transition-all duration-300 ease-out focus:outline-none focus:ring-0;
+  }
+
+  /* Input with complete border */
+  .input-complete {
+    @apply common-input border border-solid border-gray-300 rounded-sm;
+  }
+
+  .input-complete:focus {    
+    border-color: var(--primary-color);
+  }
+
+  /* Input with border only at the bottom */
+  .input-bottom {
+    @apply common-input border border-b-2 border-gray-300 rounded-sm;
+  }
+
+  .input-bottom:focus {
+    border-bottom-color: var(--primary-color);
+  }
+
+  /* Input with border only at the left */
+  .input-left {
+    @apply common-input border border-l-2 border-gray-300 rounded-sm;
+  }
+
+  .input-left:focus {
+    border-left-color: var(--primary-color);
+  }
+
+  /* Input in danger state */
+  .input-danger {
+    @apply common-input border-0 border-b-2 border-[var(--danger-color)];
+  }
+
+  .input-danger:focus {
+    border-bottom-color: var(--danger-color-dark);
+  }
+
+  /* Input in info state */
+  .input-info {
+    @apply common-input border-0 border-b-2 border-[var(--info-color)];
+  }
+
+  .input-info:focus {
+    border-bottom-color: var(--info-color-dark);
+  }
+
+  /* Input with complete border and primary color */
+  .input-complete-primary {
+    @apply common-input border border-solid border-[var(--primary-color)] rounded-sm;
+  }
+
+  .input-complete-primary:focus {
+    border-color: var(--primary-color-dark);
+  }
+
+  /* Disabled input */
+  .input-disabled {
+    @apply common-input border-0 border-b-2 border-gray-400 cursor-not-allowed bg-gray-100 text-gray-400;
+  }
+}

@@ -1,0 +1,16 @@
+@import 'tailwind/_base.css';
+@import 'tailwind/_components.css';
+@import 'tailwind/_utilities.css';
+
+@import 'components/_checkbox-radio-switch.css';
+@import 'components/_input.css';
+@import 'components/_buttons.css';
+
+@import 'base/_progress.css';
+@import 'base/_scrollbars.css';
+@import 'base/_table.css';
+
+@import 'components/_basic.css';
+@import 'components/_white.css';
+
+@import 'extra/circles.css'

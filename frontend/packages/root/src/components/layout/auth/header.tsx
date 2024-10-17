@@ -1,13 +1,21 @@
 import { FC, useState } from "react";
-import ServiceDropdown from "@/components/extra/service-dropdown";
-import MenuItems from "@/components/extra/menu-items";
-import ProfileDropdown from "@/components/extra/profile-dropdown";
-import NotificationDropdown from "@/components/extra/notification-dropdown";
-import { useSystemContext } from "@/plugins/store";
-import SidebarMenu from "@/components/extra/sidebar-menu";
+import {
+  MenuItems,
+  ProfileDropdown,
+  NotificationDropdown,
+  ServiceDropdown,
+  useSystemContext,
+  SidebarMenu,
+  usePageContext,
+} from "c3k-utilities";
+import { useNavigate } from "react-router-dom";
 
 const Header: FC = () => {
   const { services, menuItems } = useSystemContext();
+  const navigate = useNavigate();
+
+  const { breadcrumbItems } = usePageContext();
+  console.log("breadcrumbItems:", breadcrumbItems);
 
   const [showModuleDropdown, setShowModuleDropdown] = useState(false);
   const toggleModuleDropdown = () => setShowModuleDropdown((prev) => !prev);
@@ -39,8 +47,12 @@ const Header: FC = () => {
           <ServiceDropdown
             services={services}
             showDropdown={showModuleDropdown}
+            navigate={navigate}
             toggleDropdown={toggleModuleDropdown}
             selectedCardTitle={showModuleDropdown ? "Dashboard" : undefined}
+            getCategories={function (): Promise<string[]> {
+              throw new Error("Function not implemented.");
+            }}
           />
         </div>
 
@@ -53,7 +65,7 @@ const Header: FC = () => {
             showDropdown={showNotificationDropdown}
             toggleDropdown={toggleNotifications}
           />
-          <div className="flex space-x-2 sm:space-x-4 sm:flex hidden">
+          <div className="space-x-2 sm:space-x-4 sm:flex hidden">
             <button className="p-1 text-white hover:text-gray-300 focus:outline-none">
               <span className="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
             </button>

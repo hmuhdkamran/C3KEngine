@@ -1,8 +1,5 @@
-import { TokenHelper } from "@/plugins/helper/token-helper";
-import { StoreService } from "@/plugins/service/service";
-import { DefaultUser, IAccessToken, ICredential, IPayload, IUser } from "@/types/axios";
 import Axios, { AxiosResponse } from "axios";
-import GlobalConfig from '@/plugins/Api/config';
+import { StoreService, TokenHelper, DefaultUser, IAccessToken, ICredential, IPayload, IUser, GlobalConfig } from "c3k-utilities";
 
 export class AuthenticationService extends StoreService {
     login(credentials: ICredential): Promise<IUser> {

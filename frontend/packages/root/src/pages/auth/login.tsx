@@ -2,11 +2,7 @@ import { FC, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthenticationService } from "@/services/auth/authentication";
 import { config } from "@/plugins/config";
-import VNodeRenderer from "@/components/extra/node-renderer";
-import { ICredential } from "@/types/axios";
-import { useSystemContext } from "@/plugins/store";
-import { IService } from "@/components/extra/service-dropdown";
-import { MenuItem } from "@/components/extra/menu-items";
+import { ICredential, useSystemContext, VNodeRenderer, IService, MenuItem } from "c3k-utilities";
 
 const Login: FC = () => {
   const services: IService[] = [
@@ -91,64 +87,133 @@ const Login: FC = () => {
       name: "Dashboard",
       icon: "icon-[tabler--category-filled]",
       children: [
-        { name: "HRMS", icon: "icon-[fluent-mdl2--recruitment-management]", path: "/hrms" },
+        {
+          name: "HRMS",
+          icon: "icon-[fluent-mdl2--recruitment-management]",
+          path: "/hrms",
+        },
         { name: "Retail", icon: "icon-[vaadin--shop]", path: "/retail" },
-        { name: "Production", icon: "icon-[mdi--office-building-settings-outline]", path: "/production" },
+        {
+          name: "Production",
+          icon: "icon-[mdi--office-building-settings-outline]",
+          path: "/production",
+        },
         { name: "Finance", icon: "icon-[mdi--finance]", path: "/finance" },
-        { name: "Marketing", icon: "icon-[nimbus--marketing]", path: "/marketing" },
-      ]
+        {
+          name: "Marketing",
+          icon: "icon-[nimbus--marketing]",
+          path: "/marketing",
+        },
+      ],
     },
     {
       name: "User Management",
       icon: "icon-[ic--baseline-supervisor-account]",
       children: [
-        { name: "User Creation", icon: "icon-[mdi--account-plus-outline]", path: "/role/user" },
-        { name: "User List", icon: "icon-[mdi--account-group-outline]", path: "/role/userlist" },
-        { name: "Roles & Permissions", icon: "icon-[ic--baseline-security]", path: "/role/permissions" },
-        { name: "Teams", icon: "icon-[fluent-mdl2--people]", path: "/role/teams" },
-      ]
+        {
+          name: "User Creation",
+          icon: "icon-[mdi--account-plus-outline]",
+          path: "/role/user",
+        },
+        {
+          name: "User List",
+          icon: "icon-[mdi--account-group-outline]",
+          path: "/role/userlist",
+        },
+        {
+          name: "Roles & Permissions",
+          icon: "icon-[ic--baseline-security]",
+          path: "/role/permissions",
+        },
+        {
+          name: "Teams",
+          icon: "icon-[fluent-mdl2--people]",
+          path: "/role/teams",
+        },
+      ],
     },
     {
       name: "Reports",
       icon: "icon-[ic--baseline-assessment]",
       children: [
-        { name: "Sales Report", icon: "icon-[ic--baseline-show-chart]", path: "/reports/sales" },
-        { name: "Employee Performance", icon: "icon-[grommet-icons--document-performance]", path: "/reports/performance" },
-        { name: "Expense Report", icon: "icon-[mdi--finance]", path: "/reports/expenses" },
-      ]
+        {
+          name: "Sales Report",
+          icon: "icon-[ic--baseline-show-chart]",
+          path: "/reports/sales",
+        },
+        {
+          name: "Employee Performance",
+          icon: "icon-[grommet-icons--document-performance]",
+          path: "/reports/performance",
+        },
+        {
+          name: "Expense Report",
+          icon: "icon-[mdi--finance]",
+          path: "/reports/expenses",
+        },
+      ],
     },
     {
       name: "Settings",
       icon: "icon-[ic--baseline-settings]",
       children: [
-        { name: "Profile", icon: "icon-[ic--baseline-person]", path: "/profile" },
-        { name: "App Settings", icon: "icon-[ic--baseline-settings-applications]", path: "/settings" },
-        { name: "Notifications", icon: "icon-[ic--baseline-notifications]", path: "/settings/notifications" },
-      ]
+        {
+          name: "Profile",
+          icon: "icon-[ic--baseline-person]",
+          path: "/profile",
+        },
+        {
+          name: "App Settings",
+          icon: "icon-[ic--baseline-settings-applications]",
+          path: "/settings",
+        },
+        {
+          name: "Notifications",
+          icon: "icon-[ic--baseline-notifications]",
+          path: "/settings/notifications",
+        },
+      ],
     },
     {
       name: "Actions",
       icon: "icon-[ic--baseline-lightbulb]",
       children: [
         { name: "Logout", icon: "icon-[ic--baseline-logout]", path: "/logout" },
-        { name: "Help", icon: "icon-[ic--baseline-help-outline]", path: "/help" },
-      ]
+        {
+          name: "Help",
+          icon: "icon-[ic--baseline-help-outline]",
+          path: "/help",
+        },
+      ],
     },
     {
       name: "Support",
       icon: "icon-[streamline--customer-support-1-solid]",
       children: [
-        { name: "FAQ", icon: "icon-[ic--baseline-question-answer]", path: "/support/faq" },
-        { name: "Contact Us", icon: "icon-[ic--baseline-contact-phone]", path: "/support/contact" },
-        { name: "Live Chat", icon: "icon-[ic--baseline-chat]", path: "/support/chat" },
-      ]
-    }
+        {
+          name: "FAQ",
+          icon: "icon-[ic--baseline-question-answer]",
+          path: "/support/faq",
+        },
+        {
+          name: "Contact Us",
+          icon: "icon-[ic--baseline-contact-phone]",
+          path: "/support/contact",
+        },
+        {
+          name: "Live Chat",
+          icon: "icon-[ic--baseline-chat]",
+          path: "/support/chat",
+        },
+      ],
+    },
   ];
 
   const service = new AuthenticationService();
   const location = useLocation();
   const navigate = useNavigate();
-  const { updateUser, updateServices, updateMenuItems, updateSidebarMenu } = useSystemContext();
+  const { updateUser, updateServices, updateMenuItems, updateSidebarMenu } =
+    useSystemContext();
 
   const [email, setEmail] = useState("admin@sefam.com");
   const [password, setPassword] = useState("P@ssw0rd");
@@ -161,7 +226,6 @@ const Login: FC = () => {
 
     service.login(credentials).then((response) => {
       if (response?.authenticated) {
-
         updateUser(response);
         updateServices(services);
         updateMenuItems(menuItems);
