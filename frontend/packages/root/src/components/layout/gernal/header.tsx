@@ -1,11 +1,11 @@
-import { FC, useContext } from "react";
-import { VNodeRenderer, SystemContext } from "c3k-utilities";
+import { FC } from "react";
+import { VNodeRenderer, useSystemContext } from "c3k-utilities";
 import { Link } from "react-router-dom";
 import { config } from "@/plugins/config";
 
 const Header: FC = () => {
-  const context = useContext(SystemContext);
-  const isAuthenticated = context?.user.authenticated;
+  const context = useSystemContext();
+  const isAuthenticated = context.user.authenticated;
 
   return (
     <nav className="fixed z-50 w-full bg-white top-0 flex flex-wrap items-center justify-between px-1 py-1 shadow-lg">

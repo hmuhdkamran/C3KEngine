@@ -1,7 +1,7 @@
 import { FC } from "react";
-import Breadcrumb from "./bread-crumb";
 import PageFilter from "./page-filter";
 import { HeaderAreaProps } from "../../types/models";
+import Breadcrumb from "./bread-crumb";
 
 const HeaderArea: FC<HeaderAreaProps> = ({
   pageHeading,
