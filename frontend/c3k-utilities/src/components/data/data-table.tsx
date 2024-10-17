@@ -1,5 +1,7 @@
 import { FC, useState, useMemo, useEffect, ReactNode } from "react";
-import { useDataContext } from "../../plugins/store";
+import { RootState } from "../../plugins/store";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTotalRecords } from '../../plugins/store/dataSlice';
 
 interface Column {
   key: string;
@@ -18,15 +20,15 @@ interface TableProps {
 }
 
 const DataTable: FC<TableProps> = ({ data, columns, onSelectionChange }) => {
+  const dispatch = useDispatch();
+  const { currentPage, itemsPerPage, searchQuery } = useSelector((state: RootState) => state.data);
+  
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedRecords, setSelectedRecords] = useState<
     Record<string, unknown>[]
   >([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-
-  const { currentPage, itemsPerPage, searchQuery, updateTotalRecords } =
-    useDataContext();
 
   const filteredRecords = useMemo(() => {
     if (!data || data.length === 0) {
@@ -68,8 +70,8 @@ const DataTable: FC<TableProps> = ({ data, columns, onSelectionChange }) => {
   }, [data, searchQuery, sortColumn, sortOrder]);
 
   useEffect(() => {
-    updateTotalRecords(filteredRecords.length);
-  }, [filteredRecords, updateTotalRecords]);
+    dispatch(updateTotalRecords(filteredRecords.length));
+  }, [filteredRecords.length, dispatch]);
 
   const paginatedRecords = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;

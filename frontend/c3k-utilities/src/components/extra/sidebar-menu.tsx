@@ -1,15 +1,16 @@
 import { FC, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useSystemContext } from "../../plugins/store";
 import VNodeRenderer from "./node-renderer";
 import { config } from "../../plugins/config";
 import { SidebarProps } from "../../types/models";
+import { RootState } from "../../plugins/store";
+import { useSelector } from "react-redux";
 
 const SidebarMenu: FC<SidebarProps> = ({
   showSidebarDropdown,
   onToggleSidebar,
 }) => {
-  const { sidebarMenu } = useSystemContext();
+  const { sidebarMenu } = useSelector((state: RootState) => state.system);
   const [openSection, setOpenSection] = useState<number | null>(null);
   const [sidebarVisible, setSidebarVisible] = useState(showSidebarDropdown);
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BreadcrumbProps } from '../../types/models';
-import { usePageContext } from '../../plugins/store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../plugins/store';
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ homeClick }) => {
-  const { breadcrumbItems = [] } = usePageContext();
+  const { breadcrumbItems } = useSelector((state: RootState) => state.system.pageState);
 
   return (
     <nav className="sm:text-md px-2 text-sm flex space-x-2 items-center">

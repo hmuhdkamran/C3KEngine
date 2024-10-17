@@ -1,15 +1,16 @@
 import { FC, useRef, useEffect } from "react";
 import { config } from "../../plugins/config";
 import VNodeRenderer from "./node-renderer";
-import { useSystemContext } from "../../plugins/store";
 import { DropdownProps } from "../../types/models";
+import { RootState } from "../../plugins/store";
+import { useSelector } from "react-redux";
 
 const ProfileDropdown: FC<DropdownProps> = ({
   showDropdown,
   toggleDropdown,
 }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { user } = useSystemContext();
+  const { user } = useSelector((state: RootState) => state.system);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

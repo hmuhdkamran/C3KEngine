@@ -1,13 +1,17 @@
 import { ChangeEvent, FC } from "react";
 import Paginator from "../data/paginator";
-import { useDataContext } from "../../plugins/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../plugins/store";
+import { updateSearchQuery } from "../../plugins/store/dataSlice";
 import { PageFilterProps } from "../../types/models";
 
 const PageFilter: FC<PageFilterProps> = ({ children }) => {
-  const { searchQuery, updateSearchQuery } = useDataContext();
+  const dispatch = useDispatch();
+  // Access search query from the Redux store
+  const { searchQuery } = useSelector((state: RootState) => state.data);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    updateSearchQuery(event.target.value);
+    dispatch(updateSearchQuery(event.target.value));
   };
 
   return (

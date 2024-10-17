@@ -4,11 +4,10 @@ import {
   ConfirmDialog,
   DataTable,
   HeaderArea,
-  usePageContext,
+  updatePageState,
 } from "c3k-utilities";
 
 const UserModule: FC = () => {
-  const { pageTitle, updatePageState } = usePageContext();
   const [isEditModuleVisible, setEditModuleVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [mode, setMode] = useState<"view" | "edit" | "add">("view");
@@ -209,7 +208,7 @@ const UserModule: FC = () => {
       sort: false,
       width: "100px",
       class: "text-center",
-      render: (record: any) => (
+      render: (record: unknown) => (
         <span
           className={`py-0.5 px-1 rounded-full text-xs font-semibold ${
             record.status === "Installed"
@@ -259,7 +258,7 @@ const UserModule: FC = () => {
   return (
     <>
       <div className="bg-white mt-12 flex flex-col">
-        <HeaderArea pageHeading={pageTitle} goToMain={goToMain}>
+        <HeaderArea goToMain={goToMain}>
           <button
             onClick={handleAdd}
             className="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md"

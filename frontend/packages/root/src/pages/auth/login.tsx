@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthenticationService } from "@/services/auth/authentication";
 import { config } from "@/plugins/config";
-import { ICredential, useSystemContext, VNodeRenderer, IService, MenuItem } from "c3k-utilities";
+import { ICredential, VNodeRenderer, IService, MenuItem, updateUser, updateServices, updateMenuItems, updateSidebarMenu } from "c3k-utilities";
 
 const Login: FC = () => {
   const services: IService[] = [
@@ -212,9 +212,7 @@ const Login: FC = () => {
   const service = new AuthenticationService();
   const location = useLocation();
   const navigate = useNavigate();
-  const { updateUser, updateServices, updateMenuItems, updateSidebarMenu } =
-    useSystemContext();
-
+ 
   const [email, setEmail] = useState("admin@sefam.com");
   const [password, setPassword] = useState("P@ssw0rd");
 

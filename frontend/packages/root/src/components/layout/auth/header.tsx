@@ -4,18 +4,17 @@ import {
   ProfileDropdown,
   NotificationDropdown,
   ServiceDropdown,
-  useSystemContext,
   SidebarMenu,
-  usePageContext,
+  RootState,
 } from "c3k-utilities";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header: FC = () => {
-  const { services, menuItems } = useSystemContext();
+  const { services, menuItems } = useSelector(
+    (state: RootState) => state.system
+  );
   const navigate = useNavigate();
-
-  const { breadcrumbItems } = usePageContext();
-  console.log("breadcrumbItems:", breadcrumbItems);
 
   const [showModuleDropdown, setShowModuleDropdown] = useState(false);
   const toggleModuleDropdown = () => setShowModuleDropdown((prev) => !prev);

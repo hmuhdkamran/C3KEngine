@@ -1,31 +1,15 @@
-import { useContext } from 'react';
-import { PageContext } from './page';
-import { DataContext } from './data';
-import { SystemContext } from './system';
+import { configureStore } from '@reduxjs/toolkit';
+import dataReducer from './dataSlice';
+import systemReducer from './systemSlice';
 
-export const useSystemContext = () => {
-    const context = useContext(SystemContext);
-    console.log("useSystemContext called", context);
-    if (!context) {
-        throw new Error("useSystemContext must be used within a SystemProvider");
-    }
-    return context;
-}
+const store = configureStore({
+    reducer: {
+        data: dataReducer,
+        system: systemReducer,
+    },
+});
 
-export const usePageContext = () => {
-    const context = useContext(PageContext);
-    console.log("usePageContext called", context);
-    if (!context) {
-        throw new Error("usePageContext must be used within a PageProvider");
-    }
-    return context;
-};
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-export const useDataContext = () => {
-    const context = useContext(DataContext);
-    console.log("useDataContext called", context);
-    if (!context) {
-        throw new Error("useDataContext must be used within a DataProvider");
-    }
-    return context;
-};
+export default store;

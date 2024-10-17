@@ -1,16 +1,12 @@
-import {
-  Card,
-  HeaderArea,
-  useDataContext,
-  usePageContext,
-  useSystemContext,
-} from "c3k-utilities";
+import { Card, HeaderArea, RootState, updatePageState } from "c3k-utilities";
 import { FC, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 const DashboardIndex: FC = () => {
-  const { pageTitle, updatePageState } = usePageContext();
-  const { currentPage, itemsPerPage } = useDataContext();
-  const { services } = useSystemContext();
+  const { currentPage, itemsPerPage } = useSelector(
+    (state: RootState) => state.data
+  );
+  const { services } = useSelector((state: RootState) => state.system);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showModulePage, setShowModulePage] = useState(false);
@@ -88,7 +84,7 @@ const DashboardIndex: FC = () => {
   return (
     <>
       <div className="bg-white mt-12 flex flex-col">
-        <HeaderArea pageHeading={pageTitle} goToMain={goToMain}>
+        <HeaderArea goToMain={goToMain}>
           <div className="flex space-x-2">
             <button
               onClick={toggleFilters}

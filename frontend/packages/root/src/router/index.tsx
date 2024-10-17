@@ -6,8 +6,6 @@ import {
   routePath,
   UserModule,
 } from "@/pages";
-
-import { DataProvider, PageProvider } from "c3k-utilities";
 import Layout from "@/components/layout/layout";
 
 import { Route, Routes } from "react-router-dom";
@@ -21,15 +19,7 @@ const AppRoutes = () => {
       <Route element={<Layout isAuthenticated={false} />}>
         <Route path={routePath.LANDING} element={<LandingPage />} />
       </Route>
-      <Route
-        element={
-          <DataProvider>
-            <PageProvider>
-              <Layout isAuthenticated={true} />
-            </PageProvider>
-          </DataProvider>
-        }
-      >
+      <Route element={<Layout isAuthenticated={true} />}>
         <Route
           path={routePath.DASHBOARD}
           element={<ProtectedRoute element={<DashboardIndex />} />}

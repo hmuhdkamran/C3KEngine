@@ -62,6 +62,14 @@ export interface DropdownProps {
     toggleDropdown: () => void;
 }
 
+export interface DataTableState {
+    totalRecords: number;
+    itemsPerPage: number;
+    currentPage: number;
+    searchQuery: string;
+    totalPages: number;
+  }
+
 export interface BreadcrumbItem {
     title: string;
     route: string;
@@ -72,9 +80,13 @@ export interface BreadcrumbProps {
     homeClick: () => void;
 }
 export interface HeaderAreaProps {
-    pageHeading: string;
     goToMain: () => void;
     children?: ReactNode;
+}
+
+export interface PageState {
+    pageTitle: string;
+    breadcrumbItems: BreadcrumbItem[];
 }
 
 export interface PageFilterProps {
@@ -84,14 +96,10 @@ export interface PageFilterProps {
 export interface ICommonContext {
     isLoading: boolean;
     user: IUser;
+    pageState: PageState,
     services: IService[];
     menuItems: MenuItem[];
     sidebarMenu: MenuItem[];
-    updateLoading: (loading: boolean) => void;
-    updateUser: (user: IUser) => void;
-    updateServices: (values: IService[]) => void;
-    updateMenuItems: (values: MenuItem[]) => void;
-    updateSidebarMenu: (values: MenuItem[]) => void;
 }
 
 export interface IUriConfig {

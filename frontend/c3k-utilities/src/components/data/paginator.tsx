@@ -1,13 +1,16 @@
-import { useDataContext } from "../../plugins/store";
+import { useDispatch, useSelector } from "react-redux";
 import { FC } from "react";
+import { RootState } from "../../plugins/store";
+import { setPage } from "../../plugins/store/dataSlice";
 
 const Paginator: FC = () => {
-  const { currentPage, totalPages, setPage } = useDataContext();
+  const dispatch = useDispatch();
+  const { currentPage, totalPages } = useSelector((state: RootState) => state.data);
 
-  const goToFirstPage = () => setPage(1);
-  const goToPreviousPage = () => setPage(currentPage - 1);
-  const goToNextPage = () => setPage(currentPage + 1);
-  const goToLastPage = () => setPage(totalPages);
+  const goToFirstPage = () => dispatch(setPage(1));
+  const goToPreviousPage = () => dispatch(setPage(currentPage - 1));
+  const goToNextPage = () => dispatch(setPage(currentPage + 1));
+  const goToLastPage = () => dispatch(setPage(totalPages));
 
   return (
     <div className="mt-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

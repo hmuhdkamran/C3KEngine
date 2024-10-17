@@ -1,14 +1,15 @@
 import AppRoute from "@/router";
-import { SystemProvider } from "c3k-utilities";
+import { Provider } from "react-redux";
+import { SystemStore } from "c3k-utilities";
 import AxiosSetupComponent from "./components/utilities/axios-setup";
 
 function App() {
   return (
     <>
-      <SystemProvider>
+      <Provider store={SystemStore}>
         <AxiosSetupComponent />
         <AppRoute />
-      </SystemProvider>
+      </Provider>
     </>
   );
 }
