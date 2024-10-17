@@ -149,7 +149,7 @@ const hrmsCards = [
 const columns = [
   { key: 'check', label: 'check', sort: false, check: true },
   { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' },
-  { key: 'title', label: 'Title', sort: true },
+  { key: 'title', label: '[Title]', sort: true },
   { key: 'description', label: 'Description', sort: true },
   { key: 'status', label: 'Status', sort: false, width: '100px', class: 'text-center' },  
 ];

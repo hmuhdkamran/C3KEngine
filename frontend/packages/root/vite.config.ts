@@ -45,7 +45,7 @@ export default defineConfig({
     port: Number(process.env.LOCAL_PORT),
     open: false,
     watch: {
-      usePolling: true,
+      usePolling: false,
       disableGlobbing: false,
     },
   },

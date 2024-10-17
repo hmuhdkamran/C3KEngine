@@ -193,22 +193,33 @@
     }
 
     .grid-action-btn {
-        @apply relative focus:outline-none transition-all duration-300 hover:border-l-2 hover:border-r-2 border-transparent rounded-md px-1;
+        @apply relative focus:outline-none transition-all duration-300 border-transparent rounded-md px-1;
+        border-left: 2px solid transparent;
+        border-right: 2px solid transparent;
+    }
+
+    .grid-action-btn:hover {
+        @apply border-indigo-400;
     }
 
     .hover-btn-primary {
-        @apply text-indigo-800 hover:text-indigo-600 hover:border-indigo-400;
+        @apply text-indigo-800 hover:text-indigo-600;
     }
 
     .hover-btn-info {
-        @apply text-blue-800 hover:text-blue-600 hover:border-blue-400;
+        @apply text-blue-800 hover:border-blue-600;
     }
 
     .hover-btn-warning {
-        @apply text-yellow-800 hover:text-yellow-600 hover:border-yellow-400;
+        @apply text-yellow-800 hover:border-yellow-600;
     }
 
     .hover-btn-danger {
-        @apply text-red-800 hover:text-red-600 hover:border-red-400;
+        @apply text-red-800 hover:border-red-600;
     }
+
+    .grid-action-btn:hover {
+        @apply shadow-lg;
+    }
+
 }
