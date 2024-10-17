@@ -12,7 +12,6 @@ const addProp = (obj: Record<string, string>, propName: string, value: string) =
     Object.defineProperty(obj, propName, {
         enumerable: false,
         get: () => {
-            console.log(`//${window.location.host}${value}, Or //${DEV_API}${value}, Environment: ${isProduction}`)
             return isProduction ? `//${window.location.host}${value}` : `//${DEV_API}${value}`;
         },
     });
