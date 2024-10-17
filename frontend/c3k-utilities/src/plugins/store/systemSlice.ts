@@ -18,22 +18,22 @@ const systemSlice = createSlice({
     name: 'system',
     initialState,
     reducers: {
-        updateLoading(state: { isLoading: any; }, action: PayloadAction<boolean>) {
+        updateLoading(state: { isLoading: boolean; }, action: PayloadAction<boolean>) {
             state.isLoading = action.payload;
         },
-        updateUser(state: { user: any; }, action: PayloadAction<IUser>) {
+        updateUser(state: { user: IUser; }, action: PayloadAction<IUser>) {
             state.user = action.payload;
         },
-        updateServices(state: { services: any; }, action: PayloadAction<IService[]>) {
+        updateServices(state: { services: IService[]; }, action: PayloadAction<IService[]>) {
             state.services = action.payload;
         },
-        updateMenuItems(state: { menuItems: any; }, action: PayloadAction<MenuItem[]>) {
+        updateMenuItems(state: { menuItems: MenuItem[]; }, action: PayloadAction<MenuItem[]>) {
             state.menuItems = action.payload;
         },
-        updateSidebarMenu(state: { sidebarMenu: any; }, action: PayloadAction<MenuItem[]>) {
+        updateSidebarMenu(state: { sidebarMenu: MenuItem[]; }, action: PayloadAction<MenuItem[]>) {
             state.sidebarMenu = action.payload;
         },
-        updatePageState(state: { pageState: any; }, action: PayloadAction<Partial<PageState>>) {
+        updatePageState(state: { pageState: PageState; }, action: PayloadAction<Partial<PageState>>) {
             state.pageState = { ...state.pageState, ...action.payload };
         },
     },

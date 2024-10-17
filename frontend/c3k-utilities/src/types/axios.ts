@@ -45,7 +45,7 @@ export interface IUser {
     roles: IRouteMeta[],
     username: string,
     verified?: boolean,
-    exp: Date,
+    exp: string | null,
     userId?: string,
     timeZoneId?: string,
     password_changed?: boolean,

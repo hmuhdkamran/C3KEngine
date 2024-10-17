@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 import VNodeRenderer from "./node-renderer";
 import { config } from "../../plugins/config";
@@ -12,13 +12,6 @@ const SidebarMenu: FC<SidebarProps> = ({
 }) => {
   const { sidebarMenu } = useSelector((state: RootState) => state.system);
   const [openSection, setOpenSection] = useState<number | null>(null);
-  const [sidebarVisible, setSidebarVisible] = useState(showSidebarDropdown);
-
-  useEffect(() => {
-    if (showSidebarDropdown) {
-      setSidebarVisible(true);
-    }
-  }, [showSidebarDropdown]);
 
   const toggleSection = (index: number) => {
     setOpenSection((prevIndex) => (prevIndex === index ? null : index));

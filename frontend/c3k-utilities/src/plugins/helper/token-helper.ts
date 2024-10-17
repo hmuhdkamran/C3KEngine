@@ -60,7 +60,7 @@ export class TokenHelper {
             user.name = user.email = email;
             user.roles = Array.isArray(roles) ? roles : [roles];
             // user.verified = claims.verified === "true" ? true : false;
-            user.exp = new Date(decodedToken.exp * 1000);
+            user.exp = decodedToken.exp ? new Date(decodedToken.exp * 1000).toISOString() : null;
             user.userId = sid;
             user.username = decodedToken.sub;
             // user.timeZoneId = claims.timezoneid;
@@ -86,6 +86,11 @@ export class TokenHelper {
         }
 
         if (!user) return null;
-        return user.exp ? user.exp > new Date() : null;
+
+        // Check if exp is in ISO string format or is a valid Date
+        const expirationDate = typeof user.exp === 'string' ? new Date(user.exp) : null;
+
+        // Return whether the token is current (not expired)
+        return expirationDate ? expirationDate > new Date() : null;
     }
 }

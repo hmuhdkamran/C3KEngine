@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthenticationService } from "@/services/auth/authentication";
 import { config } from "@/plugins/config";
 import { ICredential, VNodeRenderer, IService, MenuItem, updateUser, updateServices, updateMenuItems, updateSidebarMenu } from "c3k-utilities";
+import { useDispatch } from "react-redux";
 
 const Login: FC = () => {
   const services: IService[] = [
@@ -210,6 +211,7 @@ const Login: FC = () => {
   ];
 
   const service = new AuthenticationService();
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
  
@@ -224,10 +226,10 @@ const Login: FC = () => {
 
     service.login(credentials).then((response) => {
       if (response?.authenticated) {
-        updateUser(response);
-        updateServices(services);
-        updateMenuItems(menuItems);
-        updateSidebarMenu(sidebarMenu);
+        dispatch(updateUser(response));
+        dispatch(updateServices(services));
+        dispatch(updateMenuItems(menuItems));
+        dispatch(updateSidebarMenu(sidebarMenu));
 
         const redirectTo =
           new URLSearchParams(location.search).get("to") || "/dashboard";
