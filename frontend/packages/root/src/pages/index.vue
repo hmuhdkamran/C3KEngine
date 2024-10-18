@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Card } from "c3k-library";
 import illustration from '@/assets/images/hero.png'
 import image1 from '@/assets/images/image1.jpg'
 import image2 from '@/assets/images/image2.jpg'
