@@ -8,8 +8,8 @@ const { notifications } = useNotification();
 
 <template>
   <div class="bg-gray-50 font-inter tracking-tight text-gray-900 antialiased">
-    <Notification v-for="notification in notifications" :key="notification.id" :message="notification.message"
-      :type="notification.type" :position="notification.position" :duration="3000" />
+    <Notification v-for="notification in notifications" :key="notification.id" :title="notification.title"
+      :message="notification.message" :type="notification.type" :position="notification.position" :duration="3000" />
     <router-view />
   </div>
 </template>
