@@ -2,6 +2,7 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/auth/authentication-service";
+import { useNotification } from 'c3k-library';
 
 import logo from "@/assets/images/vue.svg"
 
@@ -14,6 +15,7 @@ const service: AuthenticationService = new AuthenticationService();
 
 const route = useRoute()
 const router = useRouter()
+const { addNotification } = useNotification();
 
 const email: Ref<string> = ref('admin@sefam.com')
 const password: Ref<string> = ref('P@ssw0rd')
@@ -27,7 +29,7 @@ const login = () => {
     service.login(credentials)
         .then(response => {
             if (response) {
-                // ability.update(JSON.parse(TokenHelper.getAbilities()))
+                addNotification('You have successfully logged in to HRMS', 'success', 'top-right', 'Success', 3000);
                 router.replace(route.query.to ? String(route.query.to) : '/app/main')
             } else {
                 console.error('Login failed, response is undefined.')
