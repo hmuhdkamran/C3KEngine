@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { UseAxios, Notification, useNotification } from 'c3k-library';
+import { UseAxios} from 'c3k-library';
+import Notification from './components/Notification.vue';
+import { useNotification } from './components/useNotification';
 
 UseAxios();
 const { notifications } = useNotification();

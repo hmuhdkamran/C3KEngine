@@ -2,7 +2,8 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/auth/authentication-service";
-import { useNotification } from 'c3k-library';
+// import { useNotification } from 'c3k-library';
+import { useNotification } from "@/components/useNotification";
 
 import logo from "@/assets/images/vue.svg"
 
@@ -32,7 +33,8 @@ const login = () => {
                 addNotification('You have successfully logged in to HRMS', 'success', 'top-right', 'Success', 3000);
                 router.replace(route.query.to ? String(route.query.to) : '/app/main')
             } else {
-                console.error('Login failed, response is undefined.')
+                addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
+                 console.error('Login failed, response is undefined.');
             }
         })
 }
@@ -57,10 +59,10 @@ const login = () => {
         </ul>
         <div class="relative py-3 sm:max-w-xl sm:mx-auto w-full">
             <div class="absolute inset-0 bg-gradient-to-r from-violet-900 to-purple-900 shadow-lg transform 
-            -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl transition transform hover:scale-105 duration-500">
+            -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-lg transition transform hover:scale-105 duration-500">
             </div>
             <div
-                class="relative bg-white shadow-lg sm:rounded-3xl sm:p-5 transition transform hover:scale-105 duration-500">
+                class="relative bg-white shadow-lg sm:rounded-lg sm:p-5 transition transform hover:scale-105 duration-500">
                 <div class="flex flex-col bg-white">
                     <div class="flex justify-center md:justify-start md:pl-6 md:-mb-12">
                         <a href="/" class="text-white font-bold text-xl p-2">
