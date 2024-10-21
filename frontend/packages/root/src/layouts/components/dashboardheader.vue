@@ -98,13 +98,13 @@ useClickOutside(() => {
     </div>
     <div class="flex items-center space-x-2">
       <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" :isSmallScreen="isSmallScreen" class="notification" />
-      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-help] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <button class="p-1 text-white hover:text-gray-300 focus:outline-none">
+      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
       <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" class="profile" />

@@ -165,15 +165,15 @@ function goToMain() {
                 <Filter>
                     <template #action>
                         <button @click="toggleFilters"
-                            class="flex items-center bg-violet-600 text-white hover:bg-violet-700 transition px-2 py-1 rounded-sm shadow-md">
+                            class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
                         </button>
                         <button @click="groupByCategory"
-                            class="flex items-center bg-gray-200 text-gray-600 hover:bg-gray-300 transition px-2 py-1 rounded-sm shadow-md">
+                            class="flex items-center btn-secondary px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
                         </button>
                         <button @click="toggleFavorites"
-                            class="flex items-center bg-red-500 text-white hover:bg-red-600 transition px-2 py-1 rounded-sm shadow-md">
+                            class="flex items-center btn-danger px-2 py-1 rounded-sm shadow-md">
                             <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
                         </button>
                     </template>
