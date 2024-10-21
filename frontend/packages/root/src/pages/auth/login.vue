@@ -40,7 +40,7 @@ const login = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12 relative h-full md:flex items-center p-10 
+    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12 relative h-full md:flex items-center p-10 
     overflow-hidden bg-violet-900 text-white bg-no-repeat bg-cover">
         <div class="absolute bg-gradient-to-b from-violet-500 to-purple-300 opacity-75 inset-0 z-0"></div>
         <ul class="circles">
@@ -56,7 +56,7 @@ const login = () => {
             <li></li>
         </ul>
         <div class="relative py-3 sm:max-w-xl sm:mx-auto w-full">
-            <div class="absolute inset-0 bg-gradient-to-r from-violet-900 to-purple-900 shadow-lg transform 
+            <div class="absolute inset-0 bg-gradient-to-r from-violet-900 to-purple-900 shadow-lg 
             -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl transition transform hover:scale-105 duration-500">
             </div>
             <div

@@ -25,3 +25,7 @@ export { default as Card } from './components/utilities/Card.vue';
 
 export { default as Notification } from './components/utilities/Notification.vue';
 export * from "./components/utilities/useNotification";
+
+export { default as Button } from './components/common/Button.vue';
+export { default as ComboBox } from './components/common/ComboBox.vue';
+export { default as TextInput } from './components/common/TextInput.vue';

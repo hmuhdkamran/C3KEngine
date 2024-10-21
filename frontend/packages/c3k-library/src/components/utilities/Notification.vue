@@ -62,10 +62,10 @@
   
   // Icon classes for different types
   const iconClasses: Record<string, string> = {
-    success: 'text-green-500',  // You can replace with icons from FontAwesome or other icon sets
-    error: 'text-red-500',
-    warning: 'text-yellow-500',
-    info: 'text-blue-500',
+    success: 'icon-[mdi--success-circle-outline]',
+    error: 'icon-[nonicons-error-16]',
+    warning: 'icon-[mingcute--warning-line]',
+    info: 'icon-[ph--info]',
   };
   
   // Position classes for different placements
