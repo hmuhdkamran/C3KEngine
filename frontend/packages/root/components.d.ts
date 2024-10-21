@@ -13,6 +13,7 @@ declare module 'vue' {
     Loader: typeof import('./src/components/Loader.vue')['default']
     Moduleform: typeof import('./src/components/forms/moduleform.vue')['default']
     Modules: typeof import('./src/components/base/modules.vue')['default']
+    Notification: typeof import('./src/components/Notification.vue')['default']
     Picker: typeof import('./src/components/forms/picker.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
