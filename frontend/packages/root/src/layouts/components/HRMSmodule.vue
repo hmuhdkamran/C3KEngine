@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DataTable, useTableStore } from "c3k-library";
 import { ref, onMounted } from "vue";
-import userModule from "@/pages/role/user-module.vue";
+import ConfirmationDialog from '@/layouts/components/ConfirmationDialog.vue';
 import userEdit from "@/pages/role/user-edit.vue";
 const tableStore = useTableStore();
 
@@ -159,7 +159,7 @@ const columns = [
 onMounted(() => {
   tableStore.updateTotalRecords(hrmsCards.length);
 });
-
+const isDeleteDialogVisible = ref(false);
 const isDrawerVisible = ref(false);
 const currentEntry = ref(null);
 const isEditMode = ref(false);
@@ -182,6 +182,18 @@ const saveEntry = (data: any) => {
   console.log("Saving entry:", data);
   closeDrawer();
 };
+
+const onDelete = () => {
+  isDeleteDialogVisible.value = true;
+};
+
+const onConfirmDelete = () => {
+  isDeleteDialogVisible.value = false;
+};
+
+const onCancelDelete = () => {
+  isDeleteDialogVisible.value = false;
+};
 </script>
 
 <template>
@@ -195,7 +207,18 @@ const saveEntry = (data: any) => {
         </span>
       </template>
       <template #action="{ row }">
-        <userModule :row="row" :onOpenModal="openModal" />
+        <div className="flex justify-center space-x-2">
+          <button className="grid-action-btn hover-btn-warning" @click="openModal('view', row)">
+            <span className="icon-[ep--view]"></span>
+          </button>
+
+          <button className="grid-action-btn hover-btn-primary" @click="openModal('edit', row)">
+            <span className="icon-[akar-icons--edit]"></span>
+          </button>
+          <button class="grid-action-btn hover-btn-danger" @click="onDelete">
+            <span class="icon-[hugeicons--delete-02]"></span>
+           </button>
+        </div>
       </template>
     </DataTable>
     <userEdit
@@ -205,5 +228,13 @@ const saveEntry = (data: any) => {
       @Close="closeDrawer"
       @onSave="saveEntry"
     />
+    <ConfirmationDialog
+    v-if="isDeleteDialogVisible"
+    title="Confirm Delete"
+    message="Are you sure you want to delete this entry?"
+    :isVisible="isDeleteDialogVisible"
+    @confirm="onConfirmDelete"
+    @cancel="onCancelDelete"
+  />
   </div>
 </template>
