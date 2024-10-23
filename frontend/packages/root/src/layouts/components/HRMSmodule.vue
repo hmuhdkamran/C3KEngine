@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { DataTable, useTableStore } from 'c3k-library';
-import { onMounted } from 'vue';
+import { DataTable, useTableStore } from "c3k-library";
+import { ref, onMounted } from "vue";
+import userModule from "@/pages/role/user-module.vue";
+import userEdit from "@/pages/role/user-edit.vue";
 const tableStore = useTableStore();
 
 const hrmsCards = [
@@ -158,10 +160,28 @@ onMounted(() => {
   tableStore.updateTotalRecords(hrmsCards.length);
 });
 
-const openModal = (row: any) => {
-  console.log('Open modal for:', row);
-}
+const isDrawerVisible = ref(false);
+const currentEntry = ref(null);
+const isEditMode = ref(false);
 
+const openModal = (action: string, row: any) => {
+  if (action === 'delete') {
+    console.log('Deleting entry:', row);
+  } else {
+    currentEntry.value = row;
+    isEditMode.value = action === 'edit';
+    isDrawerVisible.value = true;
+  }
+};
+
+const closeDrawer = () => {
+  isDrawerVisible.value = false;
+};
+
+const saveEntry = (data: any) => {
+  console.log("Saving entry:", data);
+  closeDrawer();
+};
 </script>
 
 <template>
@@ -175,19 +195,15 @@ const openModal = (row: any) => {
         </span>
       </template>
       <template #action="{ row }">
-        <div className="flex justify-center space-x-2">
-          <button className="grid-action-btn hover-btn-warning" @click="openModal(row)">
-            <span className="icon-[ep--view]"></span>
-          </button>
-
-          <button className="grid-action-btn hover-btn-primary" @click="openModal(row)">
-            <span className="icon-[akar-icons--edit]"></span>
-          </button>
-          <button className="grid-action-btn hover-btn-danger" @click="openModal(row)">
-            <span className="icon-[hugeicons--delete-02]"></span>
-          </button>
-        </div>
+        <userModule :row="row" :onOpenModal="openModal" />
       </template>
     </DataTable>
+    <userEdit
+      :isVisible="isDrawerVisible"
+      :entryData="currentEntry"
+      :isEdit="isEditMode"
+      @Close="closeDrawer"
+      @onSave="saveEntry"
+    />
   </div>
 </template>
