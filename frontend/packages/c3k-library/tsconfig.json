@@ -31,6 +31,6 @@
     }
   },
   "exclude": ["src/App.vue", "src/main.ts"],
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../root/src/components/Notification.vue", "../root/src/components/useNotification.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "../root/src/components/Notification.vue", "src/components/utilities/useNotification.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
