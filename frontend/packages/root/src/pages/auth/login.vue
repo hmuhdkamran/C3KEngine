@@ -2,8 +2,7 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/auth/authentication-service";
-// import { useNotification } from 'c3k-library';
-import { useNotification } from "@/components/useNotification";
+import { useNotification } from 'c3k-library';
 
 import logo from "@/assets/images/vue.svg"
 
