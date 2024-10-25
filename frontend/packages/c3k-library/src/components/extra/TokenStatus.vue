@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import type { IUser } from '@/plugins/models'
 import { useSystemStore } from '@/plugins/store/system-store';
-import { AuthenticationService } from '@/service/auth/authentication-service';
 import { onMounted, ref, type Ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useNotification } from '@/components/utilities/useNotification';
 
 interface Props {
     infoTimeout: number
@@ -15,10 +15,11 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const { addNotification } = useNotification();
+
 const router = useRouter()
 const store = useSystemStore()
 
-const auth: AuthenticationService = new AuthenticationService()
 const user: Ref<IUser> = ref(store.user)
 
 const infoTimeout: Ref<number> = ref(props.infoTimeout)
@@ -62,21 +63,21 @@ const setHandlers = (tokenExpiresAt: Date) => {
 }
 
 const info = () => {
-    console.log(`token expires at ${user.value.exp?.toLocaleString()}`);
+    addNotification(`Information: token expires at ${user.value.exp?.toLocaleString()}`, 'info', 'top-right', 'Info', 3000);
 }
 
 const warn = () => {
-    console.log(`token expires at ${user.value.exp?.toLocaleString()}`);
+    addNotification(`Warning: token expires at ${user.value.exp?.toLocaleString()}`, 'warning', 'top-right', 'Warning', 3000);
 }
 
 const error = () => {
     if (logout.value) {
-        auth.logout()
+        props.auth.logout()
             .then((value: any) => store.updateUser(value))
-            .then(() => console.log("Token  expired, logged out"))
+            .then(() => addNotification(`Error: Token has been expired, Logging Out`, 'error', 'top-right', 'Error', 3000))
             .then(() => router.push({ name: 'login' }))
     }
-    else { console.log("Token  expired, logged out"); }
+    else { addNotification(`Error: Token has been expired, Logging Out`, 'error', 'top-right', 'Error', 3000) }
 }
 
 onMounted(() => {

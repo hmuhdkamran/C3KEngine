@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Axios from 'axios'
 import { useRouter } from 'vue-router'
-import { TokenHelper } from './token-helper'
+// import { TokenHelper } from './token-helper'
 
 let initialized = false
 
@@ -16,12 +16,12 @@ export function UseAxios() {
 
     if (!initialized) {
         Axios.interceptors.request.use((config: AxiosRequestConfig | any) => {
-            if (!config.headers.Authorization) {
-                const bearerToken = TokenHelper.getBearerToken()
+            // if (!config.headers.Authorization) {
+            //     const bearerToken = TokenHelper.getBearerToken()
 
-                if (bearerToken.Authorization)
-                    Object.assign(config.headers, bearerToken)
-            }
+            //     if (bearerToken.Authorization)
+            //         Object.assign(config.headers, bearerToken)
+            // }
 
             if (!config.maxRedirects || config.maxRedirects === 5)
                 config.maxRedirects = 0

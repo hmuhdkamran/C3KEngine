@@ -192,7 +192,6 @@ const closeDrawer = () => {
 };
 
 const saveEntry = (data: any) => {
-  console.log("Saving entry:", data);
   closeDrawer();
 };
 
@@ -201,7 +200,6 @@ const onDelete = () => {
 };
 
 const onConfirmDelete = () => {
-  console.log("Entry deleted:", currentEntry.value);
   isDeleteDialogVisible.value = false;
 };
 

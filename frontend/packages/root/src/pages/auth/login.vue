@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { AuthenticationService } from "@/service/auth/authentication-service";
+import { AuthenticationService } from "@/service/authentication-service";
 import { useNotification } from 'c3k-library';
 
 import logo from "@/assets/images/vue.svg"
@@ -27,15 +27,17 @@ const login = () => {
     }
 
     service.login(credentials)
-        .then(response => {
-            if (response) {
-                addNotification('You have successfully logged in to HRMS', 'success', 'top-right', 'Success', 3000);
-                router.replace(route.query.to ? String(route.query.to) : '/app/main')
-            } else {
-                addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
-                 console.error('Login failed, response is undefined.');
-            }
-        })
+    .then(response => {
+        if (response) {
+            router.replace(route.query.to ? String(route.query.to) : '/app/main');
+        } else {
+            addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
+        }
+    })
+    .catch(error => {
+        addNotification(`An error occurred during login. ${JSON.stringify(error)}.`, 'error', 'top-right', 'Error', 3000);
+    });
+
 }
 
 </script>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { config } from '@/plugins/config';
-import { VNodeRenderer } from '@/components/base/VNodeRenderer';
+import { config, VNodeRenderer } from 'c3k-library';
 </script>
 
 <template>

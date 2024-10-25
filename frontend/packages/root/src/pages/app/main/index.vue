@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Card from '@/layouts/components/card.vue';
 import Dashboardheader from '@/layouts/components/dashboardheader.vue';
 import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
 import Retailmodule from '@/layouts/components/Retailmodule.vue';
 import Productionmodule from '@/layouts/components/Productionmodule.vue';
 import { useRouter } from 'vue-router';
-import { useTableStore, Filter } from 'c3k-library';
+import { useTableStore, Filter, Card } from 'c3k-library';
 
 const tableStore = useTableStore();
 

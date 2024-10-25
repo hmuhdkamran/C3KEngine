@@ -1,7 +1,0 @@
-export { default as GlobalConfig } from './config'
-export * from './iaccess-token'
-export * from './icredencial'
-export * from './jwt-token'
-export * from './payload'
-export * from './payload-type'
-export * from './user'

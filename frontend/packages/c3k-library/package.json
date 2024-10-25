@@ -8,7 +8,8 @@
   "exports": {
     ".": {
       "import": "./dist/c3k-library.es.js",
-      "require": "./dist/c3k-library.umd.cjs"
+      "require": "./dist/c3k-library.umd.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./style.css": "./dist/style.css"
   },

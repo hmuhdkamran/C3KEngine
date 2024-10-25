@@ -30,8 +30,6 @@ export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
 
     const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());
 
-    console.log(routeCheck(user, to.name as string))
-
     if (to.matched.some((_r) => routeCheck(user, to.name as string))) {
       if (user.authenticated && to.meta.claims) {
         next(options.forbiddenRouteName);

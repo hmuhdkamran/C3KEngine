@@ -75,7 +75,6 @@ const goToPage = (page: number) => {
 };
 
 const handleAction = (action: 'add' | 'edit' | 'delete', card: Record<string, any>) => {
-  console.log(`${action} card`, card);
 };
 
 const reloadPage = () => {

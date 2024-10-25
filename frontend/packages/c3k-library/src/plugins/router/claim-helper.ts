@@ -13,9 +13,6 @@ export class ClaimHelper implements IClaimsHelper {
           satisfied = true
       })
     })
-
-    console.log(`satisfies ${user.roles} AND ${claims} ARE ${satisfied}`)
-
     return satisfied
   }
 
@@ -30,9 +27,6 @@ export class ClaimHelper implements IClaimsHelper {
           satisfied = true
       })
     })
-
-    console.log(`satisfiesAny ${user.roles} AND ${claims} ARE ${satisfied}`)
-
     return satisfied
   }
 }

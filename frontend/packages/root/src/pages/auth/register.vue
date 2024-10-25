@@ -9,7 +9,7 @@ const password: Ref<string> = ref('')
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12 relative h-full md:flex items-center p-10 
+    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12 relative h-full md:flex items-center p-10 
         overflow-hidden bg-violet-900 text-white bg-no-repeat bg-cover">
         <div class="absolute bg-gradient-to-b from-violet-500 to-purple-300 opacity-75 inset-0 z-0"></div>
         <ul class="circles">

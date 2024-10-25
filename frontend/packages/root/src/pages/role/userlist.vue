@@ -45,7 +45,6 @@ const addUser = async () => {
 };
 
 const openModal = (row: IUsers) => {
-  console.log('Open modal for:', row);
 };
 
 const reload = async () => {
