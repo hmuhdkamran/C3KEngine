@@ -176,13 +176,10 @@ const openModal = (action: string, row: any) => {
   
   if (action === 'view') {
     isDrawerVisible.value = true;
-    isEditMode.value = false;
   } else if (action === 'edit') {
-    isDrawerVisible.value = true;
-    isEditMode.value = true;
-  } else if (action === 'dialog') {
-    isEditdialog.value = true;
     isFormVisible.value = true;
+  } else if (action === 'dialog') {
+    isEditdialog.value = true;    
   }
 };
 

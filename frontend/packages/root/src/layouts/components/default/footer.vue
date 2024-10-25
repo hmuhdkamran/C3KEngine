@@ -176,9 +176,8 @@ import { config, VNodeRenderer } from 'c3k-library';
                         </a>
                     </p>
                     <p class="mt-4 text-sm text-gray-500 sm:order-first sm:mt-0">
-                        Copyright © 2024 C3K
-                        Engine by <a href="https://combinesoft.net" class="text-gray-500 hover:text-gray-800"
-                            target="_blank">COMBINE CHIPSoft</a>.
+                        Copyright © 2024 {{ config.application }} by <a href="https://combinesoft.net"
+                            class="text-gray-500 hover:text-gray-800" target="_blank">COMBINE CHIPSoft</a>.
                     </p>
                 </div>
             </div>

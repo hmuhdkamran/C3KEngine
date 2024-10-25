@@ -40,6 +40,4 @@ const config = {
   },
 }
 
-console.log('Configured:', JSON.stringify(config));
-
 export default config

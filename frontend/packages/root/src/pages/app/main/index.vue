@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Dashboardheader from '@/layouts/components/dashboardheader.vue';
 import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
 import Retailmodule from '@/layouts/components/Retailmodule.vue';
 import Productionmodule from '@/layouts/components/Productionmodule.vue';
@@ -138,7 +137,7 @@ function goToMain() {
 </script>
 
 <template>
-    <div class="bg-white mt-12 flex flex-col">
+    <div>
         <div class="border-b border-gray-300 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
             <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
                 <div class="px-3">
@@ -277,17 +276,7 @@ function goToMain() {
         <div v-else>
             <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
-        <footer class="fixed text-xs w-auto justify-end bottom-0 right-0 bg-gray-50 py-2 px-4 flex items-center">
-            <p class="text-gray-500">
-                Copyright © 2024 C3K
-                Engine by
-                <a href="https://combinesoft.net" class="text-gray-500 hover:text-gray-800" target="_blank">
-                    COMBINE CHIPSoft
-                </a>
-            </p>
-        </footer>
-    </div>
-    <Dashboardheader :selectedCardTitle="selectedCardTitle" />
+    </div>    
 </template>
 
 <route lang="yaml">

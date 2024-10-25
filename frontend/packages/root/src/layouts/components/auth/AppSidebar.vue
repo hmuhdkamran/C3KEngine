@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { defineProps, defineEmits } from 'vue';
-import logo from "@/assets/images/vue.svg";
+import { config, VNodeRenderer } from 'c3k-library';
 import sidebarMenu from '@/navigation/sidebarConfig';
 
 interface Props {
@@ -29,8 +29,7 @@ const toggleSection = (index: number) => {
       <div class="flex flex-col h-full">
         <div class="flex items-center justify-between px-5 py-4 bg-white border-b border-gray-200 shadow-sm">
           <a href="/" class="flex items-center space-x-2">
-            <img :src="logo" alt="Logo" class="h-8 w-auto object-contain" />
-            <span class="text-md font-semibold text-gray-700">C3K Engine</span>
+            <VNodeRenderer :nodes="config.logo" />{{ config.application }}
           </a>
           <button @click="emit('toggleSidebar')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
             <span class="icon-[fluent--dismiss-20-filled] h-5 w-5"></span>
@@ -38,7 +37,7 @@ const toggleSection = (index: number) => {
         </div>
         <div class="overflow-y-auto flex-grow px-4 py-3">
           <ul class="space-y-2">
-            <li v-for="(section, index) in sidebarMenu" :key="index" class="border-b last:border-none pb-1">
+            <li v-for="(section, index) in sidebarMenu" :key="index">
               <div @click="toggleSection(index)"
                 class="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
                 <span class="flex items-center space-x-2">

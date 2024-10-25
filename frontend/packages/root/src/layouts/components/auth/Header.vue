@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import Sidebar from './sidebar.vue';
-import Moduledropdown from './moduledropdown.vue';
-import Notifications from './notification.vue';
-import ProfileDropdown from './profile.vue';
-import logo from "@/assets/images/vue.svg";
+import Sidebar from './AppSidebar.vue';
+import Moduledropdown from './ModuleMenu.vue';
+import Notifications from './UserNotification.vue';
+import ProfileDropdown from './UserProfile.vue';
 
 const isOpen = ref(false);
 const showSidebarDropdown = ref(false);
@@ -57,7 +56,7 @@ function useClickOutside(callback: () => void) {
   onMounted(() => {
     document.addEventListener('click', handleClickOutside);
     checkScreenSize();
-  window.addEventListener('resize', checkScreenSize);
+    window.addEventListener('resize', checkScreenSize);
   });
 
   onBeforeUnmount(() => {
@@ -65,7 +64,6 @@ function useClickOutside(callback: () => void) {
     window.removeEventListener('resize', checkScreenSize);
   });
 }
-
 
 useClickOutside(() => {
   showModuleDropdown.value = false;
@@ -79,16 +77,12 @@ useClickOutside(() => {
   <div
     class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-50">
     <div class="flex items-center space-x-2 sm:space-x-4">
+      <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown" />
       <button @click="toggleSidebar" class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[fluent--navigation-unread-20-filled] h-6 w-6"></span>
       </button>
-      <Moduledropdown 
-        :selectedCardTitle="selectedCardTitle" 
-        :showModuleDropdown="showModuleDropdown" 
-        class="dropdown" 
-        @toggleModuleDropdown="toggleModuleDropdown"
-      />
-      <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown"/>
+      <Moduledropdown :selectedCardTitle="selectedCardTitle" :showModuleDropdown="showModuleDropdown" class="dropdown"
+        @toggleModuleDropdown="toggleModuleDropdown" />
       <nav class="hidden justify-between md:flex space-x-6">
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">CRM Dashboard</a>
         <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Sales Overview</a>
@@ -97,7 +91,8 @@ useClickOutside(() => {
       </nav>
     </div>
     <div class="flex items-center space-x-2">
-      <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" :isSmallScreen="isSmallScreen" class="notification" />
+      <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" :isSmallScreen="isSmallScreen"
+        class="notification" />
       <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
@@ -107,13 +102,13 @@ useClickOutside(() => {
       <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
       </button>
-      <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown" class="profile" />
+      <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown"
+        class="profile" />
     </div>
   </div>
 </template>
 
-
-<style scoped>  
+<style scoped>
 @media (max-width: 768px) {
   nav {
     display: none;
@@ -130,6 +125,7 @@ useClickOutside(() => {
   .h-10 {
     height: 8vh;
   }
+
   .text-sm {
     font-size: 0.75rem;
   }
