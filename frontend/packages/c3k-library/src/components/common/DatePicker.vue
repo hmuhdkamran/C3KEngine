@@ -294,7 +294,7 @@ dayjs.extend(isSameOrAfter)
 let handleOutsideClick
 
 export default {
-    name: 'C3kPicker',
+    name: 'DatePicker',
     directives: {
         closable: {
             // https://github.com/TahaSh/vue-closable // resource
