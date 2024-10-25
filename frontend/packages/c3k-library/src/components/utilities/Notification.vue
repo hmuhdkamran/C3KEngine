@@ -69,16 +69,18 @@ const positionClasses: Record<string, string> = {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.fade-enter,
-.fade-leave-to
-
-/* .fade-leave-active in <2.1.8 */
-  {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
+  transform: translateY(-10px) scale(0.95);
 }
+
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 </style>
