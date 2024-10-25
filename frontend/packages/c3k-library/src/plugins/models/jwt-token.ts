@@ -1,4 +1,4 @@
-import type {IRouteMeta} from "./route-meta";
+import type {IRouteMeta} from "../router/route-meta";
 
 export interface IJwtToken {
   aud: string

@@ -4,7 +4,7 @@ export interface IClaimMeta {
   any?: boolean
 }
 
-export  interface IRouteMeta {
+export type IRouteMeta = {
   RouteName: string,
   Operation: string
 }

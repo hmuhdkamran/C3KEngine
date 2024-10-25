@@ -2,14 +2,9 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/authentication-service";
-import { useNotification } from 'c3k-library';
+import { useNotification, ICredential } from 'c3k-library';
 
 import logo from "@/assets/images/vue.svg"
-
-interface ICredential {
-    username: string
-    password: string
-}
 
 const service: AuthenticationService = new AuthenticationService();
 

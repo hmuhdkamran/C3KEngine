@@ -48,7 +48,7 @@ async fn main() -> Result<(), std::io::Error> {
 async fn forward_request(
     req: HttpRequest,
     payload: web::Payload,
-    config: web::Data<Arc<AppConfig>>, // Config injected into handler
+    config: web::Data<Arc<AppConfig>>,
 ) -> HttpResponse {
     let client = Client::new();
 

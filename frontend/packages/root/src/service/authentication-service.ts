@@ -1,35 +1,29 @@
 import {
-  Actions,
   DefaultUser,
   GlobalConfig,
-  IAccessToken,
-  ICredential,
-  IPayload,
-  IRouteMeta,
-  IUser,
   StoreService,
-  Subjects,
   TokenHelper
 } from 'c3k-library';
 
-import { ExtractSubjectType, MongoQuery, SubjectRawRule } from '@casl/ability'
-import Axios, { AxiosResponse } from 'axios'
+import { ExtractSubjectType, MongoQuery, SubjectRawRule } from '@casl/ability';
+import Axios, { AxiosResponse } from 'axios';
 
 interface IPermission {
-  action: string
-  subject: string
+  action: string;
+  subject: string;
 }
 
 export class AuthenticationService extends StoreService {
   convertToPermissions(roles: IRouteMeta[]) {
-    const permission: Array<IPermission> = []
+    const permission: Array<IPermission> = [];
 
     roles.forEach((element: any) => {
-      if (element !== undefined)
-        permission.push({ action: 'read', subject: element.RouteName })
-    })
+      if (element !== undefined) {
+        permission.push({ action: 'read', subject: element.RouteName });
+      }
+    });
 
-    return permission
+    return permission;
   }
 
   login(credentials: ICredential) {
@@ -46,7 +40,7 @@ export class AuthenticationService extends StoreService {
         return parsed;
       }
     };
-
+    
     return this.exec<IPayload<string>>(Axios.post(`${GlobalConfig.uri.auth}`, credentials))
       .then((value: any) => this.processPayload(value))
       .then((value) => processResponse(value as IPayload<string>)); // Type assertion
@@ -54,21 +48,21 @@ export class AuthenticationService extends StoreService {
 
   logout() {
     const onSuccess = (res: AxiosResponse) => {
-      const payload: IPayload<IAccessToken> = res.data
+      const payload: IPayload<IAccessToken> = res.data;
 
       if (payload.result.toLocaleLowerCase().startsWith("suc")) {
-        const user: IUser = Object.assign({}, DefaultUser)
+        const user: IUser = Object.assign({}, DefaultUser);
 
-        TokenHelper.removeAccessToken()
-        window.localStorage.removeItem('microsoft-auth')
+        TokenHelper.removeAccessToken();
+        window.localStorage.removeItem('microsoft-auth');
 
-        return user
+        return user;
       } else {
-        return DefaultUser
+        return DefaultUser;
       }
-    }
+    };
 
     return Axios.put(`${GlobalConfig.uri.auth}logout`, null)
-      .then(onSuccess)
+      .then(onSuccess);
   }
 }
