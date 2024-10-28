@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { DataTable, useTableStore } from "c3k-library";
+import { DataTable, useTableStore, ConfirmationDialog } from "c3k-library";
 import { ref, onMounted } from "vue";
-import ConfirmationDialog from '@/layouts/components/ConfirmationDialog.vue';
 import Dialog from "@/pages/role/useredit-dialog.vue";
 import Drawer from "@/pages/role/useredit-drawer.vue";
 const tableStore = useTableStore();

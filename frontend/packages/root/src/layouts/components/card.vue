@@ -22,8 +22,8 @@ const slots = useSlots();
             <slot name="header"></slot>
         </div>
         <div v-else class="card-header px-4 py-2 flex items-center gap-3 border-b border-gray-100">
-            <div class="icon-container relative w-12 h-12 bg-violet-200 rounded-full flex items-center justify-center">
-                <span :class="`${iconClass} text-violet-700 text-lg`"></span>
+            <div class="icon-container relative w-11 h-11 bg-gradient-to-br from-indigo-200 via-purple-200 to-indigo-300 rounded-full flex items-center justify-center shadow-md">
+                <span :class="`${iconClass} text-indigo-700 text-2xl`"></span>
             </div>
             <div class="flex-1">
                 <div class="font-bold text-md flex items-center justify-between">
@@ -68,8 +68,16 @@ const slots = useSlots();
 .card-header {
     background-color: #f3f4f6;
 }
-
 .icon-container {
-    transition: all 0.5s ease-in-out;
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease;
+}
+
+.icon-container:hover {
+    transform: rotate(10deg);
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+}
+
+.card-footer button:hover {
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
 }
 </style>
