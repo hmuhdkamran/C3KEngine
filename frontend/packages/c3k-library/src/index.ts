@@ -26,9 +26,10 @@ export { default as Card } from './components/utilities/Card.vue';
 export { default as Notification } from './components/utilities/Notification.vue';
 export * from "./components/utilities/useNotification";
 
-export { default as Button } from './components/common/Button.vue';
 export { default as ConfirmationDialog } from './components/common/ConfirmationDialog.vue';
+export { default as Drawer } from './components/common/Drawer.vue';
 
+export { default as Button } from './components/common/Button.vue';
 export { default as ComboBox } from './components/form/ComboBox.vue';
 export { default as TextInput } from './components/form/TextInput.vue';
 // export { default as DatePicker } from './components/common/DatePicker.vue';

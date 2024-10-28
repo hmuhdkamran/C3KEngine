@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { defineProps, defineEmits } from 'vue';
-import { config, VNodeRenderer } from 'c3k-library';
+import { Drawer } from 'c3k-library';
 import sidebarMenu from '@/navigation/sidebarConfig';
 
 interface Props {
@@ -23,7 +23,10 @@ const toggleSection = (index: number) => {
 </script>
 
 <template>
-  <transition name="slide">
+  <Drawer>
+
+  </Drawer>
+  <!-- <transition name="slide">
     <div v-if="props.showSidebarDropdown"
     class="fixed inset-y-0 left-0 w-64 bg-white text-gray-800 border-r border-gray-200 shadow-lg z-50 rounded-tr-lg rounded-br-lg">
       <div class="flex flex-col h-full">
@@ -75,7 +78,7 @@ const toggleSection = (index: number) => {
   <transition name="fade">
     <div v-if="props.showSidebarDropdown" class="fixed inset-0 bg-black bg-opacity-50 z-40"
       @click="emit('toggleSidebar')"></div>
-  </transition>
+  </transition> -->
 </template>
 
 <style scoped>

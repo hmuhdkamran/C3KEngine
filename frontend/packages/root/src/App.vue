@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Notification, UseAxios, useNotification } from 'c3k-library';
+import { computed } from 'vue';
 
 UseAxios();
 const { notifications } = useNotification();
 
 const notificationsWithOffsets = computed(() =>
-  notifications.value.map((notification, index) => ({
+  notifications.value.map((notification: any, index: number) => ({
     ...notification,
     positionOffset: index * 110
   }))
