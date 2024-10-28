@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { ref } from 'vue';
-import { defineProps, defineEmits, useSlots } from 'vue';
+import { defineProps, defineEmits, useSlots, watch, ref, toRef } from 'vue';
 
 interface Props {
   isOpen: boolean;
@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   isOpen: false,
   title: '',
   position: 'left',
-  size: 'size-48',
+  size: 'w-64',
   showCloseButton: true,
   closeOnOutside: true
 });
@@ -38,39 +38,51 @@ const transformClasses = {
   bottom: 'translate-y-[100%]'
 };
 
+const drawerSize = ref('h-full');
+const positionRef = toRef(props, 'position');
+
+watch(positionRef, ()=> {
+  if(props.position == 'left' || props.position == 'right') {
+    drawerSize.value = 'h-full'
+  } else {
+    drawerSize.value = 'w-full'
+  }
+});
+
 const slots = useSlots();
 </script>
 
 <template>
-  <!-- Background Overlay -->
-  <transition name="fade">
-    <div v-if="props.isOpen && props.closeOnOutside" class="fixed inset-0 bg-black bg-opacity-50 z-40"
-      @click="emit('toggleDrawer')"></div>
-  </transition>
-
-  <!-- Drawer -->
-  <transition :name="`${props.position}-slide`">
-    <div v-if="props.isOpen"
-      :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} bg-white text-gray-800 shadow-lg z-50`"
-      class="rounded-lg flex flex-col h-full w-full">
-      <!-- Header -->
-      <div class="flex items-center justify-between px-5 py-4 bg-blue-600 text-white">
-        <template v-if="slots.header">
-          <slot name="header" />
-        </template>
-        <template v-else>
-          <h2 class="font-semibold text-lg">{{ props.title }}</h2>
-        </template>
-        <button v-if="props.showCloseButton" @click="emit('toggleDrawer')" class="text-white hover:text-gray-200">
-          <span class="icon-[fluent--dismiss-20-filled] h-5 w-5"></span>
-        </button>
+  <div>
+    <!-- Drawer -->
+    <transition :name="`${props.position}-slide`">
+      <div v-if="props.isOpen"
+        :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} ${drawerSize} bg-white text-gray-800 shadow-lg z-50`"
+        class="rounded-sm flex flex-col">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4 bg-blue-600 text-violet-600">
+          <template v-if="slots.header">
+            <slot name="header" />
+          </template>
+          <template v-else>
+            <h2 class="font-semibold text-lg">{{ props.title }}</h2>
+          </template>
+          <button v-if="props.showCloseButton" @click="emit('toggleDrawer')" class="text-gray-200 hover:text-gray-500">
+            <span class="icon-[fontisto--close] w-5 h-5"></span>
+          </button>
+        </div>
+        <!-- Content -->
+        <div class="flex-grow overflow-y-auto p-4">
+          <slot />
+        </div>
       </div>
-      <!-- Content -->
-      <div class="flex-grow overflow-y-auto p-4">
-        <slot />
-      </div>
-    </div>
-  </transition>
+    </transition>
+    <!-- Background Overlay -->
+    <transition name="fade">
+      <div v-if="props.isOpen && props.closeOnOutside" class="fixed inset-0 bg-black bg-opacity-50 z-40"
+        @click="emit('toggleDrawer')"></div>
+    </transition>
+  </div>
 </template>
 
 <style scoped>
