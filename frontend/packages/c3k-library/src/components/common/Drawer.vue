@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import { defineProps, defineEmits } from 'vue';
 
 interface Props {
@@ -16,10 +16,10 @@ interface Emit {
 const props = defineProps<Props>();
 const emit = defineEmits<Emit>();
 
-const openSections = ref<{ [key: number]: boolean }>({});
-const toggleSection = (index: number) => {
-  openSections.value[index] = !openSections.value[index];
-};
+// const openSections = ref<{ [key: number]: boolean }>({});
+// const toggleSection = (index: number) => {
+//   openSections.value[index] = !openSections.value[index];
+// };
 
 const positionClasses = {
   left: 'inset-y-0 left-0',
