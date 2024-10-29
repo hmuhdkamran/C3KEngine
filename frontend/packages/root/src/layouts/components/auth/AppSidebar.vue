@@ -24,9 +24,9 @@ const toggleSection = (index: number) => {
   <Drawer :isOpen="props.showSidebarDropdown" size="w-72" @toggleDrawer="emit('toggleSidebar')">
     <template #header>
       <div
-        class="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200 shadow-sm text-gray-700 hover:text-indigo-600 space-x-6">
+        class="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200 shadow-sm text-gray-700 space-x-6">
         <div>
-          <a href="/" class="flex items-center space-x-2">
+          <a href="/" class="flex items-center space-x-2 hover:text-indigo-600">
             <VNodeRenderer :nodes="config.logo" />
             <span>{{ config.application }}</span>
           </a>
