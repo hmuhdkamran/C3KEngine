@@ -170,15 +170,12 @@ const isDropdownOpen = ref(false);
 const formData = ref({ title: '', description: '', status: '' });
 
 const openModal = (action: string, row: any) => {
-  currentEntry.value = row;
-  formData.value = { ...row };
-  
-  if (action === 'view') {
+  if (action === 'delete') {
+    console.log('Deleting entry:', row);
+  } else {
+    currentEntry.value = row;
+    isEditMode.value = action === 'edit';
     isDrawerVisible.value = true;
-  } else if (action === 'edit') {
-    isFormVisible.value = true;
-  } else if (action === 'dialog') {
-    isEditdialog.value = true;    
   }
 };
 
@@ -215,7 +212,7 @@ const goBack = () => {
 
 <template>
   <div>
-    <DataTable :data="hrmsCards" :columns="columns" :check-column="true" v-if="!isFormVisible">
+    <DataTable :data="hrmsCards" :columns="columns" :check-column="true">
       <template #status="{ row }">
         <span :class="row.status === 'Installed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
           class="px-1 py-0.5 rounded-full">
@@ -230,16 +227,13 @@ const goBack = () => {
           <button class="grid-action-btn hover-btn-primary" @click="openModal('edit', row)">
             <span class="icon-[akar-icons--edit]"></span>
           </button>
-          <button class="grid-action-btn hover-btn-primary" @click="openModal('dialog', row)">
-            <span class="icon-[material-symbols--dialogs-outline]"></span>
-          </button>
           <button class="grid-action-btn hover-btn-danger" @click="onDelete">
             <span class="icon-[hugeicons--delete-02]"></span>
           </button>
         </div>
       </template>
     </DataTable>
-    <div class="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-8" v-if="isFormVisible">
+    <!-- <div class="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-8" v-if="isFormVisible">
       <form class="w-full bg-white rounded-md p-6 space-y-8 shadow-lg">
         <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
           <h1 class="text-lg font-bold text-gray-800 text-center">
@@ -286,16 +280,16 @@ const goBack = () => {
           </button>
         </div>
       </form>
-    </div>
+    </div> -->
 
-    <Dialog
+    <!-- <Dialog
       v-if="isEditdialog"
       :isVisible="isFormVisible"
       :entryData="currentEntry"
       :isEdit="isEditdialog"
       @Close="isFormVisible = false"
       @onSave="saveEntry"
-    />
+    /> -->
 
     <Drawer
       v-if="isDrawerVisible"
