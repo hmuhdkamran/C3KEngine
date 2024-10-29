@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   isOpen: false,
   title: '',
   position: 'left',
-  size: 'w-64',
+  size: '',
   showCloseButton: true,
   closeOnOutside: true
 });
@@ -58,26 +58,23 @@ const slots = useSlots();
     <transition :name="`${props.position}-slide`">
       <div v-if="props.isOpen"
         :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} ${drawerSize} bg-white text-gray-800 shadow-lg z-50`"
-        class="rounded-sm flex flex-col">
+        class="rounded-sm flex flex-col z-50">
         <!-- Header -->
-        <div class="flex items-center justify-between px-5 py-4 bg-blue-600 text-violet-600">
+        <div class="flex items-center justify-between bg-blue-600 text-violet-600">
           <template v-if="slots.header">
             <slot name="header" />
           </template>
           <template v-else>
             <h2 class="font-semibold text-lg">{{ props.title }}</h2>
           </template>
-          <button v-if="props.showCloseButton" @click="emit('toggleDrawer')" class="text-gray-200 hover:text-gray-500">
-            <span class="icon-[fontisto--close] w-5 h-5"></span>
-          </button>
         </div>
         <!-- Content -->
-        <div class="flex-grow overflow-y-auto p-4">
+        <div class="flex-grow overflow-y-auto p-2">
           <slot />
         </div>
       </div>
     </transition>
-    <!-- Background Overlay -->
+    <!-- Background Overlay --> 
     <transition name="fade">
       <div v-if="props.isOpen && props.closeOnOutside" class="fixed inset-0 bg-black bg-opacity-50 z-40"
         @click="emit('toggleDrawer')"></div>

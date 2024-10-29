@@ -21,10 +21,10 @@ const toggleSection = (index: number) => {
 </script>
 
 <template>
-  <Drawer :isOpen="props.showSidebarDropdown" size="w-80" @toggleDrawer="emit('toggleSidebar')">
+  <Drawer :isOpen="props.showSidebarDropdown" size="w-72" @toggleDrawer="emit('toggleSidebar')">
     <template #header>
       <div
-        class="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200 shadow-sm text-gray-700 hover:text-indigo-600 space-x-8">
+        class="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200 shadow-sm text-gray-700 hover:text-indigo-600 space-x-6">
         <div>
           <a href="/" class="flex items-center space-x-2">
             <VNodeRenderer :nodes="config.logo" />
@@ -37,7 +37,7 @@ const toggleSection = (index: number) => {
       </div>
     </template>
     <div
-      class="fixed inset-y-0 top-28 left-0 w-80 bg-white text-gray-800 border-r border-gray-200 shadow-lg z-40 rounded-tr-lg rounded-br-lg">
+      class="fixed inset-y-0 top-20 left-0 w-72 bg-white text-gray-800 border-r border-gray-200 shadow-lg z-40 rounded-tr-lg rounded-br-lg">
       <div class="flex flex-col h-full">
         <div class="overflow-y-auto flex-grow px-4 py-3">
           <ul class="space-y-2">
@@ -78,6 +78,5 @@ const toggleSection = (index: number) => {
     </div>
   </Drawer>
 </template>
-
 <style scoped>
 </style>

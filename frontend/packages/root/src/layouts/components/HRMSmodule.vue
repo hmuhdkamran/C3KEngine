@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { DataTable, useTableStore, ConfirmationDialog } from "c3k-library";
+import { DataTable, useTableStore, ConfirmationDialog, Drawer } from "c3k-library";
 import { ref, onMounted } from "vue";
-import Dialog from "@/pages/role/useredit-dialog.vue";
-import Drawer from "@/pages/role/useredit-drawer.vue";
 const tableStore = useTableStore();
 
 const hrmsCards = [
@@ -162,29 +160,23 @@ onMounted(() => {
 
 const isDeleteDialogVisible = ref(false);
 const isDrawerVisible = ref(false);
-const isFormVisible = ref(false);
-const isEditdialog = ref(false);
-const currentEntry = ref<any>(null);
 const isEditMode = ref(false);
+const currentEntry = ref<any>(null);
 const isDropdownOpen = ref(false);
-const formData = ref({ title: '', description: '', status: '' });
 
 const openModal = (action: string, row: any) => {
-  if (action === 'delete') {
-    console.log('Deleting entry:', row);
-  } else {
-    currentEntry.value = row;
-    isEditMode.value = action === 'edit';
-    isDrawerVisible.value = true;
-  }
+  currentEntry.value = row;
+  isEditMode.value = action === 'edit';
+  isDrawerVisible.value = true;
 };
 
 const closeDrawer = () => {
   isDrawerVisible.value = false;
   isEditMode.value = false;
+  currentEntry.value = null;
 };
 
-const saveEntry = (data: any) => {
+const saveEntry = () => {
   closeDrawer();
 };
 
@@ -201,12 +193,7 @@ const onCancelDelete = () => {
 };
 
 const onSave = () => {
-  saveEntry(formData.value);
-};
-
-const goBack = () => {
-  closeDrawer();
-  isFormVisible.value = false;
+  saveEntry();
 };
 </script>
 
@@ -233,80 +220,68 @@ const goBack = () => {
         </div>
       </template>
     </DataTable>
-    <!-- <div class="min-h-screen flex flex-col items-center justify-start bg-gray-100 p-8" v-if="isFormVisible">
-      <form class="w-full bg-white rounded-md p-6 space-y-8 shadow-lg">
-        <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
-          <h1 class="text-lg font-bold text-gray-800 text-center">
-            {{ isEditMode ? "Edit Form" : "View Form" }}
-          </h1>
-          <p class="text-md text-gray-500 text-center mt-2">
-            {{ isEditMode ? "Update the form details below." : "Review the form details below." }}
-          </p>
+    <ConfirmationDialog 
+      v-if="isDeleteDialogVisible" 
+      title="Confirm Delete"
+      message="Are you sure you want to delete this entry?" 
+      :isVisible="isDeleteDialogVisible"
+      @confirm="onConfirmDelete" 
+      @cancel="onCancelDelete" 
+      />
+    <Drawer :isOpen="isDrawerVisible" :title="isEditMode ? 'Edit Entry' : 'View Entry'" position="right" size="w-1/4">
+      <template #header>
+        <div class="w-full flex justify-between items-center p-4 bg-gray-100 border-b">
+          <h2 class="text-lg font-semibold text-gray-800">
+            {{ isEditMode ? "Edit" : "View" }}
+          </h2>
+          <button @click="closeDrawer" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+            <span class="icon-[fluent--dismiss-20-filled] h-4 w-4"></span>
+          </button>
         </div>
-        <div class="space-y-8">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="w-full">
-              <label class="block font-semibold text-gray-700 mb-2" for="title">Title</label>
-              <input v-model="formData.title" id="title" placeholder="Enter Title"
-                class="w-full input-complete transition-all" :disabled="!isEditMode" required />
+      </template>
+      <template #default>
+        <div class="flex flex-col h-full">
+          <div v-if="currentEntry" class="p-4 overflow-y-auto flex-grow">
+            <div v-if="isEditMode">
+              <span class="font-semibold text-gray-700">Title:</span>
+              <input v-model="currentEntry.title" placeholder="Enter Title" class="w-full px-3 py-1 mb-4 input-complete"
+                required />
+              <span class="font-semibold text-gray-700">Description:</span>
+              <textarea v-model="currentEntry.description" placeholder="Enter Description"
+                class="w-full px-3 py-1 mb-4 input-complete" rows="3" required></textarea>
             </div>
-            <div class="w-full">
-              <label class="block font-semibold text-gray-700 mb-2" for="status">Status</label>
-              <div class="relative">
-                <select v-model="formData.status" id="status" class="w-full input-complete transition-all"
-                  :disabled="!isEditMode" @focus="isDropdownOpen = true" @blur="isDropdownOpen = false">
+            <div v-else>
+              <span class="font-semibold text-gray-700">Title:</span>
+              <input v-model="currentEntry.title" placeholder="Enter Title" class="w-full px-3 py-1 mb-4 input-complete"
+                disabled />
+              <span class="font-semibold text-gray-700">Description:</span>
+              <textarea v-model="currentEntry.description" placeholder="Enter Description"
+                class="w-full px-3 py-1 mb-4 input-complete" rows="3" disabled></textarea>
+            </div>
+
+            <div class="mb-4 relative">
+              <label class="block text-gray-700 font-semibold" for="status">Status:</label>
+              <div v-if="isEditMode" class="relative">
+                <select v-model="currentEntry.status" id="status" class="w-full input-complete px-3 py-1"
+                  @focus="isDropdownOpen = true" @blur="isDropdownOpen = false">
                   <option value="Activate">Activate</option>
                   <option value="Installed">Installed</option>
                 </select>
                 <span v-if="isDropdownOpen"
-                  class="icon-[iconamoon--arrow-up-2] absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600"></span>
-                <span v-else
-                  class="icon-[iconamoon--arrow-down-2] absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600"></span>
+                  class="icon-[iconamoon--arrow-up-2] absolute right-3 top-3 text-gray-600"></span>
+                <span v-else class="icon-[iconamoon--arrow-down-2] absolute right-3 top-3 text-gray-600"></span>
+              </div>
+              <div v-else>
+                <span class="text-gray-600">{{ currentEntry.status === "Activate" ? "Activate" : "Installed" }}</span>
               </div>
             </div>
           </div>
-          <div class="w-full">
-            <label class="block font-semibold text-gray-700 mb-2" for="description">Description</label>
-            <textarea v-model="formData.description" id="description" placeholder="Enter Description"
-              class="w-full input-complete transition-all" rows="6" :disabled="!isEditMode" required></textarea>
+          <div class="flex justify-end p-4 border-t">
+            <button class="btn-secondary px-3 py-1 mr-2" @click="closeDrawer">Close</button>
+            <button class="btn-primary px-3 py-1" v-if="isEditMode" @click="onSave">Save</button>
           </div>
         </div>
-        <div class="flex justify-end space-x-2 mt-8">
-          <button @click="goBack" class="px-3 py-1 btn-secondary transition-all">
-            Back
-          </button>
-          <button v-if="isEditMode" type="button" @click="onSave" class="px-3 py-1 btn-primary transition-all">
-            Save
-          </button>
-        </div>
-      </form>
-    </div> -->
-
-    <!-- <Dialog
-      v-if="isEditdialog"
-      :isVisible="isFormVisible"
-      :entryData="currentEntry"
-      :isEdit="isEditdialog"
-      @Close="isFormVisible = false"
-      @onSave="saveEntry"
-    /> -->
-
-    <Drawer
-      v-if="isDrawerVisible"
-      :isVisible="isDrawerVisible"
-      :entryData="currentEntry"
-      :isEdit="isEditMode"
-      @Close="closeDrawer"
-      @onSave="saveEntry"
-    />
-
-    <ConfirmationDialog
-      v-if="isDeleteDialogVisible"
-      title="Confirm Delete"
-      message="Are you sure you want to delete this entry?"
-      :isVisible="isDeleteDialogVisible"
-      @confirm="onConfirmDelete"
-      @cancel="onCancelDelete"
-    />
+      </template>
+    </Drawer>
   </div>
 </template>
