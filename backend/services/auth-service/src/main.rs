@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{middleware::Logger, web, App, HttpServer};
+use actix_web::{web, App, HttpServer};
 use c3k_auth_service::controllers::roles::{
     auth_controller::auth_routes, role_controller::role_routes,
     role_route_map_controller::role_route_map_routes, route_controller::route_routes,
@@ -66,15 +66,14 @@ async fn main() -> Result<(), std::io::Error> {
 
         App::new()
             .wrap(cors)
-            .wrap(Logger::default())
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(communicator))
-            .configure(auth_routes)
-            .configure(user_routes)
+            .configure(user_routes)            
             .configure(role_routes)
             .configure(route_routes)
             .configure(user_role_map_routes)
             .configure(role_route_map_routes)
+            .configure(auth_routes)
     });
 
     println!("App is Running on http://{}", addr);
