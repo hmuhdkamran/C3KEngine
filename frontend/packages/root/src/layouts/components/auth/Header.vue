@@ -75,7 +75,7 @@ useClickOutside(() => {
 
 <template>
   <div
-    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-50">
+    class="fixed top-0 left-0 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11 bg-gradient-to-r from-violet-600 to-indigo-500 shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-40">
     <div class="flex items-center space-x-2 sm:space-x-4">
       <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown" />
       <button @click="toggleSidebar" class="p-1 text-white hover:text-gray-300 focus:outline-none">
