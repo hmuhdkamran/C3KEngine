@@ -79,4 +79,32 @@ const toggleSection = (index: number) => {
   </Drawer>
 </template>
 <style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.4s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+.slide-down-enter-from,
+.slide-down-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.slide-down-enter-to,
+.slide-down-leave-from {
+  max-height: 200px; /* Adjust as needed for the content size */
+  opacity: 1;
+}
 </style>
