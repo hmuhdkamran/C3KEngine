@@ -1,14 +1,18 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import router from "@/router";
+import '@/assets/styles/main.css';
+import 'c3k-library/style.css';
 
 import App from './App.vue'
-import router from './router'
+import { installPinia } from 'c3k-library';
 
-const app = createApp(App)
+const pinia = createPinia();
+const app = createApp(App);
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
+
+installPinia(app);
 
 app.mount('#app')

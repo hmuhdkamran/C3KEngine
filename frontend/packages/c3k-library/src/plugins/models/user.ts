@@ -1,6 +1,6 @@
 import type { IRouteMeta } from "../router/route-meta"
 
-export type IUser = {
+export interface IUser {
   authenticated: boolean
   claims: {}
   cultureName?: string

@@ -20,6 +20,14 @@ export default defineConfig({
     AutoImport({
       imports: ['vue', 'vue-router', '@vueuse/core', 'vue-i18n', 'pinia'],
       vueTemplate: true,
+      dts: true,
+      // resolvers: [
+      //   (name) => {
+      //     if(name.match(/DefaultUser|GlobalConfig|StoreService|TokenHelper|IPayload|IRouteMeta/)) {
+      //       return { name, from: 'c3k-library' }
+      //     }
+      //   }
+      // ]
     }),
     Pages({
       dirs: ['./src/pages'],

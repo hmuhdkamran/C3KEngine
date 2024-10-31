@@ -1,0 +1,134 @@
+{
+    "info": {
+        "_postman_id": "new_postman_id",
+        "name": "User API",
+        "description": "Collection of User API endpoints for local testing and development",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "author": "H.Muhammad Kamran"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:9731"
+        },
+        {
+            "key": "bearerToken",
+            "value": "your_bearer_token"
+        }
+    ],
+    "item": [
+        {
+            "name": "Get All Users",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{bearerToken}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/user",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "auth", "user"]
+                }
+            }
+        },
+        {
+            "name": "Get User by Filter",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{bearerToken}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/user/:filter",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "auth", "user", ":filter"],
+                    "variable": [
+                        {
+                            "key": "filter",
+                            "value": "exampleFilter"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Add User",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{bearerToken}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"id\": \"1\",\n    \"name\": \"John Doe\",\n    \"email\": \"johndoe@example.com\",\n    \"role\": \"user\"\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/user",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "auth", "user"]
+                }
+            }
+        },
+        {
+            "name": "Update User",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{bearerToken}}"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"id\": \"1\",\n    \"name\": \"Jane Doe\",\n    \"email\": \"janedoe@example.com\",\n    \"role\": \"admin\"\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/user",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "auth", "user"]
+                }
+            }
+        },
+        {
+            "name": "Delete User",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{bearerToken}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/auth/user/:id",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "auth", "user", ":id"],
+                    "variable": [
+                        {
+                            "key": "id",
+                            "value": "1"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

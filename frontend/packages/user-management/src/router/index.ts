@@ -1,23 +1,23 @@
+import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import routes from '~pages'
+import { DefaultUser, RouteGuards } from 'c3k-library'
+
+const options = {
+  resolveUser: () => DefaultUser, // store.user,
+  forbiddenRouteName: 'not-authorized',
+  loginRouteName: 'login',
+  verifyRouteName: 'access-control',
+  store: null,
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+    ...setupLayouts(routes),
+  ],
+});
 
-export default router
+router.beforeEach(RouteGuards(options));
+
+export default router;
