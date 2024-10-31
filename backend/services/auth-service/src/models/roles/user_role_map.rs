@@ -8,6 +8,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct UserRoleMap {
     pub user_role_map_id: Uuid,
     pub role_id: Uuid,

@@ -8,6 +8,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Route {
     pub route_id: Uuid,
     pub route_name: String,
