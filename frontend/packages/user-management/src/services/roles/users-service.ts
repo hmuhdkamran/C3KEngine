@@ -9,12 +9,12 @@
  */
 
 // Importing necessary dependencies and modules.
-import { IUser } from '@/models';
+import { IUsers } from '@/models';
 import Axios from 'axios';
 import { GlobalConfig, StoreService } from 'c3k-library';
 
 // Setting the base URL for User API calls.
-const BASE_URL = `${GlobalConfig.uri.services}auth/user`;
+const BASE_URL = `${GlobalConfig.uri.services}auth/role/users`;
 
 export class UsersService extends StoreService {
   /**
@@ -43,7 +43,7 @@ export class UsersService extends StoreService {
    * @param entity User entity object.
    * @returns Promise with API response data.
    */
-  public AddOne(entity: IUser) {
+  public AddOne(entity: IUsers) {
     return this.exec(Axios.post(`${BASE_URL}`, entity))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
@@ -54,7 +54,7 @@ export class UsersService extends StoreService {
    * @param entity User entity object.
    * @returns Promise with API response data.
    */
-  public Update(entity: IUser) {
+  public Update(entity: IUsers) {
     return this.exec(Axios.put(`${BASE_URL}`, entity))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
