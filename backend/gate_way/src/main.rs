@@ -64,41 +64,54 @@ async fn forward_request(
         .services
         .iter()
         .find(|service| path_and_query.starts_with(&format!("/{}", service.name)))
-        .map(|service| format!("http://{}:{}{}", service.host, service.port, path_and_query))
-        .unwrap_or_else(|| return format!("Invalid API section"));
+        .map(|service| format!("http://{}:{}{}", service.host, service.port, path_and_query));
 
-    // Forward the request to the appropriate service
-    let mut forward_request = client
-        .request(req.method().clone(), target_url)
-        .append_header(("User-Agent", "Actix-web"));
+    // Check if a valid target URL was found
+    if let Some(url) = target_url {
+        // Forward the request to the appropriate service
+        let mut forward_request = client
+            .request(req.method().clone(), url)
+            .append_header(("User-Agent", "Actix-web"));
 
-    // Copy original request headers to the forwarded request
-    for (key, value) in req.headers().iter() {
-        forward_request = forward_request.append_header((key.clone(), value.clone()));
-    }
-
-    // Send the request with the original payload
-    let response = forward_request.send_stream(payload).await;
-
-    match response {
-        Ok(mut res) => {
-            // Extract the content type before moving the mutable borrow
-            let content_type = res
-                .headers()
-                .get("Content-Type")
-                .map(|ct| ct.to_str().unwrap_or("application/json"))
-                .unwrap_or("application/json")
-                .to_string(); // Ensure it's a String to avoid lifetime issues
-
-            // Read the response body
-            let body = res.body().await;
-            match body {
-                Ok(bytes) => HttpResponse::build(res.status())
-                    .content_type(content_type)
-                    .body(bytes),
-                Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
-            }
+        // Copy original request headers to the forwarded request
+        for (key, value) in req.headers().iter() {
+            forward_request = forward_request.append_header((key.clone(), value.clone()));
         }
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+
+        // Send the request with the original payload
+        let response = forward_request.send_stream(payload).await;
+
+        match response {
+            Ok(mut res) => {
+                // Extract the content type before moving the mutable borrow
+                let content_type = res
+                    .headers()
+                    .get("Content-Type")
+                    .and_then(|ct| ct.to_str().ok())
+                    .unwrap_or("application/json")
+                    .to_string();
+
+                // Read the response body
+                let body = res.body().await;
+                match body {
+                    Ok(bytes) => HttpResponse::build(res.status())
+                        .content_type(content_type)
+                        .body(bytes),
+                    Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+                }
+            }
+            Err(err) => match err {
+                awc::error::SendRequestError::Timeout => {
+                    HttpResponse::GatewayTimeout().body("Request timed out")
+                }
+                awc::error::SendRequestError::Connect(_) => {
+                    HttpResponse::BadGateway().body("Could not connect to target service")
+                }
+                _ => HttpResponse::InternalServerError().body(err.to_string()),
+            },
+        }
+    } else {
+        // Return a bad request response if no valid target URL is found
+        HttpResponse::BadRequest().body("Invalid API section")
     }
 }

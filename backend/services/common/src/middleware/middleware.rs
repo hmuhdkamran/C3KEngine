@@ -102,7 +102,7 @@ where
             authenticate_pass = true;
         } else {
             for ignore_route in constants::IGNORE_ROUTES.iter() {
-                if req.path().starts_with(ignore_route) {
+                if req.path() == *ignore_route {
                     authenticate_pass = true;
                     break;
                 }
@@ -136,8 +136,13 @@ where
                         match redis_client.get_key(&claim.sid) {
                             Ok(store_token) if token == store_token => {
                                 let path = req.path();
-                                let transformed_path =
-                                    path.strip_prefix("/api/").unwrap_or(path).replace("/", "-");
+                                let transformed_path = path
+                                    .strip_prefix("/api/")
+                                    .unwrap_or(path)
+                                    .split('/')
+                                    .skip(1)
+                                    .collect::<Vec<&str>>()
+                                    .join("-");
 
                                 let allowed = claim
                                     .role

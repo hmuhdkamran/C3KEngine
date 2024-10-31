@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn user_role_map_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/auth/roles/user_role_map")
+        web::scope("/api/auth/role/user_role_maps")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

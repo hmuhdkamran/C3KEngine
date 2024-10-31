@@ -22,7 +22,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public GetAll() {
-    return this.exec<any>(Axios.get(`${BASE_URL}`))
+    return this.exec(Axios.get(`${BASE_URL}`))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -33,7 +33,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public GetFindBy(filter: string) {
-    return this.exec<any>(Axios.get(`${BASE_URL}/${filter}`))
+    return this.exec(Axios.get(`${BASE_URL}/${filter}`))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -44,7 +44,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public AddOne(entity: IUser) {
-    return this.exec<any>(Axios.post(`${BASE_URL}`, entity))
+    return this.exec(Axios.post(`${BASE_URL}`, entity))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -55,7 +55,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public Update(entity: IUser) {
-    return this.exec<any>(Axios.put(`${BASE_URL}`, entity))
+    return this.exec(Axios.put(`${BASE_URL}`, entity))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -66,7 +66,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public Delete(id: string) {
-    return this.exec<any>(Axios.delete(`${BASE_URL}/${id}`))
+    return this.exec(Axios.delete(`${BASE_URL}/${id}`))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
