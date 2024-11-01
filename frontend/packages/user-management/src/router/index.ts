@@ -11,13 +11,15 @@ const options = {
   store: null,
 }
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    ...setupLayouts(routes),
-  ],
-});
+export const routeHash = (hash: string) => {
+  const router = createRouter({
+    history: createWebHistory(hash),
+    routes: [
+      ...setupLayouts(routes),
+    ],
+  });
 
-router.beforeEach(RouteGuards(options));
+  router.beforeEach(RouteGuards(options));
 
-export default router;
+  return router;
+}

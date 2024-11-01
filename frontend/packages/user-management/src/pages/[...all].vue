@@ -12,7 +12,7 @@ import broken from "@/assets/images/broken-robot.svg";
                 <div class="w-16 h-1 my-3 bg-primary md:my-6"></div>
 
                 <p class="text-2xl font-light leading-normal text-gray-600 md:text-3xl">
-                    Not Found </p>
+                    Not Found at User Managements </p>
 
                 <a href="/">
                     <button

@@ -1,18 +1,54 @@
-import { createApp } from 'vue'
+import { createApp, App } from 'vue'
 import { createPinia } from 'pinia'
-import router from "@/router";
+import { routeHash } from "@/router";
+
 import '@/assets/styles/main.css';
 import 'c3k-library/style.css';
 
-import App from './App.vue'
+import './public-path'
+import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
+
+import Root from './App.vue'
 import { installPinia } from 'c3k-library';
 
-const pinia = createPinia();
-const app = createApp(App);
+let instance: App;
 
-app.use(pinia)
-app.use(router)
+const render = (props: any = {}): void => {
+    const { container, setGlobalState, getGlobalState, name } = props;
+    if (getGlobalState) {
+        // store.count = getGlobalState().count;
+    }
+    
+    const router = routeHash(qiankunWindow.__POWERED_BY_QIANKUN__ ? `/${name}` : '/')
 
-installPinia(app);
+    instance = createApp(Root, { setGlobalState });
+    instance.use(router);
+    instance.use(createPinia())
 
-app.mount('#app')
+    installPinia(instance);
+
+    instance.mount(container ? container.querySelector('#app') : '#app');
+}
+
+renderWithQiankun({
+    mount(props: any) {
+        render(props);
+    },
+    bootstrap() {
+    },
+    update(props: any) {
+        render(props)
+    },
+    unmount(_props: any) {
+        instance.unmount();
+        instance._container.innerHTML = '';
+    },
+});
+
+export async function mount(props: any) {
+    render(props);
+}
+
+if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
+    render({ container: '' });
+}

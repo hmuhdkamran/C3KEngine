@@ -30,6 +30,8 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "postcss": "^8.4.45",
+    "qiankun": "^2.10.16",
+    "vite-plugin-qiankun": "^1.0.15",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.6.2",
     "unplugin-auto-import": "^0.18.2",

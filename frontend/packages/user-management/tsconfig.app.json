@@ -39,6 +39,6 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/plugins/store",
-    "node_modules/c3k-library/index.d.ts"
+    "c3k-library/index.d.ts"
   ]
 }

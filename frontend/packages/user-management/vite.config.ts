@@ -8,8 +8,10 @@ import DefineOptions from 'unplugin-vue-define-options/vite'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import vue from '@vitejs/plugin-vue'
 import dotenv from 'dotenv'
+import qiankun from 'vite-plugin-qiankun';
 
 const envFile = '.env'
+const useDevMode = true 
 
 dotenv.config({ path: envFile })
 
@@ -39,6 +41,7 @@ export default defineConfig({
       ],
     }),
     DefineOptions(),
+    qiankun('c3k-user-management', { useDevMode })
   ],
   server: {
     host: process.env.LOCAL_PATH,
@@ -48,6 +51,9 @@ export default defineConfig({
       usePolling: false,
       disableGlobbing: false,
     },
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   define: { 'process.env': {} },
   resolve: {
