@@ -11,10 +11,10 @@ const props = defineProps({
         type: Array as () => {
             key: string,
             label: string,
-            sort: boolean,
-            width: string,
-            class: string,
-            check: boolean
+            sort?: boolean,
+            width?: string,
+            class?: string,
+            check?: boolean
         }[],
         default: () => []
     },
@@ -82,14 +82,15 @@ const toggleSelectAll = () => {
         <thead>
             <tr class="bg-gray-100 border-b border-gray-300">
                 <template v-for="column in props.columns" :key="column.key">
-                    <th v-if="column.check"
+                    <th v-if="column.check ?? false"
                         class="cursor-pointer">
                         <input class="cursor-pointer" type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
                     </th>
-                    <th v-else @click="changeSort(column.key, column.sort)"
-                        class="cursor-pointer ">
+                    <th v-else @click="changeSort(column.key, column.sort ?? false)"
+                        :class="['cursor-pointer', column.class || '']"
+                        :style="{ width: column.width || 'auto' }">
                         {{ column.label }}
-                        <span v-if="sortColumn === column.key && column.sort" class="ml-1 text-md">
+                        <span v-if="sortColumn === column.key && column.sort !== false" class="ml-1 text-md">
                             {{ sortOrder === 'asc' ? '↑' : '↓' }}
                         </span>
                     </th>
@@ -99,18 +100,15 @@ const toggleSelectAll = () => {
         <tbody>
             <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]">
                 <template v-for="column in props.columns">
-                    <template v-if="column.check">
+                    <template v-if="column.check ?? false">
                         <td class="cursor-pointer text-center">
                             <input class="cursor-pointer" type="checkbox" v-model="selectedRecords" :value="record" />
                         </td>
                     </template>
                     <template v-else>
-                        <td class="p-1" :class="column.class" :key="column.key"
-                            v-if="typeof $slots[column.key] !== 'undefined'">
-                            <slot :name="column.key" :field="column.key" :row="record"></slot>
-                        </td>
-                        <td class="p-1" :class="column.class" :key="column.key + `-els`" v-else>
-                            <span v-html="record[column.key]"></span>
+                        <td class="p-1" :class="column.class || ''" :style="{ width: column.width || 'auto' }" :key="column.key">
+                            <slot :name="column.key" :field="column.key" :row="record" v-if="$slots[column.key]"></slot>
+                            <span v-html="record[column.key]" v-else></span>
                         </td>
                     </template>
                 </template>

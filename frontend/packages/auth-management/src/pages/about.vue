@@ -7,7 +7,7 @@ const repo: UsersService = new UsersService();
 const data: Ref<Array<IUser>> = ref([]);
 
 const columns = [
-  // { key: 'check', label: 'check', sort: false, check: true },
+  { key: 'check', label: 'check', sort: false, check: true },
   { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' },
   { key: 'Username', label: 'User Name', sort: true },
   { key: 'DisplayName', label: 'Name', sort: true },
@@ -15,7 +15,7 @@ const columns = [
 ];
 
 onMounted(() => {
-  repo.GetAll().then((res: any) => data.value = res.data as IUser[]);
+  repo.GetAll().then(res => data.value = res?.data as IUser[]);
 });
 
 </script>
@@ -25,7 +25,7 @@ onMounted(() => {
     <h1>This is an about page</h1>
 
     <DataTable :data="data" :columns="columns" :check-column="false">
-      <template #action="{ row }">
+      <template #action>
         <div class="flex justify-center space-x-2">
           <button class="grid-action-btn hover-btn-warning">
             <span class="icon-[ep--view]"></span>
