@@ -113,8 +113,8 @@ function toggleFavorites() {
 }
 
 function handleCardClick(cardTitle: string) {
-    localStorage.setItem("application", "c3k-user-management")
-    router.replace('/c3k-user-management');
+    localStorage.setItem("application", "c3k-auth-management")
+    router.replace('/c3k-auth-management');
 
     // showModulePage.value = true;
     selectedCardTitle.value = cardTitle;

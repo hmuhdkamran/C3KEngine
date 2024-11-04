@@ -12,9 +12,9 @@ import { registerMicroApps } from 'qiankun'
 // const getGlobalState = () => initState;
 
 const microApps = [{
-    name: 'c3k-user-management',
-    entry: '//localhost:5002',
-    activeRule: 'c3k-user-management'
+    name: 'c3k-auth-management',
+    entry: '//localhost:8291',
+    activeRule: 'c3k-auth-management'
 }
 ];
 

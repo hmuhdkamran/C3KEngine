@@ -7,6 +7,14 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 
+import dotenv from 'dotenv'
+import qiankun from 'vite-plugin-qiankun';
+
+const envFile = '.env'
+const useDevMode = true 
+
+dotenv.config({ path: envFile })
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -17,7 +25,8 @@ export default defineConfig({
     }),
     Layouts({
       layoutsDirs: './src/layouts/',
-    })
+    }),
+    qiankun('c3k-auth-management', { useDevMode })
   ],
   resolve: {
     alias: {
