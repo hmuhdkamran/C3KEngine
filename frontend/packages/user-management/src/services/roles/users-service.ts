@@ -9,9 +9,8 @@
  */
 
 // Importing necessary dependencies and modules.
-import { IUsers } from '@/models';
-import Axios from 'axios';
-import { GlobalConfig, StoreService, TokenHelper } from 'c3k-library';
+import { IUser } from '@/models';
+import { GlobalConfig, StoreService } from 'c3k-library';
 
 // Setting the base URL for User API calls.
 const BASE_URL = `${GlobalConfig.uri.services}auth/role/users`;
@@ -22,8 +21,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public GetAll() {
-    console.log(JSON.stringify(TokenHelper.getBearerToken().Authorization));
-    return this.exec(Axios.get(`${BASE_URL}`, { headers: { Authorization: TokenHelper.getBearerToken().Authorization } }))
+    return this.get(`${BASE_URL}`, false)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -34,7 +32,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public GetFindBy(filter: string) {
-    return this.exec(Axios.get(`${BASE_URL}/${filter}`))
+    return this.get(`${BASE_URL}/${filter}`, true)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -44,8 +42,8 @@ export class UsersService extends StoreService {
    * @param entity User entity object.
    * @returns Promise with API response data.
    */
-  public AddOne(entity: IUsers) {
-    return this.exec(Axios.post(`${BASE_URL}`, entity))
+  public AddOne(entity: IUser) {
+    return this.post(`${BASE_URL}`, entity, true)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -55,8 +53,8 @@ export class UsersService extends StoreService {
    * @param entity User entity object.
    * @returns Promise with API response data.
    */
-  public Update(entity: IUsers) {
-    return this.exec(Axios.put(`${BASE_URL}`, entity))
+  public Update(entity: IUser) {
+    return this.put(`${BASE_URL}`, entity, true)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }
@@ -67,7 +65,7 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public Delete(id: string) {
-    return this.exec(Axios.delete(`${BASE_URL}/${id}`))
+    return this.delete(`${BASE_URL}/${id}`, true)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }

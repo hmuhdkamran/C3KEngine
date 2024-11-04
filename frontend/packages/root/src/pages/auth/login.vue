@@ -2,7 +2,7 @@
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/service/authentication-service";
-import { useNotification, ICredential } from 'c3k-library';
+import { useNotification } from 'c3k-library';
 
 import logo from "@/assets/images/vue.svg"
 
@@ -16,20 +16,20 @@ const email: Ref<string> = ref('admin@sefam.com')
 const password: Ref<string> = ref('P@ssw0rd')
 
 const login = () => {
-    const credentials: ICredential = {
+    const credentials = {
         username: email.value.toLowerCase(),
         password: password.value,
     }
 
     service.login(credentials)
-    .then(response => {
+    .then((response: any) => {
         if (response) {
             router.replace(route.query.to ? String(route.query.to) : '/app/main');
         } else {
             addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
         }
     })
-    .catch(error => {
+    .catch((error: any) => {
         addNotification(`An error occurred during login. ${JSON.stringify(error)}.`, 'error', 'top-right', 'Error', 3000);
     });
 

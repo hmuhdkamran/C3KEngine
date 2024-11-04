@@ -1,9 +1,14 @@
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use c3k_auth_service::controllers::roles::{
-    auth_controller::auth_routes, role_controller::role_routes,
-    role_route_map_controller::role_route_map_routes, route_controller::route_routes,
-    user_controller::user_routes, user_role_map_controller::user_role_map_routes,
+    auth_controller::auth_routes, 
+    product_controller::product_routes,
+    role_controller::role_routes,
+    role_route_map_controller::role_route_map_routes, 
+    route_controller::route_routes,
+    user_controller::user_routes,
+    user_product_map_controller::user_product_map_routes,
+    user_role_map_controller::user_role_map_routes,
 };
 use c3k_common::{
     handler::service_client::ServiceCommunicator, models::config::app_config::get_json,
@@ -68,11 +73,13 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(cors)
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(communicator))
-            .configure(user_routes)            
+            .configure(user_routes)
+            .configure(product_routes)
             .configure(role_routes)
             .configure(route_routes)
             .configure(user_role_map_routes)
             .configure(role_route_map_routes)
+            .configure(user_product_map_routes)
             .configure(auth_routes)
     });
 

@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use sqlx::types::Uuid;
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
@@ -68,4 +69,58 @@ pub struct PasswordCode {
 pub struct AuthModel {
     pub username: String,
     pub password: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserProducts {
+    pub product_id: Uuid,
+    pub abbreviation: String,
+    pub full_name: String,
+    pub description: String,
+    pub icon: String,
+}
+
+impl UserProducts {
+    pub fn new(
+        product_id: Uuid,
+        abbreviation: String,
+        full_name: String,
+        description: String,
+        icon: String,
+    ) -> Self {
+        Self {
+            product_id,
+            abbreviation,
+            full_name,
+            description,
+            icon,
+        }
+    }
+}
+
+impl PartialEq for UserProducts {
+    fn eq(&self, other: &Self) -> bool {
+        self.product_id == other.product_id
+    }
+}
+
+impl Model for UserProducts {
+    fn from_row(row: &PgRow) -> UserProducts
+    where
+        Self: Sized,
+    {
+        let product_id = row.get("ProductId");
+        let abbreviation = row.get("Abbreviation");
+        let full_name = row.get("FullName");
+        let description = row.get("Description");
+        let icon = row.get("Icon");
+
+        Self {
+            product_id,
+            abbreviation,
+            full_name,
+            description,
+            icon,
+        }
+    }
 }

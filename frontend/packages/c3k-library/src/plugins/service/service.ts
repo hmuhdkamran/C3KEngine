@@ -2,17 +2,9 @@
  * StoreService is an abstract class that provides common functionality for handling API responses and generating page parameters.
  * It implements the IStoreService interface.
  */
-import type { IPayload } from '../models'
-import { PayloadMessageTypes } from '../models'
+import Axios from 'axios';
 
-import type { IStoreService } from './iservice'
-import { PayloadMapper } from './payload-mapper'
-
-interface IProcessPayloadOptions {
-  timeout?: number
-  uri?: string
-  messageTypeIds?: string[]
-}
+import { useNotification, PayloadMapper, IStoreService, TokenHelper, PayloadMessageTypes, IPayload } from '@/index';
 
 export abstract class StoreService implements IStoreService {
   constructor() { }
@@ -40,25 +32,15 @@ export abstract class StoreService implements IStoreService {
      * @param options Additional processing options.
      * @returns A Promise resolving to the extracted data.
      */
-  processPayload<T>(payload: IPayload<T>, options?: IProcessPayloadOptions): Promise<T> {
-    const msg = payload
+  processPayload<T>(payload: IPayload<T>): Promise<T> {
+    const { addNotification } = useNotification();
 
-    options = options || {}
-
-    const messageTypeIds = options.messageTypeIds || [
-      PayloadMessageTypes.error,
-      PayloadMessageTypes.failure,
-    ]
-
-    const messageTypeId = messageTypeIds.find(o => o === msg.result)
-
-    if (messageTypeId) {
-      alert(`Failed: ${msg}`)
+    const messageTypeIds = [PayloadMessageTypes.error, PayloadMessageTypes.failure]
+    if (messageTypeIds.includes(payload.result)) {
+      addNotification(JSON.stringify(payload), 'error', 'top-right', 'Error', 3000);
       return Promise.reject({} as T)
     }
-    else {
-      return Promise.resolve(payload.data as T);
-    }
+    return Promise.resolve(payload.data as T)
   }
 
   /**
@@ -71,5 +53,26 @@ export abstract class StoreService implements IStoreService {
     const onRejection = (reason: any) => this.handleRejection<T>(reason)
 
     return cb.then(onFulfilled, onRejection)
+  }
+
+  request<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: string, data?: any, auth: boolean = true): Promise<IPayload<T>> {
+    const headers = auth ? { Authorization: TokenHelper.getBearerToken().Authorization } : undefined
+    return this.exec(Axios({ method, url, data, headers }))
+  }
+
+  get<T>(url: string, auth: boolean = true): Promise<IPayload<T>> {
+    return this.request<T>('GET', url, undefined, auth)
+  }
+
+  post<T>(url: string, data: any, auth: boolean = true): Promise<IPayload<T>> {
+    return this.request<T>('POST', url, data, auth)
+  }
+
+  put<T>(url: string, data: any, auth: boolean = true): Promise<IPayload<T>> {
+    return this.request<T>('PUT', url, data, auth)
+  }
+
+  delete<T>(url: string, auth: boolean = true): Promise<IPayload<T>> {
+    return this.request<T>('DELETE', url, undefined, auth)
   }
 }

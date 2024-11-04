@@ -3,8 +3,8 @@ import {
   GlobalConfig,
   StoreService,
   TokenHelper,
-  type IPayload,
-  type IRouteMeta
+  IPayload,
+  IRouteMeta
 } from 'c3k-library';
 
 import { ExtractSubjectType, MongoQuery, SubjectRawRule } from '@casl/ability';
@@ -43,9 +43,9 @@ export class AuthenticationService extends StoreService {
       }
     };
     
-    return this.exec<IPayload<string>>(Axios.post(`${GlobalConfig.uri.auth}`, credentials))
+    return this.post(`${GlobalConfig.uri.auth}`, credentials)
       .then((value: any) => this.processPayload(value))
-      .then((value) => processResponse(value as IPayload<string>)); // Type assertion
+      .then((value: any) => processResponse(value as IPayload<string>)); // Type assertion
   }
 
   logout() {
