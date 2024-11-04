@@ -2,8 +2,8 @@ import { createApp, App } from 'vue'
 import { createPinia } from 'pinia'
 import { routeHash } from "@/router";
 
-import '@/assets/styles/main.css';
 import 'c3k-library/style.css';
+import '@/assets/styles/main.css';
 
 import './public-path'
 import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper';

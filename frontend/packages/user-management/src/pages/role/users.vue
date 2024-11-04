@@ -28,12 +28,15 @@ const itemList = ref<IUser[]>([]);
 const repository: UsersService = new UsersService();
 
 const load = () => {
+    console.log("Reached load");
     repository.GetAll().then((response: any) => {
+        console.log("Got Response");
         if (response) itemList.value = response.data
     })
 }
 
 onMounted(() => {
+    console.log("Reached Mounted");
     load();
 });
 
@@ -47,8 +50,8 @@ const openModal = (action: string, row: IUser) => {
 </script>
 
 <template>
-    <div>
-        <button @click="load()">Load</button>
+    <div v-if="itemList">
+        <button class="btn-gradient px-4 py-2" @click="load()">Load</button>
         <DataTable :data="itemList" :columns="columns" :check-column="false">
             <template #status="{ row }">
                 <span :class="row.Status ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"

@@ -9,7 +9,7 @@
  */
 
 // Importing necessary dependencies and modules.
-import { IUser } from '@/models';
+import type { IUser } from '@/models';
 import { GlobalConfig, StoreService } from 'c3k-library';
 
 // Setting the base URL for User API calls.
