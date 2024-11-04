@@ -8,7 +8,7 @@
     }
 
     tr {
-        @apply max-w-full relative border-b border-gray-100 table-row dark:border-slate-800;
+        @apply max-w-full relative border-b border-gray-100 table-row dark:border-slate-200;
     }
 
     tr:hover {
@@ -24,20 +24,20 @@
     }
 
     td {
-        @apply flex justify-between text-right text-sm border-b border-gray-100 sm:table-cell sm:text-left align-middle dark:border-slate-800;
+        @apply flex justify-between text-right text-sm border-b border-gray-100 sm:table-cell sm:text-left align-middle dark:border-slate-200;
     }
 
-    td:last-child {
+    /* td:last-child {
         @apply border-b-0;
-    }
+    } */
 
     tbody tr,
     tbody tr:nth-child(odd) {
-        @apply hover:bg-gray-100 dark:hover:bg-slate-700/70;
+        @apply hover:bg-gray-100 dark:hover:bg-slate-100/50;
     }
 
     tbody tr:nth-child(odd) {
-        @apply bg-gray-100/50 dark:bg-slate-800/50;
+        @apply bg-gray-100/50 dark:bg-slate-200/50;
     }
 
     td:before {

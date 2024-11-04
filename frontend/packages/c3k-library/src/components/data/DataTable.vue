@@ -80,7 +80,7 @@ const toggleSelectAll = () => {
 <template>
     <table>
         <thead>
-            <tr class="bg-gray-200 border-b border-gray-300">
+            <tr class="bg-gray-100 border-b border-gray-300">
                 <template v-for="column in props.columns" :key="column.key">
                     <th v-if="column.check"
                         class="cursor-pointer">
@@ -100,7 +100,7 @@ const toggleSelectAll = () => {
             <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]">
                 <template v-for="column in props.columns">
                     <template v-if="column.check">
-                        <td class="p-1 flex items-center justify-center h-full">
+                        <td class="cursor-pointer text-center">
                             <input class="cursor-pointer" type="checkbox" v-model="selectedRecords" :value="record" />
                         </td>
                     </template>
