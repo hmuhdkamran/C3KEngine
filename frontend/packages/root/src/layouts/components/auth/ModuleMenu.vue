@@ -52,7 +52,7 @@ function toggleModuleDropdown() {
                 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 transform origin-top scale-95 transition-transform duration-300">
                 <div class="col-span-full mb-2 relative">
                     <input v-model="searchQuery" type="text" placeholder="Search Modules..."
-                        class="input-complete text-xm sm:text-sm border rounded-lg" />
+                        class="input-bottom pl-2 w-full" />
                 </div>
                 <div v-if="filteredServices.length" v-for="(service, index) in filteredServices" :key="index"
                     class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm border-l-4 p-1 sm:p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative">

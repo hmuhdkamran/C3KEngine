@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { registerMicroApps, start, setDefaultMountApp } from 'qiankun';
-import microApps from '@/spa';
+import { apps } from '@/spa';
 import { onMounted } from 'vue';
 
 onMounted(() => {
     const application = localStorage.getItem("application");
     setDefaultMountApp(`/${application}`);
 
-    registerMicroApps(microApps, {
+    registerMicroApps(apps, {
         beforeLoad: async (app) => console.log('before load', 'color: red', app.name),
         beforeMount: async (app) => console.log('before mount', app.name),
         afterMount: async (app) => console.log('after mount', app.name),

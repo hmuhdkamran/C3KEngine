@@ -11,7 +11,7 @@
     "start": "npm-run-all --parallel start:*",
     "build": "npm-run-all build:* && bash ./scripts/bundle.sh",
     "start:root": "cd packages/root && npm run start",
-    "start:user-management": "cd packages/user-management && npm run start"
+    "start:auth-management": "cd packages/auth-management && npm run start"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

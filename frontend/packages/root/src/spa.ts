@@ -18,7 +18,7 @@ const microApps = [{
 }
 ];
 
-const apps = microApps.map((item) => {
+export const apps = microApps.map((item) => {
     return {
         ...item,
         container: "#child-viewport",
@@ -29,4 +29,8 @@ const apps = microApps.map((item) => {
     };
 });
 
-export default apps;
+export const microAppRoutes = microApps.map(app => ({
+    path: `/${app.activeRule}/:pathMatch(.*)*`,
+    name: app.name,
+    component: () => import('@/pages/app/micro.vue'),
+}));

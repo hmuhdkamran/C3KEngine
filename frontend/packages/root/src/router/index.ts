@@ -2,6 +2,7 @@ import { setupLayouts } from 'virtual:generated-layouts';
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from '~pages';
 import { DefaultUser, RouteGuards } from 'c3k-library';
+import { microAppRoutes } from '@/spa';
 
 const options = {
   resolveUser: () => DefaultUser,
@@ -15,11 +16,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...setupLayouts(routes),
-    {
-      path: '/c3k-auth-management/:pathMatch(.*)*',
-      name: 'c3k-auth-management',
-      component: () => import('@/pages/app/micro.vue'),
-    },
+    ...microAppRoutes
   ],
 });
 
