@@ -11,7 +11,7 @@
 // Importing necessary dependencies and modules.
 import { IUsers } from '@/models';
 import Axios from 'axios';
-import { GlobalConfig, StoreService } from 'c3k-library';
+import { GlobalConfig, StoreService, TokenHelper } from 'c3k-library';
 
 // Setting the base URL for User API calls.
 const BASE_URL = `${GlobalConfig.uri.services}auth/role/users`;
@@ -22,7 +22,8 @@ export class UsersService extends StoreService {
    * @returns Promise with API response data.
    */
   public GetAll() {
-    return this.exec(Axios.get(`${BASE_URL}`))
+    console.log(JSON.stringify(TokenHelper.getBearerToken().Authorization));
+    return this.exec(Axios.get(`${BASE_URL}`, { headers: { Authorization: TokenHelper.getBearerToken().Authorization } }))
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
   }

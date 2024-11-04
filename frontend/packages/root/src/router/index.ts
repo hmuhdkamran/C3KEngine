@@ -17,7 +17,7 @@ const router = createRouter({
     ...setupLayouts(routes),
     {
       path: '/c3k-user-management/:pathMatch(.*)*',
-      name: 'micro',
+      name: 'c3k-user-management',
       component: () => import('@/pages/app/micro.vue'),
     },
   ],
