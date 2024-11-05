@@ -21,6 +21,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "c3k-library": "file:./packages/c3k-library"
+    "@iconify/vue": "^4.1.2",
+    "c3k-library": "file:./packages/c3k-library",
+    "chart.js": "^4.4.6"
   }
 }
