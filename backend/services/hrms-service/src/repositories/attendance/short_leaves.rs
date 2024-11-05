@@ -17,11 +17,15 @@ pub struct ShortLeavesRepository {}
 
 impl IRepository<ShortLeaves> for ShortLeavesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<ShortLeaves>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", ShortLeaves::COLUMNS, ShortLeaves::TABLE).as_str())
-            .map(|row: PgRow| ShortLeaves::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&ShortLeaves::build_select_string(
+            ShortLeaves::TABLE,
+            &ShortLeaves::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| ShortLeaves::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<ShortLeaves> for ShortLeavesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<ShortLeaves>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            ShortLeaves::COLUMNS,
+        let result = sqlx::query(&ShortLeaves::build_select_string(
             ShortLeaves::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| ShortLeaves::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &ShortLeaves::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| ShortLeaves::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &ShortLeaves) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_short_leave_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.start_date_time.clone());
-let _ = args.add(entity.end_date_time.clone());
-let _ = args.add(entity.reason.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                ShortLeaves::TABLE,
-                ShortLeaves::COLUMNS
-            )
-            .as_str(),
-            args,
+            &ShortLeaves::build_insert_string(ShortLeaves::TABLE, &ShortLeaves::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.reason.clone());
     }
 
     async fn update(connection: PgPool, entity: &ShortLeaves) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_short_leave_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.start_date_time.clone());
-let _ = args.add(entity.end_date_time.clone());
-let _ = args.add(entity.reason.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", ShortLeaves::TABLE, ShortLeaves::COLUMNS_UPDATE).as_str(),
-            args,
+            &ShortLeaves::build_update_string(ShortLeaves::TABLE, &ShortLeaves::COLUMNS_ARRAY, ShortLeaves::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.reason.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", ShortLeaves::TABLE, ShortLeaves::PK).as_str(),
+            &ShortLeaves::build_delete_string(ShortLeaves::TABLE, ShortLeaves::PK),
             args,
         )
         .execute(&connection)

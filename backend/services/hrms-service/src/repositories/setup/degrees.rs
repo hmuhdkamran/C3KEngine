@@ -17,11 +17,15 @@ pub struct DegreesRepository {}
 
 impl IRepository<Degrees> for DegreesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Degrees>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Degrees::COLUMNS, Degrees::TABLE).as_str())
-            .map(|row: PgRow| Degrees::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Degrees::build_select_string(
+            Degrees::TABLE,
+            &Degrees::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Degrees::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<Degrees> for DegreesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Degrees>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Degrees::COLUMNS,
+        let result = sqlx::query(&Degrees::build_select_string(
             Degrees::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Degrees::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Degrees::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Degrees::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Degrees) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.degree_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.label.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Degrees::TABLE,
-                Degrees::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Degrees::build_insert_string(Degrees::TABLE, &Degrees::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.label.clone());
     }
 
     async fn update(connection: PgPool, entity: &Degrees) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.degree_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.label.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Degrees::TABLE, Degrees::COLUMNS_UPDATE).as_str(),
-            args,
+            &Degrees::build_update_string(Degrees::TABLE, &Degrees::COLUMNS_ARRAY, Degrees::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.label.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Degrees::TABLE, Degrees::PK).as_str(),
+            &Degrees::build_delete_string(Degrees::TABLE, Degrees::PK),
             args,
         )
         .execute(&connection)

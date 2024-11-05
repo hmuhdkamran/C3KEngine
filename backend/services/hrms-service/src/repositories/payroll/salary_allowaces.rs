@@ -17,11 +17,15 @@ pub struct SalaryAllowacesRepository {}
 
 impl IRepository<SalaryAllowaces> for SalaryAllowacesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<SalaryAllowaces>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", SalaryAllowaces::COLUMNS, SalaryAllowaces::TABLE).as_str())
-            .map(|row: PgRow| SalaryAllowaces::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&SalaryAllowaces::build_select_string(
+            SalaryAllowaces::TABLE,
+            &SalaryAllowaces::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| SalaryAllowaces::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<SalaryAllowaces> for SalaryAllowacesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<SalaryAllowaces>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            SalaryAllowaces::COLUMNS,
+        let result = sqlx::query(&SalaryAllowaces::build_select_string(
             SalaryAllowaces::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| SalaryAllowaces::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &SalaryAllowaces::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| SalaryAllowaces::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &SalaryAllowaces) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.salary_allowace_id.clone());
-let _ = args.add(entity.allowance_id.clone());
-let _ = args.add(entity.allowance_amount.clone());
-let _ = args.add(entity.allowance_paid_amount.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.salary_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                SalaryAllowaces::TABLE,
-                SalaryAllowaces::COLUMNS
-            )
-            .as_str(),
-            args,
+            &SalaryAllowaces::build_insert_string(SalaryAllowaces::TABLE, &SalaryAllowaces::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.salary_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &SalaryAllowaces) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.salary_allowace_id.clone());
-let _ = args.add(entity.allowance_id.clone());
-let _ = args.add(entity.allowance_amount.clone());
-let _ = args.add(entity.allowance_paid_amount.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.salary_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", SalaryAllowaces::TABLE, SalaryAllowaces::COLUMNS_UPDATE).as_str(),
-            args,
+            &SalaryAllowaces::build_update_string(SalaryAllowaces::TABLE, &SalaryAllowaces::COLUMNS_ARRAY, SalaryAllowaces::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.salary_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", SalaryAllowaces::TABLE, SalaryAllowaces::PK).as_str(),
+            &SalaryAllowaces::build_delete_string(SalaryAllowaces::TABLE, SalaryAllowaces::PK),
             args,
         )
         .execute(&connection)

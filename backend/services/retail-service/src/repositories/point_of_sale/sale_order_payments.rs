@@ -17,11 +17,15 @@ pub struct SaleOrderPaymentsRepository {}
 
 impl IRepository<SaleOrderPayments> for SaleOrderPaymentsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<SaleOrderPayments>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", SaleOrderPayments::COLUMNS, SaleOrderPayments::TABLE).as_str())
-            .map(|row: PgRow| SaleOrderPayments::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&SaleOrderPayments::build_select_string(
+            SaleOrderPayments::TABLE,
+            &SaleOrderPayments::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| SaleOrderPayments::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,40 +34,23 @@ impl IRepository<SaleOrderPayments> for SaleOrderPaymentsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<SaleOrderPayments>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            SaleOrderPayments::COLUMNS,
+        let result = sqlx::query(&SaleOrderPayments::build_select_string(
             SaleOrderPayments::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| SaleOrderPayments::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &SaleOrderPayments::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| SaleOrderPayments::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &SaleOrderPayments) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_payment_id.clone());
-let _ = args.add(entity.payment_type_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.pay_amount.clone());
-let _ = args.add(entity.balance.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.payment_term_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                SaleOrderPayments::TABLE,
-                SaleOrderPayments::COLUMNS
-            )
-            .as_str(),
-            args,
+            &SaleOrderPayments::build_insert_string(SaleOrderPayments::TABLE, &SaleOrderPayments::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -79,19 +66,9 @@ let _ = args.add(entity.payment_term_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &SaleOrderPayments) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_payment_id.clone());
-let _ = args.add(entity.payment_type_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.pay_amount.clone());
-let _ = args.add(entity.balance.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.payment_term_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", SaleOrderPayments::TABLE, SaleOrderPayments::COLUMNS_UPDATE).as_str(),
-            args,
+            &SaleOrderPayments::build_update_string(SaleOrderPayments::TABLE, &SaleOrderPayments::COLUMNS_ARRAY, SaleOrderPayments::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -111,7 +88,7 @@ let _ = args.add(entity.payment_term_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", SaleOrderPayments::TABLE, SaleOrderPayments::PK).as_str(),
+            &SaleOrderPayments::build_delete_string(SaleOrderPayments::TABLE, SaleOrderPayments::PK),
             args,
         )
         .execute(&connection)

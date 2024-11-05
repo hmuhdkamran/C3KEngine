@@ -17,11 +17,15 @@ pub struct VendorAddressesRepository {}
 
 impl IRepository<VendorAddresses> for VendorAddressesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<VendorAddresses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", VendorAddresses::COLUMNS, VendorAddresses::TABLE).as_str())
-            .map(|row: PgRow| VendorAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&VendorAddresses::build_select_string(
+            VendorAddresses::TABLE,
+            &VendorAddresses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| VendorAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<VendorAddresses> for VendorAddressesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<VendorAddresses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            VendorAddresses::COLUMNS,
+        let result = sqlx::query(&VendorAddresses::build_select_string(
             VendorAddresses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| VendorAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &VendorAddresses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| VendorAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &VendorAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.vendor_address_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.vendor_id.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                VendorAddresses::TABLE,
-                VendorAddresses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &VendorAddresses::build_insert_string(VendorAddresses::TABLE, &VendorAddresses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &VendorAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.vendor_address_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.vendor_id.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", VendorAddresses::TABLE, VendorAddresses::COLUMNS_UPDATE).as_str(),
-            args,
+            &VendorAddresses::build_update_string(VendorAddresses::TABLE, &VendorAddresses::COLUMNS_ARRAY, VendorAddresses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", VendorAddresses::TABLE, VendorAddresses::PK).as_str(),
+            &VendorAddresses::build_delete_string(VendorAddresses::TABLE, VendorAddresses::PK),
             args,
         )
         .execute(&connection)

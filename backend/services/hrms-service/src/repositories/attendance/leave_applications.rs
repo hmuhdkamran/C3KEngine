@@ -17,11 +17,15 @@ pub struct LeaveApplicationsRepository {}
 
 impl IRepository<LeaveApplications> for LeaveApplicationsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<LeaveApplications>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", LeaveApplications::COLUMNS, LeaveApplications::TABLE).as_str())
-            .map(|row: PgRow| LeaveApplications::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&LeaveApplications::build_select_string(
+            LeaveApplications::TABLE,
+            &LeaveApplications::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| LeaveApplications::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,41 +34,23 @@ impl IRepository<LeaveApplications> for LeaveApplicationsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<LeaveApplications>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            LeaveApplications::COLUMNS,
+        let result = sqlx::query(&LeaveApplications::build_select_string(
             LeaveApplications::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| LeaveApplications::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &LeaveApplications::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| LeaveApplications::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &LeaveApplications) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.leave_application_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.full_half_day.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.application_date.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                LeaveApplications::TABLE,
-                LeaveApplications::COLUMNS
-            )
-            .as_str(),
-            args,
+            &LeaveApplications::build_insert_string(LeaveApplications::TABLE, &LeaveApplications::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -80,20 +66,9 @@ let _ = args.add(entity.application_date.clone());
     }
 
     async fn update(connection: PgPool, entity: &LeaveApplications) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.leave_application_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.full_half_day.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.application_date.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", LeaveApplications::TABLE, LeaveApplications::COLUMNS_UPDATE).as_str(),
-            args,
+            &LeaveApplications::build_update_string(LeaveApplications::TABLE, &LeaveApplications::COLUMNS_ARRAY, LeaveApplications::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -113,7 +88,7 @@ let _ = args.add(entity.application_date.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", LeaveApplications::TABLE, LeaveApplications::PK).as_str(),
+            &LeaveApplications::build_delete_string(LeaveApplications::TABLE, LeaveApplications::PK),
             args,
         )
         .execute(&connection)

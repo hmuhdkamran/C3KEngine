@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct CareerLevels {
     pub career_level_id: Uuid,
 pub full_name: String,
@@ -19,12 +20,21 @@ pub abbreviation: String
 
 impl CareerLevels {
     pub const TABLE: &'static str = r#""Setup"."CareerLevels""#;
-    pub const PK: &'static str = r#"CareerLevelId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""CareerLevelId","FullName","StatusId","Abbreviation""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""CareerLevelId"=$1,"FullName"=$2,"StatusId"=$3,"Abbreviation"=$4 WHERE "CareerLevelId"=$1"#;
+    pub const PK: &'static str = "CareerLevelId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["CareerLevelId","FullName","StatusId","Abbreviation"];
 
     pub fn get_id(&self) -> Uuid {
         self.career_level_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.career_level_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.abbreviation.clone());
+
+        args
     }
 
     pub fn new(career_level_id: Uuid,full_name: String,status_id: Uuid,abbreviation: String) -> Self {

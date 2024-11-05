@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn leave_application_approvals_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/leave_application_approvals")
+        web::scope("/api/hrms/leave_application_approvals")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

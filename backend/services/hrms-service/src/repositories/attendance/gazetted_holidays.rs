@@ -17,11 +17,15 @@ pub struct GazettedHolidaysRepository {}
 
 impl IRepository<GazettedHolidays> for GazettedHolidaysRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<GazettedHolidays>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", GazettedHolidays::COLUMNS, GazettedHolidays::TABLE).as_str())
-            .map(|row: PgRow| GazettedHolidays::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&GazettedHolidays::build_select_string(
+            GazettedHolidays::TABLE,
+            &GazettedHolidays::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| GazettedHolidays::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<GazettedHolidays> for GazettedHolidaysRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<GazettedHolidays>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            GazettedHolidays::COLUMNS,
+        let result = sqlx::query(&GazettedHolidays::build_select_string(
             GazettedHolidays::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| GazettedHolidays::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &GazettedHolidays::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| GazettedHolidays::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &GazettedHolidays) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.gazetted_holiday_id.clone());
-let _ = args.add(entity.title.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                GazettedHolidays::TABLE,
-                GazettedHolidays::COLUMNS
-            )
-            .as_str(),
-            args,
+            &GazettedHolidays::build_insert_string(GazettedHolidays::TABLE, &GazettedHolidays::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &GazettedHolidays) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.gazetted_holiday_id.clone());
-let _ = args.add(entity.title.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", GazettedHolidays::TABLE, GazettedHolidays::COLUMNS_UPDATE).as_str(),
-            args,
+            &GazettedHolidays::build_update_string(GazettedHolidays::TABLE, &GazettedHolidays::COLUMNS_ARRAY, GazettedHolidays::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", GazettedHolidays::TABLE, GazettedHolidays::PK).as_str(),
+            &GazettedHolidays::build_delete_string(GazettedHolidays::TABLE, GazettedHolidays::PK),
             args,
         )
         .execute(&connection)

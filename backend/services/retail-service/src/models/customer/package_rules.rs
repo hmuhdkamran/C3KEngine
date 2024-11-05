@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct PackageRules {
     pub package_rule_id: Uuid,
 pub abbreviation: String,
@@ -21,12 +22,23 @@ pub status_id: Uuid
 
 impl PackageRules {
     pub const TABLE: &'static str = r#""Customer"."PackageRules""#;
-    pub const PK: &'static str = r#"PackageRuleId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""PackageRuleId","Abbreviation","FullName","PercentageFlat","OnePointValue","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""PackageRuleId"=$1,"Abbreviation"=$2,"FullName"=$3,"PercentageFlat"=$4,"OnePointValue"=$5,"StatusId"=$6 WHERE "PackageRuleId"=$1"#;
+    pub const PK: &'static str = "PackageRuleId";
+    pub const COLUMNS_ARRAY: [&'static str; 6] = ["PackageRuleId","Abbreviation","FullName","PercentageFlat","OnePointValue","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.package_rule_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.package_rule_id.clone());
+let _ = args.add(self.abbreviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.percentage_flat.clone());
+let _ = args.add(self.one_point_value.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(package_rule_id: Uuid,abbreviation: String,full_name: String,percentage_flat: bool,one_point_value: f64,status_id: Uuid) -> Self {

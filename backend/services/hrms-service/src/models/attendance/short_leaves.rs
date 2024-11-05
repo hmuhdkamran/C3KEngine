@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct ShortLeaves {
     pub employee_short_leave_id: Uuid,
 pub employee_id: Uuid,
@@ -21,12 +22,23 @@ pub reason: String
 
 impl ShortLeaves {
     pub const TABLE: &'static str = r#""Attendance"."ShortLeaves""#;
-    pub const PK: &'static str = r#"EmployeeShortLeaveId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""EmployeeShortLeaveId","EmployeeId","StatusId","StartDateTime","EndDateTime","Reason""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""EmployeeShortLeaveId"=$1,"EmployeeId"=$2,"StatusId"=$3,"StartDateTime"=$4,"EndDateTime"=$5,"Reason"=$6 WHERE "EmployeeShortLeaveId"=$1"#;
+    pub const PK: &'static str = "EmployeeShortLeaveId";
+    pub const COLUMNS_ARRAY: [&'static str; 6] = ["EmployeeShortLeaveId","EmployeeId","StatusId","StartDateTime","EndDateTime","Reason"];
 
     pub fn get_id(&self) -> Uuid {
         self.employee_short_leave_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.employee_short_leave_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.start_date_time.clone());
+let _ = args.add(self.end_date_time.clone());
+let _ = args.add(self.reason.clone());
+
+        args
     }
 
     pub fn new(employee_short_leave_id: Uuid,employee_id: Uuid,status_id: Uuid,start_date_time: DateTime<Utc>,end_date_time: DateTime<Utc>,reason: String) -> Self {

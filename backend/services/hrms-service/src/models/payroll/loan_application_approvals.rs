@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct LoanApplicationApprovals {
     pub loan_application_approval_id: Uuid,
 pub loan_application_id: Uuid,
@@ -22,12 +23,24 @@ pub status_id: Uuid
 
 impl LoanApplicationApprovals {
     pub const TABLE: &'static str = r#""Payroll"."LoanApplicationApprovals""#;
-    pub const PK: &'static str = r#"LoanApplicationApprovalId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""LoanApplicationApprovalId","LoanApplicationId","ApprovedBy","ApprovedDate","ApporvedAmount","Remkars","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""LoanApplicationApprovalId"=$1,"LoanApplicationId"=$2,"ApprovedBy"=$3,"ApprovedDate"=$4,"ApporvedAmount"=$5,"Remkars"=$6,"StatusId"=$7 WHERE "LoanApplicationApprovalId"=$1"#;
+    pub const PK: &'static str = "LoanApplicationApprovalId";
+    pub const COLUMNS_ARRAY: [&'static str; 7] = ["LoanApplicationApprovalId","LoanApplicationId","ApprovedBy","ApprovedDate","ApporvedAmount","Remkars","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.loan_application_approval_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.loan_application_approval_id.clone());
+let _ = args.add(self.loan_application_id.clone());
+let _ = args.add(self.approved_by.clone());
+let _ = args.add(self.approved_date.clone());
+let _ = args.add(self.apporved_amount.clone());
+let _ = args.add(self.remkars.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(loan_application_approval_id: Uuid,loan_application_id: Uuid,approved_by: Uuid,approved_date: DateTime<Utc>,apporved_amount: f64,remkars: String,status_id: Uuid) -> Self {

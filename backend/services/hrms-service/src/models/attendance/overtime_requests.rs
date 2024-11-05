@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct OvertimeRequests {
     pub overtime_request_id: Uuid,
 pub employee_id: Uuid,
@@ -22,12 +23,24 @@ pub status_id: Uuid
 
 impl OvertimeRequests {
     pub const TABLE: &'static str = r#""Attendance"."OvertimeRequests""#;
-    pub const PK: &'static str = r#"OvertimeRequestId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""OvertimeRequestId","EmployeeId","OvertimeDate","OvertimeHours","Reason","RequestDate","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""OvertimeRequestId"=$1,"EmployeeId"=$2,"OvertimeDate"=$3,"OvertimeHours"=$4,"Reason"=$5,"RequestDate"=$6,"StatusId"=$7 WHERE "OvertimeRequestId"=$1"#;
+    pub const PK: &'static str = "OvertimeRequestId";
+    pub const COLUMNS_ARRAY: [&'static str; 7] = ["OvertimeRequestId","EmployeeId","OvertimeDate","OvertimeHours","Reason","RequestDate","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.overtime_request_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.overtime_request_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.overtime_date.clone());
+let _ = args.add(self.overtime_hours.clone());
+let _ = args.add(self.reason.clone());
+let _ = args.add(self.request_date.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(overtime_request_id: Uuid,employee_id: Uuid,overtime_date: DateTime<Utc>,overtime_hours: f64,reason: String,request_date: DateTime<Utc>,status_id: Uuid) -> Self {

@@ -17,11 +17,15 @@ pub struct ProductPricesRepository {}
 
 impl IRepository<ProductPrices> for ProductPricesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<ProductPrices>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", ProductPrices::COLUMNS, ProductPrices::TABLE).as_str())
-            .map(|row: PgRow| ProductPrices::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&ProductPrices::build_select_string(
+            ProductPrices::TABLE,
+            &ProductPrices::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| ProductPrices::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<ProductPrices> for ProductPricesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<ProductPrices>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            ProductPrices::COLUMNS,
+        let result = sqlx::query(&ProductPrices::build_select_string(
             ProductPrices::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| ProductPrices::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &ProductPrices::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| ProductPrices::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &ProductPrices) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.product_price_id.clone());
-let _ = args.add(entity.standard_cost.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.whole_sale_price.clone());
-let _ = args.add(entity.retail_price.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.product_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                ProductPrices::TABLE,
-                ProductPrices::COLUMNS
-            )
-            .as_str(),
-            args,
+            &ProductPrices::build_insert_string(ProductPrices::TABLE, &ProductPrices::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.product_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &ProductPrices) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.product_price_id.clone());
-let _ = args.add(entity.standard_cost.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.whole_sale_price.clone());
-let _ = args.add(entity.retail_price.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.product_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", ProductPrices::TABLE, ProductPrices::COLUMNS_UPDATE).as_str(),
-            args,
+            &ProductPrices::build_update_string(ProductPrices::TABLE, &ProductPrices::COLUMNS_ARRAY, ProductPrices::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.product_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", ProductPrices::TABLE, ProductPrices::PK).as_str(),
+            &ProductPrices::build_delete_string(ProductPrices::TABLE, ProductPrices::PK),
             args,
         )
         .execute(&connection)

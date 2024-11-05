@@ -17,11 +17,15 @@ pub struct PackageRulesRepository {}
 
 impl IRepository<PackageRules> for PackageRulesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<PackageRules>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", PackageRules::COLUMNS, PackageRules::TABLE).as_str())
-            .map(|row: PgRow| PackageRules::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&PackageRules::build_select_string(
+            PackageRules::TABLE,
+            &PackageRules::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| PackageRules::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<PackageRules> for PackageRulesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<PackageRules>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            PackageRules::COLUMNS,
+        let result = sqlx::query(&PackageRules::build_select_string(
             PackageRules::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| PackageRules::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &PackageRules::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| PackageRules::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &PackageRules) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_rule_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.percentage_flat.clone());
-let _ = args.add(entity.one_point_value.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                PackageRules::TABLE,
-                PackageRules::COLUMNS
-            )
-            .as_str(),
-            args,
+            &PackageRules::build_insert_string(PackageRules::TABLE, &PackageRules::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &PackageRules) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_rule_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.percentage_flat.clone());
-let _ = args.add(entity.one_point_value.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", PackageRules::TABLE, PackageRules::COLUMNS_UPDATE).as_str(),
-            args,
+            &PackageRules::build_update_string(PackageRules::TABLE, &PackageRules::COLUMNS_ARRAY, PackageRules::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", PackageRules::TABLE, PackageRules::PK).as_str(),
+            &PackageRules::build_delete_string(PackageRules::TABLE, PackageRules::PK),
             args,
         )
         .execute(&connection)

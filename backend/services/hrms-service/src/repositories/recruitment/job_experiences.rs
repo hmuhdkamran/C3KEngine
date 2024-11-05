@@ -17,11 +17,15 @@ pub struct JobExperiencesRepository {}
 
 impl IRepository<JobExperiences> for JobExperiencesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<JobExperiences>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", JobExperiences::COLUMNS, JobExperiences::TABLE).as_str())
-            .map(|row: PgRow| JobExperiences::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&JobExperiences::build_select_string(
+            JobExperiences::TABLE,
+            &JobExperiences::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| JobExperiences::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<JobExperiences> for JobExperiencesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<JobExperiences>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            JobExperiences::COLUMNS,
+        let result = sqlx::query(&JobExperiences::build_select_string(
             JobExperiences::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| JobExperiences::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &JobExperiences::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| JobExperiences::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &JobExperiences) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_experience_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                JobExperiences::TABLE,
-                JobExperiences::COLUMNS
-            )
-            .as_str(),
-            args,
+            &JobExperiences::build_insert_string(JobExperiences::TABLE, &JobExperiences::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &JobExperiences) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_experience_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", JobExperiences::TABLE, JobExperiences::COLUMNS_UPDATE).as_str(),
-            args,
+            &JobExperiences::build_update_string(JobExperiences::TABLE, &JobExperiences::COLUMNS_ARRAY, JobExperiences::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", JobExperiences::TABLE, JobExperiences::PK).as_str(),
+            &JobExperiences::build_delete_string(JobExperiences::TABLE, JobExperiences::PK),
             args,
         )
         .execute(&connection)

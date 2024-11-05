@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct JobPosts {
     pub job_post_id: Uuid,
 pub title: String,
@@ -36,12 +37,38 @@ pub salary_to: f64
 
 impl JobPosts {
     pub const TABLE: &'static str = r#""Recruitment"."JobPosts""#;
-    pub const PK: &'static str = r#"JobPostId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""JobPostId","Title","ShortDescription","LongDescription","Gender","AgeLimit","TotalPosition","JobStatusId","PostedDate","ExpiryDated","MinimumEducationId","ApplyBefore","IndustryId","CityId","JobShiftId","CareerLevelId","FunctionalAreaId","JobExperienceId","DepartmentId","SalaryFrom","SalaryTo""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""JobPostId"=$1,"Title"=$2,"ShortDescription"=$3,"LongDescription"=$4,"Gender"=$7,"AgeLimit"=$8,"TotalPosition"=$9,"JobStatusId"=$11,"PostedDate"=$12,"ExpiryDated"=$13,"MinimumEducationId"=$14,"ApplyBefore"=$15,"IndustryId"=$17,"CityId"=$18,"JobShiftId"=$19,"CareerLevelId"=$20,"FunctionalAreaId"=$21,"JobExperienceId"=$22,"DepartmentId"=$23,"SalaryFrom"=$24,"SalaryTo"=$25 WHERE "JobPostId"=$1"#;
+    pub const PK: &'static str = "JobPostId";
+    pub const COLUMNS_ARRAY: [&'static str; 21] = ["JobPostId","Title","ShortDescription","LongDescription","Gender","AgeLimit","TotalPosition","JobStatusId","PostedDate","ExpiryDated","MinimumEducationId","ApplyBefore","IndustryId","CityId","JobShiftId","CareerLevelId","FunctionalAreaId","JobExperienceId","DepartmentId","SalaryFrom","SalaryTo"];
 
     pub fn get_id(&self) -> Uuid {
         self.job_post_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.job_post_id.clone());
+let _ = args.add(self.title.clone());
+let _ = args.add(self.short_description.clone());
+let _ = args.add(self.long_description.clone());
+let _ = args.add(self.gender.clone());
+let _ = args.add(self.age_limit.clone());
+let _ = args.add(self.total_position.clone());
+let _ = args.add(self.job_status_id.clone());
+let _ = args.add(self.posted_date.clone());
+let _ = args.add(self.expiry_dated.clone());
+let _ = args.add(self.minimum_education_id.clone());
+let _ = args.add(self.apply_before.clone());
+let _ = args.add(self.industry_id.clone());
+let _ = args.add(self.city_id.clone());
+let _ = args.add(self.job_shift_id.clone());
+let _ = args.add(self.career_level_id.clone());
+let _ = args.add(self.functional_area_id.clone());
+let _ = args.add(self.job_experience_id.clone());
+let _ = args.add(self.department_id.clone());
+let _ = args.add(self.salary_from.clone());
+let _ = args.add(self.salary_to.clone());
+
+        args
     }
 
     pub fn new(job_post_id: Uuid,title: String,short_description: String,long_description: String,gender: String,age_limit: i32,total_position: i32,job_status_id: Uuid,posted_date: DateTime<Utc>,expiry_dated: DateTime<Utc>,minimum_education_id: Uuid,apply_before: DateTime<Utc>,industry_id: Uuid,city_id: Uuid,job_shift_id: Uuid,career_level_id: Uuid,functional_area_id: Uuid,job_experience_id: Uuid,department_id: Uuid,salary_from: f64,salary_to: f64) -> Self {

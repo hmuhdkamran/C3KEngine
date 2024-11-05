@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct CustomerLoyaltyPoints {
     pub customer_loyalty_point_id: Uuid,
 pub award_points: f64,
@@ -20,12 +21,22 @@ pub bonus_points: f64
 
 impl CustomerLoyaltyPoints {
     pub const TABLE: &'static str = r#""Customer"."CustomerLoyaltyPoints""#;
-    pub const PK: &'static str = r#"CustomerLoyaltyPointId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""CustomerLoyaltyPointId","AwardPoints","RedeemPoints","BalancePoints","BonusPoints""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""CustomerLoyaltyPointId"=$1,"AwardPoints"=$2,"RedeemPoints"=$3,"BalancePoints"=$4,"BonusPoints"=$5 WHERE "CustomerLoyaltyPointId"=$1"#;
+    pub const PK: &'static str = "CustomerLoyaltyPointId";
+    pub const COLUMNS_ARRAY: [&'static str; 5] = ["CustomerLoyaltyPointId","AwardPoints","RedeemPoints","BalancePoints","BonusPoints"];
 
     pub fn get_id(&self) -> Uuid {
         self.customer_loyalty_point_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.customer_loyalty_point_id.clone());
+let _ = args.add(self.award_points.clone());
+let _ = args.add(self.redeem_points.clone());
+let _ = args.add(self.balance_points.clone());
+let _ = args.add(self.bonus_points.clone());
+
+        args
     }
 
     pub fn new(customer_loyalty_point_id: Uuid,award_points: f64,redeem_points: f64,balance_points: f64,bonus_points: f64) -> Self {

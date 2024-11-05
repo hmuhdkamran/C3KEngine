@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn candidate_contacts_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/candidate_contacts")
+        web::scope("/api/hrms/candidate_contacts")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

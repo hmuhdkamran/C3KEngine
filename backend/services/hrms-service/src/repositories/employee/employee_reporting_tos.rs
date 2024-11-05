@@ -17,11 +17,15 @@ pub struct EmployeeReportingTosRepository {}
 
 impl IRepository<EmployeeReportingTos> for EmployeeReportingTosRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeReportingTos>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeReportingTos::COLUMNS, EmployeeReportingTos::TABLE).as_str())
-            .map(|row: PgRow| EmployeeReportingTos::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeReportingTos::build_select_string(
+            EmployeeReportingTos::TABLE,
+            &EmployeeReportingTos::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeReportingTos::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<EmployeeReportingTos> for EmployeeReportingTosRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeReportingTos>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeReportingTos::COLUMNS,
+        let result = sqlx::query(&EmployeeReportingTos::build_select_string(
             EmployeeReportingTos::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeReportingTos::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeReportingTos::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeReportingTos::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeReportingTos) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_reporting_to_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.reporting_to_employee_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeReportingTos::TABLE,
-                EmployeeReportingTos::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeReportingTos::build_insert_string(EmployeeReportingTos::TABLE, &EmployeeReportingTos::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeReportingTos) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_reporting_to_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.reporting_to_employee_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeReportingTos::TABLE, EmployeeReportingTos::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeReportingTos::build_update_string(EmployeeReportingTos::TABLE, &EmployeeReportingTos::COLUMNS_ARRAY, EmployeeReportingTos::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeReportingTos::TABLE, EmployeeReportingTos::PK).as_str(),
+            &EmployeeReportingTos::build_delete_string(EmployeeReportingTos::TABLE, EmployeeReportingTos::PK),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn leave_types_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/leave_types")
+        web::scope("/api/hrms/leave_types")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

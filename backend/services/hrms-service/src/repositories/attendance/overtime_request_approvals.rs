@@ -17,11 +17,15 @@ pub struct OvertimeRequestApprovalsRepository {}
 
 impl IRepository<OvertimeRequestApprovals> for OvertimeRequestApprovalsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<OvertimeRequestApprovals>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", OvertimeRequestApprovals::COLUMNS, OvertimeRequestApprovals::TABLE).as_str())
-            .map(|row: PgRow| OvertimeRequestApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&OvertimeRequestApprovals::build_select_string(
+            OvertimeRequestApprovals::TABLE,
+            &OvertimeRequestApprovals::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| OvertimeRequestApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<OvertimeRequestApprovals> for OvertimeRequestApprovalsRepositor
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<OvertimeRequestApprovals>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            OvertimeRequestApprovals::COLUMNS,
+        let result = sqlx::query(&OvertimeRequestApprovals::build_select_string(
             OvertimeRequestApprovals::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| OvertimeRequestApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &OvertimeRequestApprovals::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| OvertimeRequestApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &OvertimeRequestApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.overtime_request_approval_id.clone());
-let _ = args.add(entity.overtime_request_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                OvertimeRequestApprovals::TABLE,
-                OvertimeRequestApprovals::COLUMNS
-            )
-            .as_str(),
-            args,
+            &OvertimeRequestApprovals::build_insert_string(OvertimeRequestApprovals::TABLE, &OvertimeRequestApprovals::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &OvertimeRequestApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.overtime_request_approval_id.clone());
-let _ = args.add(entity.overtime_request_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", OvertimeRequestApprovals::TABLE, OvertimeRequestApprovals::COLUMNS_UPDATE).as_str(),
-            args,
+            &OvertimeRequestApprovals::build_update_string(OvertimeRequestApprovals::TABLE, &OvertimeRequestApprovals::COLUMNS_ARRAY, OvertimeRequestApprovals::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", OvertimeRequestApprovals::TABLE, OvertimeRequestApprovals::PK).as_str(),
+            &OvertimeRequestApprovals::build_delete_string(OvertimeRequestApprovals::TABLE, OvertimeRequestApprovals::PK),
             args,
         )
         .execute(&connection)

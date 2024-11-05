@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Years {
     pub year_id: Uuid,
 pub year_no: i32,
@@ -18,12 +19,20 @@ pub status: Uuid
 
 impl Years {
     pub const TABLE: &'static str = r#""Setting"."Years""#;
-    pub const PK: &'static str = r#"YearId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""YearId","YearNo","Status""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""YearId"=$1,"YearNo"=$2,"Status"=$3 WHERE "YearId"=$1"#;
+    pub const PK: &'static str = "YearId";
+    pub const COLUMNS_ARRAY: [&'static str; 3] = ["YearId","YearNo","Status"];
 
     pub fn get_id(&self) -> Uuid {
         self.year_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.year_id.clone());
+let _ = args.add(self.year_no.clone());
+let _ = args.add(self.status.clone());
+
+        args
     }
 
     pub fn new(year_id: Uuid,year_no: i32,status: Uuid) -> Self {

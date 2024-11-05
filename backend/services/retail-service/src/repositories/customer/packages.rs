@@ -17,11 +17,15 @@ pub struct PackagesRepository {}
 
 impl IRepository<Packages> for PackagesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Packages>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Packages::COLUMNS, Packages::TABLE).as_str())
-            .map(|row: PgRow| Packages::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Packages::build_select_string(
+            Packages::TABLE,
+            &Packages::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Packages::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,41 +34,23 @@ impl IRepository<Packages> for PackagesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Packages>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Packages::COLUMNS,
+        let result = sqlx::query(&Packages::build_select_string(
             Packages::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Packages::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Packages::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Packages::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Packages) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.term_and_conditions.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.package_type_id.clone());
-let _ = args.add(entity.package_rule_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Packages::TABLE,
-                Packages::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Packages::build_insert_string(Packages::TABLE, &Packages::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -80,20 +66,9 @@ let _ = args.add(entity.package_rule_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Packages) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.term_and_conditions.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.package_type_id.clone());
-let _ = args.add(entity.package_rule_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Packages::TABLE, Packages::COLUMNS_UPDATE).as_str(),
-            args,
+            &Packages::build_update_string(Packages::TABLE, &Packages::COLUMNS_ARRAY, Packages::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -113,7 +88,7 @@ let _ = args.add(entity.package_rule_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Packages::TABLE, Packages::PK).as_str(),
+            &Packages::build_delete_string(Packages::TABLE, Packages::PK),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn idd_types_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/idd_types")
+        web::scope("/api/hrms/idd_types")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

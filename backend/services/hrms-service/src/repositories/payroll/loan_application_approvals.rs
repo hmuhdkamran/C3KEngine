@@ -17,11 +17,15 @@ pub struct LoanApplicationApprovalsRepository {}
 
 impl IRepository<LoanApplicationApprovals> for LoanApplicationApprovalsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<LoanApplicationApprovals>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", LoanApplicationApprovals::COLUMNS, LoanApplicationApprovals::TABLE).as_str())
-            .map(|row: PgRow| LoanApplicationApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&LoanApplicationApprovals::build_select_string(
+            LoanApplicationApprovals::TABLE,
+            &LoanApplicationApprovals::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| LoanApplicationApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<LoanApplicationApprovals> for LoanApplicationApprovalsRepositor
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<LoanApplicationApprovals>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            LoanApplicationApprovals::COLUMNS,
+        let result = sqlx::query(&LoanApplicationApprovals::build_select_string(
             LoanApplicationApprovals::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| LoanApplicationApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &LoanApplicationApprovals::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| LoanApplicationApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &LoanApplicationApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.loan_application_approval_id.clone());
-let _ = args.add(entity.loan_application_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.apporved_amount.clone());
-let _ = args.add(entity.remkars.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                LoanApplicationApprovals::TABLE,
-                LoanApplicationApprovals::COLUMNS
-            )
-            .as_str(),
-            args,
+            &LoanApplicationApprovals::build_insert_string(LoanApplicationApprovals::TABLE, &LoanApplicationApprovals::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &LoanApplicationApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.loan_application_approval_id.clone());
-let _ = args.add(entity.loan_application_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.apporved_amount.clone());
-let _ = args.add(entity.remkars.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", LoanApplicationApprovals::TABLE, LoanApplicationApprovals::COLUMNS_UPDATE).as_str(),
-            args,
+            &LoanApplicationApprovals::build_update_string(LoanApplicationApprovals::TABLE, &LoanApplicationApprovals::COLUMNS_ARRAY, LoanApplicationApprovals::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", LoanApplicationApprovals::TABLE, LoanApplicationApprovals::PK).as_str(),
+            &LoanApplicationApprovals::build_delete_string(LoanApplicationApprovals::TABLE, LoanApplicationApprovals::PK),
             args,
         )
         .execute(&connection)

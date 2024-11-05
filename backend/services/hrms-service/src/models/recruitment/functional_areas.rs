@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct FunctionalAreas {
     pub functional_area_id: Uuid,
 pub full_name: String,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl FunctionalAreas {
     pub const TABLE: &'static str = r#""Recruitment"."FunctionalAreas""#;
-    pub const PK: &'static str = r#"FunctionalAreaId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""FunctionalAreaId","FullName","Abbreviation","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""FunctionalAreaId"=$1,"FullName"=$2,"Abbreviation"=$3,"StatusId"=$4 WHERE "FunctionalAreaId"=$1"#;
+    pub const PK: &'static str = "FunctionalAreaId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["FunctionalAreaId","FullName","Abbreviation","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.functional_area_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.functional_area_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.abbreviation.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(functional_area_id: Uuid,full_name: String,abbreviation: String,status_id: Uuid) -> Self {

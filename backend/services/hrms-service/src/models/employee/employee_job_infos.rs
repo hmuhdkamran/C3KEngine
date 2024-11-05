@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct EmployeeJobInfos {
     pub employee_job_info_id: Uuid,
 pub employee_id: Uuid,
@@ -26,12 +27,28 @@ pub end_date: DateTime<Utc>
 
 impl EmployeeJobInfos {
     pub const TABLE: &'static str = r#""Employee"."EmployeeJobInfos""#;
-    pub const PK: &'static str = r#"EmployeeJobInfoId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""EmployeeJobInfoId","EmployeeId","DepartmentId","DesignationId","GradeId","EmployeeTypeId","JobStatusId","DateOfJoining","EmployeeCode","StatusId","EndDate""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""EmployeeJobInfoId"=$1,"EmployeeId"=$2,"DepartmentId"=$3,"DesignationId"=$4,"GradeId"=$5,"EmployeeTypeId"=$6,"JobStatusId"=$7,"DateOfJoining"=$8,"EmployeeCode"=$9,"StatusId"=$10,"EndDate"=$11 WHERE "EmployeeJobInfoId"=$1"#;
+    pub const PK: &'static str = "EmployeeJobInfoId";
+    pub const COLUMNS_ARRAY: [&'static str; 11] = ["EmployeeJobInfoId","EmployeeId","DepartmentId","DesignationId","GradeId","EmployeeTypeId","JobStatusId","DateOfJoining","EmployeeCode","StatusId","EndDate"];
 
     pub fn get_id(&self) -> Uuid {
         self.employee_job_info_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.employee_job_info_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.department_id.clone());
+let _ = args.add(self.designation_id.clone());
+let _ = args.add(self.grade_id.clone());
+let _ = args.add(self.employee_type_id.clone());
+let _ = args.add(self.job_status_id.clone());
+let _ = args.add(self.date_of_joining.clone());
+let _ = args.add(self.employee_code.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.end_date.clone());
+
+        args
     }
 
     pub fn new(employee_job_info_id: Uuid,employee_id: Uuid,department_id: Uuid,designation_id: Uuid,grade_id: Uuid,employee_type_id: Uuid,job_status_id: Uuid,date_of_joining: DateTime<Utc>,employee_code: String,status_id: Uuid,end_date: DateTime<Utc>) -> Self {

@@ -17,11 +17,15 @@ pub struct DiscountTypesRepository {}
 
 impl IRepository<DiscountTypes> for DiscountTypesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<DiscountTypes>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", DiscountTypes::COLUMNS, DiscountTypes::TABLE).as_str())
-            .map(|row: PgRow| DiscountTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&DiscountTypes::build_select_string(
+            DiscountTypes::TABLE,
+            &DiscountTypes::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| DiscountTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<DiscountTypes> for DiscountTypesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<DiscountTypes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            DiscountTypes::COLUMNS,
+        let result = sqlx::query(&DiscountTypes::build_select_string(
             DiscountTypes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| DiscountTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &DiscountTypes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| DiscountTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &DiscountTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.discount_type_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                DiscountTypes::TABLE,
-                DiscountTypes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &DiscountTypes::build_insert_string(DiscountTypes::TABLE, &DiscountTypes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &DiscountTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.discount_type_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", DiscountTypes::TABLE, DiscountTypes::COLUMNS_UPDATE).as_str(),
-            args,
+            &DiscountTypes::build_update_string(DiscountTypes::TABLE, &DiscountTypes::COLUMNS_ARRAY, DiscountTypes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", DiscountTypes::TABLE, DiscountTypes::PK).as_str(),
+            &DiscountTypes::build_delete_string(DiscountTypes::TABLE, DiscountTypes::PK),
             args,
         )
         .execute(&connection)

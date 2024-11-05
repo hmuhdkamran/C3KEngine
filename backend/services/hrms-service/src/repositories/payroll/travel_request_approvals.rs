@@ -17,11 +17,15 @@ pub struct TravelRequestApprovalsRepository {}
 
 impl IRepository<TravelRequestApprovals> for TravelRequestApprovalsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TravelRequestApprovals>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TravelRequestApprovals::COLUMNS, TravelRequestApprovals::TABLE).as_str())
-            .map(|row: PgRow| TravelRequestApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TravelRequestApprovals::build_select_string(
+            TravelRequestApprovals::TABLE,
+            &TravelRequestApprovals::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TravelRequestApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<TravelRequestApprovals> for TravelRequestApprovalsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TravelRequestApprovals>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TravelRequestApprovals::COLUMNS,
+        let result = sqlx::query(&TravelRequestApprovals::build_select_string(
             TravelRequestApprovals::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TravelRequestApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TravelRequestApprovals::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TravelRequestApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TravelRequestApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_approval_id.clone());
-let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approval_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TravelRequestApprovals::TABLE,
-                TravelRequestApprovals::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TravelRequestApprovals::build_insert_string(TravelRequestApprovals::TABLE, &TravelRequestApprovals::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &TravelRequestApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_approval_id.clone());
-let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.approved_by.clone());
-let _ = args.add(entity.approval_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TravelRequestApprovals::TABLE, TravelRequestApprovals::COLUMNS_UPDATE).as_str(),
-            args,
+            &TravelRequestApprovals::build_update_string(TravelRequestApprovals::TABLE, &TravelRequestApprovals::COLUMNS_ARRAY, TravelRequestApprovals::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TravelRequestApprovals::TABLE, TravelRequestApprovals::PK).as_str(),
+            &TravelRequestApprovals::build_delete_string(TravelRequestApprovals::TABLE, TravelRequestApprovals::PK),
             args,
         )
         .execute(&connection)

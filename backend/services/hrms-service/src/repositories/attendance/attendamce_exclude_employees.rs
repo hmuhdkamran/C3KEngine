@@ -17,11 +17,15 @@ pub struct AttendamceExcludeEmployeesRepository {}
 
 impl IRepository<AttendamceExcludeEmployees> for AttendamceExcludeEmployeesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<AttendamceExcludeEmployees>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", AttendamceExcludeEmployees::COLUMNS, AttendamceExcludeEmployees::TABLE).as_str())
-            .map(|row: PgRow| AttendamceExcludeEmployees::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&AttendamceExcludeEmployees::build_select_string(
+            AttendamceExcludeEmployees::TABLE,
+            &AttendamceExcludeEmployees::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| AttendamceExcludeEmployees::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<AttendamceExcludeEmployees> for AttendamceExcludeEmployeesRepos
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<AttendamceExcludeEmployees>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            AttendamceExcludeEmployees::COLUMNS,
+        let result = sqlx::query(&AttendamceExcludeEmployees::build_select_string(
             AttendamceExcludeEmployees::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| AttendamceExcludeEmployees::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &AttendamceExcludeEmployees::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| AttendamceExcludeEmployees::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &AttendamceExcludeEmployees) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.attendamce_exclude_employee_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                AttendamceExcludeEmployees::TABLE,
-                AttendamceExcludeEmployees::COLUMNS
-            )
-            .as_str(),
-            args,
+            &AttendamceExcludeEmployees::build_insert_string(AttendamceExcludeEmployees::TABLE, &AttendamceExcludeEmployees::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &AttendamceExcludeEmployees) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.attendamce_exclude_employee_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", AttendamceExcludeEmployees::TABLE, AttendamceExcludeEmployees::COLUMNS_UPDATE).as_str(),
-            args,
+            &AttendamceExcludeEmployees::build_update_string(AttendamceExcludeEmployees::TABLE, &AttendamceExcludeEmployees::COLUMNS_ARRAY, AttendamceExcludeEmployees::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", AttendamceExcludeEmployees::TABLE, AttendamceExcludeEmployees::PK).as_str(),
+            &AttendamceExcludeEmployees::build_delete_string(AttendamceExcludeEmployees::TABLE, AttendamceExcludeEmployees::PK),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn job_experiences_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/job_experiences")
+        web::scope("/api/hrms/job_experiences")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

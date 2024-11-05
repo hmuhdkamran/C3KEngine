@@ -17,11 +17,15 @@ pub struct PackageTypesRepository {}
 
 impl IRepository<PackageTypes> for PackageTypesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<PackageTypes>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", PackageTypes::COLUMNS, PackageTypes::TABLE).as_str())
-            .map(|row: PgRow| PackageTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&PackageTypes::build_select_string(
+            PackageTypes::TABLE,
+            &PackageTypes::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| PackageTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<PackageTypes> for PackageTypesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<PackageTypes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            PackageTypes::COLUMNS,
+        let result = sqlx::query(&PackageTypes::build_select_string(
             PackageTypes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| PackageTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &PackageTypes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| PackageTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &PackageTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_type_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                PackageTypes::TABLE,
-                PackageTypes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &PackageTypes::build_insert_string(PackageTypes::TABLE, &PackageTypes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &PackageTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.package_type_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", PackageTypes::TABLE, PackageTypes::COLUMNS_UPDATE).as_str(),
-            args,
+            &PackageTypes::build_update_string(PackageTypes::TABLE, &PackageTypes::COLUMNS_ARRAY, PackageTypes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", PackageTypes::TABLE, PackageTypes::PK).as_str(),
+            &PackageTypes::build_delete_string(PackageTypes::TABLE, PackageTypes::PK),
             args,
         )
         .execute(&connection)

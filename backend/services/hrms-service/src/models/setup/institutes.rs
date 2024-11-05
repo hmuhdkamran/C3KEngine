@@ -3,41 +3,47 @@ use serde::{Deserialize, Serialize};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
-    types::chrono::{DateTime, Utc},
     Arguments, Error, PgPool, Postgres, Row,
+    types::chrono::{DateTime, Utc},
 };
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Institutes {
     pub institute_id: Uuid,
-    pub full_name: String,
-    pub status_id: Uuid,
-    pub abbreviation: String,
+pub full_name: String,
+pub status_id: Uuid,
+pub abbreviation: String
+
 }
 
 impl Institutes {
     pub const TABLE: &'static str = r#""Setup"."Institutes""#;
-    pub const PK: &'static str = r#"instituteId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""instituteId","FullName","StatusId","Abbreviation""#;
-    pub const COLUMNS_UPDATE: &'static str =
-        r#""instituteId"=$1,"FullName"=$2,"StatusId"=$3,"Abbreviation"=$4 WHERE "instituteId"=$1"#;
+    pub const PK: &'static str = "InstituteId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["InstituteId","FullName","StatusId","Abbreviation"];
 
     pub fn get_id(&self) -> Uuid {
         self.institute_id.clone()
     }
 
-    pub fn new(
-        institute_id: Uuid,
-        full_name: String,
-        status_id: Uuid,
-        abbreviation: String,
-    ) -> Self {
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.institute_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.abbreviation.clone());
+
+        args
+    }
+
+    pub fn new(institute_id: Uuid,full_name: String,status_id: Uuid,abbreviation: String) -> Self {
         Self {
             institute_id,
-            full_name,
-            status_id,
-            abbreviation,
+full_name,
+status_id,
+abbreviation
+
         }
     }
 }
@@ -53,16 +59,18 @@ impl Model for Institutes {
     where
         Self: Sized,
     {
-        let institute_id = row.get("instituteId");
-        let full_name = row.get("FullName");
-        let status_id = row.get("StatusId");
-        let abbreviation = row.get("Abbreviation");
+        let institute_id = row.get("InstituteId");
+let full_name = row.get("FullName");
+let status_id = row.get("StatusId");
+let abbreviation = row.get("Abbreviation");
+
 
         Self {
             institute_id,
-            full_name,
-            status_id,
-            abbreviation,
+full_name,
+status_id,
+abbreviation
+
         }
     }
 }

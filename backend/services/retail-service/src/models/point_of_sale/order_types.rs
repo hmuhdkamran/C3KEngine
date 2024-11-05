@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct OrderTypes {
     pub order_type_id: Uuid,
 pub abberviation: String,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl OrderTypes {
     pub const TABLE: &'static str = r#""PointOfSale"."OrderTypes""#;
-    pub const PK: &'static str = r#"OrderTypeId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""OrderTypeId","Abberviation","FullName","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""OrderTypeId"=$1,"Abberviation"=$2,"FullName"=$3,"StatusId"=$4 WHERE "OrderTypeId"=$1"#;
+    pub const PK: &'static str = "OrderTypeId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["OrderTypeId","Abberviation","FullName","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.order_type_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.order_type_id.clone());
+let _ = args.add(self.abberviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(order_type_id: Uuid,abberviation: String,full_name: String,status_id: Uuid) -> Self {

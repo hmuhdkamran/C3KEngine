@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Statuses {
     pub status_id: Uuid,
 pub abberviation: String,
@@ -19,12 +20,21 @@ pub is_active: bool
 
 impl Statuses {
     pub const TABLE: &'static str = r#""Setup"."Statuses""#;
-    pub const PK: &'static str = r#"StatusId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""StatusId","Abberviation","FullName","IsActive""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""StatusId"=$1,"Abberviation"=$2,"FullName"=$3,"IsActive"=$4 WHERE "StatusId"=$1"#;
+    pub const PK: &'static str = "StatusId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["StatusId","Abberviation","FullName","IsActive"];
 
     pub fn get_id(&self) -> Uuid {
         self.status_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.status_id.clone());
+let _ = args.add(self.abberviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.is_active.clone());
+
+        args
     }
 
     pub fn new(status_id: Uuid,abberviation: String,full_name: String,is_active: bool) -> Self {

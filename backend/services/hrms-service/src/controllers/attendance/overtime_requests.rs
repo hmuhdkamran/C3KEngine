@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn overtime_requests_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/overtime_requests")
+        web::scope("/api/hrms/overtime_requests")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

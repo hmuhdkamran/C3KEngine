@@ -17,11 +17,15 @@ pub struct JobApplicationsRepository {}
 
 impl IRepository<JobApplications> for JobApplicationsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<JobApplications>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", JobApplications::COLUMNS, JobApplications::TABLE).as_str())
-            .map(|row: PgRow| JobApplications::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&JobApplications::build_select_string(
+            JobApplications::TABLE,
+            &JobApplications::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| JobApplications::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<JobApplications> for JobApplicationsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<JobApplications>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            JobApplications::COLUMNS,
+        let result = sqlx::query(&JobApplications::build_select_string(
             JobApplications::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| JobApplications::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &JobApplications::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| JobApplications::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &JobApplications) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_application_id.clone());
-let _ = args.add(entity.candidate_id.clone());
-let _ = args.add(entity.application_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.job_post_id.clone());
-let _ = args.add(entity.resume_url.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                JobApplications::TABLE,
-                JobApplications::COLUMNS
-            )
-            .as_str(),
-            args,
+            &JobApplications::build_insert_string(JobApplications::TABLE, &JobApplications::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.resume_url.clone());
     }
 
     async fn update(connection: PgPool, entity: &JobApplications) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_application_id.clone());
-let _ = args.add(entity.candidate_id.clone());
-let _ = args.add(entity.application_date.clone());
-let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.job_post_id.clone());
-let _ = args.add(entity.resume_url.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", JobApplications::TABLE, JobApplications::COLUMNS_UPDATE).as_str(),
-            args,
+            &JobApplications::build_update_string(JobApplications::TABLE, &JobApplications::COLUMNS_ARRAY, JobApplications::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.resume_url.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", JobApplications::TABLE, JobApplications::PK).as_str(),
+            &JobApplications::build_delete_string(JobApplications::TABLE, JobApplications::PK),
             args,
         )
         .execute(&connection)

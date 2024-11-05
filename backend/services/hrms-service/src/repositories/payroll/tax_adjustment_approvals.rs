@@ -17,11 +17,15 @@ pub struct TaxAdjustmentApprovalsRepository {}
 
 impl IRepository<TaxAdjustmentApprovals> for TaxAdjustmentApprovalsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TaxAdjustmentApprovals>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TaxAdjustmentApprovals::COLUMNS, TaxAdjustmentApprovals::TABLE).as_str())
-            .map(|row: PgRow| TaxAdjustmentApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TaxAdjustmentApprovals::build_select_string(
+            TaxAdjustmentApprovals::TABLE,
+            &TaxAdjustmentApprovals::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TaxAdjustmentApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<TaxAdjustmentApprovals> for TaxAdjustmentApprovalsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TaxAdjustmentApprovals>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TaxAdjustmentApprovals::COLUMNS,
+        let result = sqlx::query(&TaxAdjustmentApprovals::build_select_string(
             TaxAdjustmentApprovals::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TaxAdjustmentApprovals::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TaxAdjustmentApprovals::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TaxAdjustmentApprovals::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TaxAdjustmentApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_adjustment_approval_id.clone());
-let _ = args.add(entity.tax_adjustment_id.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.approved_amount.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.approved_by.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TaxAdjustmentApprovals::TABLE,
-                TaxAdjustmentApprovals::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TaxAdjustmentApprovals::build_insert_string(TaxAdjustmentApprovals::TABLE, &TaxAdjustmentApprovals::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.approved_by.clone());
     }
 
     async fn update(connection: PgPool, entity: &TaxAdjustmentApprovals) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_adjustment_approval_id.clone());
-let _ = args.add(entity.tax_adjustment_id.clone());
-let _ = args.add(entity.approved_date.clone());
-let _ = args.add(entity.comments.clone());
-let _ = args.add(entity.approved_amount.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.approved_by.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TaxAdjustmentApprovals::TABLE, TaxAdjustmentApprovals::COLUMNS_UPDATE).as_str(),
-            args,
+            &TaxAdjustmentApprovals::build_update_string(TaxAdjustmentApprovals::TABLE, &TaxAdjustmentApprovals::COLUMNS_ARRAY, TaxAdjustmentApprovals::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.approved_by.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TaxAdjustmentApprovals::TABLE, TaxAdjustmentApprovals::PK).as_str(),
+            &TaxAdjustmentApprovals::build_delete_string(TaxAdjustmentApprovals::TABLE, TaxAdjustmentApprovals::PK),
             args,
         )
         .execute(&connection)

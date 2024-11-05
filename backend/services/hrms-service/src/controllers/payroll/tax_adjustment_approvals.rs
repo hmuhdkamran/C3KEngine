@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn tax_adjustment_approvals_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/tax_adjustment_approvals")
+        web::scope("/api/hrms/tax_adjustment_approvals")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

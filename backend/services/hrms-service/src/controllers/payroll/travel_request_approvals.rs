@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn travel_request_approvals_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/travel_request_approvals")
+        web::scope("/api/hrms/travel_request_approvals")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

@@ -17,11 +17,15 @@ pub struct EmployeeBankInfosRepository {}
 
 impl IRepository<EmployeeBankInfos> for EmployeeBankInfosRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeBankInfos>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeBankInfos::COLUMNS, EmployeeBankInfos::TABLE).as_str())
-            .map(|row: PgRow| EmployeeBankInfos::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeBankInfos::build_select_string(
+            EmployeeBankInfos::TABLE,
+            &EmployeeBankInfos::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeBankInfos::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<EmployeeBankInfos> for EmployeeBankInfosRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeBankInfos>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeBankInfos::COLUMNS,
+        let result = sqlx::query(&EmployeeBankInfos::build_select_string(
             EmployeeBankInfos::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeBankInfos::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeBankInfos::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeBankInfos::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeBankInfos) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_bank_info_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.bank_branch_id.clone());
-let _ = args.add(entity.account_title.clone());
-let _ = args.add(entity.account_number.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeBankInfos::TABLE,
-                EmployeeBankInfos::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeBankInfos::build_insert_string(EmployeeBankInfos::TABLE, &EmployeeBankInfos::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeBankInfos) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_bank_info_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.bank_branch_id.clone());
-let _ = args.add(entity.account_title.clone());
-let _ = args.add(entity.account_number.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeBankInfos::TABLE, EmployeeBankInfos::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeBankInfos::build_update_string(EmployeeBankInfos::TABLE, &EmployeeBankInfos::COLUMNS_ARRAY, EmployeeBankInfos::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeBankInfos::TABLE, EmployeeBankInfos::PK).as_str(),
+            &EmployeeBankInfos::build_delete_string(EmployeeBankInfos::TABLE, EmployeeBankInfos::PK),
             args,
         )
         .execute(&connection)

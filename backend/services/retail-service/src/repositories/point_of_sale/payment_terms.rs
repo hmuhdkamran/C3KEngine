@@ -17,11 +17,15 @@ pub struct PaymentTermsRepository {}
 
 impl IRepository<PaymentTerms> for PaymentTermsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<PaymentTerms>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", PaymentTerms::COLUMNS, PaymentTerms::TABLE).as_str())
-            .map(|row: PgRow| PaymentTerms::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&PaymentTerms::build_select_string(
+            PaymentTerms::TABLE,
+            &PaymentTerms::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| PaymentTerms::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<PaymentTerms> for PaymentTermsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<PaymentTerms>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            PaymentTerms::COLUMNS,
+        let result = sqlx::query(&PaymentTerms::build_select_string(
             PaymentTerms::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| PaymentTerms::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &PaymentTerms::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| PaymentTerms::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &PaymentTerms) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.payment_term_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.term_days.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                PaymentTerms::TABLE,
-                PaymentTerms::COLUMNS
-            )
-            .as_str(),
-            args,
+            &PaymentTerms::build_insert_string(PaymentTerms::TABLE, &PaymentTerms::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.term_days.clone());
     }
 
     async fn update(connection: PgPool, entity: &PaymentTerms) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.payment_term_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.term_days.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", PaymentTerms::TABLE, PaymentTerms::COLUMNS_UPDATE).as_str(),
-            args,
+            &PaymentTerms::build_update_string(PaymentTerms::TABLE, &PaymentTerms::COLUMNS_ARRAY, PaymentTerms::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.term_days.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", PaymentTerms::TABLE, PaymentTerms::PK).as_str(),
+            &PaymentTerms::build_delete_string(PaymentTerms::TABLE, PaymentTerms::PK),
             args,
         )
         .execute(&connection)

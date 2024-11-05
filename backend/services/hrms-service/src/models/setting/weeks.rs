@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Weeks {
     pub week_id: Uuid,
 pub week_no: i32,
@@ -18,12 +19,20 @@ pub status_id: Uuid
 
 impl Weeks {
     pub const TABLE: &'static str = r#""Setting"."Weeks""#;
-    pub const PK: &'static str = r#"WeekId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""WeekId","WeekNo","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""WeekId"=$1,"WeekNo"=$2,"StatusId"=$3 WHERE "WeekId"=$1"#;
+    pub const PK: &'static str = "WeekId";
+    pub const COLUMNS_ARRAY: [&'static str; 3] = ["WeekId","WeekNo","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.week_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.week_id.clone());
+let _ = args.add(self.week_no.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(week_id: Uuid,week_no: i32,status_id: Uuid) -> Self {

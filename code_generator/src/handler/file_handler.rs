@@ -18,13 +18,15 @@ impl FileHandler {
 
     pub fn process_files(&self) -> io::Result<()> {
         for module in &self.config.module_configuration {
-            let path = format!("{}{}", self.config.base_path, module.distination);
+            let path: String = format!("{}{}", self.config.base_path, module.distination);
             let distination_path = Path::new(&path);
             if !distination_path.exists() {
                 create_dir_all(distination_path)?;
             }
 
-            let file_contents = read_to_string(&module.file_path)?;
+            println!("{}", &module.file_path);
+
+            let file_contents = read_to_string(&module.file_path)?;            
 
             let root_mod_file_path = Path::new(&path).join(&module.common_file);
             let mut root_mod_file = OpenOptions::new()
@@ -139,6 +141,8 @@ impl FileHandler {
         let formats: Vec<&str> = config.display_type.split('+').collect();
         let mut has_index = false;
 
+        result = result.replace("TOTAL_COLUMNS", &table.columns.len().to_string());
+
         if result.contains("TABLE_NAME") && result.contains("SCHEMA") {
             result = result
                 .replace(
@@ -215,6 +219,8 @@ impl FileHandler {
                         .replace("COLUMN_INDEX", "1")
                 );
             }
+        } else if result.contains("TOTAL_COLUMNS") {
+            result = result.replace("TOTAL_COLUMNS", &table.columns.len().to_string());
         }
 
         result

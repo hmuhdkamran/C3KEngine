@@ -1,5 +1,6 @@
 use crate::{
-    models::setup::institutes::Institutes, repositories::setup::institutes::InstitutesRepository,
+    models::setup::institutes::Institutes,
+    repositories::setup::institutes::InstitutesRepository,
 };
 use c3k_common::{
     interfaces::{irepository::IRepository, iservice::IService},

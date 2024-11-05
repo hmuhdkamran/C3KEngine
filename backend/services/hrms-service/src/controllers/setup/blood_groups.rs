@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn blood_groups_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/blood_groups")
+        web::scope("/api/hrms/blood_groups")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

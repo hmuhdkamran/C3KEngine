@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct GazettedHolidays {
     pub gazetted_holiday_id: Uuid,
 pub title: String,
@@ -20,12 +21,22 @@ pub status_id: Uuid
 
 impl GazettedHolidays {
     pub const TABLE: &'static str = r#""Attendance"."GazettedHolidays""#;
-    pub const PK: &'static str = r#"GazettedHolidayId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""GazettedHolidayId","Title","StartDate","EndDate","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""GazettedHolidayId"=$1,"Title"=$2,"StartDate"=$3,"EndDate"=$4,"StatusId"=$5 WHERE "GazettedHolidayId"=$1"#;
+    pub const PK: &'static str = "GazettedHolidayId";
+    pub const COLUMNS_ARRAY: [&'static str; 5] = ["GazettedHolidayId","Title","StartDate","EndDate","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.gazetted_holiday_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.gazetted_holiday_id.clone());
+let _ = args.add(self.title.clone());
+let _ = args.add(self.start_date.clone());
+let _ = args.add(self.end_date.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(gazetted_holiday_id: Uuid,title: String,start_date: DateTime<Utc>,end_date: DateTime<Utc>,status_id: Uuid) -> Self {

@@ -16,12 +16,17 @@ pub struct $TABLE_NAME$ {
 
 impl $TABLE_NAME$ {
     pub const TABLE: &'static str = r#"$TABLE_NAME_TEXT$"#;
-    pub const PK: &'static str = r#"$PRIMARY_KEY$::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#"$TABLE_COLUMNS_TEXT$"#;
-    pub const COLUMNS_UPDATE: &'static str = r#"$TABLE_COLUMNS_UPDATE$"#;
+    pub const PK: &'static str = "$PRIMARY_KEY$";
+    pub const COLUMNS_ARRAY: [&'static str; $TOTAL_COLUMNS$] = [$TABLE_COLUMNS_TEXT$];
 
     pub fn get_id(&self) -> Uuid {
         self.$PRIMARY_KEY_RUST$.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        $TABLE_COLUMNS_REPOSITORY$
+        args
     }
 
     pub fn new($TABLE_COLUMN_RUST$) -> Self {

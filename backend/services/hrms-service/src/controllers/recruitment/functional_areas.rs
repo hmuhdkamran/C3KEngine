@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn functional_areas_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/functional_areas")
+        web::scope("/api/hrms/functional_areas")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

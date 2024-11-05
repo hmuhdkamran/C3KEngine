@@ -1,5 +1,6 @@
 use crate::{
-    models::setup::institutes::Institutes, services::setup::institutes::InstitutesService,
+    models::setup::institutes::Institutes,
+    services::setup::institutes::InstitutesService,
 };
 use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
 use c3k_common::interfaces::iservice::IService;
@@ -49,7 +50,7 @@ pub async fn delete(
 
 pub fn institutes_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/Institutes")
+        web::scope("/api/hrms/institutes")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

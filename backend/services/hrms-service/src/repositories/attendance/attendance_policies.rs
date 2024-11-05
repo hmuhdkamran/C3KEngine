@@ -17,11 +17,15 @@ pub struct AttendancePoliciesRepository {}
 
 impl IRepository<AttendancePolicies> for AttendancePoliciesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<AttendancePolicies>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", AttendancePolicies::COLUMNS, AttendancePolicies::TABLE).as_str())
-            .map(|row: PgRow| AttendancePolicies::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&AttendancePolicies::build_select_string(
+            AttendancePolicies::TABLE,
+            &AttendancePolicies::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| AttendancePolicies::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<AttendancePolicies> for AttendancePoliciesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<AttendancePolicies>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            AttendancePolicies::COLUMNS,
+        let result = sqlx::query(&AttendancePolicies::build_select_string(
             AttendancePolicies::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| AttendancePolicies::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &AttendancePolicies::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| AttendancePolicies::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &AttendancePolicies) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.attendance_policie_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                AttendancePolicies::TABLE,
-                AttendancePolicies::COLUMNS
-            )
-            .as_str(),
-            args,
+            &AttendancePolicies::build_insert_string(AttendancePolicies::TABLE, &AttendancePolicies::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &AttendancePolicies) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.attendance_policie_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", AttendancePolicies::TABLE, AttendancePolicies::COLUMNS_UPDATE).as_str(),
-            args,
+            &AttendancePolicies::build_update_string(AttendancePolicies::TABLE, &AttendancePolicies::COLUMNS_ARRAY, AttendancePolicies::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", AttendancePolicies::TABLE, AttendancePolicies::PK).as_str(),
+            &AttendancePolicies::build_delete_string(AttendancePolicies::TABLE, AttendancePolicies::PK),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn expense_types_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/expense_types")
+        web::scope("/api/hrms/expense_types")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

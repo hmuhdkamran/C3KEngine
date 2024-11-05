@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Categories {
     pub category_id: Uuid,
 pub abbreviation: String,
@@ -20,12 +21,22 @@ pub status_id: Uuid
 
 impl Categories {
     pub const TABLE: &'static str = r#""Inventory"."Categories""#;
-    pub const PK: &'static str = r#"CategoryId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""CategoryId","Abbreviation","FullName","ParentCategoryId","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""CategoryId"=$1,"Abbreviation"=$2,"FullName"=$3,"ParentCategoryId"=$4,"StatusId"=$5 WHERE "CategoryId"=$1"#;
+    pub const PK: &'static str = "CategoryId";
+    pub const COLUMNS_ARRAY: [&'static str; 5] = ["CategoryId","Abbreviation","FullName","ParentCategoryId","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.category_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.category_id.clone());
+let _ = args.add(self.abbreviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.parent_category_id.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(category_id: Uuid,abbreviation: String,full_name: String,parent_category_id: Uuid,status_id: Uuid) -> Self {

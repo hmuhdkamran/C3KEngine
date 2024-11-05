@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn short_leaves_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/short_leaves")
+        web::scope("/api/hrms/short_leaves")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

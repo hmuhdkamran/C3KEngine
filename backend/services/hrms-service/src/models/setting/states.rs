@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct States {
     pub state_id: Uuid,
 pub name: String,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl States {
     pub const TABLE: &'static str = r#""Setting"."States""#;
-    pub const PK: &'static str = r#"StateId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""StateId","Name","CountryId","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""StateId"=$1,"Name"=$2,"CountryId"=$3,"StatusId"=$4 WHERE "StateId"=$1"#;
+    pub const PK: &'static str = "StateId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["StateId","Name","CountryId","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.state_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.state_id.clone());
+let _ = args.add(self.name.clone());
+let _ = args.add(self.country_id.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(state_id: Uuid,name: String,country_id: Uuid,status_id: Uuid) -> Self {

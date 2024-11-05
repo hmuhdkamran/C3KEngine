@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn fort_nights_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/fort_nights")
+        web::scope("/api/hrms/fort_nights")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

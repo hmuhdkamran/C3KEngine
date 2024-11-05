@@ -17,11 +17,15 @@ pub struct BankBranchesRepository {}
 
 impl IRepository<BankBranches> for BankBranchesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<BankBranches>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", BankBranches::COLUMNS, BankBranches::TABLE).as_str())
-            .map(|row: PgRow| BankBranches::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&BankBranches::build_select_string(
+            BankBranches::TABLE,
+            &BankBranches::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| BankBranches::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<BankBranches> for BankBranchesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<BankBranches>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            BankBranches::COLUMNS,
+        let result = sqlx::query(&BankBranches::build_select_string(
             BankBranches::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| BankBranches::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &BankBranches::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| BankBranches::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &BankBranches) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.bank_branch_id.clone());
-let _ = args.add(entity.bank_id.clone());
-let _ = args.add(entity.branch_code.clone());
-let _ = args.add(entity.branch_name.clone());
-let _ = args.add(entity.branch_address.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                BankBranches::TABLE,
-                BankBranches::COLUMNS
-            )
-            .as_str(),
-            args,
+            &BankBranches::build_insert_string(BankBranches::TABLE, &BankBranches::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &BankBranches) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.bank_branch_id.clone());
-let _ = args.add(entity.bank_id.clone());
-let _ = args.add(entity.branch_code.clone());
-let _ = args.add(entity.branch_name.clone());
-let _ = args.add(entity.branch_address.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", BankBranches::TABLE, BankBranches::COLUMNS_UPDATE).as_str(),
-            args,
+            &BankBranches::build_update_string(BankBranches::TABLE, &BankBranches::COLUMNS_ARRAY, BankBranches::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", BankBranches::TABLE, BankBranches::PK).as_str(),
+            &BankBranches::build_delete_string(BankBranches::TABLE, BankBranches::PK),
             args,
         )
         .execute(&connection)

@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn store_daily_expenses_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/retail/store_daily_expenses")
+        web::scope("/api/hrms/store_daily_expenses")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

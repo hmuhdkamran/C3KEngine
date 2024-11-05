@@ -17,11 +17,15 @@ pub struct SpouseContactsRepository {}
 
 impl IRepository<SpouseContacts> for SpouseContactsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<SpouseContacts>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", SpouseContacts::COLUMNS, SpouseContacts::TABLE).as_str())
-            .map(|row: PgRow| SpouseContacts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&SpouseContacts::build_select_string(
+            SpouseContacts::TABLE,
+            &SpouseContacts::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| SpouseContacts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<SpouseContacts> for SpouseContactsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<SpouseContacts>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            SpouseContacts::COLUMNS,
+        let result = sqlx::query(&SpouseContacts::build_select_string(
             SpouseContacts::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| SpouseContacts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &SpouseContacts::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| SpouseContacts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &SpouseContacts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.spouse_contact_id.clone());
-let _ = args.add(entity.contact_type_id.clone());
-let _ = args.add(entity.spouse_id.clone());
-let _ = args.add(entity.contact_info.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                SpouseContacts::TABLE,
-                SpouseContacts::COLUMNS
-            )
-            .as_str(),
-            args,
+            &SpouseContacts::build_insert_string(SpouseContacts::TABLE, &SpouseContacts::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &SpouseContacts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.spouse_contact_id.clone());
-let _ = args.add(entity.contact_type_id.clone());
-let _ = args.add(entity.spouse_id.clone());
-let _ = args.add(entity.contact_info.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", SpouseContacts::TABLE, SpouseContacts::COLUMNS_UPDATE).as_str(),
-            args,
+            &SpouseContacts::build_update_string(SpouseContacts::TABLE, &SpouseContacts::COLUMNS_ARRAY, SpouseContacts::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", SpouseContacts::TABLE, SpouseContacts::PK).as_str(),
+            &SpouseContacts::build_delete_string(SpouseContacts::TABLE, SpouseContacts::PK),
             args,
         )
         .execute(&connection)

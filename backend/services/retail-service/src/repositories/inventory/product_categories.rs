@@ -17,11 +17,15 @@ pub struct ProductCategoriesRepository {}
 
 impl IRepository<ProductCategories> for ProductCategoriesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<ProductCategories>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", ProductCategories::COLUMNS, ProductCategories::TABLE).as_str())
-            .map(|row: PgRow| ProductCategories::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&ProductCategories::build_select_string(
+            ProductCategories::TABLE,
+            &ProductCategories::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| ProductCategories::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<ProductCategories> for ProductCategoriesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<ProductCategories>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            ProductCategories::COLUMNS,
+        let result = sqlx::query(&ProductCategories::build_select_string(
             ProductCategories::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| ProductCategories::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &ProductCategories::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| ProductCategories::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &ProductCategories) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.product_category_id.clone());
-let _ = args.add(entity.category_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.product_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                ProductCategories::TABLE,
-                ProductCategories::COLUMNS
-            )
-            .as_str(),
-            args,
+            &ProductCategories::build_insert_string(ProductCategories::TABLE, &ProductCategories::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.product_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &ProductCategories) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.product_category_id.clone());
-let _ = args.add(entity.category_id.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.product_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", ProductCategories::TABLE, ProductCategories::COLUMNS_UPDATE).as_str(),
-            args,
+            &ProductCategories::build_update_string(ProductCategories::TABLE, &ProductCategories::COLUMNS_ARRAY, ProductCategories::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.product_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", ProductCategories::TABLE, ProductCategories::PK).as_str(),
+            &ProductCategories::build_delete_string(ProductCategories::TABLE, ProductCategories::PK),
             args,
         )
         .execute(&connection)

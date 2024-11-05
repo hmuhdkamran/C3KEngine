@@ -17,11 +17,15 @@ pub struct EmployeeIdTypesRepository {}
 
 impl IRepository<EmployeeIdTypes> for EmployeeIdTypesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeIdTypes>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeIdTypes::COLUMNS, EmployeeIdTypes::TABLE).as_str())
-            .map(|row: PgRow| EmployeeIdTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeIdTypes::build_select_string(
+            EmployeeIdTypes::TABLE,
+            &EmployeeIdTypes::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeIdTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<EmployeeIdTypes> for EmployeeIdTypesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeIdTypes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeIdTypes::COLUMNS,
+        let result = sqlx::query(&EmployeeIdTypes::build_select_string(
             EmployeeIdTypes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeIdTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeIdTypes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeIdTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeIdTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_id_type_id.clone());
-let _ = args.add(entity.personal_information_id.clone());
-let _ = args.add(entity.id_type_id.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.document_url.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeIdTypes::TABLE,
-                EmployeeIdTypes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeIdTypes::build_insert_string(EmployeeIdTypes::TABLE, &EmployeeIdTypes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeIdTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_id_type_id.clone());
-let _ = args.add(entity.personal_information_id.clone());
-let _ = args.add(entity.id_type_id.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.document_url.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeIdTypes::TABLE, EmployeeIdTypes::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeIdTypes::build_update_string(EmployeeIdTypes::TABLE, &EmployeeIdTypes::COLUMNS_ARRAY, EmployeeIdTypes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeIdTypes::TABLE, EmployeeIdTypes::PK).as_str(),
+            &EmployeeIdTypes::build_delete_string(EmployeeIdTypes::TABLE, EmployeeIdTypes::PK),
             args,
         )
         .execute(&connection)

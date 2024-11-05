@@ -17,11 +17,15 @@ pub struct LeaveTypesRepository {}
 
 impl IRepository<LeaveTypes> for LeaveTypesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<LeaveTypes>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", LeaveTypes::COLUMNS, LeaveTypes::TABLE).as_str())
-            .map(|row: PgRow| LeaveTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&LeaveTypes::build_select_string(
+            LeaveTypes::TABLE,
+            &LeaveTypes::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| LeaveTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<LeaveTypes> for LeaveTypesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<LeaveTypes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            LeaveTypes::COLUMNS,
+        let result = sqlx::query(&LeaveTypes::build_select_string(
             LeaveTypes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| LeaveTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &LeaveTypes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| LeaveTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &LeaveTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                LeaveTypes::TABLE,
-                LeaveTypes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &LeaveTypes::build_insert_string(LeaveTypes::TABLE, &LeaveTypes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &LeaveTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", LeaveTypes::TABLE, LeaveTypes::COLUMNS_UPDATE).as_str(),
-            args,
+            &LeaveTypes::build_update_string(LeaveTypes::TABLE, &LeaveTypes::COLUMNS_ARRAY, LeaveTypes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", LeaveTypes::TABLE, LeaveTypes::PK).as_str(),
+            &LeaveTypes::build_delete_string(LeaveTypes::TABLE, LeaveTypes::PK),
             args,
         )
         .execute(&connection)

@@ -17,11 +17,15 @@ pub struct CustomerLoyaltyPointsRepository {}
 
 impl IRepository<CustomerLoyaltyPoints> for CustomerLoyaltyPointsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<CustomerLoyaltyPoints>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", CustomerLoyaltyPoints::COLUMNS, CustomerLoyaltyPoints::TABLE).as_str())
-            .map(|row: PgRow| CustomerLoyaltyPoints::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&CustomerLoyaltyPoints::build_select_string(
+            CustomerLoyaltyPoints::TABLE,
+            &CustomerLoyaltyPoints::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| CustomerLoyaltyPoints::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<CustomerLoyaltyPoints> for CustomerLoyaltyPointsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<CustomerLoyaltyPoints>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            CustomerLoyaltyPoints::COLUMNS,
+        let result = sqlx::query(&CustomerLoyaltyPoints::build_select_string(
             CustomerLoyaltyPoints::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| CustomerLoyaltyPoints::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &CustomerLoyaltyPoints::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| CustomerLoyaltyPoints::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &CustomerLoyaltyPoints) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.customer_loyalty_point_id.clone());
-let _ = args.add(entity.award_points.clone());
-let _ = args.add(entity.redeem_points.clone());
-let _ = args.add(entity.balance_points.clone());
-let _ = args.add(entity.bonus_points.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                CustomerLoyaltyPoints::TABLE,
-                CustomerLoyaltyPoints::COLUMNS
-            )
-            .as_str(),
-            args,
+            &CustomerLoyaltyPoints::build_insert_string(CustomerLoyaltyPoints::TABLE, &CustomerLoyaltyPoints::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.bonus_points.clone());
     }
 
     async fn update(connection: PgPool, entity: &CustomerLoyaltyPoints) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.customer_loyalty_point_id.clone());
-let _ = args.add(entity.award_points.clone());
-let _ = args.add(entity.redeem_points.clone());
-let _ = args.add(entity.balance_points.clone());
-let _ = args.add(entity.bonus_points.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", CustomerLoyaltyPoints::TABLE, CustomerLoyaltyPoints::COLUMNS_UPDATE).as_str(),
-            args,
+            &CustomerLoyaltyPoints::build_update_string(CustomerLoyaltyPoints::TABLE, &CustomerLoyaltyPoints::COLUMNS_ARRAY, CustomerLoyaltyPoints::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.bonus_points.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", CustomerLoyaltyPoints::TABLE, CustomerLoyaltyPoints::PK).as_str(),
+            &CustomerLoyaltyPoints::build_delete_string(CustomerLoyaltyPoints::TABLE, CustomerLoyaltyPoints::PK),
             args,
         )
         .execute(&connection)

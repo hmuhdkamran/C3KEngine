@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Salaries {
     pub salarie_id: Uuid,
 pub salary_type_id: Uuid,
@@ -28,12 +29,30 @@ pub month_id: Uuid
 
 impl Salaries {
     pub const TABLE: &'static str = r#""Payroll"."Salaries""#;
-    pub const PK: &'static str = r#"SalarieId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""SalarieId","SalaryTypeId","EmployeeId","EmployeeJobInfoId","AllowanceAmount","DeductionAmount","NetAmount","YearId","WeekId","FortNightId","Freezed","StatusId","MonthId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""SalarieId"=$1,"SalaryTypeId"=$2,"EmployeeId"=$3,"EmployeeJobInfoId"=$4,"AllowanceAmount"=$5,"DeductionAmount"=$6,"NetAmount"=$7,"YearId"=$8,"WeekId"=$9,"FortNightId"=$10,"Freezed"=$11,"StatusId"=$12,"MonthId"=$13 WHERE "SalarieId"=$1"#;
+    pub const PK: &'static str = "SalarieId";
+    pub const COLUMNS_ARRAY: [&'static str; 13] = ["SalarieId","SalaryTypeId","EmployeeId","EmployeeJobInfoId","AllowanceAmount","DeductionAmount","NetAmount","YearId","WeekId","FortNightId","Freezed","StatusId","MonthId"];
 
     pub fn get_id(&self) -> Uuid {
         self.salarie_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.salarie_id.clone());
+let _ = args.add(self.salary_type_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.employee_job_info_id.clone());
+let _ = args.add(self.allowance_amount.clone());
+let _ = args.add(self.deduction_amount.clone());
+let _ = args.add(self.net_amount.clone());
+let _ = args.add(self.year_id.clone());
+let _ = args.add(self.week_id.clone());
+let _ = args.add(self.fort_night_id.clone());
+let _ = args.add(self.freezed.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.month_id.clone());
+
+        args
     }
 
     pub fn new(salarie_id: Uuid,salary_type_id: Uuid,employee_id: Uuid,employee_job_info_id: Uuid,allowance_amount: f64,deduction_amount: f64,net_amount: f64,year_id: Uuid,week_id: Uuid,fort_night_id: Uuid,freezed: bool,status_id: Uuid,month_id: Uuid) -> Self {

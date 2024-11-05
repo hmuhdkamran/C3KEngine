@@ -17,11 +17,15 @@ pub struct CareerLevelsRepository {}
 
 impl IRepository<CareerLevels> for CareerLevelsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<CareerLevels>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", CareerLevels::COLUMNS, CareerLevels::TABLE).as_str())
-            .map(|row: PgRow| CareerLevels::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&CareerLevels::build_select_string(
+            CareerLevels::TABLE,
+            &CareerLevels::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| CareerLevels::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<CareerLevels> for CareerLevelsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<CareerLevels>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            CareerLevels::COLUMNS,
+        let result = sqlx::query(&CareerLevels::build_select_string(
             CareerLevels::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| CareerLevels::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &CareerLevels::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| CareerLevels::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &CareerLevels) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.career_level_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                CareerLevels::TABLE,
-                CareerLevels::COLUMNS
-            )
-            .as_str(),
-            args,
+            &CareerLevels::build_insert_string(CareerLevels::TABLE, &CareerLevels::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.abbreviation.clone());
     }
 
     async fn update(connection: PgPool, entity: &CareerLevels) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.career_level_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", CareerLevels::TABLE, CareerLevels::COLUMNS_UPDATE).as_str(),
-            args,
+            &CareerLevels::build_update_string(CareerLevels::TABLE, &CareerLevels::COLUMNS_ARRAY, CareerLevels::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.abbreviation.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", CareerLevels::TABLE, CareerLevels::PK).as_str(),
+            &CareerLevels::build_delete_string(CareerLevels::TABLE, CareerLevels::PK),
             args,
         )
         .execute(&connection)

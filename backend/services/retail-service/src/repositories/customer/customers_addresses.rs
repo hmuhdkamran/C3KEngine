@@ -17,11 +17,15 @@ pub struct CustomersAddressesRepository {}
 
 impl IRepository<CustomersAddresses> for CustomersAddressesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<CustomersAddresses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", CustomersAddresses::COLUMNS, CustomersAddresses::TABLE).as_str())
-            .map(|row: PgRow| CustomersAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&CustomersAddresses::build_select_string(
+            CustomersAddresses::TABLE,
+            &CustomersAddresses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| CustomersAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<CustomersAddresses> for CustomersAddressesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<CustomersAddresses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            CustomersAddresses::COLUMNS,
+        let result = sqlx::query(&CustomersAddresses::build_select_string(
             CustomersAddresses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| CustomersAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &CustomersAddresses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| CustomersAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &CustomersAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.customers_address_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.customer_id.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                CustomersAddresses::TABLE,
-                CustomersAddresses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &CustomersAddresses::build_insert_string(CustomersAddresses::TABLE, &CustomersAddresses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &CustomersAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.customers_address_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.customer_id.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", CustomersAddresses::TABLE, CustomersAddresses::COLUMNS_UPDATE).as_str(),
-            args,
+            &CustomersAddresses::build_update_string(CustomersAddresses::TABLE, &CustomersAddresses::COLUMNS_ARRAY, CustomersAddresses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", CustomersAddresses::TABLE, CustomersAddresses::PK).as_str(),
+            &CustomersAddresses::build_delete_string(CustomersAddresses::TABLE, CustomersAddresses::PK),
             args,
         )
         .execute(&connection)

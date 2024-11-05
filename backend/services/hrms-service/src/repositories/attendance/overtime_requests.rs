@@ -17,11 +17,15 @@ pub struct OvertimeRequestsRepository {}
 
 impl IRepository<OvertimeRequests> for OvertimeRequestsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<OvertimeRequests>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", OvertimeRequests::COLUMNS, OvertimeRequests::TABLE).as_str())
-            .map(|row: PgRow| OvertimeRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&OvertimeRequests::build_select_string(
+            OvertimeRequests::TABLE,
+            &OvertimeRequests::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| OvertimeRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<OvertimeRequests> for OvertimeRequestsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<OvertimeRequests>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            OvertimeRequests::COLUMNS,
+        let result = sqlx::query(&OvertimeRequests::build_select_string(
             OvertimeRequests::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| OvertimeRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &OvertimeRequests::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| OvertimeRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &OvertimeRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.overtime_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.overtime_date.clone());
-let _ = args.add(entity.overtime_hours.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.request_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                OvertimeRequests::TABLE,
-                OvertimeRequests::COLUMNS
-            )
-            .as_str(),
-            args,
+            &OvertimeRequests::build_insert_string(OvertimeRequests::TABLE, &OvertimeRequests::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &OvertimeRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.overtime_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.overtime_date.clone());
-let _ = args.add(entity.overtime_hours.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.request_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", OvertimeRequests::TABLE, OvertimeRequests::COLUMNS_UPDATE).as_str(),
-            args,
+            &OvertimeRequests::build_update_string(OvertimeRequests::TABLE, &OvertimeRequests::COLUMNS_ARRAY, OvertimeRequests::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", OvertimeRequests::TABLE, OvertimeRequests::PK).as_str(),
+            &OvertimeRequests::build_delete_string(OvertimeRequests::TABLE, OvertimeRequests::PK),
             args,
         )
         .execute(&connection)

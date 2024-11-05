@@ -17,11 +17,15 @@ pub struct EmployeeAddressesRepository {}
 
 impl IRepository<EmployeeAddresses> for EmployeeAddressesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeAddresses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeAddresses::COLUMNS, EmployeeAddresses::TABLE).as_str())
-            .map(|row: PgRow| EmployeeAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeAddresses::build_select_string(
+            EmployeeAddresses::TABLE,
+            &EmployeeAddresses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,41 +34,23 @@ impl IRepository<EmployeeAddresses> for EmployeeAddressesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeAddresses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeAddresses::COLUMNS,
+        let result = sqlx::query(&EmployeeAddresses::build_select_string(
             EmployeeAddresses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeAddresses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeAddresses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeAddresses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_address_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.street_address.clone());
-let _ = args.add(entity.city_id.clone());
-let _ = args.add(entity.state_id.clone());
-let _ = args.add(entity.country_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.is_primary.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeAddresses::TABLE,
-                EmployeeAddresses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeAddresses::build_insert_string(EmployeeAddresses::TABLE, &EmployeeAddresses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -80,20 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeAddresses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_address_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.street_address.clone());
-let _ = args.add(entity.city_id.clone());
-let _ = args.add(entity.state_id.clone());
-let _ = args.add(entity.country_id.clone());
-let _ = args.add(entity.address_type_id.clone());
-let _ = args.add(entity.is_primary.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeAddresses::TABLE, EmployeeAddresses::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeAddresses::build_update_string(EmployeeAddresses::TABLE, &EmployeeAddresses::COLUMNS_ARRAY, EmployeeAddresses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -113,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeAddresses::TABLE, EmployeeAddresses::PK).as_str(),
+            &EmployeeAddresses::build_delete_string(EmployeeAddresses::TABLE, EmployeeAddresses::PK),
             args,
         )
         .execute(&connection)

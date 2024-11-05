@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Interests {
     pub interest_id: Uuid,
 pub full_name: String,
@@ -19,12 +20,21 @@ pub abbreviation: String
 
 impl Interests {
     pub const TABLE: &'static str = r#""Setup"."Interests""#;
-    pub const PK: &'static str = r#"InterestId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""InterestId","FullName","StatusId","Abbreviation""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""InterestId"=$1,"FullName"=$2,"StatusId"=$3,"Abbreviation"=$4 WHERE "InterestId"=$1"#;
+    pub const PK: &'static str = "InterestId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["InterestId","FullName","StatusId","Abbreviation"];
 
     pub fn get_id(&self) -> Uuid {
         self.interest_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.interest_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.abbreviation.clone());
+
+        args
     }
 
     pub fn new(interest_id: Uuid,full_name: String,status_id: Uuid,abbreviation: String) -> Self {

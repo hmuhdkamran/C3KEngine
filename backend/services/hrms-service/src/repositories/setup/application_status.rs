@@ -17,11 +17,15 @@ pub struct ApplicationStatusRepository {}
 
 impl IRepository<ApplicationStatus> for ApplicationStatusRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<ApplicationStatus>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", ApplicationStatus::COLUMNS, ApplicationStatus::TABLE).as_str())
-            .map(|row: PgRow| ApplicationStatus::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&ApplicationStatus::build_select_string(
+            ApplicationStatus::TABLE,
+            &ApplicationStatus::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| ApplicationStatus::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<ApplicationStatus> for ApplicationStatusRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<ApplicationStatus>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            ApplicationStatus::COLUMNS,
+        let result = sqlx::query(&ApplicationStatus::build_select_string(
             ApplicationStatus::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| ApplicationStatus::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &ApplicationStatus::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| ApplicationStatus::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &ApplicationStatus) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                ApplicationStatus::TABLE,
-                ApplicationStatus::COLUMNS
-            )
-            .as_str(),
-            args,
+            &ApplicationStatus::build_insert_string(ApplicationStatus::TABLE, &ApplicationStatus::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.abbreviation.clone());
     }
 
     async fn update(connection: PgPool, entity: &ApplicationStatus) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.application_status_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", ApplicationStatus::TABLE, ApplicationStatus::COLUMNS_UPDATE).as_str(),
-            args,
+            &ApplicationStatus::build_update_string(ApplicationStatus::TABLE, &ApplicationStatus::COLUMNS_ARRAY, ApplicationStatus::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.abbreviation.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", ApplicationStatus::TABLE, ApplicationStatus::PK).as_str(),
+            &ApplicationStatus::build_delete_string(ApplicationStatus::TABLE, ApplicationStatus::PK),
             args,
         )
         .execute(&connection)

@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct SaleOrders {
     pub sale_order_id: Uuid,
 pub order_no: String,
@@ -26,12 +27,28 @@ pub fbr_invoice_no: String
 
 impl SaleOrders {
     pub const TABLE: &'static str = r#""PointOfSale"."SaleOrders""#;
-    pub const PK: &'static str = r#"SaleOrderId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""SaleOrderId","OrderNo","OrderDate","ReffNo","OrderStatusId","OrderTypeId","CustomerId","CustomerTypeId","BranchId","StatusId","FBRInvoiceNo""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""SaleOrderId"=$1,"OrderNo"=$2,"OrderDate"=$3,"ReffNo"=$4,"OrderStatusId"=$5,"OrderTypeId"=$6,"CustomerId"=$7,"CustomerTypeId"=$8,"BranchId"=$9,"StatusId"=$10,"FBRInvoiceNo"=$11 WHERE "SaleOrderId"=$1"#;
+    pub const PK: &'static str = "SaleOrderId";
+    pub const COLUMNS_ARRAY: [&'static str; 11] = ["SaleOrderId","OrderNo","OrderDate","ReffNo","OrderStatusId","OrderTypeId","CustomerId","CustomerTypeId","BranchId","StatusId","FBRInvoiceNo"];
 
     pub fn get_id(&self) -> Uuid {
         self.sale_order_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.sale_order_id.clone());
+let _ = args.add(self.order_no.clone());
+let _ = args.add(self.order_date.clone());
+let _ = args.add(self.reff_no.clone());
+let _ = args.add(self.order_status_id.clone());
+let _ = args.add(self.order_type_id.clone());
+let _ = args.add(self.customer_id.clone());
+let _ = args.add(self.customer_type_id.clone());
+let _ = args.add(self.branch_id.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.fbr_invoice_no.clone());
+
+        args
     }
 
     pub fn new(sale_order_id: Uuid,order_no: String,order_date: DateTime<Utc>,reff_no: String,order_status_id: Uuid,order_type_id: Uuid,customer_id: Uuid,customer_type_id: Uuid,branch_id: Uuid,status_id: Uuid,fbr_invoice_no: String) -> Self {

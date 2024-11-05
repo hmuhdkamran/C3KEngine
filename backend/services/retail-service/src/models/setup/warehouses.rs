@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Warehouses {
     pub warehouse_id: Uuid,
 pub abbreviation: String,
@@ -20,12 +21,22 @@ pub status_id: Uuid
 
 impl Warehouses {
     pub const TABLE: &'static str = r#""Setup"."Warehouses""#;
-    pub const PK: &'static str = r#"WarehouseId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""WarehouseId","Abbreviation","FullName","LocationId","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""WarehouseId"=$1,"Abbreviation"=$2,"FullName"=$3,"LocationId"=$4,"StatusId"=$5 WHERE "WarehouseId"=$1"#;
+    pub const PK: &'static str = "WarehouseId";
+    pub const COLUMNS_ARRAY: [&'static str; 5] = ["WarehouseId","Abbreviation","FullName","LocationId","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.warehouse_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.warehouse_id.clone());
+let _ = args.add(self.abbreviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.location_id.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(warehouse_id: Uuid,abbreviation: String,full_name: String,location_id: Uuid,status_id: Uuid) -> Self {

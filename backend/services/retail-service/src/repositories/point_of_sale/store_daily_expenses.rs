@@ -17,11 +17,15 @@ pub struct StoreDailyExpensesRepository {}
 
 impl IRepository<StoreDailyExpenses> for StoreDailyExpensesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<StoreDailyExpenses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", StoreDailyExpenses::COLUMNS, StoreDailyExpenses::TABLE).as_str())
-            .map(|row: PgRow| StoreDailyExpenses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&StoreDailyExpenses::build_select_string(
+            StoreDailyExpenses::TABLE,
+            &StoreDailyExpenses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| StoreDailyExpenses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,40 +34,23 @@ impl IRepository<StoreDailyExpenses> for StoreDailyExpensesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<StoreDailyExpenses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            StoreDailyExpenses::COLUMNS,
+        let result = sqlx::query(&StoreDailyExpenses::build_select_string(
             StoreDailyExpenses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| StoreDailyExpenses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &StoreDailyExpenses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| StoreDailyExpenses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &StoreDailyExpenses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.store_daily_expense_id.clone());
-let _ = args.add(entity.expense_type_id.clone());
-let _ = args.add(entity.amount.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.picture.clone());
-let _ = args.add(entity.expense_date.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.branch_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                StoreDailyExpenses::TABLE,
-                StoreDailyExpenses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &StoreDailyExpenses::build_insert_string(StoreDailyExpenses::TABLE, &StoreDailyExpenses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -79,19 +66,9 @@ let _ = args.add(entity.branch_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &StoreDailyExpenses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.store_daily_expense_id.clone());
-let _ = args.add(entity.expense_type_id.clone());
-let _ = args.add(entity.amount.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.picture.clone());
-let _ = args.add(entity.expense_date.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.branch_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", StoreDailyExpenses::TABLE, StoreDailyExpenses::COLUMNS_UPDATE).as_str(),
-            args,
+            &StoreDailyExpenses::build_update_string(StoreDailyExpenses::TABLE, &StoreDailyExpenses::COLUMNS_ARRAY, StoreDailyExpenses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -111,7 +88,7 @@ let _ = args.add(entity.branch_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", StoreDailyExpenses::TABLE, StoreDailyExpenses::PK).as_str(),
+            &StoreDailyExpenses::build_delete_string(StoreDailyExpenses::TABLE, StoreDailyExpenses::PK),
             args,
         )
         .execute(&connection)

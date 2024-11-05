@@ -17,11 +17,15 @@ pub struct MonthsRepository {}
 
 impl IRepository<Months> for MonthsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Months>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Months::COLUMNS, Months::TABLE).as_str())
-            .map(|row: PgRow| Months::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Months::build_select_string(
+            Months::TABLE,
+            &Months::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Months::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,35 +34,23 @@ impl IRepository<Months> for MonthsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Months>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Months::COLUMNS,
+        let result = sqlx::query(&Months::build_select_string(
             Months::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Months::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Months::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Months::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Months) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.month_id.clone());
-let _ = args.add(entity.month_no.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Months::TABLE,
-                Months::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Months::build_insert_string(Months::TABLE, &Months::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -74,14 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Months) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.month_id.clone());
-let _ = args.add(entity.month_no.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Months::TABLE, Months::COLUMNS_UPDATE).as_str(),
-            args,
+            &Months::build_update_string(Months::TABLE, &Months::COLUMNS_ARRAY, Months::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -101,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Months::TABLE, Months::PK).as_str(),
+            &Months::build_delete_string(Months::TABLE, Months::PK),
             args,
         )
         .execute(&connection)

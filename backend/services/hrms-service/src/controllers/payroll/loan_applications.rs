@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn loan_applications_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/loan_applications")
+        web::scope("/api/hrms/loan_applications")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

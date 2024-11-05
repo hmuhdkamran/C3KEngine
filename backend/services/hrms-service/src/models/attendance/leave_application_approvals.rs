@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct LeaveApplicationApprovals {
     pub leave_application_approval_id: Uuid,
 pub leave_application_id: Uuid,
@@ -22,12 +23,24 @@ pub comments: String
 
 impl LeaveApplicationApprovals {
     pub const TABLE: &'static str = r#""Attendance"."LeaveApplicationApprovals""#;
-    pub const PK: &'static str = r#"LeaveApplicationApprovalId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""LeaveApplicationApprovalId","LeaveApplicationId","ApprovedBy","ApprovalDate","ApplicationStatusId","StatusId","Comments""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""LeaveApplicationApprovalId"=$1,"LeaveApplicationId"=$2,"ApprovedBy"=$3,"ApprovalDate"=$4,"ApplicationStatusId"=$5,"StatusId"=$6,"Comments"=$7 WHERE "LeaveApplicationApprovalId"=$1"#;
+    pub const PK: &'static str = "LeaveApplicationApprovalId";
+    pub const COLUMNS_ARRAY: [&'static str; 7] = ["LeaveApplicationApprovalId","LeaveApplicationId","ApprovedBy","ApprovalDate","ApplicationStatusId","StatusId","Comments"];
 
     pub fn get_id(&self) -> Uuid {
         self.leave_application_approval_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.leave_application_approval_id.clone());
+let _ = args.add(self.leave_application_id.clone());
+let _ = args.add(self.approved_by.clone());
+let _ = args.add(self.approval_date.clone());
+let _ = args.add(self.application_status_id.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.comments.clone());
+
+        args
     }
 
     pub fn new(leave_application_approval_id: Uuid,leave_application_id: Uuid,approved_by: Uuid,approval_date: DateTime<Utc>,application_status_id: Uuid,status_id: Uuid,comments: String) -> Self {

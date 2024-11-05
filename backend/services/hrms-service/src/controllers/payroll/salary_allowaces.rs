@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn salary_allowaces_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/salary_allowaces")
+        web::scope("/api/hrms/salary_allowaces")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

@@ -17,11 +17,15 @@ pub struct SalariesRepository {}
 
 impl IRepository<Salaries> for SalariesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Salaries>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Salaries::COLUMNS, Salaries::TABLE).as_str())
-            .map(|row: PgRow| Salaries::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Salaries::build_select_string(
+            Salaries::TABLE,
+            &Salaries::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Salaries::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,45 +34,23 @@ impl IRepository<Salaries> for SalariesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Salaries>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Salaries::COLUMNS,
+        let result = sqlx::query(&Salaries::build_select_string(
             Salaries::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Salaries::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Salaries::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Salaries::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Salaries) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.salarie_id.clone());
-let _ = args.add(entity.salary_type_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.employee_job_info_id.clone());
-let _ = args.add(entity.allowance_amount.clone());
-let _ = args.add(entity.deduction_amount.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.year_id.clone());
-let _ = args.add(entity.week_id.clone());
-let _ = args.add(entity.fort_night_id.clone());
-let _ = args.add(entity.freezed.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.month_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Salaries::TABLE,
-                Salaries::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Salaries::build_insert_string(Salaries::TABLE, &Salaries::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -84,24 +66,9 @@ let _ = args.add(entity.month_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Salaries) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.salarie_id.clone());
-let _ = args.add(entity.salary_type_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.employee_job_info_id.clone());
-let _ = args.add(entity.allowance_amount.clone());
-let _ = args.add(entity.deduction_amount.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.year_id.clone());
-let _ = args.add(entity.week_id.clone());
-let _ = args.add(entity.fort_night_id.clone());
-let _ = args.add(entity.freezed.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.month_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Salaries::TABLE, Salaries::COLUMNS_UPDATE).as_str(),
-            args,
+            &Salaries::build_update_string(Salaries::TABLE, &Salaries::COLUMNS_ARRAY, Salaries::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -121,7 +88,7 @@ let _ = args.add(entity.month_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Salaries::TABLE, Salaries::PK).as_str(),
+            &Salaries::build_delete_string(Salaries::TABLE, Salaries::PK),
             args,
         )
         .execute(&connection)

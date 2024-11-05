@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct TaxRates {
     pub tax_rate_id: Uuid,
 pub full_name: String,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl TaxRates {
     pub const TABLE: &'static str = r#""Setup"."TaxRates""#;
-    pub const PK: &'static str = r#"TaxRateId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""TaxRateId","FullName","TaxRate","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""TaxRateId"=$1,"FullName"=$2,"TaxRate"=$3,"StatusId"=$4 WHERE "TaxRateId"=$1"#;
+    pub const PK: &'static str = "TaxRateId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["TaxRateId","FullName","TaxRate","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.tax_rate_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.tax_rate_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.tax_rate.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(tax_rate_id: Uuid,full_name: String,tax_rate: f64,status_id: Uuid) -> Self {

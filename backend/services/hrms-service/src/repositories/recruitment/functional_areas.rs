@@ -17,11 +17,15 @@ pub struct FunctionalAreasRepository {}
 
 impl IRepository<FunctionalAreas> for FunctionalAreasRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<FunctionalAreas>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", FunctionalAreas::COLUMNS, FunctionalAreas::TABLE).as_str())
-            .map(|row: PgRow| FunctionalAreas::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&FunctionalAreas::build_select_string(
+            FunctionalAreas::TABLE,
+            &FunctionalAreas::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| FunctionalAreas::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<FunctionalAreas> for FunctionalAreasRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<FunctionalAreas>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            FunctionalAreas::COLUMNS,
+        let result = sqlx::query(&FunctionalAreas::build_select_string(
             FunctionalAreas::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| FunctionalAreas::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &FunctionalAreas::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| FunctionalAreas::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &FunctionalAreas) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.functional_area_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                FunctionalAreas::TABLE,
-                FunctionalAreas::COLUMNS
-            )
-            .as_str(),
-            args,
+            &FunctionalAreas::build_insert_string(FunctionalAreas::TABLE, &FunctionalAreas::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &FunctionalAreas) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.functional_area_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", FunctionalAreas::TABLE, FunctionalAreas::COLUMNS_UPDATE).as_str(),
-            args,
+            &FunctionalAreas::build_update_string(FunctionalAreas::TABLE, &FunctionalAreas::COLUMNS_ARRAY, FunctionalAreas::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", FunctionalAreas::TABLE, FunctionalAreas::PK).as_str(),
+            &FunctionalAreas::build_delete_string(FunctionalAreas::TABLE, FunctionalAreas::PK),
             args,
         )
         .execute(&connection)

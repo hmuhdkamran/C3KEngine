@@ -17,11 +17,15 @@ pub struct TravelRequestExpensesRepository {}
 
 impl IRepository<TravelRequestExpenses> for TravelRequestExpensesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TravelRequestExpenses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TravelRequestExpenses::COLUMNS, TravelRequestExpenses::TABLE).as_str())
-            .map(|row: PgRow| TravelRequestExpenses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TravelRequestExpenses::build_select_string(
+            TravelRequestExpenses::TABLE,
+            &TravelRequestExpenses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TravelRequestExpenses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<TravelRequestExpenses> for TravelRequestExpensesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TravelRequestExpenses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TravelRequestExpenses::COLUMNS,
+        let result = sqlx::query(&TravelRequestExpenses::build_select_string(
             TravelRequestExpenses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TravelRequestExpenses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TravelRequestExpenses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TravelRequestExpenses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TravelRequestExpenses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_expense_id.clone());
-let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.expense_type_id.clone());
-let _ = args.add(entity.expense_amount.clone());
-let _ = args.add(entity.expensedate.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TravelRequestExpenses::TABLE,
-                TravelRequestExpenses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TravelRequestExpenses::build_insert_string(TravelRequestExpenses::TABLE, &TravelRequestExpenses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &TravelRequestExpenses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_expense_id.clone());
-let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.expense_type_id.clone());
-let _ = args.add(entity.expense_amount.clone());
-let _ = args.add(entity.expensedate.clone());
-let _ = args.add(entity.description.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TravelRequestExpenses::TABLE, TravelRequestExpenses::COLUMNS_UPDATE).as_str(),
-            args,
+            &TravelRequestExpenses::build_update_string(TravelRequestExpenses::TABLE, &TravelRequestExpenses::COLUMNS_ARRAY, TravelRequestExpenses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TravelRequestExpenses::TABLE, TravelRequestExpenses::PK).as_str(),
+            &TravelRequestExpenses::build_delete_string(TravelRequestExpenses::TABLE, TravelRequestExpenses::PK),
             args,
         )
         .execute(&connection)

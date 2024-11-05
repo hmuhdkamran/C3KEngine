@@ -17,11 +17,15 @@ pub struct FortNightsRepository {}
 
 impl IRepository<FortNights> for FortNightsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<FortNights>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", FortNights::COLUMNS, FortNights::TABLE).as_str())
-            .map(|row: PgRow| FortNights::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&FortNights::build_select_string(
+            FortNights::TABLE,
+            &FortNights::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| FortNights::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,35 +34,23 @@ impl IRepository<FortNights> for FortNightsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<FortNights>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            FortNights::COLUMNS,
+        let result = sqlx::query(&FortNights::build_select_string(
             FortNights::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| FortNights::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &FortNights::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| FortNights::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &FortNights) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.fort_night_id.clone());
-let _ = args.add(entity.fort_night_no.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                FortNights::TABLE,
-                FortNights::COLUMNS
-            )
-            .as_str(),
-            args,
+            &FortNights::build_insert_string(FortNights::TABLE, &FortNights::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -74,14 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &FortNights) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.fort_night_id.clone());
-let _ = args.add(entity.fort_night_no.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", FortNights::TABLE, FortNights::COLUMNS_UPDATE).as_str(),
-            args,
+            &FortNights::build_update_string(FortNights::TABLE, &FortNights::COLUMNS_ARRAY, FortNights::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -101,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", FortNights::TABLE, FortNights::PK).as_str(),
+            &FortNights::build_delete_string(FortNights::TABLE, FortNights::PK),
             args,
         )
         .execute(&connection)

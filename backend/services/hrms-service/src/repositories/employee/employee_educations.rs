@@ -17,11 +17,15 @@ pub struct EmployeeEducationsRepository {}
 
 impl IRepository<EmployeeEducations> for EmployeeEducationsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeEducations>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeEducations::COLUMNS, EmployeeEducations::TABLE).as_str())
-            .map(|row: PgRow| EmployeeEducations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeEducations::build_select_string(
+            EmployeeEducations::TABLE,
+            &EmployeeEducations::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeEducations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<EmployeeEducations> for EmployeeEducationsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeEducations>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeEducations::COLUMNS,
+        let result = sqlx::query(&EmployeeEducations::build_select_string(
             EmployeeEducations::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeEducations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeEducations::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeEducations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeEducations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_education_id.clone());
-let _ = args.add(entity.degree_id.clone());
-let _ = args.add(entity.major_subject.clone());
-let _ = args.add(entity.completion_year.clone());
-let _ = args.add(entity.institute_id.clone());
-let _ = args.add(entity.personal_information_id.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeEducations::TABLE,
-                EmployeeEducations::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeEducations::build_insert_string(EmployeeEducations::TABLE, &EmployeeEducations::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeEducations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_education_id.clone());
-let _ = args.add(entity.degree_id.clone());
-let _ = args.add(entity.major_subject.clone());
-let _ = args.add(entity.completion_year.clone());
-let _ = args.add(entity.institute_id.clone());
-let _ = args.add(entity.personal_information_id.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeEducations::TABLE, EmployeeEducations::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeEducations::build_update_string(EmployeeEducations::TABLE, &EmployeeEducations::COLUMNS_ARRAY, EmployeeEducations::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeEducations::TABLE, EmployeeEducations::PK).as_str(),
+            &EmployeeEducations::build_delete_string(EmployeeEducations::TABLE, EmployeeEducations::PK),
             args,
         )
         .execute(&connection)

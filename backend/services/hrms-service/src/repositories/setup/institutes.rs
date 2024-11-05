@@ -17,9 +17,11 @@ pub struct InstitutesRepository {}
 
 impl IRepository<Institutes> for InstitutesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Institutes>, Box<dyn StdError>> {
-        let result = sqlx::query(
-            format!("SELECT {} FROM {}", Institutes::COLUMNS, Institutes::TABLE).as_str(),
-        )
+        let result = sqlx::query(&Institutes::build_select_string(
+            Institutes::TABLE,
+            &Institutes::COLUMNS_ARRAY,
+            None,
+        ))
         .map(|row: PgRow| Institutes::from_row(&row))
         .fetch_all(&connection)
         .await
@@ -32,36 +34,23 @@ impl IRepository<Institutes> for InstitutesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Institutes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Institutes::COLUMNS,
+        let result = sqlx::query(&Institutes::build_select_string(
             Institutes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Institutes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Institutes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Institutes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Institutes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.institute_id.clone());
-        let _ = args.add(entity.full_name.clone());
-        let _ = args.add(entity.status_id.clone());
-        let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Institutes::TABLE,
-                Institutes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Institutes::build_insert_string(Institutes::TABLE, &Institutes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,20 +66,9 @@ impl IRepository<Institutes> for InstitutesRepository {
     }
 
     async fn update(connection: PgPool, entity: &Institutes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.institute_id.clone());
-        let _ = args.add(entity.full_name.clone());
-        let _ = args.add(entity.status_id.clone());
-        let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "UPDATE {} SET {}",
-                Institutes::TABLE,
-                Institutes::COLUMNS_UPDATE
-            )
-            .as_str(),
-            args,
+            &Institutes::build_update_string(Institutes::TABLE, &Institutes::COLUMNS_ARRAY, Institutes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -110,7 +88,7 @@ impl IRepository<Institutes> for InstitutesRepository {
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Institutes::TABLE, Institutes::PK).as_str(),
+            &Institutes::build_delete_string(Institutes::TABLE, Institutes::PK),
             args,
         )
         .execute(&connection)

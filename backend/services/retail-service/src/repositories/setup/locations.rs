@@ -17,11 +17,15 @@ pub struct LocationsRepository {}
 
 impl IRepository<Locations> for LocationsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Locations>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Locations::COLUMNS, Locations::TABLE).as_str())
-            .map(|row: PgRow| Locations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Locations::build_select_string(
+            Locations::TABLE,
+            &Locations::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Locations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,40 +34,23 @@ impl IRepository<Locations> for LocationsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Locations>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Locations::COLUMNS,
+        let result = sqlx::query(&Locations::build_select_string(
             Locations::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Locations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Locations::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Locations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Locations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.location_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.city_id.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Locations::TABLE,
-                Locations::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Locations::build_insert_string(Locations::TABLE, &Locations::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -79,19 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Locations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.location_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.address.clone());
-let _ = args.add(entity.longitude.clone());
-let _ = args.add(entity.latitude.clone());
-let _ = args.add(entity.city_id.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Locations::TABLE, Locations::COLUMNS_UPDATE).as_str(),
-            args,
+            &Locations::build_update_string(Locations::TABLE, &Locations::COLUMNS_ARRAY, Locations::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -111,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Locations::TABLE, Locations::PK).as_str(),
+            &Locations::build_delete_string(Locations::TABLE, Locations::PK),
             args,
         )
         .execute(&connection)

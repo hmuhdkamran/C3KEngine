@@ -17,11 +17,15 @@ pub struct TaxAdjustmentRequestsRepository {}
 
 impl IRepository<TaxAdjustmentRequests> for TaxAdjustmentRequestsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TaxAdjustmentRequests>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TaxAdjustmentRequests::COLUMNS, TaxAdjustmentRequests::TABLE).as_str())
-            .map(|row: PgRow| TaxAdjustmentRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TaxAdjustmentRequests::build_select_string(
+            TaxAdjustmentRequests::TABLE,
+            &TaxAdjustmentRequests::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TaxAdjustmentRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<TaxAdjustmentRequests> for TaxAdjustmentRequestsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TaxAdjustmentRequests>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TaxAdjustmentRequests::COLUMNS,
+        let result = sqlx::query(&TaxAdjustmentRequests::build_select_string(
             TaxAdjustmentRequests::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TaxAdjustmentRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TaxAdjustmentRequests::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TaxAdjustmentRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TaxAdjustmentRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_adjustment_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.adjustment_date.clone());
-let _ = args.add(entity.attached_document.clone());
-let _ = args.add(entity.adjustment_amount.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TaxAdjustmentRequests::TABLE,
-                TaxAdjustmentRequests::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TaxAdjustmentRequests::build_insert_string(TaxAdjustmentRequests::TABLE, &TaxAdjustmentRequests::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &TaxAdjustmentRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_adjustment_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.adjustment_date.clone());
-let _ = args.add(entity.attached_document.clone());
-let _ = args.add(entity.adjustment_amount.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TaxAdjustmentRequests::TABLE, TaxAdjustmentRequests::COLUMNS_UPDATE).as_str(),
-            args,
+            &TaxAdjustmentRequests::build_update_string(TaxAdjustmentRequests::TABLE, &TaxAdjustmentRequests::COLUMNS_ARRAY, TaxAdjustmentRequests::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TaxAdjustmentRequests::TABLE, TaxAdjustmentRequests::PK).as_str(),
+            &TaxAdjustmentRequests::build_delete_string(TaxAdjustmentRequests::TABLE, TaxAdjustmentRequests::PK),
             args,
         )
         .execute(&connection)

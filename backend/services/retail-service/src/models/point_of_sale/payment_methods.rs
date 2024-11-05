@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct PaymentMethods {
     pub payment_method_id: Uuid,
 pub abberviation: String,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl PaymentMethods {
     pub const TABLE: &'static str = r#""PointOfSale"."PaymentMethods""#;
-    pub const PK: &'static str = r#"PaymentMethodId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""PaymentMethodId","Abberviation","FullName","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""PaymentMethodId"=$1,"Abberviation"=$2,"FullName"=$3,"StatusId"=$4 WHERE "PaymentMethodId"=$1"#;
+    pub const PK: &'static str = "PaymentMethodId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["PaymentMethodId","Abberviation","FullName","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.payment_method_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.payment_method_id.clone());
+let _ = args.add(self.abberviation.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(payment_method_id: Uuid,abberviation: String,full_name: String,status_id: Uuid) -> Self {

@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct ProductAttributes {
     pub product_attribute_id: Uuid,
 pub product_id: Uuid,
@@ -20,12 +21,22 @@ pub status_id: Uuid
 
 impl ProductAttributes {
     pub const TABLE: &'static str = r#""Inventory"."ProductAttributes""#;
-    pub const PK: &'static str = r#"ProductAttributeId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""ProductAttributeId","ProductId","AttirbuteId","AttributeValue","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""ProductAttributeId"=$1,"ProductId"=$2,"AttirbuteId"=$3,"AttributeValue"=$4,"StatusId"=$5 WHERE "ProductAttributeId"=$1"#;
+    pub const PK: &'static str = "ProductAttributeId";
+    pub const COLUMNS_ARRAY: [&'static str; 5] = ["ProductAttributeId","ProductId","AttirbuteId","AttributeValue","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.product_attribute_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.product_attribute_id.clone());
+let _ = args.add(self.product_id.clone());
+let _ = args.add(self.attirbute_id.clone());
+let _ = args.add(self.attribute_value.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(product_attribute_id: Uuid,product_id: Uuid,attirbute_id: Uuid,attribute_value: String,status_id: Uuid) -> Self {

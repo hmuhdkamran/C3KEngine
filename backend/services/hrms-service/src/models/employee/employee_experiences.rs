@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct EmployeeExperiences {
     pub employee_experience_id: Uuid,
 pub employee_id: Uuid,
@@ -27,12 +28,29 @@ pub status_id: Uuid
 
 impl EmployeeExperiences {
     pub const TABLE: &'static str = r#""Employee"."EmployeeExperiences""#;
-    pub const PK: &'static str = r#"EmployeeExperienceId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""EmployeeExperienceId","EmployeeId","CompanyName","DepartmentId","DesignationId","ContactPerson","CompanyEmail","CompanyPhone","StartDate","EndDate","LeavingReason","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""EmployeeExperienceId"=$1,"EmployeeId"=$2,"CompanyName"=$3,"DepartmentId"=$4,"DesignationId"=$5,"ContactPerson"=$6,"CompanyEmail"=$7,"CompanyPhone"=$8,"StartDate"=$9,"EndDate"=$10,"LeavingReason"=$11,"StatusId"=$12 WHERE "EmployeeExperienceId"=$1"#;
+    pub const PK: &'static str = "EmployeeExperienceId";
+    pub const COLUMNS_ARRAY: [&'static str; 12] = ["EmployeeExperienceId","EmployeeId","CompanyName","DepartmentId","DesignationId","ContactPerson","CompanyEmail","CompanyPhone","StartDate","EndDate","LeavingReason","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.employee_experience_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.employee_experience_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.company_name.clone());
+let _ = args.add(self.department_id.clone());
+let _ = args.add(self.designation_id.clone());
+let _ = args.add(self.contact_person.clone());
+let _ = args.add(self.company_email.clone());
+let _ = args.add(self.company_phone.clone());
+let _ = args.add(self.start_date.clone());
+let _ = args.add(self.end_date.clone());
+let _ = args.add(self.leaving_reason.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(employee_experience_id: Uuid,employee_id: Uuid,company_name: String,department_id: Uuid,designation_id: Uuid,contact_person: String,company_email: String,company_phone: String,start_date: DateTime<Utc>,end_date: DateTime<Utc>,leaving_reason: String,status_id: Uuid) -> Self {

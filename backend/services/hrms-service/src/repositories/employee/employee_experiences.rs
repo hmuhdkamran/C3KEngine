@@ -17,11 +17,15 @@ pub struct EmployeeExperiencesRepository {}
 
 impl IRepository<EmployeeExperiences> for EmployeeExperiencesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeExperiences>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeExperiences::COLUMNS, EmployeeExperiences::TABLE).as_str())
-            .map(|row: PgRow| EmployeeExperiences::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeExperiences::build_select_string(
+            EmployeeExperiences::TABLE,
+            &EmployeeExperiences::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeExperiences::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,44 +34,23 @@ impl IRepository<EmployeeExperiences> for EmployeeExperiencesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeExperiences>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeExperiences::COLUMNS,
+        let result = sqlx::query(&EmployeeExperiences::build_select_string(
             EmployeeExperiences::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeExperiences::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeExperiences::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeExperiences::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeExperiences) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_experience_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.company_name.clone());
-let _ = args.add(entity.department_id.clone());
-let _ = args.add(entity.designation_id.clone());
-let _ = args.add(entity.contact_person.clone());
-let _ = args.add(entity.company_email.clone());
-let _ = args.add(entity.company_phone.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.leaving_reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeExperiences::TABLE,
-                EmployeeExperiences::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeExperiences::build_insert_string(EmployeeExperiences::TABLE, &EmployeeExperiences::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -83,23 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeExperiences) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_experience_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.company_name.clone());
-let _ = args.add(entity.department_id.clone());
-let _ = args.add(entity.designation_id.clone());
-let _ = args.add(entity.contact_person.clone());
-let _ = args.add(entity.company_email.clone());
-let _ = args.add(entity.company_phone.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.leaving_reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeExperiences::TABLE, EmployeeExperiences::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeExperiences::build_update_string(EmployeeExperiences::TABLE, &EmployeeExperiences::COLUMNS_ARRAY, EmployeeExperiences::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -119,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeExperiences::TABLE, EmployeeExperiences::PK).as_str(),
+            &EmployeeExperiences::build_delete_string(EmployeeExperiences::TABLE, EmployeeExperiences::PK),
             args,
         )
         .execute(&connection)

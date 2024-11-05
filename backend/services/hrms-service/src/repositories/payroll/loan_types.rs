@@ -17,11 +17,15 @@ pub struct LoanTypesRepository {}
 
 impl IRepository<LoanTypes> for LoanTypesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<LoanTypes>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", LoanTypes::COLUMNS, LoanTypes::TABLE).as_str())
-            .map(|row: PgRow| LoanTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&LoanTypes::build_select_string(
+            LoanTypes::TABLE,
+            &LoanTypes::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| LoanTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<LoanTypes> for LoanTypesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<LoanTypes>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            LoanTypes::COLUMNS,
+        let result = sqlx::query(&LoanTypes::build_select_string(
             LoanTypes::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| LoanTypes::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &LoanTypes::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| LoanTypes::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &LoanTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.loan_type_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                LoanTypes::TABLE,
-                LoanTypes::COLUMNS
-            )
-            .as_str(),
-            args,
+            &LoanTypes::build_insert_string(LoanTypes::TABLE, &LoanTypes::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.abbreviation.clone());
     }
 
     async fn update(connection: PgPool, entity: &LoanTypes) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.loan_type_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", LoanTypes::TABLE, LoanTypes::COLUMNS_UPDATE).as_str(),
-            args,
+            &LoanTypes::build_update_string(LoanTypes::TABLE, &LoanTypes::COLUMNS_ARRAY, LoanTypes::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.abbreviation.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", LoanTypes::TABLE, LoanTypes::PK).as_str(),
+            &LoanTypes::build_delete_string(LoanTypes::TABLE, LoanTypes::PK),
             args,
         )
         .execute(&connection)

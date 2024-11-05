@@ -17,11 +17,15 @@ pub struct ResignReasonsRepository {}
 
 impl IRepository<ResignReasons> for ResignReasonsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<ResignReasons>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", ResignReasons::COLUMNS, ResignReasons::TABLE).as_str())
-            .map(|row: PgRow| ResignReasons::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&ResignReasons::build_select_string(
+            ResignReasons::TABLE,
+            &ResignReasons::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| ResignReasons::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<ResignReasons> for ResignReasonsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<ResignReasons>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            ResignReasons::COLUMNS,
+        let result = sqlx::query(&ResignReasons::build_select_string(
             ResignReasons::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| ResignReasons::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &ResignReasons::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| ResignReasons::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &ResignReasons) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.resign_reason_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                ResignReasons::TABLE,
-                ResignReasons::COLUMNS
-            )
-            .as_str(),
-            args,
+            &ResignReasons::build_insert_string(ResignReasons::TABLE, &ResignReasons::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &ResignReasons) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.resign_reason_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.reason.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", ResignReasons::TABLE, ResignReasons::COLUMNS_UPDATE).as_str(),
-            args,
+            &ResignReasons::build_update_string(ResignReasons::TABLE, &ResignReasons::COLUMNS_ARRAY, ResignReasons::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", ResignReasons::TABLE, ResignReasons::PK).as_str(),
+            &ResignReasons::build_delete_string(ResignReasons::TABLE, ResignReasons::PK),
             args,
         )
         .execute(&connection)

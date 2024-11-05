@@ -17,11 +17,15 @@ pub struct EmployeeContactsRepository {}
 
 impl IRepository<EmployeeContacts> for EmployeeContactsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeContacts>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeContacts::COLUMNS, EmployeeContacts::TABLE).as_str())
-            .map(|row: PgRow| EmployeeContacts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeContacts::build_select_string(
+            EmployeeContacts::TABLE,
+            &EmployeeContacts::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeContacts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<EmployeeContacts> for EmployeeContactsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeContacts>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeContacts::COLUMNS,
+        let result = sqlx::query(&EmployeeContacts::build_select_string(
             EmployeeContacts::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeContacts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeContacts::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeContacts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeContacts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_contacts_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.contact_type_id.clone());
-let _ = args.add(entity.contact_value.clone());
-let _ = args.add(entity.is_primary.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeContacts::TABLE,
-                EmployeeContacts::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeContacts::build_insert_string(EmployeeContacts::TABLE, &EmployeeContacts::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeContacts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_contacts_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.contact_type_id.clone());
-let _ = args.add(entity.contact_value.clone());
-let _ = args.add(entity.is_primary.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeContacts::TABLE, EmployeeContacts::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeContacts::build_update_string(EmployeeContacts::TABLE, &EmployeeContacts::COLUMNS_ARRAY, EmployeeContacts::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeContacts::TABLE, EmployeeContacts::PK).as_str(),
+            &EmployeeContacts::build_delete_string(EmployeeContacts::TABLE, EmployeeContacts::PK),
             args,
         )
         .execute(&connection)

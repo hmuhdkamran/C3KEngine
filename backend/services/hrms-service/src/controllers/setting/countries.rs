@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn countries_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/countries")
+        web::scope("/api/hrms/countries")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

@@ -17,11 +17,15 @@ pub struct EmployeeLeaveEntitlementsRepository {}
 
 impl IRepository<EmployeeLeaveEntitlements> for EmployeeLeaveEntitlementsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeLeaveEntitlements>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeLeaveEntitlements::COLUMNS, EmployeeLeaveEntitlements::TABLE).as_str())
-            .map(|row: PgRow| EmployeeLeaveEntitlements::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeLeaveEntitlements::build_select_string(
+            EmployeeLeaveEntitlements::TABLE,
+            &EmployeeLeaveEntitlements::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeLeaveEntitlements::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,39 +34,23 @@ impl IRepository<EmployeeLeaveEntitlements> for EmployeeLeaveEntitlementsReposit
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeLeaveEntitlements>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeLeaveEntitlements::COLUMNS,
+        let result = sqlx::query(&EmployeeLeaveEntitlements::build_select_string(
             EmployeeLeaveEntitlements::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeLeaveEntitlements::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeLeaveEntitlements::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeLeaveEntitlements::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeLeaveEntitlements) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_leave_entitlement_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.entitlement.clone());
-let _ = args.add(entity.availed.clone());
-let _ = args.add(entity.balanced.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeLeaveEntitlements::TABLE,
-                EmployeeLeaveEntitlements::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeLeaveEntitlements::build_insert_string(EmployeeLeaveEntitlements::TABLE, &EmployeeLeaveEntitlements::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -78,18 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeLeaveEntitlements) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_leave_entitlement_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.leave_type_id.clone());
-let _ = args.add(entity.entitlement.clone());
-let _ = args.add(entity.availed.clone());
-let _ = args.add(entity.balanced.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeLeaveEntitlements::TABLE, EmployeeLeaveEntitlements::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeLeaveEntitlements::build_update_string(EmployeeLeaveEntitlements::TABLE, &EmployeeLeaveEntitlements::COLUMNS_ARRAY, EmployeeLeaveEntitlements::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -109,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeLeaveEntitlements::TABLE, EmployeeLeaveEntitlements::PK).as_str(),
+            &EmployeeLeaveEntitlements::build_delete_string(EmployeeLeaveEntitlements::TABLE, EmployeeLeaveEntitlements::PK),
             args,
         )
         .execute(&connection)

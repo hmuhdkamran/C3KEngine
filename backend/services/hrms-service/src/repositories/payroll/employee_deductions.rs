@@ -17,11 +17,15 @@ pub struct EmployeeDeductionsRepository {}
 
 impl IRepository<EmployeeDeductions> for EmployeeDeductionsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<EmployeeDeductions>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", EmployeeDeductions::COLUMNS, EmployeeDeductions::TABLE).as_str())
-            .map(|row: PgRow| EmployeeDeductions::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&EmployeeDeductions::build_select_string(
+            EmployeeDeductions::TABLE,
+            &EmployeeDeductions::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| EmployeeDeductions::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<EmployeeDeductions> for EmployeeDeductionsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<EmployeeDeductions>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            EmployeeDeductions::COLUMNS,
+        let result = sqlx::query(&EmployeeDeductions::build_select_string(
             EmployeeDeductions::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| EmployeeDeductions::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &EmployeeDeductions::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| EmployeeDeductions::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &EmployeeDeductions) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_deduction_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.deduction_id.clone());
-let _ = args.add(entity.deduction_amount.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                EmployeeDeductions::TABLE,
-                EmployeeDeductions::COLUMNS
-            )
-            .as_str(),
-            args,
+            &EmployeeDeductions::build_insert_string(EmployeeDeductions::TABLE, &EmployeeDeductions::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &EmployeeDeductions) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_deduction_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.deduction_id.clone());
-let _ = args.add(entity.deduction_amount.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", EmployeeDeductions::TABLE, EmployeeDeductions::COLUMNS_UPDATE).as_str(),
-            args,
+            &EmployeeDeductions::build_update_string(EmployeeDeductions::TABLE, &EmployeeDeductions::COLUMNS_ARRAY, EmployeeDeductions::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", EmployeeDeductions::TABLE, EmployeeDeductions::PK).as_str(),
+            &EmployeeDeductions::build_delete_string(EmployeeDeductions::TABLE, EmployeeDeductions::PK),
             args,
         )
         .execute(&connection)

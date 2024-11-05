@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct DocumentTypes {
     pub document_type_id: Uuid,
 pub full_name: String,
@@ -19,12 +20,21 @@ pub abbreviation: String
 
 impl DocumentTypes {
     pub const TABLE: &'static str = r#""Setup"."DocumentTypes""#;
-    pub const PK: &'static str = r#"DocumentTypeId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""DocumentTypeId","FullName","StatusId","Abbreviation""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""DocumentTypeId"=$1,"FullName"=$2,"StatusId"=$3,"Abbreviation"=$4 WHERE "DocumentTypeId"=$1"#;
+    pub const PK: &'static str = "DocumentTypeId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["DocumentTypeId","FullName","StatusId","Abbreviation"];
 
     pub fn get_id(&self) -> Uuid {
         self.document_type_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.document_type_id.clone());
+let _ = args.add(self.full_name.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.abbreviation.clone());
+
+        args
     }
 
     pub fn new(document_type_id: Uuid,full_name: String,status_id: Uuid,abbreviation: String) -> Self {

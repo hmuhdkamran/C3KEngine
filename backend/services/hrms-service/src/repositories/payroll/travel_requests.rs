@@ -17,11 +17,15 @@ pub struct TravelRequestsRepository {}
 
 impl IRepository<TravelRequests> for TravelRequestsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TravelRequests>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TravelRequests::COLUMNS, TravelRequests::TABLE).as_str())
-            .map(|row: PgRow| TravelRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TravelRequests::build_select_string(
+            TravelRequests::TABLE,
+            &TravelRequests::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TravelRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,40 +34,23 @@ impl IRepository<TravelRequests> for TravelRequestsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TravelRequests>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TravelRequests::COLUMNS,
+        let result = sqlx::query(&TravelRequests::build_select_string(
             TravelRequests::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TravelRequests::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TravelRequests::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TravelRequests::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TravelRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.purpose.clone());
-let _ = args.add(entity.request_date.clone());
-let _ = args.add(entity.travel_from.clone());
-let _ = args.add(entity.travel_to.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TravelRequests::TABLE,
-                TravelRequests::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TravelRequests::build_insert_string(TravelRequests::TABLE, &TravelRequests::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -79,19 +66,9 @@ let _ = args.add(entity.travel_to.clone());
     }
 
     async fn update(connection: PgPool, entity: &TravelRequests) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.travel_request_id.clone());
-let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.purpose.clone());
-let _ = args.add(entity.request_date.clone());
-let _ = args.add(entity.travel_from.clone());
-let _ = args.add(entity.travel_to.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TravelRequests::TABLE, TravelRequests::COLUMNS_UPDATE).as_str(),
-            args,
+            &TravelRequests::build_update_string(TravelRequests::TABLE, &TravelRequests::COLUMNS_ARRAY, TravelRequests::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -111,7 +88,7 @@ let _ = args.add(entity.travel_to.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TravelRequests::TABLE, TravelRequests::PK).as_str(),
+            &TravelRequests::build_delete_string(TravelRequests::TABLE, TravelRequests::PK),
             args,
         )
         .execute(&connection)

@@ -17,11 +17,15 @@ pub struct GrnOrderDetailsRepository {}
 
 impl IRepository<GrnOrderDetails> for GrnOrderDetailsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<GrnOrderDetails>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", GrnOrderDetails::COLUMNS, GrnOrderDetails::TABLE).as_str())
-            .map(|row: PgRow| GrnOrderDetails::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&GrnOrderDetails::build_select_string(
+            GrnOrderDetails::TABLE,
+            &GrnOrderDetails::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| GrnOrderDetails::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,42 +34,23 @@ impl IRepository<GrnOrderDetails> for GrnOrderDetailsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<GrnOrderDetails>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            GrnOrderDetails::COLUMNS,
+        let result = sqlx::query(&GrnOrderDetails::build_select_string(
             GrnOrderDetails::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| GrnOrderDetails::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &GrnOrderDetails::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| GrnOrderDetails::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &GrnOrderDetails) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.grn_order_detail_id.clone());
-let _ = args.add(entity.grn_order_id.clone());
-let _ = args.add(entity.product_id.clone());
-let _ = args.add(entity.qunatity.clone());
-let _ = args.add(entity.warehouse_id.clone());
-let _ = args.add(entity.sale_price.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.whole_sale_price.clone());
-let _ = args.add(entity.net_price.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                GrnOrderDetails::TABLE,
-                GrnOrderDetails::COLUMNS
-            )
-            .as_str(),
-            args,
+            &GrnOrderDetails::build_insert_string(GrnOrderDetails::TABLE, &GrnOrderDetails::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -81,21 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &GrnOrderDetails) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.grn_order_detail_id.clone());
-let _ = args.add(entity.grn_order_id.clone());
-let _ = args.add(entity.product_id.clone());
-let _ = args.add(entity.qunatity.clone());
-let _ = args.add(entity.warehouse_id.clone());
-let _ = args.add(entity.sale_price.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.whole_sale_price.clone());
-let _ = args.add(entity.net_price.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", GrnOrderDetails::TABLE, GrnOrderDetails::COLUMNS_UPDATE).as_str(),
-            args,
+            &GrnOrderDetails::build_update_string(GrnOrderDetails::TABLE, &GrnOrderDetails::COLUMNS_ARRAY, GrnOrderDetails::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -115,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", GrnOrderDetails::TABLE, GrnOrderDetails::PK).as_str(),
+            &GrnOrderDetails::build_delete_string(GrnOrderDetails::TABLE, GrnOrderDetails::PK),
             args,
         )
         .execute(&connection)

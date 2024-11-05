@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct EmployeeReportingTos {
     pub employee_reporting_to_id: Uuid,
 pub employee_id: Uuid,
@@ -21,12 +22,23 @@ pub status_id: Uuid
 
 impl EmployeeReportingTos {
     pub const TABLE: &'static str = r#""Employee"."EmployeeReportingTos""#;
-    pub const PK: &'static str = r#"EmployeeReportingToId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""EmployeeReportingToId","EmployeeId","ReportingToEmployeeId","StartDate","EndDate","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""EmployeeReportingToId"=$1,"EmployeeId"=$2,"ReportingToEmployeeId"=$3,"StartDate"=$4,"EndDate"=$5,"StatusId"=$6 WHERE "EmployeeReportingToId"=$1"#;
+    pub const PK: &'static str = "EmployeeReportingToId";
+    pub const COLUMNS_ARRAY: [&'static str; 6] = ["EmployeeReportingToId","EmployeeId","ReportingToEmployeeId","StartDate","EndDate","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.employee_reporting_to_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.employee_reporting_to_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.reporting_to_employee_id.clone());
+let _ = args.add(self.start_date.clone());
+let _ = args.add(self.end_date.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(employee_reporting_to_id: Uuid,employee_id: Uuid,reporting_to_employee_id: Uuid,start_date: DateTime<Utc>,end_date: DateTime<Utc>,status_id: Uuid) -> Self {

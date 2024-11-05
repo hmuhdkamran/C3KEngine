@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn shifts_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/shifts")
+        web::scope("/api/hrms/shifts")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

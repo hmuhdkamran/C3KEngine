@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Candidates {
     pub candidate_id: Uuid,
 pub fist_name: String,
@@ -21,12 +22,23 @@ pub status_id: Uuid
 
 impl Candidates {
     pub const TABLE: &'static str = r#""Recruitment"."Candidates""#;
-    pub const PK: &'static str = r#"CandidateId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""CandidateId","FistName","MiddleName","LastName","Gender","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""CandidateId"=$1,"FistName"=$2,"MiddleName"=$3,"LastName"=$4,"Gender"=$6,"StatusId"=$7 WHERE "CandidateId"=$1"#;
+    pub const PK: &'static str = "CandidateId";
+    pub const COLUMNS_ARRAY: [&'static str; 6] = ["CandidateId","FistName","MiddleName","LastName","Gender","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.candidate_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.candidate_id.clone());
+let _ = args.add(self.fist_name.clone());
+let _ = args.add(self.middle_name.clone());
+let _ = args.add(self.last_name.clone());
+let _ = args.add(self.gender.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(candidate_id: Uuid,fist_name: String,middle_name: String,last_name: String,gender: String,status_id: Uuid) -> Self {

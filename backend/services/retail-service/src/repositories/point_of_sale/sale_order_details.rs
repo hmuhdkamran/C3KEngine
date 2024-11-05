@@ -17,11 +17,15 @@ pub struct SaleOrderDetailsRepository {}
 
 impl IRepository<SaleOrderDetails> for SaleOrderDetailsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<SaleOrderDetails>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", SaleOrderDetails::COLUMNS, SaleOrderDetails::TABLE).as_str())
-            .map(|row: PgRow| SaleOrderDetails::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&SaleOrderDetails::build_select_string(
+            SaleOrderDetails::TABLE,
+            &SaleOrderDetails::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| SaleOrderDetails::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,48 +34,23 @@ impl IRepository<SaleOrderDetails> for SaleOrderDetailsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<SaleOrderDetails>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            SaleOrderDetails::COLUMNS,
+        let result = sqlx::query(&SaleOrderDetails::build_select_string(
             SaleOrderDetails::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| SaleOrderDetails::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &SaleOrderDetails::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| SaleOrderDetails::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &SaleOrderDetails) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_detail_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.product_id.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.wholesale_price.clone());
-let _ = args.add(entity.sale_price.clone());
-let _ = args.add(entity.quantity.clone());
-let _ = args.add(entity.discount_type_id.clone());
-let _ = args.add(entity.discount_value.clone());
-let _ = args.add(entity.discount_amount.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.tax_value.clone());
-let _ = args.add(entity.sub_total.clone());
-let _ = args.add(entity.net_total.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.campaign_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                SaleOrderDetails::TABLE,
-                SaleOrderDetails::COLUMNS
-            )
-            .as_str(),
-            args,
+            &SaleOrderDetails::build_insert_string(SaleOrderDetails::TABLE, &SaleOrderDetails::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -87,27 +66,9 @@ let _ = args.add(entity.campaign_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &SaleOrderDetails) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_detail_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.product_id.clone());
-let _ = args.add(entity.purchase_price.clone());
-let _ = args.add(entity.wholesale_price.clone());
-let _ = args.add(entity.sale_price.clone());
-let _ = args.add(entity.quantity.clone());
-let _ = args.add(entity.discount_type_id.clone());
-let _ = args.add(entity.discount_value.clone());
-let _ = args.add(entity.discount_amount.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.tax_value.clone());
-let _ = args.add(entity.sub_total.clone());
-let _ = args.add(entity.net_total.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.campaign_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", SaleOrderDetails::TABLE, SaleOrderDetails::COLUMNS_UPDATE).as_str(),
-            args,
+            &SaleOrderDetails::build_update_string(SaleOrderDetails::TABLE, &SaleOrderDetails::COLUMNS_ARRAY, SaleOrderDetails::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -127,7 +88,7 @@ let _ = args.add(entity.campaign_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", SaleOrderDetails::TABLE, SaleOrderDetails::PK).as_str(),
+            &SaleOrderDetails::build_delete_string(SaleOrderDetails::TABLE, SaleOrderDetails::PK),
             args,
         )
         .execute(&connection)

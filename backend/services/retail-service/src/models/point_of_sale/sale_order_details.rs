@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct SaleOrderDetails {
     pub sale_order_detail_id: Uuid,
 pub sale_order_id: Uuid,
@@ -31,12 +32,33 @@ pub campaign_id: Uuid
 
 impl SaleOrderDetails {
     pub const TABLE: &'static str = r#""PointOfSale"."SaleOrderDetails""#;
-    pub const PK: &'static str = r#"SaleOrderDetailId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""SaleOrderDetailId","SaleOrderId","ProductId","PurchasePrice","WholesalePrice","SalePrice","Quantity","DiscountTypeId","DiscountValue","DiscountAmount","TaxRate","TaxValue","SubTotal","NetTotal","StatusId","CampaignId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""SaleOrderDetailId"=$1,"SaleOrderId"=$2,"ProductId"=$3,"PurchasePrice"=$4,"WholesalePrice"=$5,"SalePrice"=$6,"Quantity"=$7,"DiscountTypeId"=$8,"DiscountValue"=$9,"DiscountAmount"=$10,"TaxRate"=$11,"TaxValue"=$12,"SubTotal"=$13,"NetTotal"=$14,"StatusId"=$15,"CampaignId"=$16 WHERE "SaleOrderDetailId"=$1"#;
+    pub const PK: &'static str = "SaleOrderDetailId";
+    pub const COLUMNS_ARRAY: [&'static str; 16] = ["SaleOrderDetailId","SaleOrderId","ProductId","PurchasePrice","WholesalePrice","SalePrice","Quantity","DiscountTypeId","DiscountValue","DiscountAmount","TaxRate","TaxValue","SubTotal","NetTotal","StatusId","CampaignId"];
 
     pub fn get_id(&self) -> Uuid {
         self.sale_order_detail_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.sale_order_detail_id.clone());
+let _ = args.add(self.sale_order_id.clone());
+let _ = args.add(self.product_id.clone());
+let _ = args.add(self.purchase_price.clone());
+let _ = args.add(self.wholesale_price.clone());
+let _ = args.add(self.sale_price.clone());
+let _ = args.add(self.quantity.clone());
+let _ = args.add(self.discount_type_id.clone());
+let _ = args.add(self.discount_value.clone());
+let _ = args.add(self.discount_amount.clone());
+let _ = args.add(self.tax_rate.clone());
+let _ = args.add(self.tax_value.clone());
+let _ = args.add(self.sub_total.clone());
+let _ = args.add(self.net_total.clone());
+let _ = args.add(self.status_id.clone());
+let _ = args.add(self.campaign_id.clone());
+
+        args
     }
 
     pub fn new(sale_order_detail_id: Uuid,sale_order_id: Uuid,product_id: Uuid,purchase_price: f64,wholesale_price: f64,sale_price: f64,quantity: f64,discount_type_id: Uuid,discount_value: f64,discount_amount: f64,tax_rate: f64,tax_value: f64,sub_total: f64,net_total: f64,status_id: Uuid,campaign_id: Uuid) -> Self {

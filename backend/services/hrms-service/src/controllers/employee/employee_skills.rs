@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn employee_skills_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/employee_skills")
+        web::scope("/api/hrms/employee_skills")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

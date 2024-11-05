@@ -17,11 +17,15 @@ pub struct JobShiftsRepository {}
 
 impl IRepository<JobShifts> for JobShiftsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<JobShifts>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", JobShifts::COLUMNS, JobShifts::TABLE).as_str())
-            .map(|row: PgRow| JobShifts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&JobShifts::build_select_string(
+            JobShifts::TABLE,
+            &JobShifts::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| JobShifts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<JobShifts> for JobShiftsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<JobShifts>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            JobShifts::COLUMNS,
+        let result = sqlx::query(&JobShifts::build_select_string(
             JobShifts::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| JobShifts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &JobShifts::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| JobShifts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &JobShifts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_shift_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                JobShifts::TABLE,
-                JobShifts::COLUMNS
-            )
-            .as_str(),
-            args,
+            &JobShifts::build_insert_string(JobShifts::TABLE, &JobShifts::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &JobShifts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.job_shift_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.abbreviation.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", JobShifts::TABLE, JobShifts::COLUMNS_UPDATE).as_str(),
-            args,
+            &JobShifts::build_update_string(JobShifts::TABLE, &JobShifts::COLUMNS_ARRAY, JobShifts::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", JobShifts::TABLE, JobShifts::PK).as_str(),
+            &JobShifts::build_delete_string(JobShifts::TABLE, JobShifts::PK),
             args,
         )
         .execute(&connection)

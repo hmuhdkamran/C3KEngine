@@ -17,11 +17,15 @@ pub struct PersonalInformationsRepository {}
 
 impl IRepository<PersonalInformations> for PersonalInformationsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<PersonalInformations>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", PersonalInformations::COLUMNS, PersonalInformations::TABLE).as_str())
-            .map(|row: PgRow| PersonalInformations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&PersonalInformations::build_select_string(
+            PersonalInformations::TABLE,
+            &PersonalInformations::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| PersonalInformations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,45 +34,23 @@ impl IRepository<PersonalInformations> for PersonalInformationsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<PersonalInformations>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            PersonalInformations::COLUMNS,
+        let result = sqlx::query(&PersonalInformations::build_select_string(
             PersonalInformations::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| PersonalInformations::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &PersonalInformations::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| PersonalInformations::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &PersonalInformations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.first_name.clone());
-let _ = args.add(entity.middle_name.clone());
-let _ = args.add(entity.last_name.clone());
-let _ = args.add(entity.employee_code.clone());
-let _ = args.add(entity.picture.clone());
-let _ = args.add(entity.blood_group_id.clone());
-let _ = args.add(entity.attendance_machine_no.clone());
-let _ = args.add(entity.gender.clone());
-let _ = args.add(entity.date_of_birth.clone());
-let _ = args.add(entity.nationality_id.clone());
-let _ = args.add(entity.religion_id.clone());
-let _ = args.add(entity.martial_status.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                PersonalInformations::TABLE,
-                PersonalInformations::COLUMNS
-            )
-            .as_str(),
-            args,
+            &PersonalInformations::build_insert_string(PersonalInformations::TABLE, &PersonalInformations::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -84,24 +66,9 @@ let _ = args.add(entity.martial_status.clone());
     }
 
     async fn update(connection: PgPool, entity: &PersonalInformations) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.employee_id.clone());
-let _ = args.add(entity.first_name.clone());
-let _ = args.add(entity.middle_name.clone());
-let _ = args.add(entity.last_name.clone());
-let _ = args.add(entity.employee_code.clone());
-let _ = args.add(entity.picture.clone());
-let _ = args.add(entity.blood_group_id.clone());
-let _ = args.add(entity.attendance_machine_no.clone());
-let _ = args.add(entity.gender.clone());
-let _ = args.add(entity.date_of_birth.clone());
-let _ = args.add(entity.nationality_id.clone());
-let _ = args.add(entity.religion_id.clone());
-let _ = args.add(entity.martial_status.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", PersonalInformations::TABLE, PersonalInformations::COLUMNS_UPDATE).as_str(),
-            args,
+            &PersonalInformations::build_update_string(PersonalInformations::TABLE, &PersonalInformations::COLUMNS_ARRAY, PersonalInformations::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -121,7 +88,7 @@ let _ = args.add(entity.martial_status.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", PersonalInformations::TABLE, PersonalInformations::PK).as_str(),
+            &PersonalInformations::build_delete_string(PersonalInformations::TABLE, PersonalInformations::PK),
             args,
         )
         .execute(&connection)

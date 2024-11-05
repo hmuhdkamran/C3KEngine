@@ -17,11 +17,15 @@ pub struct CampaignsRepository {}
 
 impl IRepository<Campaigns> for CampaignsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Campaigns>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Campaigns::COLUMNS, Campaigns::TABLE).as_str())
-            .map(|row: PgRow| Campaigns::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Campaigns::build_select_string(
+            Campaigns::TABLE,
+            &Campaigns::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Campaigns::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,37 +34,23 @@ impl IRepository<Campaigns> for CampaignsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Campaigns>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Campaigns::COLUMNS,
+        let result = sqlx::query(&Campaigns::build_select_string(
             Campaigns::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Campaigns::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Campaigns::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Campaigns::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Campaigns) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.campaign_id.clone());
-let _ = args.add(entity.fulle_name.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Campaigns::TABLE,
-                Campaigns::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Campaigns::build_insert_string(Campaigns::TABLE, &Campaigns::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -76,16 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Campaigns) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.campaign_id.clone());
-let _ = args.add(entity.fulle_name.clone());
-let _ = args.add(entity.start_date.clone());
-let _ = args.add(entity.end_date.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Campaigns::TABLE, Campaigns::COLUMNS_UPDATE).as_str(),
-            args,
+            &Campaigns::build_update_string(Campaigns::TABLE, &Campaigns::COLUMNS_ARRAY, Campaigns::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -105,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Campaigns::TABLE, Campaigns::PK).as_str(),
+            &Campaigns::build_delete_string(Campaigns::TABLE, Campaigns::PK),
             args,
         )
         .execute(&connection)

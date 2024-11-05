@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct AttendamceExcludeEmployees {
     pub attendamce_exclude_employee_id: Uuid,
 pub employee_id: Uuid,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl AttendamceExcludeEmployees {
     pub const TABLE: &'static str = r#""Attendance"."AttendamceExcludeEmployees""#;
-    pub const PK: &'static str = r#"AttendamceExcludeEmployeeId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""AttendamceExcludeEmployeeId","EmployeeId","Reason","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""AttendamceExcludeEmployeeId"=$1,"EmployeeId"=$2,"Reason"=$3,"StatusId"=$4 WHERE "AttendamceExcludeEmployeeId"=$1"#;
+    pub const PK: &'static str = "AttendamceExcludeEmployeeId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["AttendamceExcludeEmployeeId","EmployeeId","Reason","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.attendamce_exclude_employee_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.attendamce_exclude_employee_id.clone());
+let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.reason.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(attendamce_exclude_employee_id: Uuid,employee_id: Uuid,reason: String,status_id: Uuid) -> Self {

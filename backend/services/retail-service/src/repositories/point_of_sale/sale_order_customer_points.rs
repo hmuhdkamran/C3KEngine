@@ -17,11 +17,15 @@ pub struct SaleOrderCustomerPointsRepository {}
 
 impl IRepository<SaleOrderCustomerPoints> for SaleOrderCustomerPointsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<SaleOrderCustomerPoints>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", SaleOrderCustomerPoints::COLUMNS, SaleOrderCustomerPoints::TABLE).as_str())
-            .map(|row: PgRow| SaleOrderCustomerPoints::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&SaleOrderCustomerPoints::build_select_string(
+            SaleOrderCustomerPoints::TABLE,
+            &SaleOrderCustomerPoints::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| SaleOrderCustomerPoints::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,40 +34,23 @@ impl IRepository<SaleOrderCustomerPoints> for SaleOrderCustomerPointsRepository 
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<SaleOrderCustomerPoints>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            SaleOrderCustomerPoints::COLUMNS,
+        let result = sqlx::query(&SaleOrderCustomerPoints::build_select_string(
             SaleOrderCustomerPoints::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| SaleOrderCustomerPoints::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &SaleOrderCustomerPoints::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| SaleOrderCustomerPoints::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &SaleOrderCustomerPoints) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_customer_point_id.clone());
-let _ = args.add(entity.customer_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.point_awards.clone());
-let _ = args.add(entity.redeem_points.clone());
-let _ = args.add(entity.balance_point.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                SaleOrderCustomerPoints::TABLE,
-                SaleOrderCustomerPoints::COLUMNS
-            )
-            .as_str(),
-            args,
+            &SaleOrderCustomerPoints::build_insert_string(SaleOrderCustomerPoints::TABLE, &SaleOrderCustomerPoints::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -79,19 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &SaleOrderCustomerPoints) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.sale_order_customer_point_id.clone());
-let _ = args.add(entity.customer_id.clone());
-let _ = args.add(entity.sale_order_id.clone());
-let _ = args.add(entity.net_amount.clone());
-let _ = args.add(entity.point_awards.clone());
-let _ = args.add(entity.redeem_points.clone());
-let _ = args.add(entity.balance_point.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", SaleOrderCustomerPoints::TABLE, SaleOrderCustomerPoints::COLUMNS_UPDATE).as_str(),
-            args,
+            &SaleOrderCustomerPoints::build_update_string(SaleOrderCustomerPoints::TABLE, &SaleOrderCustomerPoints::COLUMNS_ARRAY, SaleOrderCustomerPoints::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -111,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", SaleOrderCustomerPoints::TABLE, SaleOrderCustomerPoints::PK).as_str(),
+            &SaleOrderCustomerPoints::build_delete_string(SaleOrderCustomerPoints::TABLE, SaleOrderCustomerPoints::PK),
             args,
         )
         .execute(&connection)

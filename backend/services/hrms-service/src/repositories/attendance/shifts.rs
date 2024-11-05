@@ -17,11 +17,15 @@ pub struct ShiftsRepository {}
 
 impl IRepository<Shifts> for ShiftsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Shifts>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Shifts::COLUMNS, Shifts::TABLE).as_str())
-            .map(|row: PgRow| Shifts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Shifts::build_select_string(
+            Shifts::TABLE,
+            &Shifts::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Shifts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<Shifts> for ShiftsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Shifts>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Shifts::COLUMNS,
+        let result = sqlx::query(&Shifts::build_select_string(
             Shifts::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Shifts::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Shifts::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Shifts::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Shifts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.shift_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.start_time.clone());
-let _ = args.add(entity.end_time.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Shifts::TABLE,
-                Shifts::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Shifts::build_insert_string(Shifts::TABLE, &Shifts::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.abbreviation.clone());
     }
 
     async fn update(connection: PgPool, entity: &Shifts) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.shift_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.start_time.clone());
-let _ = args.add(entity.end_time.clone());
-let _ = args.add(entity.status_id.clone());
-let _ = args.add(entity.abbreviation.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Shifts::TABLE, Shifts::COLUMNS_UPDATE).as_str(),
-            args,
+            &Shifts::build_update_string(Shifts::TABLE, &Shifts::COLUMNS_ARRAY, Shifts::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.abbreviation.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Shifts::TABLE, Shifts::PK).as_str(),
+            &Shifts::build_delete_string(Shifts::TABLE, Shifts::PK),
             args,
         )
         .execute(&connection)

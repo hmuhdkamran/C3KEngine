@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct PersonalInformations {
     pub employee_id: Uuid,
 pub first_name: String,
@@ -28,12 +29,30 @@ pub martial_status: String
 
 impl PersonalInformations {
     pub const TABLE: &'static str = r#""Employee"."PersonalInformations""#;
-    pub const PK: &'static str = r#"EmployeeId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""EmployeeId","FirstName","MiddleName","LastName","EmployeeCode","Picture","BloodGroupId","AttendanceMachineNo","Gender","DateOfBirth","NationalityId","ReligionId","MartialStatus""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""EmployeeId"=$1,"FirstName"=$2,"MiddleName"=$3,"LastName"=$4,"EmployeeCode"=$7,"Picture"=$21,"BloodGroupId"=$22,"AttendanceMachineNo"=$24,"Gender"=$25,"DateOfBirth"=$28,"NationalityId"=$29,"ReligionId"=$30,"MartialStatus"=$31 WHERE "EmployeeId"=$1"#;
+    pub const PK: &'static str = "EmployeeId";
+    pub const COLUMNS_ARRAY: [&'static str; 13] = ["EmployeeId","FirstName","MiddleName","LastName","EmployeeCode","Picture","BloodGroupId","AttendanceMachineNo","Gender","DateOfBirth","NationalityId","ReligionId","MartialStatus"];
 
     pub fn get_id(&self) -> Uuid {
         self.employee_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.employee_id.clone());
+let _ = args.add(self.first_name.clone());
+let _ = args.add(self.middle_name.clone());
+let _ = args.add(self.last_name.clone());
+let _ = args.add(self.employee_code.clone());
+let _ = args.add(self.picture.clone());
+let _ = args.add(self.blood_group_id.clone());
+let _ = args.add(self.attendance_machine_no.clone());
+let _ = args.add(self.gender.clone());
+let _ = args.add(self.date_of_birth.clone());
+let _ = args.add(self.nationality_id.clone());
+let _ = args.add(self.religion_id.clone());
+let _ = args.add(self.martial_status.clone());
+
+        args
     }
 
     pub fn new(employee_id: Uuid,first_name: String,middle_name: String,last_name: String,employee_code: String,picture: String,blood_group_id: Uuid,attendance_machine_no: String,gender: String,date_of_birth: DateTime<Utc>,nationality_id: Uuid,religion_id: Uuid,martial_status: String) -> Self {

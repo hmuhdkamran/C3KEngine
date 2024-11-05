@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn short_leave_apporvals_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/short_leave_apporvals")
+        web::scope("/api/hrms/short_leave_apporvals")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

@@ -17,11 +17,15 @@ pub struct TaxRatesRepository {}
 
 impl IRepository<TaxRates> for TaxRatesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<TaxRates>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", TaxRates::COLUMNS, TaxRates::TABLE).as_str())
-            .map(|row: PgRow| TaxRates::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&TaxRates::build_select_string(
+            TaxRates::TABLE,
+            &TaxRates::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| TaxRates::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<TaxRates> for TaxRatesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<TaxRates>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            TaxRates::COLUMNS,
+        let result = sqlx::query(&TaxRates::build_select_string(
             TaxRates::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| TaxRates::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &TaxRates::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| TaxRates::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &TaxRates) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_rate_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                TaxRates::TABLE,
-                TaxRates::COLUMNS
-            )
-            .as_str(),
-            args,
+            &TaxRates::build_insert_string(TaxRates::TABLE, &TaxRates::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &TaxRates) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.tax_rate_id.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", TaxRates::TABLE, TaxRates::COLUMNS_UPDATE).as_str(),
-            args,
+            &TaxRates::build_update_string(TaxRates::TABLE, &TaxRates::COLUMNS_ARRAY, TaxRates::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", TaxRates::TABLE, TaxRates::PK).as_str(),
+            &TaxRates::build_delete_string(TaxRates::TABLE, TaxRates::PK),
             args,
         )
         .execute(&connection)

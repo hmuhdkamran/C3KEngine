@@ -17,11 +17,15 @@ pub struct OrderStatusesRepository {}
 
 impl IRepository<OrderStatuses> for OrderStatusesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<OrderStatuses>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", OrderStatuses::COLUMNS, OrderStatuses::TABLE).as_str())
-            .map(|row: PgRow| OrderStatuses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&OrderStatuses::build_select_string(
+            OrderStatuses::TABLE,
+            &OrderStatuses::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| OrderStatuses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<OrderStatuses> for OrderStatusesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<OrderStatuses>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            OrderStatuses::COLUMNS,
+        let result = sqlx::query(&OrderStatuses::build_select_string(
             OrderStatuses::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| OrderStatuses::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &OrderStatuses::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| OrderStatuses::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &OrderStatuses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.order_status_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                OrderStatuses::TABLE,
-                OrderStatuses::COLUMNS
-            )
-            .as_str(),
-            args,
+            &OrderStatuses::build_insert_string(OrderStatuses::TABLE, &OrderStatuses::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &OrderStatuses) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.order_status_id.clone());
-let _ = args.add(entity.abberviation.clone());
-let _ = args.add(entity.full_name.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", OrderStatuses::TABLE, OrderStatuses::COLUMNS_UPDATE).as_str(),
-            args,
+            &OrderStatuses::build_update_string(OrderStatuses::TABLE, &OrderStatuses::COLUMNS_ARRAY, OrderStatuses::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", OrderStatuses::TABLE, OrderStatuses::PK).as_str(),
+            &OrderStatuses::build_delete_string(OrderStatuses::TABLE, OrderStatuses::PK),
             args,
         )
         .execute(&connection)

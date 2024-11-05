@@ -17,11 +17,15 @@ pub struct CurrenciesRepository {}
 
 impl IRepository<Currencies> for CurrenciesRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<Currencies>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", Currencies::COLUMNS, Currencies::TABLE).as_str())
-            .map(|row: PgRow| Currencies::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&Currencies::build_select_string(
+            Currencies::TABLE,
+            &Currencies::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| Currencies::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,36 +34,23 @@ impl IRepository<Currencies> for CurrenciesRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<Currencies>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            Currencies::COLUMNS,
+        let result = sqlx::query(&Currencies::build_select_string(
             Currencies::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| Currencies::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &Currencies::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| Currencies::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &Currencies) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.currency_id.clone());
-let _ = args.add(entity.code.clone());
-let _ = args.add(entity.symbol.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                Currencies::TABLE,
-                Currencies::COLUMNS
-            )
-            .as_str(),
-            args,
+            &Currencies::build_insert_string(Currencies::TABLE, &Currencies::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -75,15 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &Currencies) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.currency_id.clone());
-let _ = args.add(entity.code.clone());
-let _ = args.add(entity.symbol.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", Currencies::TABLE, Currencies::COLUMNS_UPDATE).as_str(),
-            args,
+            &Currencies::build_update_string(Currencies::TABLE, &Currencies::COLUMNS_ARRAY, Currencies::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -103,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", Currencies::TABLE, Currencies::PK).as_str(),
+            &Currencies::build_delete_string(Currencies::TABLE, Currencies::PK),
             args,
         )
         .execute(&connection)

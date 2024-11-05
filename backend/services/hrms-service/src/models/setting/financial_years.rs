@@ -9,6 +9,7 @@ pub use sqlx::{
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct FinancialYears {
     pub financial_year_id: Uuid,
 pub start_date: DateTime<Utc>,
@@ -19,12 +20,21 @@ pub status_id: Uuid
 
 impl FinancialYears {
     pub const TABLE: &'static str = r#""Setting"."FinancialYears""#;
-    pub const PK: &'static str = r#"FinancialYearId::TEXT=$1"#;
-    pub const COLUMNS: &'static str = r#""FinancialYearId","StartDate","EndDate","StatusId""#;
-    pub const COLUMNS_UPDATE: &'static str = r#""FinancialYearId"=$1,"StartDate"=$2,"EndDate"=$3,"StatusId"=$4 WHERE "FinancialYearId"=$1"#;
+    pub const PK: &'static str = "FinancialYearId";
+    pub const COLUMNS_ARRAY: [&'static str; 4] = ["FinancialYearId","StartDate","EndDate","StatusId"];
 
     pub fn get_id(&self) -> Uuid {
         self.financial_year_id.clone()
+    }
+
+    pub fn get_args(&self) -> PgArguments {
+        let mut args = PgArguments::default();
+        let _ = args.add(self.financial_year_id.clone());
+let _ = args.add(self.start_date.clone());
+let _ = args.add(self.end_date.clone());
+let _ = args.add(self.status_id.clone());
+
+        args
     }
 
     pub fn new(financial_year_id: Uuid,start_date: DateTime<Utc>,end_date: DateTime<Utc>,status_id: Uuid) -> Self {

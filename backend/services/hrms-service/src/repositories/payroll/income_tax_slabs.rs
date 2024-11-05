@@ -17,11 +17,15 @@ pub struct IncomeTaxSlabsRepository {}
 
 impl IRepository<IncomeTaxSlabs> for IncomeTaxSlabsRepository {
     async fn get_all(connection: PgPool) -> Result<Vec<IncomeTaxSlabs>, Box<dyn StdError>> {
-        let result = sqlx::query(format!("SELECT {} FROM {}", IncomeTaxSlabs::COLUMNS, IncomeTaxSlabs::TABLE).as_str())
-            .map(|row: PgRow| IncomeTaxSlabs::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+        let result = sqlx::query(&IncomeTaxSlabs::build_select_string(
+            IncomeTaxSlabs::TABLE,
+            &IncomeTaxSlabs::COLUMNS_ARRAY,
+            None,
+        ))
+        .map(|row: PgRow| IncomeTaxSlabs::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
@@ -30,38 +34,23 @@ impl IRepository<IncomeTaxSlabs> for IncomeTaxSlabsRepository {
         connection: PgPool,
         filter: &String,
     ) -> Result<Vec<IncomeTaxSlabs>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT {} FROM {} WHERE {}"#,
-            IncomeTaxSlabs::COLUMNS,
+        let result = sqlx::query(&IncomeTaxSlabs::build_select_string(
             IncomeTaxSlabs::TABLE,
-            filter
-        );
-        let result = sqlx::query(query.as_str())
-            .map(|row: PgRow| IncomeTaxSlabs::from_row(&row))
-            .fetch_all(&connection)
-            .await
-            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+            &IncomeTaxSlabs::COLUMNS_ARRAY,
+            Some(filter),
+        ))
+        .map(|row: PgRow| IncomeTaxSlabs::from_row(&row))
+        .fetch_all(&connection)
+        .await
+        .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
 
         Ok(result)
     }
 
     async fn add(connection: PgPool, entity: &IncomeTaxSlabs) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.income_tax_slab_id.clone());
-let _ = args.add(entity.start_amount.clone());
-let _ = args.add(entity.end_amount.clone());
-let _ = args.add(entity.exceed_amount.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!(
-                "INSERT INTO {} ({}) VALUES ($1, $2, $3, $4)",
-                IncomeTaxSlabs::TABLE,
-                IncomeTaxSlabs::COLUMNS
-            )
-            .as_str(),
-            args,
+            &IncomeTaxSlabs::build_insert_string(IncomeTaxSlabs::TABLE, &IncomeTaxSlabs::COLUMNS_ARRAY),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -77,17 +66,9 @@ let _ = args.add(entity.status_id.clone());
     }
 
     async fn update(connection: PgPool, entity: &IncomeTaxSlabs) -> Result<bool, Box<dyn StdError>> {
-        let mut args = PgArguments::default();
-        let _ = args.add(entity.income_tax_slab_id.clone());
-let _ = args.add(entity.start_amount.clone());
-let _ = args.add(entity.end_amount.clone());
-let _ = args.add(entity.exceed_amount.clone());
-let _ = args.add(entity.tax_rate.clone());
-let _ = args.add(entity.status_id.clone());
-
         sqlx::query_with(
-            format!("UPDATE {} SET {}", IncomeTaxSlabs::TABLE, IncomeTaxSlabs::COLUMNS_UPDATE).as_str(),
-            args,
+            &IncomeTaxSlabs::build_update_string(IncomeTaxSlabs::TABLE, &IncomeTaxSlabs::COLUMNS_ARRAY, IncomeTaxSlabs::PK),
+            entity.get_args(),
         )
         .execute(&connection)
         .await
@@ -107,7 +88,7 @@ let _ = args.add(entity.status_id.clone());
         let _ = args.add(id);
 
         sqlx::query_with(
-            format!("DELETE FROM {} WHERE {}", IncomeTaxSlabs::TABLE, IncomeTaxSlabs::PK).as_str(),
+            &IncomeTaxSlabs::build_delete_string(IncomeTaxSlabs::TABLE, IncomeTaxSlabs::PK),
             args,
         )
         .execute(&connection)
