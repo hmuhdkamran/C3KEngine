@@ -4,11 +4,16 @@ import {
   StoreService,
   TokenHelper,
   IPayload,
-  IRouteMeta
-} from 'c3k-library';
+  IRouteMeta,
+  ICredential,
+  Actions,
+  Subjects,
+  IAccessToken,
+  IUser,
+} from "c3k-library";
 
-import { ExtractSubjectType, MongoQuery, SubjectRawRule } from '@casl/ability';
-import Axios, { AxiosResponse } from 'axios';
+import { ExtractSubjectType, MongoQuery, SubjectRawRule } from "@casl/ability";
+import Axios, { AxiosResponse } from "axios";
 
 interface IPermission {
   action: string;
@@ -21,7 +26,7 @@ export class AuthenticationService extends StoreService {
 
     roles.forEach((element: any) => {
       if (element !== undefined) {
-        permission.push({ action: 'read', subject: element.RouteName });
+        permission.push({ action: "read", subject: element.RouteName });
       }
     });
 
@@ -35,15 +40,21 @@ export class AuthenticationService extends StoreService {
         const parsed = TokenHelper.parseUserToken(token.data);
 
         if (parsed.roles !== undefined) {
-          const userAbilities = this.convertToPermissions(parsed.roles) as SubjectRawRule<Actions, ExtractSubjectType<Subjects>, MongoQuery>[];
+          const userAbilities = this.convertToPermissions(
+            parsed.roles
+          ) as SubjectRawRule<
+            Actions,
+            ExtractSubjectType<Subjects>,
+            MongoQuery
+          >[];
           TokenHelper.setAbilities(JSON.stringify(userAbilities));
         }
 
         return parsed;
       }
     };
-    
-    return this.post(`${GlobalConfig.uri.auth}`, credentials)
+
+    return this.exec(Axios.post(`${GlobalConfig.uri.auth}`, credentials))
       .then((value: any) => this.processPayload(value))
       .then((value: any) => processResponse(value as IPayload<string>)); // Type assertion
   }
@@ -56,7 +67,7 @@ export class AuthenticationService extends StoreService {
         const user: IUser = Object.assign({}, DefaultUser);
 
         TokenHelper.removeAccessToken();
-        window.localStorage.removeItem('microsoft-auth');
+        window.localStorage.removeItem("microsoft-auth");
 
         return user;
       } else {
@@ -64,7 +75,6 @@ export class AuthenticationService extends StoreService {
       }
     };
 
-    return Axios.put(`${GlobalConfig.uri.auth}logout`, null)
-      .then(onSuccess);
+    return Axios.put(`${GlobalConfig.uri.auth}logout`, null).then(onSuccess);
   }
 }
