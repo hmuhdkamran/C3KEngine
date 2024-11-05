@@ -15,15 +15,13 @@ const columns = [
 ];
 
 onMounted(() => {
-  repo.GetAll().then(res => data.value = res?.data as IUser[]);
+  repo.GetAll().then((res: any) => data.value = res.data as IUser[]);
 });
 
 </script>
 
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
-
     <DataTable :data="data" :columns="columns" :check-column="false">
       <template #action>
         <div class="flex justify-center space-x-2">

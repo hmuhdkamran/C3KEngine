@@ -40,6 +40,8 @@ module.exports = {
 
     "antfu/top-level-function": "off",
 
+    "@typescript-eslint/no-explicit-any": "error",
+
     // indentation (Already present in TypeScript)
     indent: ["error", 2],
 

@@ -18,7 +18,7 @@ const notificationsWithOffsets = computed(() =>
   <div class="bg-gray-50 font-inter tracking-tight text-gray-900 antialiased">
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
-      :positionOffset="notification.positionOffset" :duration="300" />
+      :positionOffset="notification.positionOffset" :duration="9000" />
     <router-view />
   </div>
 </template>
