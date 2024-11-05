@@ -21,6 +21,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "c3k-library": "file:./packages/c3k-library"
+    "c3k-library": "file:./packages/c3k-library",
+    "chart.js": "^4.4.6"
   }
 }

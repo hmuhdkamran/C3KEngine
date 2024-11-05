@@ -6,16 +6,24 @@ import { onMounted, ref, type Ref } from 'vue';
 const repo: UsersService = new UsersService();
 const data: Ref<Array<IUser>> = ref([]);
 
-const columns = [
-  { key: 'check', label: 'check', sort: false, check: true },
+  const columns = [
+  // { key: 'check', label: 'check', sort: false, check: true },
   { key: 'action', label: 'Action', sort: false, width: '100px', class: 'text-center' },
   { key: 'Username', label: 'User Name', sort: true },
   { key: 'DisplayName', label: 'Name', sort: true },
   { key: 'Language', label: 'Language', sort: false, width: '100px', class: 'text-center' },
+  { key: 'status', label: 'Status', sort: false, width: '100px', class: 'text-center' },
 ];
 
+const load = () => {
+    repo.GetAll().then((res: any) => {
+        if (res) 
+        data.value = res.data
+    })
+}
+
 onMounted(() => {
-  repo.GetAll().then((res: any) => data.value = res.data as IUser[]);
+    load();
 });
 
 </script>
@@ -23,6 +31,12 @@ onMounted(() => {
 <template>
   <div class="about">
     <DataTable :data="data" :columns="columns" :check-column="false">
+      <template #status="{ row }">
+        <span :class="row.Status ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+          class="px-1 py-0.5 rounded-full">
+          {{ row.Status ? 'Active' : 'Inactive' }}
+        </span>
+      </template>
       <template #action>
         <div class="flex justify-center space-x-2">
           <button class="grid-action-btn hover-btn-warning">
