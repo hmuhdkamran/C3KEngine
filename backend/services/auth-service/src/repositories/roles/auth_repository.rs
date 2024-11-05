@@ -17,13 +17,7 @@ impl AuthRepository {
         username: &String,
     ) -> Result<Vec<Auth>, Box<dyn StdError>> {
         let query = format!(
-            r#"SELECT rot."RouteName", rrm."Operation"
-FROM "Role"."Users" usr
-INNER JOIN "Role"."UserRoleMaps" urm ON usr."UserId" = urm."UserId"
-INNER JOIN "Role"."Roles" rol ON urm."RoleId" = rol."RoleId"
-INNER JOIN "Role"."RoleRouteMaps" rrm ON rol."RoleId" = rrm."RoleId"
-INNER JOIN "Role"."Routes" rot ON rrm."RouteId" = rot."RouteId"
-WHERE usr."Username"='{}'"#,
+            r#"SELECT ur."RouteName", ur."Operation" FROM "Role"."UserRoles" ur WHERE ur."Username"='{}'"#,
             username
         );
         let result = sqlx::query(query.as_str())
@@ -40,12 +34,7 @@ WHERE usr."Username"='{}'"#,
         username: &String,
     ) -> Result<Vec<UserProducts>, Box<dyn StdError>> {
         let query = format!(
-            r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon" 
-FROM "Role"."UserProductMaps" upm
-JOIN "Role"."Products" pr ON upm."ProductId" = pr."ProductId"
-JOIN "Role"."Users" us ON upm."UserId" = us."UserId"
-JOIN "Setup"."Status" st ON upm."StatusId" = st."StatusId" AND st."IsActive" = True
-WHERE us."Username"='{}'"#,
+            r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon", pr."FrontendIp", pr."FrontendPort" FROM "Role"."UserApplications" pr WHERE us."Username"='{}'"#,
             username
         );
         let result = sqlx::query(query.as_str())

@@ -72,12 +72,15 @@ pub struct AuthModel {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct UserProducts {
     pub product_id: Uuid,
     pub abbreviation: String,
     pub full_name: String,
     pub description: String,
     pub icon: String,
+    pub frontend_ip: String,
+    pub frontend_port: i32
 }
 
 impl UserProducts {
@@ -87,6 +90,8 @@ impl UserProducts {
         full_name: String,
         description: String,
         icon: String,
+        frontend_ip: String,
+        frontend_port: i32
     ) -> Self {
         Self {
             product_id,
@@ -94,6 +99,8 @@ impl UserProducts {
             full_name,
             description,
             icon,
+            frontend_ip,
+            frontend_port
         }
     }
 }
@@ -114,6 +121,8 @@ impl Model for UserProducts {
         let full_name = row.get("FullName");
         let description = row.get("Description");
         let icon = row.get("Icon");
+        let frontend_ip = row.get("FrontendIp");
+        let frontend_port = row.get("FrontendPort");
 
         Self {
             product_id,
@@ -121,6 +130,8 @@ impl Model for UserProducts {
             full_name,
             description,
             icon,
+            frontend_ip,
+            frontend_port
         }
     }
 }
