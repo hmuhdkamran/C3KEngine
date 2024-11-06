@@ -49,7 +49,8 @@ const login = () => {
             -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl transition transform hover:scale-105 duration-500">
             </div>
             <div
-                class="relative bg-white shadow-lg sm:rounded-lg sm:p-5 transition transform hover:scale-105 duration-500">
+                class="relative bg-white shadow-lg p-1 transition transform hover:scale-105 duration-500
+                w-full [background:linear-gradient(45deg,#172033,theme(colors.slate.800)_50%,#172033)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.slate.600/.48)_80%,_theme(colors.indigo.500)_86%,_theme(colors.indigo.300)_90%,_theme(colors.indigo.500)_94%,_theme(colors.green.600/.48))_border-box] rounded-md border border-transparent animate-border">
                 <div class="flex flex-col bg-white">
                     <div class="flex justify-center md:justify-start md:pl-6 md:-mb-12">
                         <a href="/" class="text-white font-bold text-xl p-2">
@@ -90,6 +91,12 @@ const login = () => {
 
 <style scoped lang="scss">
 @use "sass:map";
+
+@property --border-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: '<angle>';
+}
 
 $circle-sizes: (
     1: (left: 25%, width: 80px, height: 80px, delay: 0s),
