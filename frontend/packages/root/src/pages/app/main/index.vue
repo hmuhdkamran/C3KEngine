@@ -142,7 +142,7 @@ function goToMain() {
 
 <template>
     <div class="flex h-screen bg-gray-100">
-        <div class="absolute w-full bg-gradient-to-r from-violet-600 to-violet-500 min-h-12">
+        <div class="absolute w-full bg-gradient-to-r from-violet-600 to-violet-500 min-h-75">
             <div
                 class="py-2 px-6 flex flex-col md:flex-row justify-between ml-auto mt-12 space-y-4 md:space-y-0 md:space-x-8">
                 <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
@@ -189,7 +189,7 @@ function goToMain() {
         <div class="w-full px-6 py-6 mt-32 mx-auto">
             <div class="flex justify-end mr-2">
                 <div v-if="!showModulePage" class="flex flex-1">
-                    <div class="h-screen bg-white border-r border-gray-300 w-64 mt-6 p-4 hidden sm:block z-20">
+                    <div class="h-screen bg-white border border-gray-200 w-64 mt-8 p-4 hidden sm:block z-20">
                         <div class="text-md font-semibold mb-2">
                             <span class="icon-[ion--folder-sharp] text-violet-600"></span>
                             <span class="text-violet-600">
@@ -272,9 +272,8 @@ function goToMain() {
                         </ul>
 
                     </div>
-
-                    <div class="bg-transparent flex-1 mx-auto mt-6 px-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <div class="w-full px-4 sm:px-6 py-4 md:py-6 mt-2 mx-auto">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
                                 :description="card.description" :status="card.status" :buttonText="card.buttonText"
                                 :iconClass="card.iconClass" @click="handleCardClick(card.title)">
@@ -295,28 +294,6 @@ function goToMain() {
 .min-h-75 {
     min-height: 18.75rem;
 }
-
-.ps {
-    overflow: hidden !important;
-    overflow-anchor: none;
-    -ms-overflow-style: none;
-    touch-action: auto;
-    -ms-touch-action: auto;
-}
-
-@media (min-width: 1200px) {
-    .xl\:translate-x-0 {
-        --tw-translate-x: 0px;
-        transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-    }
-}
-
-@media (min-width: 1200px) {
-    .xl\:ml-6 {
-        margin-left: 1.5rem;
-    }
-}
-
 </style>
 
 <route lang="yaml">
