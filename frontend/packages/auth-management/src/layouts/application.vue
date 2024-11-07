@@ -12,7 +12,7 @@ const pageHeading = computed(() => {
 
 <template>
     <div class="text-blueGray-700 antialiased">
-        <div class="bg-white mt-12 flex flex-col">
+        <!-- <div class="bg-white mt-12 flex flex-col"> -->
             <div
                 class="border-b border-gray-300 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
                 <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
@@ -62,6 +62,6 @@ const pageHeading = computed(() => {
                     <Component :is="Component" />
                 </Transition>
             </RouterView>
-        </div>
+        <!-- </div> -->
     </div>
 </template>

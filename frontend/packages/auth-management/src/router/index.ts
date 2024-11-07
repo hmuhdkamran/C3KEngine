@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 import { setupLayouts } from 'virtual:generated-layouts';
 import routes from '~pages'
