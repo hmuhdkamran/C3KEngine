@@ -11,7 +11,6 @@ const auth: AuthenticationService = new AuthenticationService();
 <template>
     <div class="text-blueGray-700 antialiased">
         <TokenStatus :info-timeout="300" :warn-timeout="60" :error-timeout="10" :logout="true" :auth="auth" />
-        <div class="bg-white mt-12 flex flex-col">
             <AuthHeader selectedCardTitle="Applications" />
 
             <RouterView v-slot="{ Component }">
@@ -22,7 +21,6 @@ const auth: AuthenticationService = new AuthenticationService();
 
             <AuthFooter />
         </div>
-    </div>
 </template>
 
 <style>

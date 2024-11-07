@@ -13,7 +13,7 @@ import { registerMicroApps } from 'qiankun'
 
 const microApps = [{
     name: 'c3k-auth-management',
-    entry: '//localhost:8291',
+    entry: '//localhost:8001',
     activeRule: 'c3k-auth-management'
 }
 ];
