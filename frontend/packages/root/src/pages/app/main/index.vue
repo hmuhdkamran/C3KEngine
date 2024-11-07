@@ -141,147 +141,183 @@ function goToMain() {
 </script>
 
 <template>
-    <div>
-        <div class="border-b border-gray-300 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
-            <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
-                <div class="px-3">
-                    <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
+    <div class="flex h-screen bg-gray-100">
+        <div class="absolute w-full bg-gradient-to-r from-violet-600 to-violet-500 min-h-12">
+            <div
+                class="py-2 px-6 flex flex-col md:flex-row justify-between ml-auto mt-12 space-y-4 md:space-y-0 md:space-x-8">
+                <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
+                    <div class="px-3">
+                        <h1 class="text-2xl font-bold text-gray-100">{{ pageHeading }}</h1>
+                    </div>
+                    <nav class="sm:text-md px-2 text-sm flex space-x-2">
+                        <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-100 flex items-center">
+                            <i class="icon-[mdi--home-outline] mr-1 text-gray-50"></i> Apps
+                        </div>
+                        <span class="text-gray-100">/</span>
+                        <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-100">
+                            {{ selectedCardCategory }}
+                        </div>
+                        <div v-else class="text-gray-100">
+                            {{ selectedCategory }}
+                        </div>
+                        <span class="text-gray-100" v-if="selectedCardTitle !== ''">/</span>
+                        <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-100">{{
+                            selectedCardTitle }}</span>
+                    </nav>
                 </div>
-                <nav class="sm:text-md px-2 text-sm flex space-x-2">
-                    <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-600 flex items-center">
-                        <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
-                    </div>
-                    <span class="text-gray-400">/</span>
-                    <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-600">
-                        {{ selectedCardCategory }}
-                    </div>
-                    <div v-else class="text-gray-600">
-                        {{ selectedCategory }}
-                    </div>
-                    <span class="text-gray-400" v-if="selectedCardTitle !== ''">/</span>
-                    <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-600">{{
-                        selectedCardTitle }}</span>
-                </nav>
-            </div>
-            <div class="w-full md:w-1/2 flex flex-col space-y-2">
-                <Filter>
-                    <template #action>
-                        <button @click="toggleFilters"
-                            class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
-                            <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
-                        </button>
-                        <button @click="groupByCategory"
-                            class="flex items-center btn-secondary px-2 py-1 rounded-sm shadow-md">
-                            <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
-                        </button>
-                        <button @click="toggleFavorites"
-                            class="flex items-center btn-danger px-2 py-1 rounded-sm shadow-md">
-                            <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
-                        </button>
-                    </template>
-                </Filter>
-            </div>
-        </div>
-        <div v-if="!showModulePage" class="flex flex-1">
-            <div class="h-screen border-r border-gray-300 w-64 p-4 hidden sm:block">
-                <div class="text-md font-semibold mb-2">
-                    <span class="icon-[ion--folder-sharp] text-violet-600"></span>
-                    <span class="text-violet-600">
-                        CATEGORIES
-                    </span>
-                </div>
-                <ul class="px-2 text-sm">
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('All')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }">
-                            ALL
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('HRMS')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }">
-                            HRMS
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Retail')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }">
-                            Retail
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Production')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }">
-                            Production
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Finance')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Finance' }">
-                            Finance
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Marketing')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Marketing' }">
-                            Marketing
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Point of Sales')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Point of Sales' }">
-                            Point of Sales
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Healthcare')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Healthcare' }">
-                            Healthcare
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Education')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Education' }">
-                            Education
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Technology')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Technology' }">
-                            Technology
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Logistics')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Logistics' }">
-                            Logistics
-                        </a>
-                    </li>
-                    <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
-                        @click.prevent="filterByCategory('Customer Support')">
-                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Customer Support' }">
-                            Customer Support
-                        </a>
-                    </li>
-                </ul>
-
-            </div>
-
-            <div class="bg-gray-50 flex-1 mx-auto py-6 px-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
-                        :description="card.description" :status="card.status" :buttonText="card.buttonText"
-                        :iconClass="card.iconClass" @click="handleCardClick(card.title)">
-                    </Card>
+                <div class="w-full md:w-1/2 flex flex-col space-y-2">
+                    <Filter>
+                        <template #action>
+                            <button @click="toggleFilters"
+                                class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
+                                <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
+                            </button>
+                            <button @click="groupByCategory"
+                                class="flex items-center btn-secondary px-2 py-1 rounded-sm shadow-md">
+                                <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
+                            </button>
+                            <button @click="toggleFavorites"
+                                class="flex items-center btn-danger px-2 py-1 rounded-sm shadow-md">
+                                <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
+                            </button>
+                        </template>
+                    </Filter>
                 </div>
             </div>
-        </div>
 
-        <div v-else>
-            <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
-    </div>    
+        <div class="w-full px-6 py-6 mt-32 mx-auto">
+            <div class="flex justify-end mr-2">
+                <div v-if="!showModulePage" class="flex flex-1">
+                    <div class="h-screen bg-white border-r border-gray-300 w-64 mt-6 p-4 hidden sm:block z-20">
+                        <div class="text-md font-semibold mb-2">
+                            <span class="icon-[ion--folder-sharp] text-violet-600"></span>
+                            <span class="text-violet-600">
+                                CATEGORIES
+                            </span>
+                        </div>
+                        <ul class="px-2 text-sm">
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('All')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }">
+                                    ALL
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('HRMS')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }">
+                                    HRMS
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Retail')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }">
+                                    Retail
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Production')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }">
+                                    Production
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Finance')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Finance' }">
+                                    Finance
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Marketing')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Marketing' }">
+                                    Marketing
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Point of Sales')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Point of Sales' }">
+                                    Point of Sales
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Healthcare')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Healthcare' }">
+                                    Healthcare
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Education')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Education' }">
+                                    Education
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Technology')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Technology' }">
+                                    Technology
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Logistics')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Logistics' }">
+                                    Logistics
+                                </a>
+                            </li>
+                            <li class="mb-1 hover:bg-violet-100 hover:rounded-md py-1 px-3 cursor-pointer"
+                                @click.prevent="filterByCategory('Customer Support')">
+                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Customer Support' }">
+                                    Customer Support
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="bg-transparent flex-1 mx-auto mt-6 px-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                            <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
+                                :description="card.description" :status="card.status" :buttonText="card.buttonText"
+                                :iconClass="card.iconClass" @click="handleCardClick(card.title)">
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else>
+                    <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
+
+<style>
+.min-h-75 {
+    min-height: 18.75rem;
+}
+
+.ps {
+    overflow: hidden !important;
+    overflow-anchor: none;
+    -ms-overflow-style: none;
+    touch-action: auto;
+    -ms-touch-action: auto;
+}
+
+@media (min-width: 1200px) {
+    .xl\:translate-x-0 {
+        --tw-translate-x: 0px;
+        transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    }
+}
+
+@media (min-width: 1200px) {
+    .xl\:ml-6 {
+        margin-left: 1.5rem;
+    }
+}
+
+</style>
 
 <route lang="yaml">
     meta:

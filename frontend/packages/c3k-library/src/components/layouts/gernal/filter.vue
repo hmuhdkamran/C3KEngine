@@ -8,8 +8,8 @@ const tableStore = useTableStore();
 <template>
     <div class="flex flex-col space-y-2">
         <div class="relative">
-            <i class="icon-[mdi--magnify] absolute left-2 top-3 text-gray-400"></i>
-            <input type="text" placeholder="Search..." class="input-bottom pl-6 w-full"
+            <i class="icon-[mdi--magnify] left-2 top-3 text-gray-700"></i>
+            <input type="text" placeholder="Search..." class="input-bottom pl-6 w-full bg-white"
                 v-model="tableStore.searchQuery" />
         </div>
         <div class="flex flex-wrap items-center justify-between lg:space-x-96 sm:space-x-80 md:space-x-12">
