@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue';
 import { defineProps } from 'vue';
 import { Drawer, VNodeRenderer, config } from 'c3k-library';
@@ -112,4 +112,4 @@ const toggleSection = (index: number) => {
   /* Adjust as needed for the content size */
   opacity: 1;
 }
-</style>
+</style> -->
