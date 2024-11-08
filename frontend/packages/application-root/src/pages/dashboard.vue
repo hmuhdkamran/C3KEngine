@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
-import Retailmodule from '@/layouts/components/Retailmodule.vue';
-import Productionmodule from '@/layouts/components/Productionmodule.vue';
 import { useRouter } from 'vue-router';
 import { useTableStore, Filter } from 'c3k-library';
-import Card from '@/layouts/components/card.vue'
+import Card from '@/layouts/components/card.vue';
 
 const tableStore = useTableStore();
 
@@ -121,47 +118,33 @@ function handleCardClick(cardTitle: string) {
     currentModule.value = cardTitle;
 }
 
-const moduleComponent = computed(() => {
-    switch (currentModule.value) {
-        case 'Employee Management':
-            return HRMSmodule;
-        case 'Inventory Management':
-            return Retailmodule;
-        case 'Production Planning':
-            return Productionmodule;
-        default:
-            return null;
-    }
-});
 
 function goToMain() {
     router.replace('/app/main');
 }
-
 </script>
-
 <template>
-    <div class="flex h-screen bg-gray-100">
-        <div class="absolute w-full bg-gradient-to-r from-violet-600 to-violet-500 min-h-75">
+<div class="flex h-screen bg-gray-50">
+        <div class="absolute w-full">
             <div
                 class="py-2 px-6 flex flex-col md:flex-row justify-between ml-auto mt-12 space-y-4 md:space-y-0 md:space-x-8">
                 <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
                     <div class="px-3">
-                        <h1 class="text-2xl font-bold text-gray-100">{{ pageHeading }}</h1>
+                        <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
                     </div>
                     <nav class="sm:text-md px-2 text-sm flex space-x-2">
-                        <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-100 flex items-center">
-                            <i class="icon-[mdi--home-outline] mr-1 text-gray-50"></i> Apps
+                        <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-800 flex items-center">
+                            <i class="icon-[mdi--home-outline] mr-1 text-gray-800"></i> Apps
                         </div>
-                        <span class="text-gray-100">/</span>
-                        <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-100">
+                        <span class="text-gray-800">/</span>
+                        <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-800">
                             {{ selectedCardCategory }}
                         </div>
-                        <div v-else class="text-gray-100">
+                        <div v-else class="text-gray-800">
                             {{ selectedCategory }}
                         </div>
-                        <span class="text-gray-100" v-if="selectedCardTitle !== ''">/</span>
-                        <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-100">{{
+                        <span class="text-gray-800" v-if="selectedCardTitle !== ''">/</span>
+                        <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-800">{{
                             selectedCardTitle }}</span>
                     </nav>
                 </div>
@@ -289,15 +272,8 @@ function goToMain() {
         </div>
     </div>
 </template>
-
-<style>
-.min-h-75 {
-    min-height: 18.75rem;
-}
-</style>
-
 <route lang="yaml">
     meta:
       layout: auth
       action: read
-</route>
+  </route>
