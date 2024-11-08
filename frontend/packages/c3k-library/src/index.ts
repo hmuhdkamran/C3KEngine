@@ -21,7 +21,7 @@ export { default as DataTable } from './components/data/DataTable.vue';
 export { default as Pagination } from './components/data/Pagination.vue';
 
 export { default as BaseIcon } from './components/utilities/BaseIcon.vue';
-export { default as Card } from './components/utilities/cardstyle.vue';
+export { default as Card } from './components/utilities/Card.vue';
 
 export { default as Notification } from './components/utilities/Notification.vue';
 export * from "./components/utilities/useNotification";
