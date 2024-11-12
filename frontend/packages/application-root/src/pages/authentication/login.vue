@@ -24,7 +24,7 @@ const login = () => {
     service.login(credentials)
         .then((response: any) => {
             if (response) {
-                router.replace(route.query.to ? String(route.query.to) : '/app/main');
+                router.replace(route.query.to ? String(route.query.to) : '/dashboard');
             } else {
                 addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
             }

@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import HRMSmodule from '@/layouts/components/HRMSmodule.vue';
-import Retailmodule from '@/layouts/components/Retailmodule.vue';
-import Productionmodule from '@/layouts/components/Productionmodule.vue';
 import { useRouter } from 'vue-router';
 import { useTableStore, Filter } from 'c3k-library';
-import Card from '@/layouts/components/card.vue'
+import Card from '@/layouts/components/card.vue';
 
 const tableStore = useTableStore();
 
@@ -121,82 +118,62 @@ function handleCardClick(cardTitle: string) {
     currentModule.value = cardTitle;
 }
 
-const moduleComponent = computed(() => {
-    switch (currentModule.value) {
-        case 'Employee Management':
-            return HRMSmodule;
-        case 'Inventory Management':
-            return Retailmodule;
-        case 'Production Planning':
-            return Productionmodule;
-        default:
-            return null;
-    }
-});
 
 function goToMain() {
     router.replace('/app/main');
 }
-
 </script>
-
 <template>
-    <div class="flex h-screen bg-gray-100">
-        <div class="absolute w-full bg-gradient-to-r from-violet-600 to-violet-500 min-h-75">
-            <div
-                class="py-2 px-6 flex flex-col md:flex-row justify-between ml-auto mt-12 space-y-4 md:space-y-0 md:space-x-8">
-                <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
-                    <div class="px-3">
-                        <h1 class="text-2xl font-bold text-gray-100">{{ pageHeading }}</h1>
+ <div>
+        <div class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
+            <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
+                <div class="px-3">
+                    <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
+                </div>
+                <nav class="sm:text-md px-2 text-sm flex space-x-2">
+                    <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-600 flex items-center">
+                        <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
                     </div>
-                    <nav class="sm:text-md px-2 text-sm flex space-x-2">
-                        <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-100 flex items-center">
-                            <i class="icon-[mdi--home-outline] mr-1 text-gray-50"></i> Apps
-                        </div>
-                        <span class="text-gray-100">/</span>
-                        <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-100">
-                            {{ selectedCardCategory }}
-                        </div>
-                        <div v-else class="text-gray-100">
-                            {{ selectedCategory }}
-                        </div>
-                        <span class="text-gray-100" v-if="selectedCardTitle !== ''">/</span>
-                        <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-100">{{
-                            selectedCardTitle }}</span>
-                    </nav>
-                </div>
-                <div class="w-full md:w-1/2 flex flex-col space-y-2">
-                    <Filter>
-                        <template #action>
-                            <button @click="toggleFilters"
-                                class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
-                                <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
-                            </button>
-                            <button @click="groupByCategory"
-                                class="flex items-center btn-secondary px-2 py-1 rounded-sm shadow-md">
-                                <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
-                            </button>
-                            <button @click="toggleFavorites"
-                                class="flex items-center btn-danger px-2 py-1 rounded-sm shadow-md">
-                                <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
-                            </button>
-                        </template>
-                    </Filter>
-                </div>
+                    <span class="text-gray-400">/</span>
+                    <div v-if="selectedCardCategory !== 'All'" class="hover:underline cursor-pointer text-gray-600">
+                        {{ selectedCardCategory }}
+                    </div>
+                    <div v-else class="text-gray-600">
+                        {{ selectedCategory }}
+                    </div>
+                    <span class="text-gray-400" v-if="selectedCardTitle !== ''">/</span>
+                    <span v-if="selectedCardTitle !== ''" class="hover:underline cursor-pointer text-gray-600">{{
+                        selectedCardTitle }}</span>
+                </nav>
             </div>
-
+            <div class="w-full md:w-1/2 flex flex-col space-y-2">
+                <Filter>
+                    <template #action>
+                        <button @click="toggleFilters"
+                            class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[fluent--filter-16-filled] mr-1"></i> Filters
+                        </button>
+                        <button @click="groupByCategory"
+                            class="flex items-center btn-secondary px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[fluent--group-24-filled] mr-1"></i> Group By
+                        </button>
+                        <button @click="toggleFavorites"
+                            class="flex items-center btn-danger px-2 py-1 rounded-sm shadow-md">
+                            <i class="icon-[mdi--star-outline] mr-1"></i> Favorites
+                        </button>
+                    </template>
+                </Filter>
+            </div>
         </div>
-        <div class="w-full px-6 py-6 mt-32 mx-auto">
-            <div class="flex justify-end mr-2">
-                <div v-if="!showModulePage" class="flex flex-1">
-                    <div class="h-screen bg-white border border-gray-200 w-64 mt-8 p-4 hidden sm:block z-20">
-                        <div class="text-md font-semibold mb-2">
-                            <span class="icon-[ion--folder-sharp] text-violet-600"></span>
-                            <span class="text-violet-600">
-                                CATEGORIES
-                            </span>
-                        </div>
-                        <ul class="px-2 text-sm">
+        <div v-if="!showModulePage" class="flex flex-1">
+            <div class="h-screen border-r border-gray-300 w-64 p-4 hidden sm:block">
+                <div class="text-md font-semibold mb-2">
+                    <span class="icon-[ion--folder-sharp] text-violet-600"></span>
+                    <span class="text-violet-600">
+                        CATEGORIES
+                    </span>
+                </div>
+                <ul class="px-2 text-sm">
                             <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
                                 @click.prevent="filterByCategory('All')">
                                 <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }">
@@ -271,33 +248,25 @@ function goToMain() {
                             </li>
                         </ul>
 
-                    </div>
-                    <div class="w-full px-4 sm:px-6 py-4 md:py-6 mt-2 mx-auto">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                            <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
-                                :description="card.description" :status="card.status" :buttonText="card.buttonText"
-                                :iconClass="card.iconClass" @click="handleCardClick(card.title)">
-                            </Card>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
-                <div v-else>
-                    <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
+            <div class="bg-gray-50 flex-1 mx-auto py-6 px-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <Card v-for="(card, index) in paginatedFilteredCards" :key="index" :title="card.title"
+                        :description="card.description" :status="card.status" :buttonText="card.buttonText"
+                        :iconClass="card.iconClass" @click="handleCardClick(card.title)">
+                    </Card>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div v-else>
+            <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
+        </div>
+    </div> 
 </template>
-
-<style>
-.min-h-75 {
-    min-height: 18.75rem;
-}
-</style>
-
 <route lang="yaml">
     meta:
       layout: auth
       action: read
-</route>
+  </route>
