@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { TokenStatus } from "c3k-library"
-import { AuthenticationService } from '@/services/authentication-service';
-
 import ChildDisplay from '@/components/ChildDisplay.vue';
-import AuthFooter from '@/layouts/components/auth/Footer.vue';
-
-const auth: AuthenticationService = new AuthenticationService();
+import AuthFooter from '@/layouts/components/authentication/Footer.vue';
 
 </script>
 
 <template>
     <div class="text-blueGray-700 antialiased">
-        <TokenStatus :info-timeout="300" :warn-timeout="60" :error-timeout="10" :logout="true" :auth="auth" />
         <div class="bg-white mt-12 flex flex-col">
             <ChildDisplay path="" />
             <AuthFooter />
@@ -21,6 +15,6 @@ const auth: AuthenticationService = new AuthenticationService();
 
 <route lang="yaml">
     meta:
-      layout: auth
+      layout: authentication
       action: read
 </route>

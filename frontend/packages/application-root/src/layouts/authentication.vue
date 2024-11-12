@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { TokenStatus } from "c3k-library"
 import { AuthenticationService } from "@/services/authentication-service";
-import AuthHeader from "./components/auth/Header.vue";
-import AuthFooter from './components/auth/Footer.vue';
+import AuthHeader from "./components/authentication/Header.vue";
+import AuthFooter from './components/authentication/Footer.vue';
 
 const auth: AuthenticationService = new AuthenticationService();
 

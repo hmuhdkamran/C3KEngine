@@ -124,14 +124,16 @@ function goToMain() {
 }
 </script>
 <template>
- <div>
-        <div class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
+    <div>
+        <div
+            class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
             <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
                 <div class="px-3">
                     <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
                 </div>
                 <nav class="sm:text-md px-2 text-sm flex space-x-2">
-                    <div @click.prevent="goToMain" class="hover:underline cursor-pointer text-gray-600 flex items-center">
+                    <div @click.prevent="goToMain"
+                        class="hover:underline cursor-pointer text-gray-600 flex items-center">
                         <i class="icon-[mdi--home-outline] mr-1 text-gray-500"></i> Apps
                     </div>
                     <span class="text-gray-400">/</span>
@@ -174,79 +176,79 @@ function goToMain() {
                     </span>
                 </div>
                 <ul class="px-2 text-sm">
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('All')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }">
-                                    ALL
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('HRMS')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }">
-                                    HRMS
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Retail')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }">
-                                    Retail
-                                </a>
-                            </li>
-                            <li class="mb-1hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Production')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }">
-                                    Production
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Finance')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Finance' }">
-                                    Finance
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Marketing')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Marketing' }">
-                                    Marketing
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Point of Sales')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Point of Sales' }">
-                                    Point of Sales
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Healthcare')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Healthcare' }">
-                                    Healthcare
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Education')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Education' }">
-                                    Education
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Technology')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Technology' }">
-                                    Technology
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Logistics')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Logistics' }">
-                                    Logistics
-                                </a>
-                            </li>
-                            <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
-                                @click.prevent="filterByCategory('Customer Support')">
-                                <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Customer Support' }">
-                                    Customer Support
-                                </a>
-                            </li>
-                        </ul>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('All')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'All' }">
+                            ALL
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('HRMS')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'HRMS' }">
+                            HRMS
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Retail')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Retail' }">
+                            Retail
+                        </a>
+                    </li>
+                    <li class="mb-1hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Production')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Production' }">
+                            Production
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Finance')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Finance' }">
+                            Finance
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Marketing')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Marketing' }">
+                            Marketing
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Point of Sales')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Point of Sales' }">
+                            Point of Sales
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Healthcare')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Healthcare' }">
+                            Healthcare
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Education')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Education' }">
+                            Education
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Technology')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Technology' }">
+                            Technology
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Logistics')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Logistics' }">
+                            Logistics
+                        </a>
+                    </li>
+                    <li class="mb-1 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 hover:rounded-md py-1 px-3 cursor-pointer"
+                        @click.prevent="filterByCategory('Customer Support')">
+                        <a href="#" :class="{ 'text-violet-600': selectedCategory === 'Customer Support' }">
+                            Customer Support
+                        </a>
+                    </li>
+                </ul>
 
             </div>
 
@@ -263,10 +265,10 @@ function goToMain() {
         <div v-else>
             <component :is="moduleComponent" :cardTitle="selectedCardTitle" />
         </div>
-    </div> 
+    </div>
 </template>
 <route lang="yaml">
     meta:
-      layout: auth
+      layout: authentication
       action: read
   </route>
