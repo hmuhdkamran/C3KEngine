@@ -32,5 +32,5 @@ export const apps = microApps.map((item) => {
 export const microAppRoutes = microApps.map(app => ({
     path: `/${app.activeRule}/:pathMatch(.*)*`,
     name: app.name,
-    component: () => import('@/pages/micro.vue'),
+    component: () => import('@/layouts/micro-frontend.vue'),
 }));

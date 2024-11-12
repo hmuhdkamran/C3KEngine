@@ -2,7 +2,7 @@ import { createApp, type App } from 'vue'
 import { createPinia } from 'pinia'
 import {routeHash} from "@/router";
 
-import '@/assets/styles/main.css';
+import './assets/styles/main.css';
 
 import Root from './App.vue'
 import { installPinia } from 'c3k-library';
