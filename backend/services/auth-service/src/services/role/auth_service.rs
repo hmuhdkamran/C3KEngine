@@ -1,4 +1,4 @@
-use c3k_common::models::auth::{Auth, AuthModel, JwtClaims, PasswordCode};
+use c3k_common::models::auth::{Auth, AuthModel, JwtClaims, PasswordCode, UserProducts};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use sha2::{Digest, Sha256};
@@ -45,7 +45,7 @@ impl AuthService {
             .collect()
     }
 
-    fn generate_jwt(&self, user: &Users, claims: &Vec<Auth>) -> Result<String, Box<dyn StdError>> {
+    fn generate_jwt(&self, user: &Users, claims: &Vec<UserProducts>) -> Result<String, Box<dyn StdError>> {
         let json = match get_json() {
             Ok(cfg) => cfg,
             Err(err) => return Err(err),
@@ -104,7 +104,7 @@ impl AuthService {
             return Err("Invalid password".into());
         }
 
-        let claims = match AuthRepository::get_claims(self.db_pool.clone(), username).await {
+        let claims = match AuthRepository::get_products(self.db_pool.clone(), username).await {
             Ok(claims) => claims,
             Err(e) => return Err(e.into()),
         };
