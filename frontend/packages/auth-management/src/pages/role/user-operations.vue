@@ -29,7 +29,7 @@ const onSave = () => {
 </script>
 
 <template>
-    <Drawer :isOpen="props.isDrawerVisible" :title="props.isEditMode ? 'Edit Entry' : 'View Entry'" position="right" size="w-1/4">
+    <Drawer :isOpen="props.isDrawerVisible" :title="props.isEditMode ? 'Edit Entry' : 'View Entry'" position="right" size="w-1/4" class="bg-black bg-opacity-50">
         <template #header>
             <div class="w-full flex justify-between items-center p-4 bg-gray-100 border-b">
                 <h2 class="text-lg font-semibold text-gray-800">{{ props.isEditMode ? "Edit" : "View" }}</h2>

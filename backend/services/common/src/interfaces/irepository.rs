@@ -20,7 +20,7 @@ pub trait Model: Sized {
     }
 
     fn build_update_string(table_name: &str, columns: &[&'static str], primary_key: &str) -> String {
-        let mut update_str = format!("UPDATE {}", table_name);
+        let mut update_str = format!("UPDATE {} SET ", table_name);
         let mut first = true;
 
         for (i, &column) in columns.iter().enumerate() {

@@ -144,14 +144,14 @@ where
                                     .collect::<Vec<&str>>()
                                     .join("-");
 
-                                // let allowed = claim
-                                //     .role
-                                //     .iter()
-                                //     .any(|role| transformed_path.contains(&role.route));
+                                let allowed = claim
+                                    .role
+                                    .iter()
+                                    .any(|role| transformed_path.contains(&role.route));
 
-                                // if allowed {
-                                //     authenticate_pass = true;
-                                // }
+                                if allowed {
+                                    authenticate_pass = true;
+                                }
                             }
                             Ok(_) => {
                                 authenticate_pass = false;

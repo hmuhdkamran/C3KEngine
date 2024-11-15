@@ -49,7 +49,7 @@ pub struct JwtClaims {
     #[serde(rename = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")]
     pub name: Vec<String>,
     #[serde(rename = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role")]
-    pub role: Vec<UserProducts>,
+    pub role: Vec<Auth>,
     #[serde(rename = "http://schemas.c3kframework.skn/2003/81/culturename")]
     pub culturename: String,
     pub iss: String,
