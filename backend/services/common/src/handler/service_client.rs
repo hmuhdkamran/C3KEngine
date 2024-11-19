@@ -2,13 +2,14 @@ use crate::models::{config::app_config::AppConfig, response::ApiResponse};
 use actix_web::{http::Method, HttpResponse};
 use awc::{body::to_bytes, Client};
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 pub struct ServiceCommunicator {
-    config: AppConfig,
+    config: Arc<AppConfig>,
 }
 
 impl ServiceCommunicator {
-    pub fn new(config: AppConfig) -> Self {
+    pub fn new(config: Arc<AppConfig>) -> Self {
         ServiceCommunicator { config }
     }
 

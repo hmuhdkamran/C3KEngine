@@ -24,7 +24,7 @@ pub use sqlx::{
     postgres::{PgArguments, PgPoolOptions, PgRow},
     Arguments, PgPool, Postgres, Row,
 };
-use std::io::{Error, ErrorKind};
+use std::{io::{Error, ErrorKind}, sync::Arc};
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
@@ -48,9 +48,13 @@ async fn main() -> Result<(), std::io::Error> {
         .unwrap();
 
     let addr = format!("{}:{}", service.host, service.port);
-    let db_pool = create_db_pool(&service.connection_string)
-        .await
-        .expect("Failed to create pool");
+    let db_pool = match create_db_pool(&service.connection_string).await {
+        Ok(pool) => pool,
+        Err(err) => {
+            eprintln!("Failed to create DB pool: {}", err);
+            return Err(Error::new(ErrorKind::Other, "Database pool initialization failed"));
+        }
+    };
 
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
@@ -66,7 +70,7 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
-        let communicator = ServiceCommunicator::new(config.clone());
+        let communicator = ServiceCommunicator::new(Arc::new(config.clone()));
 
         App::new()
             .wrap(cors)

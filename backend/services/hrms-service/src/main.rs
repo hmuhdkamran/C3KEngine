@@ -82,7 +82,7 @@ pub use sqlx::{
     Arguments, PgPool, Postgres, Row,
 };
 
-use std::io::{Error, ErrorKind};
+use std::{io::{Error, ErrorKind}, sync::Arc};
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
@@ -120,7 +120,7 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
-        let communicator = ServiceCommunicator::new(config.clone());
+        let communicator = ServiceCommunicator::new(Arc::new(config.clone()));
 
         App::new()
             .wrap(cors)

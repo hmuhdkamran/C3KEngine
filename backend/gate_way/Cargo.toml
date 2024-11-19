@@ -6,6 +6,6 @@ authors = ["H.Muhammad Kamran"]
 
 [dependencies]
 c3k-common = { path = "../services/common" }
-actix-web = "4.9.0"
-actix-cors = "0.7.0"
-awc = { version = "3.5.1", features = ["openssl"] }
+actix-web = { workspace = true }
+actix-cors = { workspace = true }
+awc = { workspace = true }

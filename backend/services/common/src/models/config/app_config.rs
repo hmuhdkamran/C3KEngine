@@ -94,10 +94,7 @@ pub async fn create_db_pool(connection_string: &str) -> Result<PgPool, sqlx::Err
         .connect(connection_string)
         .await
     {
-        Ok(pool) => {
-            println!("Connection successful: {}", connection_string);
-            Ok(pool)
-        }
+        Ok(pool) => Ok(pool),
         Err(e) => {
             eprintln!("Failed to create database pool: {}", e);
             Err(e)

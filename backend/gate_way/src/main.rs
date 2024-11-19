@@ -26,7 +26,7 @@ async fn main() -> Result<(), std::io::Error> {
     };
 
     let addr = format!("{}:{}", config.gateway.host, config.gateway.port);
-
+    
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
             .allow_any_method()

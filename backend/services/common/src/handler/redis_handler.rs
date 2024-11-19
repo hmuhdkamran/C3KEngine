@@ -2,17 +2,27 @@ use crate::models::config::app_config::get_config;
 use redis::Commands;
 use std::error::Error as StdError;
 
+use super::error_display::ParseError;
+
 pub struct RedisHandler {
     client: redis::Client,
 }
 
 impl RedisHandler {
     pub fn new() -> Result<Self, Box<dyn StdError>> {
-        let json = get_config().unwrap();
+        let json = match get_config() {
+            Some(cfg) => cfg,
+            None => return Err(Box::new(ParseError::from("Configuration not loaded"))),
+        };
+
         let client = redis::Client::open(format!(
             "redis://{}:{}/",
             json.redis.redis_host, json.redis.redis_port
-        ))?;
+        ))
+        .map_err(|_| {
+            Box::new(ParseError::from("Redis client error:")) as Box<dyn StdError>
+        })?;
+
         Ok(RedisHandler { client })
     }
 
