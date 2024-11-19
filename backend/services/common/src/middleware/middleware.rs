@@ -19,7 +19,12 @@ use jsonwebtoken::{
 
 use crate::{
     handler::redis_handler::RedisHandler,
-    models::{auth::JwtClaims, config::app_config::get_config, constants, response::ApiResponse},
+    models::{
+        auth::{Auth, JwtClaims},
+        config::app_config::get_config,
+        constants,
+        response::ApiResponse,
+    },
 };
 
 pub struct InterHandler;
@@ -80,7 +85,9 @@ where
                 return Box::pin(async move {
                     let (request, _pl) = req.into_parts();
                     let response = HttpResponse::InternalServerError()
-                        .json(ApiResponse::<String>::error("Internal error: Configuration not initialized".to_string()))
+                        .json(ApiResponse::<String>::error(
+                            "Internal error: Configuration not initialized".to_string(),
+                        ))
                         .map_into_right_body();
                     Ok(ServiceResponse::new(request, response))
                 });
@@ -133,7 +140,7 @@ where
                         match redis_client.get_key(&claim.sid) {
                             Ok(store_token) if token == store_token => {
                                 let path = req.path();
-                                let transformed_path = path
+                                let api_claim = path
                                     .strip_prefix("/api/")
                                     .unwrap_or(path)
                                     .split('/')
@@ -141,16 +148,43 @@ where
                                     .collect::<Vec<&str>>()
                                     .join("-");
 
-                                println!("{}", transformed_path);
+                                let api_application = format!(
+                                    "{}-api/{}",
+                                    &claim.sid,
+                                    path.split('/').nth(2).unwrap_or("")
+                                );
 
-                                // let allowed = claim
-                                //     .role
-                                //     .iter()
-                                //     .any(|role| transformed_path.contains(&role.route));
+                                match redis_client.get_key(&api_application) {
+                                    Ok(application_keys_str) => {
+                                        let application_keys: Vec<Auth> =
+                                            match serde_json::from_str(&application_keys_str) {
+                                                Ok(keys) => keys,
+                                                Err(err) => {
+                                                    return Box::pin(async move {
+                                                        let (request, _pl) = req.into_parts();
+                                                        let response =
+                                                            HttpResponse::InternalServerError()
+                                                                .json(ApiResponse::<String>::error(
+                                                                    format!(
+                                                                        "Internal error: {}",
+                                                                        err
+                                                                    ),
+                                                                ))
+                                                                .map_into_right_body();
+                                                        Ok(ServiceResponse::new(request, response))
+                                                    });
+                                                }
+                                            };
 
-                                // if allowed {
-                                //     authenticate_pass = true;
-                                // }
+                                        authenticate_pass = application_keys
+                                            .iter()
+                                            .any(|key| key.route == api_claim);
+                                    }
+                                    Err(e) => {
+                                        eprintln!("Failed to get key {} from Redis: {:?}", api_application, e);
+                                        authenticate_pass = false;
+                                    }
+                                }
                             }
                             Ok(_) => {
                                 authenticate_pass = false;

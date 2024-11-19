@@ -15,6 +15,7 @@ rand = "0.8.5"
 actix-web = { workspace = true }
 actix-cors = { workspace = true }
 jsonwebtoken = { workspace = true }
+serde_json = { workspace = true }
 sqlx = { workspace = true }
 serde = { workspace = true }
 uuid = { workspace = true }

@@ -15,11 +15,28 @@ impl AuthRepository {
     pub async fn get_claims(
         connection: PgPool,
         username: &String,
+        product: Option<String>, // Optional parameter for the product
     ) -> Result<Vec<Auth>, Box<dyn StdError>> {
-        let query = format!(
-            r#"SELECT ur."RouteName", ur."Operation" FROM "Role"."UserRoles" ur WHERE ur."Username"='{}'"#,
-            username
-        );
+        // Build the query based on whether product is provided
+        let query = if let Some(ref p) = product {
+            // If product is provided, use UserApplicationRoles
+            format!(
+                r#"SELECT uar."RouteName", uar."Operation" 
+                   FROM "Role"."UserApplicationRoles" uar 
+                   WHERE uar."Username"='{}' AND uar."Product"='{}'"#,
+                username, p
+            )
+        } else {
+            // If product is not provided, use UserRoles
+            format!(
+                r#"SELECT ur."RouteName", ur."Operation" 
+                   FROM "Role"."UserRoles" ur 
+                   WHERE ur."Username"='{}'"#,
+                username
+            )
+        };
+
+        // Execute the query
         let result = sqlx::query(query.as_str())
             .map(|row: PgRow| Auth::from_row(&row))
             .fetch_all(&connection)

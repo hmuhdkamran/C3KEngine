@@ -6,6 +6,7 @@ use sha2::{Digest, Sha256};
 use sqlx::PgPool;
 use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
+use serde_json;
 
 use crate::{
     models::role::users::Users,
@@ -68,7 +69,10 @@ impl AuthService {
             sid: user.username.to_string(),
             emailaddress: user.username.to_string(),
             name: vec![user.username.to_string(), user.display_name.to_string()],
-            role: claims.clone(),
+            role: claims
+                .iter()
+                .map(|p| format!("{}-{}", user.username, p.abbreviation))
+                .collect::<Vec<String>>(),
             culturename: "en-US".to_string(),
             iss: json.token_provider.token_issuer.to_string(),
             sub: user.username.to_string(),
@@ -80,9 +84,6 @@ impl AuthService {
         let header = Header::new(Algorithm::HS256);
         let secret = EncodingKey::from_secret(json.token_provider.token_security_key.as_bytes());
         let token = encode(&header, &claims, &secret)?;
-
-        self.redis_client
-            .insert_update_key(&user.username, &token)?;
 
         Ok(token)
     }
@@ -109,13 +110,36 @@ impl AuthService {
             return Err("Invalid password".into());
         }
 
-        let claims = match AuthRepository::get_products(self.db_pool.clone(), username).await {
-            Ok(claims) => claims,
+        let products = match AuthRepository::get_products(self.db_pool.clone(), username).await {
+            Ok(products) => products,
             Err(e) => return Err(e.into()),
         };
 
-        match self.generate_jwt(user, &claims) {
-            Ok(token) => Ok(token),
+        match self.generate_jwt(user, &products) {
+            Ok(token) => Ok({
+                self.redis_client
+                    .insert_update_key(&user.username, &token)?;
+
+                for product in products {
+                    let claims = match AuthRepository::get_claims(
+                        self.db_pool.clone(),
+                        username,
+                        Some(product.full_name),
+                    )
+                    .await
+                    {
+                        Ok(claims) => claims,
+                        Err(e) => return Err(e.into()),
+                    };
+
+                    self.redis_client.insert_update_key(
+                        &format!("{}-{}", user.username, product.abbreviation),
+                        &serde_json::to_string(&claims).unwrap(),
+                    )?;
+                }
+
+                token
+            }),
             Err(e) => Err(e.into()),
         }
     }
