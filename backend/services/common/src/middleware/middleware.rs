@@ -19,7 +19,7 @@ use jsonwebtoken::{
 
 use crate::{
     handler::redis_handler::RedisHandler,
-    models::{auth::JwtClaims, config::app_config::get_json, constants, response::ApiResponse},
+    models::{auth::JwtClaims, config::app_config::get_config, constants, response::ApiResponse},
 };
 
 pub struct InterHandler;
@@ -74,16 +74,13 @@ where
             }
         };
 
-        let json = match get_json() {
-            Ok(cfg) => cfg,
-            Err(err) => {
+        let json = match get_config() {
+            Some(cfg) => cfg,
+            None => {
                 return Box::pin(async move {
                     let (request, _pl) = req.into_parts();
                     let response = HttpResponse::InternalServerError()
-                        .json(ApiResponse::<String>::error(format!(
-                            "Internal error: {}",
-                            err
-                        )))
+                        .json(ApiResponse::<String>::error("Internal error: Configuration not initialized".to_string()))
                         .map_into_right_body();
                     Ok(ServiceResponse::new(request, response))
                 });
@@ -143,6 +140,8 @@ where
                                     .skip(1)
                                     .collect::<Vec<&str>>()
                                     .join("-");
+
+                                println!("{}", transformed_path);
 
                                 // let allowed = claim
                                 //     .role

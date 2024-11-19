@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { UsersService } from '@/services';
 import { DataTable, ConfirmationDialog } from 'c3k-library';
-import { onMounted, ref, type Ref } from 'vue';
+import { onMounted, ref, watch, type Ref } from 'vue';
 import UserOperations from './user-operations.vue';
 import type { IUser } from '@/models';
+import { useApplicationStore } from '@/stores/counter';
 
 const repo = new UsersService();
+const store = useApplicationStore();
 const data: Ref<IUser[]> = ref([]);
 
 const columns = [
@@ -32,7 +34,7 @@ const isDrawerVisible = ref(false);
 const isEditMode = ref(false);
 const currentEntry = ref<IUser | null>(null); 
 
-const openModal = (action: string, row: IUser) => {
+const openModal = (action: string, row: IUser | any) => {
   currentEntry.value = row;
   isEditMode.value = action === 'edit';
   isDrawerVisible.value = true;
@@ -43,6 +45,10 @@ const closeDrawer = () => {
   isEditMode.value = false;
   currentEntry.value = null;
 };
+
+watch(()=>store.toggleDrawer, ()=> {
+  isDrawerVisible.value = store.toggleDrawer
+})
 
 const saveEntry = async () => {
   if (currentEntry.value && isEditMode.value) {

@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { useApplicationStore } from '@/stores/counter';
 import { Filter } from 'c3k-library';
 import { computed, ref } from 'vue';
+
+const store = useApplicationStore();
 
 const selectedCardTitle = ref('Manaloom Afrad');
 
 const pageHeading = computed(() => {
     return selectedCardTitle.value !== '' ? selectedCardTitle.value : 'Apps';
 });
+
 
 </script>
 
@@ -30,7 +34,7 @@ const pageHeading = computed(() => {
                 <div class="w-full md:w-1/2 flex flex-col space-y-2">
                     <Filter>
                         <template #action>
-                            <button class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md">
+                            <button class="flex items-center btn-primary px-2 py-1 rounded-sm shadow-md" @click="store.toggleDrawer = true">
                                 <i class="icon-[fluent--filter-16-filled] mr-1"></i> Add
                             </button>
                         </template>

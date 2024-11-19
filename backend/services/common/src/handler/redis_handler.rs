@@ -1,4 +1,4 @@
-use crate::models::config::app_config::get_json;
+use crate::models::config::app_config::get_config;
 use redis::Commands;
 use std::error::Error as StdError;
 
@@ -8,7 +8,7 @@ pub struct RedisHandler {
 
 impl RedisHandler {
     pub fn new() -> Result<Self, Box<dyn StdError>> {
-        let json = get_json()?;
+        let json = get_config().unwrap();
         let client = redis::Client::open(format!(
             "redis://{}:{}/",
             json.redis.redis_host, json.redis.redis_port

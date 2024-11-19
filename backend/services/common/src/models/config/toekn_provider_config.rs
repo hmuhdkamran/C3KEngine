@@ -7,5 +7,5 @@ pub struct TokenProviderConfig {
     pub token_security_algorithm: String,
     pub token_issuer: String,
     pub token_audience: String,
-    pub salt_length: u32,
+    pub salt_length: usize,
 }

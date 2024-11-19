@@ -1,4 +1,5 @@
-use c3k_common::models::auth::{Auth, AuthModel, JwtClaims, PasswordCode, UserProducts};
+use c3k_common::handler::error_display::ParseError;
+use c3k_common::models::auth::{AuthModel, JwtClaims, PasswordCode, UserProducts};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use sha2::{Digest, Sha256};
@@ -13,7 +14,7 @@ use crate::{
 use c3k_common::{
     handler::redis_handler::RedisHandler,
     interfaces::irepository::IRepository,
-    models::{config::app_config::get_json, response::ApiResponse},
+    models::{config::app_config::get_config, response::ApiResponse},
 };
 
 pub struct AuthService {
@@ -45,10 +46,14 @@ impl AuthService {
             .collect()
     }
 
-    fn generate_jwt(&self, user: &Users, claims: &Vec<UserProducts>) -> Result<String, Box<dyn StdError>> {
-        let json = match get_json() {
-            Ok(cfg) => cfg,
-            Err(err) => return Err(err),
+    fn generate_jwt(
+        &self,
+        user: &Users,
+        claims: &Vec<UserProducts>,
+    ) -> Result<String, Box<dyn StdError>> {
+        let json = match get_config() {
+            Some(cfg) => cfg,
+            None => return Err(Box::new(ParseError::from("Configuration error"))),
         };
 
         let now = SystemTime::now();
@@ -122,8 +127,8 @@ impl AuthService {
         }
     }
 
-    pub fn encrypt_password(password: &String) -> PasswordCode {
-        let salt = Self::generate_salt(16);
+    pub fn encrypt_password(password: &String, length: usize) -> PasswordCode {
+        let salt = Self::generate_salt(length);
         let hash = Self::generate_hash(password, &salt);
         PasswordCode {
             password: hash,
