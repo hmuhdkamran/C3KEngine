@@ -37,11 +37,12 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(origin);
         }
 
-        App::new()
-            .app_data(web::Data::new(config.clone()))
+        App::new()            
             .wrap(cors)
             .wrap(InterHandler)
-            .default_service(web::route().to(forward_request))
+            .app_data(web::Data::new(Arc::new(config.clone())))
+            .default_service(web::route()
+            .to(forward_request))
     });
 
     println!("App is Running on http://{}", addr);

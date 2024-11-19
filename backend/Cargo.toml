@@ -28,3 +28,4 @@ redis = "0.27.5"
 once_cell = "1.20.2"
 uuid = { version = "1.11.0", features = ["serde", "v4"] }
 chrono = { version = "0.4.38", features = ["serde"] }
+env_logger = "0.11.5"
