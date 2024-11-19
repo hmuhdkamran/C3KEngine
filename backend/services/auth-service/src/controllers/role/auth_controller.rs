@@ -12,9 +12,10 @@ pub async fn login(
     let redis_client = RedisHandler::new()?;
     let service = AuthService::new(connection.as_ref().clone(), redis_client);
     let result = service.login(&entity.into_inner()).await;
+
     Ok(HttpResponse::Ok().json(result))
 }
 
 pub fn auth_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/api/auth").service(login));
+    cfg.service(web::scope("/api/auth/login").service(login));
 }

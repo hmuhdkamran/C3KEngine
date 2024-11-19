@@ -3,6 +3,28 @@ members = [
   "services/auth-service", 
   "services/hrms-service",
   "services/retail-service",
+  "services/common",
   "gate_way"
   ]
 resolver = "2"
+
+[workspace.dependencies]
+actix-web = "4.9.0"
+actix-cors = "0.7.0"
+awc = { version = "3.5.1", features = ["openssl"] }
+futures = "0.3.31"
+sqlx = { version = "0.8.1", features = [
+    "postgres",
+    "macros",
+    "runtime-tokio",
+    "tls-native-tls",
+    "uuid",
+    "chrono",
+] }
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0.133"
+jsonwebtoken = "9.3"
+redis = "0.27.5"
+once_cell = "1.20.2"
+uuid = { version = "1.11.0", features = ["serde", "v4"] }
+chrono = { version = "0.4.38", features = ["serde"] }

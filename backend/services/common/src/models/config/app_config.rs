@@ -1,6 +1,6 @@
 use once_cell::sync::Lazy;
 use serde::Deserialize;
-use sqlx::{Row, PgPool, postgres::PgPoolOptions};
+use sqlx::{postgres::PgPoolOptions, PgPool, Row};
 use std::fs;
 use std::sync::Mutex;
 
@@ -34,7 +34,6 @@ pub async fn initialize_config() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-
 /// Access the AppConfig singleton. Returns a clone of the config.
 pub fn get_config() -> Option<AppConfig> {
     APP_CONFIG.lock().unwrap().clone()
@@ -47,8 +46,8 @@ async fn load_app_config() -> Result<AppConfig, Box<dyn std::error::Error>> {
         .map_err(|e| format!("Failed to read configuration file: {}", e))?;
 
     // Parse JSON into AppConfig
-    let mut app_config: AppConfig =
-        serde_json::from_str(&config_contents).map_err(|e| format!("Failed to parse JSON: {}", e))?;
+    let mut app_config: AppConfig = serde_json::from_str(&config_contents)
+        .map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
     // Find the service with name "api/auth"
     let auth_service = app_config
@@ -90,12 +89,18 @@ async fn load_app_config() -> Result<AppConfig, Box<dyn std::error::Error>> {
 }
 
 pub async fn create_db_pool(connection_string: &str) -> Result<PgPool, sqlx::Error> {
-    PgPoolOptions::new()
+    match PgPoolOptions::new()
         .max_connections(5)
         .connect(connection_string)
         .await
-        .map_err(|e| {
+    {
+        Ok(pool) => {
+            println!("Connection successful: {}", connection_string);
+            Ok(pool)
+        }
+        Err(e) => {
             eprintln!("Failed to create database pool: {}", e);
-            e
-        })
+            Err(e)
+        }
+    }
 }
