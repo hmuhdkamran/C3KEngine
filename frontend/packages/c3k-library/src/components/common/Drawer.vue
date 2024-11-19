@@ -69,7 +69,7 @@ const slots = useSlots();
           </template>
         </div>
         <!-- Content -->
-        <div class="flex-grow overflow-y-auto p-2">
+        <div class="flex-grow overflow-y-auto">
           <slot />
         </div>
       </div>

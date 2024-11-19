@@ -4,8 +4,11 @@ import { DataTable, ConfirmationDialog } from 'c3k-library';
 import { onMounted, ref, type Ref } from 'vue';
 import UserOperations from './user-operations.vue';
 import type { IUser } from '@/models';
+import { useApplicationEventStore } from '@/stores/application';
 
 const repo = new UsersService();
+const store = useApplicationEventStore();
+
 const data: Ref<IUser[]> = ref([]);
 
 const columns = [
@@ -16,10 +19,12 @@ const columns = [
   { key: 'action', label: 'Action', sort: false, width: '300px', class: 'text-center' },
 ];
 
+const Operation = ref()
+
 const load = () => {
   repo.GetAll().then((res: any) => {
     if (res)
-    data.value = res.data
+      data.value = res.data
   })
 }
 
@@ -33,21 +38,17 @@ const isEditMode = ref(false);
 const isViewMode = ref(false);
 const currentEntry = ref<IUser | null>(null);
 
-const openModal = (action: string, row: IUser | null = null) => {
-  if (action === 'add') {
+const openModal = (action: string, row: IUser | any) => {
+  Operation.value = action;
+
+  if (action.toLowerCase().startsWith('add')) {
     currentEntry.value = { UserId: '', Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: 'Active' } as IUser;
-    isEditMode.value = true;
-    isViewMode.value = false;
-  } else if (action === 'edit') {
+  } else if (action.toLowerCase().startsWith('edit')) {
     currentEntry.value = row;
-    isEditMode.value = true;
-    isViewMode.value = false;
-  } else if (action === 'view') {
+  } else if (action.toLowerCase().startsWith('view')) {
     currentEntry.value = row;
-    isEditMode.value = false;
-    isViewMode.value = true;
   }
-  isDrawerVisible.value = true;
+  store.ToggleDrawer = true;
 };
 
 const closeDrawer = () => {
@@ -55,6 +56,7 @@ const closeDrawer = () => {
   isEditMode.value = false;
   isViewMode.value = false;
   currentEntry.value = null;
+  store.ToggleDrawer = false;
 };
 
 const saveEntry = async () => {
@@ -89,20 +91,24 @@ const onCancelDelete = () => {
 <template>
   <DataTable :data="data" :columns="columns" :check-column="false">
     <template #status="{ row }">
-      <span :class="row.StatusId === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'" class="px-1 py-0.5 rounded-full">
+      <span :class="row.StatusId === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+        class="px-1 py-0.5 rounded-full">
         {{ row.StatusId === 'Active' ? 'Active' : 'Inactive' }}
       </span>
     </template>
     <template #action="{ row }">
-      <div class="flex justify-center space-x-2">
-        <button class="grid-action-btn hover-btn-warning" @click="openModal('view', row)">
-          <span class="icon-[ep--view]"></span>
+      <div class="flex justify-center space-x-3">
+        <button class="actionbtn rounded-md bg-yellow-100 hover:bg-yellow-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+          @click="openModal('View Record', row)" title="View Record">
+          <span class="icon-[ep--view] text-yellow-600"></span>
         </button>
-        <button class="grid-action-btn hover-btn-primary" @click="openModal('edit', row)">
-          <span class="icon-[akar-icons--edit]"></span>
+        <button class="actionbtn rounded-md bg-blue-100 hover:bg-blue-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+          @click="openModal('Edit Record', row)" title="Edit Record">
+          <span class="icon-[akar-icons--edit] text-blue-600"></span>
         </button>
-        <button class="grid-action-btn hover-btn-danger" @click="onDelete">
-          <span class="icon-[hugeicons--delete-02]"></span>
+        <button class="actionbtn rounded-md bg-red-100 hover:bg-red-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+          @click="onDelete" title="Delete Record">
+          <span class="icon-[hugeicons--delete-02] text-red-600"></span>
         </button>
       </div>
     </template>
@@ -117,15 +123,22 @@ const onCancelDelete = () => {
     @cancel="onCancelDelete"
   />
 
-  <UserOperations
-    :isDrawerVisible="isDrawerVisible"
-    :isEditMode="isEditMode"
-    :isViewMode="isViewMode"
-    :currentEntry="currentEntry"
-    @close="closeDrawer"
-    @save="saveEntry"
-  />
+  <UserOperations :isDrawerVisible="isDrawerVisible" :title="Operation" :currentEntry="currentEntry"
+    @close="closeDrawer" @save="saveEntry" />
 </template>
+<style scoped>
+.actionbtn {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 1.rem;
+}
+</style>
 <route lang="yaml">
   meta:
     layout: application

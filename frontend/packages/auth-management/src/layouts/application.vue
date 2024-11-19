@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { Filter } from 'c3k-library';
 import { computed, ref } from 'vue';
-import UserCreate from '@/pages/role/user-create.vue';
 import { UsersService } from '@/services';
 import type { IUser } from '@/models';
+import { useApplicationEventStore } from '@/stores/application';
 
 const selectedCardTitle = ref('');
 const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
 const isModalVisible = ref(false);
 const repository = new UsersService();
 
-const openAddUserModal = () => {
-    isModalVisible.value = true;
+const store = useApplicationEventStore();
+
+const openAddRecord = () => {
+    // isModalVisible.value = true;
+    store.ToggleDrawer = true;
 };
 
 const closeModal = () => {
@@ -47,22 +50,21 @@ const saveUser = async (user: IUser) => {
             <div class="w-full md:w-1/2 flex flex-col space-y-2">
                 <Filter>
                     <template #action>
-                        <button class="btn-primary px-3 py-1 rounded-md flex items-center" @click="openAddUserModal">
-                            <span class="icon-[fa--plus-circle] mr-2"></span> Add
+                        <button class="btn-primary px-3 py-1 rounded-md flex items-center" @click="openAddRecord">
+                            <span class="icon-[fa--plus-circle] mr-2 text-white"></span> Add
                         </button>
                     </template>
                 </Filter>
             </div>
         </div>
-        <UserCreate :isVisible="isModalVisible" @close="closeModal" @save="saveUser" />
-        <div class="w-full px-6 py-2 mx-auto">
-            <div class="flex justify-end mr-2">
+        <!-- <div class="w-full px-6 py-2 mx-auto"> -->
+            <div class="bg-white p-4">
                 <RouterView v-slot="{ Component }">
                     <Transition name="fade" mode="out-in">
                         <Component :is="Component" />
                     </Transition>
                 </RouterView>
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
