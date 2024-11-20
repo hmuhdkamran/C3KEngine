@@ -1,6 +1,6 @@
 @layer base {
     table {
-        @apply w-full;
+        @apply w-full border-collapse overflow-hidden rounded-md shadow-sm;
     }
 
     thead {
@@ -20,16 +20,13 @@
     }
 
     th {
-        @apply text-center p-2 text-sm font-medium;
+        @apply text-center p-3 text-sm font-semibold text-gray-800 dark:text-gray-300;
+        @apply select-none;
     }
 
     td {
-        @apply flex justify-between text-right text-sm border-b border-gray-100 sm:table-cell sm:text-left align-middle dark:border-slate-200;
+        @apply p-3 text-sm text-gray-600 dark:text-gray-400;
     }
-
-    /* td:last-child {
-        @apply border-b-0;
-    } */
 
     tbody tr,
     tbody tr:nth-child(odd) {
@@ -37,11 +34,14 @@
     }
 
     tbody tr:nth-child(odd) {
-        @apply bg-gray-100/50 dark:bg-slate-200/50;
+        @apply bg-gray-50 dark:bg-slate-200/50;
     }
 
     td:before {
         content: attr(data-label);
         @apply font-semibold pr-2 text-left hidden;
+    }
+    input[type="checkbox"] {
+        @apply cursor-pointer w-4 h-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-500;
     }
 }
