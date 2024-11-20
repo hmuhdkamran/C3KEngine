@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTableStore } from '@/plugins/store';
+import { Icon } from '@iconify/vue';
 import { ref, computed } from 'vue';
 
 const props = defineProps({
@@ -75,12 +76,95 @@ const toggleSelectAll = () => {
         selectedRecords.value = [];
     }
 };
+
+const selectedFilter = ref('');
+const data = ref<Record<string, any>[]>([]);
+
+const refreshData = async () => {
+    console.log('Data refreshed');
+    try {
+        const response = await fetch('api/data');
+        const newData = await response.json();
+        data.value = newData;
+        console.log('New Data:', newData);
+    } catch (error) {
+        console.error('Error refreshing data:', error);
+    }
+};
+
+const applyFilter = () => {
+    console.log('Filter applied for:', selectedFilter.value);
+    if (selectedFilter.value) {
+        data.value = props.data.filter((item) =>
+            item[selectedFilter.value] !== undefined
+        );
+        console.log('Filtered Data:', data.value);
+    } else {
+        data.value = [...props.data];
+        console.log('No filter selected, showing all data.');
+    }
+};
+
+
+
+const exportData = () => {
+    if (!filteredRecords.value.length) {
+        console.log('No data available for export');
+        return;
+    }
+    console.log('Exporting data to CSV');
+    const dataToExport = filteredRecords.value;
+    const csvContent = dataToCSV(dataToExport);
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'exported-data.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+};
+
+
+function dataToCSV(data: Record<string, any>[]) {
+    const header = Object.keys(data[0]).join(',') + '\n';
+    const rows = data
+        .map((item) =>
+            Object.values(item)
+                .map((value) => `"${value}"`)
+                .join(',')
+        )
+        .join('\n');
+
+    return header + rows;
+}
 </script>
 
 <template>
-    <div class="overflow-x-auto border-b border-gray-800">
-        <table class="table-auto w-full border-collapse overflow-hidden rounded-md shadow-md">
-            <thead>
+    <div>
+        <div class="mb-4 flex justify-end items-center">
+            <div class="flex space-x-4 items-center">
+                <div class="flex space-x-1">
+                    <button class="flex items-center hover:bg-gray-100 rounded" @click="exportData"
+                        aria-label="Export to csv">
+                        <Icon icon="pajamas-import" class="text-lg text-gray-600 mr-2" />
+                    </button>
+                    <button class="flex items-center hover:bg-gray-100 rounded" @click="refreshData"
+                        aria-label="Refresh Data">
+                        <Icon icon="ci:arrows-reload-01" class="text-lg text-gray-600 mr-2" />
+                    </button>
+                </div>
+                <select v-model="selectedFilter" class="p-1 input-complete" @change="applyFilter"
+                    aria-label="Filter Data">
+                    <option value="">All</option>
+                    <option v-for="column in columns" :key="column.key" :value="column.key">
+                        Filter by {{ column.label }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto border rounded-sm shadow-md">
+            <table class="table-auto w-full border-collapse">
+                <thead>
                 <tr class="bg-gray-200 border-b border-gray-300">
                     <template v-for="column in props.columns" :key="column.key">
                         <th v-if="column.check ?? false"
@@ -98,7 +182,7 @@ const toggleSelectAll = () => {
                     </template>
                 </tr>
             </thead>
-            <tbody>
+                <tbody>
                 <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]">
                     <template v-for="column in props.columns">
                         <template v-if="column.check ?? false">
@@ -115,7 +199,16 @@ const toggleSelectAll = () => {
                     </template>
                 </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
+        <div class="mt-4 text-sm flex justify-between items-center">
+            <div>
+                Showing {{ (tableStore.currentPage - 1) * itemsPerPage + 1 }} to
+                {{ Math.min(tableStore.currentPage * itemsPerPage, filteredRecords.length) }} of
+                {{ filteredRecords.length }} records
+            </div>
+        </div>
+
     </div>
 </template>
 

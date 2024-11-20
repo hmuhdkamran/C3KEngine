@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { Filter } from 'c3k-library';
 import { computed, ref } from 'vue';
-import { UsersService } from '@/services';
-import type { IUser } from '@/models';
 import { useApplicationEventStore } from '@/stores/application';
 
 const selectedCardTitle = ref('');
 const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
-const isModalVisible = ref(false);
-const repository = new UsersService();
 
 const store = useApplicationEventStore();
 
@@ -16,20 +12,13 @@ const openAddRecord = () => {
     // isModalVisible.value = true;
     store.ToggleDrawer = true;
 };
+// const exportData = () => {
+//   store.exportData();
+// };
 
-const closeModal = () => {
-    isModalVisible.value = false;
-};
-
-const saveUser = async (user: IUser) => {
-    try {
-        await repository.AddOne(user);
-        console.log('User successfully added:', user);
-        closeModal();
-    } catch (error) {
-        console.error('Failed to add user:', error);
-    }
-};
+// const refreshData = () => {
+//   store.refreshData();
+// };
 </script>
 
 <template>
@@ -50,21 +39,27 @@ const saveUser = async (user: IUser) => {
             <div class="w-full md:w-1/2 flex flex-col space-y-2">
                 <Filter>
                     <template #action>
-                        <button class="btn-primary px-3 py-1 rounded-md flex items-center" @click="openAddRecord">
+                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="openAddRecord">
                             <span class="icon-[fa--plus-circle] mr-2 text-white"></span> Add
                         </button>
+                        <!-- <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="exportData">
+                            <span class="icon-[pajamas--import] mr-2 text-white"></span>Export
+                        </button>
+                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="refreshData">
+                            <span class="icon-[ci:arrows--reload-01] mr-2 text-white"></span>Load
+                        </button> -->
                     </template>
                 </Filter>
             </div>
         </div>
         <!-- <div class="w-full px-6 py-2 mx-auto"> -->
-            <div class="bg-white p-4">
-                <RouterView v-slot="{ Component }">
-                    <Transition name="fade" mode="out-in">
-                        <Component :is="Component" />
-                    </Transition>
-                </RouterView>
-            </div>
+        <div class="bg-white p-4">
+            <RouterView v-slot="{ Component }">
+                <Transition name="fade" mode="out-in">
+                    <Component :is="Component" />
+                </Transition>
+            </RouterView>
+        </div>
         <!-- </div> -->
     </div>
 </template>
