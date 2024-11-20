@@ -54,7 +54,7 @@ export class AuthenticationService extends StoreService {
       }
     };
 
-    return this.exec(Axios.post(`${GlobalConfig.uri.auth}`, credentials))
+    return this.exec(Axios.post(`${GlobalConfig.uri.auth}/login`, credentials))
       .then((value: any) => this.processPayload(value))
       .then((value: any) => processResponse(value as IPayload<string>)); // Type assertion
   }
