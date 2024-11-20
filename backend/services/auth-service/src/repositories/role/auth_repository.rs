@@ -51,7 +51,7 @@ impl AuthRepository {
         username: &String,
     ) -> Result<Vec<UserProducts>, Box<dyn StdError>> {
         let query = format!(
-            r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon", pr."FrontendIp", pr."FrontendPort" FROM "Role"."UserApplications" pr WHERE us."Username"='{}'"#,
+            r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon", pr."FrontendIp", pr."FrontendPort" FROM "Role"."UserApplications" pr WHERE pr."Username"='{}'"#,
             username
         );
         let result = sqlx::query(query.as_str())
