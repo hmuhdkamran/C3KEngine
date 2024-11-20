@@ -1,4 +1,4 @@
-use jsonwebtoken::{Algorithm, DecodingKey, Validation};
+use jsonwebtoken::{errors::{ ErrorKind, Error as JError }, Algorithm, DecodingKey, Validation};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use sha2::{Digest, Sha256, Sha512};
 use std::error::Error;
@@ -57,28 +57,31 @@ impl SecurityUtils {
         secret: &str,
         audience: &str,
         algorithm: &str,
-    ) -> Result<JwtClaims, jsonwebtoken::errors::Error> {
+    ) -> Result<JwtClaims, JError> {
         let alg = match algorithm.to_uppercase().as_str() {
-            "HS256" => Algorithm::HS256,
-            "HS512" => Algorithm::HS512,
+            "SHA256" => Algorithm::HS256,
+            "SHA512" => Algorithm::HS512,
             _ => {
-                return Err(jsonwebtoken::errors::Error::from(
-                    jsonwebtoken::errors::ErrorKind::InvalidAlgorithm,
-                ))
+                return Err(JError::from(ErrorKind::InvalidAlgorithm,))
             }
         };
-
+    
         let decoding_key = DecodingKey::from_secret(secret.as_bytes());
-        let mut validation = Validation::new(alg);
+        let mut validation = Validation::new(alg);        
         validation.set_audience(&[audience]);
 
-        let token_data = jsonwebtoken::decode::<JwtClaims>(token, &decoding_key, &validation)?;
-        if token_data.claims.exp < jsonwebtoken::get_current_timestamp() {
-            return Err(jsonwebtoken::errors::Error::from(
-                jsonwebtoken::errors::ErrorKind::ExpiredSignature,
-            ));
+        match jsonwebtoken::decode::<JwtClaims>(token, &decoding_key, &validation) {
+            Ok(token_data) => {
+                if token_data.claims.exp < jsonwebtoken::get_current_timestamp() {
+                    return Err(ErrorKind::ExpiredSignature.into());
+                }
+                Ok(token_data.claims)
+            }
+            Err(e) => {
+                eprintln!("Token Decoding Failed: {:?}", e);
+                Err(e)
+            }
         }
-
-        Ok(token_data.claims)
     }
+    
 }

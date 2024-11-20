@@ -12,7 +12,7 @@
   "token_provider": {
     "token_expiration": 36000,
     "token_security_key": "startrekkingacrosstheuniverseonthestarshipenterpriseundercaptainkirk",
-    "token_security_algorithm": "SHA512",
+    "token_security_algorithm": "SHA256",
     "token_issuer": "localhost",
     "token_audience": "schemas.c3kframework.skn",
     "salt_length": 64
