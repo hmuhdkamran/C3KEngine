@@ -1,8 +1,7 @@
 use c3k_common::handler::error_display::ParseError;
-use c3k_common::models::auth::{AuthModel, JwtClaims, PasswordCode, UserProducts};
+use c3k_common::models::auth::{AuthModel, JwtClaims, UserProducts};
+use c3k_common::utilities::security_utils::SecurityUtils;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-use rand::{distributions::Alphanumeric, thread_rng, Rng};
-use sha2::{Digest, Sha256};
 use sqlx::PgPool;
 use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -29,22 +28,6 @@ impl AuthService {
             db_pool,
             redis_client,
         }
-    }
-
-    fn generate_hash(data: &String, salt: &String) -> String {
-        let mut hasher = Sha256::new();
-        hasher.update(data.as_bytes());
-        hasher.update(salt.as_bytes());
-        let hash_result = hasher.finalize();
-        format!("{:x}", hash_result)
-    }
-
-    fn generate_salt(length: usize) -> String {
-        thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(length)
-            .map(char::from)
-            .collect()
     }
 
     fn generate_jwt(
@@ -106,7 +89,12 @@ impl AuthService {
 
         let user = &entities[0];
 
-        if &Self::generate_hash(password, &user.salt) != &user.password {
+        let config = match get_config() {
+            Some(cfg) => cfg,
+            None => return Err("Internal error: Configuration not initialized".into())
+        };
+
+        if &SecurityUtils::generate_hash(password, &user.salt, &config.token_provider.token_security_algorithm)? != &user.password {
             return Err("Invalid password".into());
         }
 
@@ -148,15 +136,6 @@ impl AuthService {
         match self.validate(&entity.username, &entity.password).await {
             Ok(response) => ApiResponse::success(response),
             Err(e) => ApiResponse::error(e.to_string()),
-        }
-    }
-
-    pub fn encrypt_password(password: &String, length: usize) -> PasswordCode {
-        let salt = Self::generate_salt(length);
-        let hash = Self::generate_hash(password, &salt);
-        PasswordCode {
-            password: hash,
-            salt: salt,
         }
     }
 }

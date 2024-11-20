@@ -11,20 +11,11 @@ use actix_web::{
 };
 
 use futures::future::LocalBoxFuture;
-use jsonwebtoken::{
-    decode,
-    errors::{Error as JwtError, ErrorKind},
-    Algorithm, DecodingKey, Validation,
-};
 
 use crate::{
     handler::redis_handler::RedisHandler,
-    models::{
-        auth::{Auth, JwtClaims},
-        config::app_config::get_config,
-        constants,
-        response::ApiResponse,
-    },
+    models::{auth::Auth, config::app_config::get_config, constants, response::ApiResponse},
+    utilities::security_utils::SecurityUtils,
 };
 
 pub struct InterHandler;
@@ -118,10 +109,11 @@ where
                 if let Ok(authen_str) = authen_header.to_str() {
                     if authen_str.starts_with("bearer") || authen_str.starts_with("Bearer") {
                         let token = authen_str.replace("Bearer ", "");
-                        let claim = match verify_token(
+                        let claim = match SecurityUtils::verify_token(
                             &token,
                             &json.token_provider.token_security_key,
                             &json.token_provider.token_audience,
+                            &json.token_provider.token_security_algorithm
                         ) {
                             Ok(claim) => claim,
                             Err(_) => {
@@ -181,7 +173,10 @@ where
                                             .any(|key| key.route == api_claim);
                                     }
                                     Err(e) => {
-                                        eprintln!("Failed to get key {} from Redis: {:?}", api_application, e);
+                                        eprintln!(
+                                            "Failed to get key {} from Redis: {:?}",
+                                            api_application, e
+                                        );
                                         authenticate_pass = false;
                                     }
                                 }
@@ -220,26 +215,5 @@ where
         let res = self.service.call(req);
 
         Box::pin(async move { res.await.map(ServiceResponse::map_into_left_body) })
-    }
-}
-
-pub fn verify_token(token: &str, secret: &str, audience: &str) -> Result<JwtClaims, JwtError> {
-    let decoding_key = DecodingKey::from_secret(secret.as_bytes());
-    let mut validation = Validation::new(Algorithm::HS256);
-
-    // Set the expected audience
-    validation.set_audience(&[audience]);
-
-    // Decode and validate the token
-    match decode::<JwtClaims>(token, &decoding_key, &validation) {
-        Ok(token_data) => {
-            let now = jsonwebtoken::get_current_timestamp();
-            if token_data.claims.exp < now {
-                Err(ErrorKind::ExpiredSignature.into())
-            } else {
-                Ok(token_data.claims)
-            }
-        }
-        Err(err) => Err(err),
     }
 }

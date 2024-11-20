@@ -17,7 +17,10 @@ use c3k_auth_service::controllers::{
     },
 };
 use c3k_common::{
-    handler::service_client::ServiceCommunicator, models::config::app_config::{create_db_pool, initialize_config, get_config}
+    handler::{
+        service_client::ServiceCommunicator, 
+        redis_handler::RedisHandler
+    }, models::config::app_config::{create_db_pool, initialize_config, get_config},
 };
 pub use sqlx::{
     pool::PoolConnection,
@@ -55,6 +58,8 @@ async fn main() -> Result<(), std::io::Error> {
             return Err(Error::new(ErrorKind::Other, "Database pool initialization failed"));
         }
     };
+    let redis_client = RedisHandler::new()
+        .map_err(|e| Error::new(ErrorKind::Other, format!("Redis initialization failed: {}", e)))?;
 
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
@@ -75,6 +80,7 @@ async fn main() -> Result<(), std::io::Error> {
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(db_pool.clone()))
+            .app_data(web::Data::new(redis_client.clone()))
             .app_data(web::Data::new(communicator))
             .configure(auth_routes)
             .configure(users_routes)

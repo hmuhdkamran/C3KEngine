@@ -4,6 +4,7 @@ use std::error::Error as StdError;
 
 use super::error_display::ParseError;
 
+#[derive(Clone)]
 pub struct RedisHandler {
     client: redis::Client,
 }

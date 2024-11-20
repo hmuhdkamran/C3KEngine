@@ -10,8 +10,6 @@ path = "src/main.rs"
 
 [dependencies]
 c3k-common = { path = "../common" }
-sha2 = "0.10.8"
-rand = "0.8.5"
 actix-web = { workspace = true }
 actix-cors = { workspace = true }
 jsonwebtoken = { workspace = true }

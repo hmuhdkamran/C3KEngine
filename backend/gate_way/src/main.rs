@@ -3,7 +3,7 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 use awc::Client;
 use c3k_common::{
     middleware::middleware::InterHandler,
-    models::config::app_config::{initialize_config, get_config, AppConfig},
+    models::config::app_config::{get_config, initialize_config, AppConfig},
 };
 use std::{
     io::{Error, ErrorKind},
@@ -12,7 +12,7 @@ use std::{
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
-    if let Err(err) = initialize_config().await  {
+    if let Err(err) = initialize_config().await {
         eprintln!("Failed to initialize configuration: {}", err);
         std::process::exit(1);
     }
@@ -26,7 +26,7 @@ async fn main() -> Result<(), std::io::Error> {
     };
 
     let addr = format!("{}:{}", config.gateway.host, config.gateway.port);
-    
+
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
             .allow_any_method()
@@ -37,12 +37,11 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(origin);
         }
 
-        App::new()            
+        App::new()
             .wrap(cors)
             .wrap(InterHandler)
             .app_data(web::Data::new(Arc::new(config.clone())))
-            .default_service(web::route()
-            .to(forward_request))
+            .default_service(web::route().to(forward_request))
     });
 
     println!("App is Running on http://{}", addr);

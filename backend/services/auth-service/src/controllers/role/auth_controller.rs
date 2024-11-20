@@ -7,10 +7,10 @@ use crate::services::role::auth_service::AuthService;
 #[post("")]
 pub async fn login(
     connection: web::Data<PgPool>,
+    redis_client: web::Data<RedisHandler>,
     entity: web::Json<AuthModel>,
 ) -> Result<impl Responder, actix_web::Error> {
-    let redis_client = RedisHandler::new()?;
-    let service = AuthService::new(connection.as_ref().clone(), redis_client);
+    let service = AuthService::new(connection.as_ref().clone(), redis_client.as_ref().clone());
     let result = service.login(&entity.into_inner()).await;
 
     Ok(HttpResponse::Ok().json(result))
