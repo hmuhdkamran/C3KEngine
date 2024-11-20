@@ -157,6 +157,7 @@ $circle-sizes: (
 }
 
 .box {
+  display: flex;
   padding: 12px;
   border: 3px solid #0000;
   background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(

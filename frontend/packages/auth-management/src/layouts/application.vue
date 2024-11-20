@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useApplicationStore } from '@/stores/counter';
 import { Filter } from 'c3k-library';
 import { computed, ref } from 'vue';
 import { useApplicationEventStore } from '@/stores/application';
@@ -13,13 +12,13 @@ const openAddRecord = () => {
     // isModalVisible.value = true;
     store.ToggleDrawer = true;
 };
-// const exportData = () => {
-//   store.exportData();
-// };
+const exportData = () => {
+  store.exportData();
+};
 
-// const refreshData = () => {
+const refreshData = () => {
 //   store.refreshData();
-// };
+};
 </script>
 
 <template>
@@ -43,12 +42,12 @@ const openAddRecord = () => {
                         <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="openAddRecord">
                             <span class="icon-[fa--plus-circle] mr-2 text-white"></span> Add
                         </button>
-                        <!-- <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="exportData">
+                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="exportData">
                             <span class="icon-[pajamas--import] mr-2 text-white"></span>Export
                         </button>
-                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="refreshData">
-                            <span class="icon-[ci:arrows--reload-01] mr-2 text-white"></span>Load
-                        </button> -->
+                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center"  @click="refreshData">
+                            <span class="icon-[tabler--refresh] mr-2 text-white"></span>Load
+                        </button>
                     </template>
                 </Filter>
             </div>
