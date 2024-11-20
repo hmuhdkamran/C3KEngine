@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useApplicationStore } from '@/stores/counter';
 import { Filter } from 'c3k-library';
 import { computed, ref } from 'vue';
 import { useApplicationEventStore } from '@/stores/application';

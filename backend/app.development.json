@@ -12,17 +12,17 @@
   "token_provider": {
     "token_expiration": 36000,
     "token_security_key": "startrekkingacrosstheuniverseonthestarshipenterpriseundercaptainkirk",
-    "token_security_algorithm": "HS256",
+    "token_security_algorithm": "SHA512",
     "token_issuer": "localhost",
     "token_audience": "schemas.c3kframework.skn",
-    "salt_length": 32
+    "salt_length": 64
   },
   "gateway": {
     "port": "8292",
     "host": "127.0.0.1",
     "cors": [
-      "http://localhost:8002",
-      "http://127.0.0.1:8002"
+      "http://localhost:5001",
+      "http://127.0.0.1:5001"
     ]
   },
   "services": [
@@ -30,19 +30,7 @@
       "name": "api/auth",
       "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/BizFlowSetupDb",
       "host": "127.0.0.1",
-      "port": "9871"
-    },
-    {
-      "name": "api/hrms",
-      "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/HRISDb",
-      "host": "127.0.0.1",
-      "port": "9872"
-    },
-    {
-      "name": "api/retail",
-      "connection_string": "postgres://postgres:P%40ssw0rd@10.10.33.39:5432/RetailDb",
-      "host": "127.0.0.1",
-      "port": "9873"
+      "port": "8201"
     }
   ]
 }

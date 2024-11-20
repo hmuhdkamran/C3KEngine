@@ -11,15 +11,11 @@ use actix_web::{
 };
 
 use futures::future::LocalBoxFuture;
-use jsonwebtoken::{
-    decode,
-    errors::{Error as JwtError, ErrorKind},
-    Algorithm, DecodingKey, Validation,
-};
 
 use crate::{
     handler::redis_handler::RedisHandler,
-    models::{auth::JwtClaims, config::app_config::get_json, constants, response::ApiResponse},
+    models::{auth::Auth, config::app_config::get_config, constants, response::ApiResponse},
+    utilities::security_utils::SecurityUtils,
 };
 
 pub struct InterHandler;
@@ -74,16 +70,15 @@ where
             }
         };
 
-        let json = match get_json() {
-            Ok(cfg) => cfg,
-            Err(err) => {
+        let json = match get_config() {
+            Some(cfg) => cfg,
+            None => {
                 return Box::pin(async move {
                     let (request, _pl) = req.into_parts();
                     let response = HttpResponse::InternalServerError()
-                        .json(ApiResponse::<String>::error(format!(
-                            "Internal error: {}",
-                            err
-                        )))
+                        .json(ApiResponse::<String>::error(
+                            "Internal error: Configuration not initialized".to_string(),
+                        ))
                         .map_into_right_body();
                     Ok(ServiceResponse::new(request, response))
                 });
@@ -114,10 +109,11 @@ where
                 if let Ok(authen_str) = authen_header.to_str() {
                     if authen_str.starts_with("bearer") || authen_str.starts_with("Bearer") {
                         let token = authen_str.replace("Bearer ", "");
-                        let claim = match verify_token(
+                        let claim = match SecurityUtils::verify_token(
                             &token,
                             &json.token_provider.token_security_key,
                             &json.token_provider.token_audience,
+                            &json.token_provider.token_security_algorithm
                         ) {
                             Ok(claim) => claim,
                             Err(_) => {
@@ -136,7 +132,7 @@ where
                         match redis_client.get_key(&claim.sid) {
                             Ok(store_token) if token == store_token => {
                                 let path = req.path();
-                                let transformed_path = path
+                                let api_claim = path
                                     .strip_prefix("/api/")
                                     .unwrap_or(path)
                                     .split('/')
@@ -144,13 +140,45 @@ where
                                     .collect::<Vec<&str>>()
                                     .join("-");
 
-                                let allowed = claim
-                                    .role
-                                    .iter()
-                                    .any(|role| transformed_path.contains(&role.route));
+                                let api_application = format!(
+                                    "{}-api/{}",
+                                    &claim.sid,
+                                    path.split('/').nth(2).unwrap_or("")
+                                );
 
-                                if allowed {
-                                    authenticate_pass = true;
+                                match redis_client.get_key(&api_application) {
+                                    Ok(application_keys_str) => {
+                                        let application_keys: Vec<Auth> =
+                                            match serde_json::from_str(&application_keys_str) {
+                                                Ok(keys) => keys,
+                                                Err(err) => {
+                                                    return Box::pin(async move {
+                                                        let (request, _pl) = req.into_parts();
+                                                        let response =
+                                                            HttpResponse::InternalServerError()
+                                                                .json(ApiResponse::<String>::error(
+                                                                    format!(
+                                                                        "Internal error: {}",
+                                                                        err
+                                                                    ),
+                                                                ))
+                                                                .map_into_right_body();
+                                                        Ok(ServiceResponse::new(request, response))
+                                                    });
+                                                }
+                                            };
+
+                                        authenticate_pass = application_keys
+                                            .iter()
+                                            .any(|key| key.route == api_claim);
+                                    }
+                                    Err(e) => {
+                                        eprintln!(
+                                            "Failed to get key {} from Redis: {:?}",
+                                            api_application, e
+                                        );
+                                        authenticate_pass = false;
+                                    }
                                 }
                             }
                             Ok(_) => {
@@ -187,26 +215,5 @@ where
         let res = self.service.call(req);
 
         Box::pin(async move { res.await.map(ServiceResponse::map_into_left_body) })
-    }
-}
-
-pub fn verify_token(token: &str, secret: &str, audience: &str) -> Result<JwtClaims, JwtError> {
-    let decoding_key = DecodingKey::from_secret(secret.as_bytes());
-    let mut validation = Validation::new(Algorithm::HS256);
-
-    // Set the expected audience
-    validation.set_audience(&[audience]);
-
-    // Decode and validate the token
-    match decode::<JwtClaims>(token, &decoding_key, &validation) {
-        Ok(token_data) => {
-            let now = jsonwebtoken::get_current_timestamp();
-            if token_data.claims.exp < now {
-                Err(ErrorKind::ExpiredSignature.into())
-            } else {
-                Ok(token_data.claims)
-            }
-        }
-        Err(err) => Err(err),
     }
 }

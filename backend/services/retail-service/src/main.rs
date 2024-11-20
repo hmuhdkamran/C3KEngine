@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::get_json};
+use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::{create_db_pool, initialize_config, get_config}};
 use c3k_retail_service::controllers::{
     customer::customer_contacts::customer_contacts_routes,
     customer::customer_loyalty_points::customer_loyalty_points_routes,
@@ -57,26 +57,19 @@ pub use sqlx::{
     Arguments, PgPool, Postgres, Row,
 };
 
-use std::io::{Error, ErrorKind};
-use std::sync::Arc;
-
-async fn create_db_pool(connection_string: &str) -> Result<PgPool, sqlx::Error> {
-    PgPoolOptions::new()
-        .max_connections(5)
-        .connect(connection_string)
-        .await
-        .map_err(|e| {
-            eprintln!("Failed to create database pool: {}", e);
-            e
-        })
-}
+use std::{io::{Error, ErrorKind}, sync::Arc};
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
-    let config = match get_json() {
-        Ok(cfg) => Arc::new(cfg),
-        Err(err) => {
-            eprintln!("Error loading configuration: {}", err);
+    if let Err(err) = initialize_config().await  {
+        eprintln!("Failed to initialize configuration: {}", err);
+        std::process::exit(1);
+    }
+
+    let config = match get_config() {
+        Some(cfg) => cfg,
+        None => {
+            eprintln!("Internal error: Configuration not initialized");
             return Err(Error::new(ErrorKind::Other, "Configuration error"));
         }
     };
@@ -102,7 +95,7 @@ async fn main() -> Result<(), std::io::Error> {
             cors = cors.allowed_origin(format!("http://{}:{}", origin.host, origin.port).as_str());
         }
 
-        let communicator = ServiceCommunicator::new(config.clone());
+        let communicator = ServiceCommunicator::new(Arc::new(config.clone()));
 
         App::new()
             .wrap(cors)

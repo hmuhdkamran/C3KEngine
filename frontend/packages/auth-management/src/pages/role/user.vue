@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UsersService } from '@/services';
 import { DataTable, ConfirmationDialog } from 'c3k-library';
-import { onMounted, ref, type Ref } from 'vue';
+import { onMounted, ref, watch, type Ref } from 'vue';
 import UserOperations from './user-operations.vue';
 import type { IUser } from '@/models';
 import { useApplicationEventStore } from '@/stores/application';
@@ -58,6 +58,10 @@ const closeDrawer = () => {
   currentEntry.value = null;
   store.ToggleDrawer = false;
 };
+
+watch(()=>store.toggleDrawer, ()=> {
+  isDrawerVisible.value = store.toggleDrawer
+})
 
 const saveEntry = async () => {
   if (currentEntry.value) {

@@ -1,10 +1,11 @@
-use c3k_common::models::auth::{Auth, AuthModel, JwtClaims, PasswordCode};
+use c3k_common::handler::error_display::ParseError;
+use c3k_common::models::auth::{AuthModel, JwtClaims, UserProducts};
+use c3k_common::utilities::security_utils::SecurityUtils;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-use rand::{distributions::Alphanumeric, thread_rng, Rng};
-use sha2::{Digest, Sha256};
 use sqlx::PgPool;
 use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
+use serde_json;
 
 use crate::{
     models::role::users::Users,
@@ -13,7 +14,7 @@ use crate::{
 use c3k_common::{
     handler::redis_handler::RedisHandler,
     interfaces::irepository::IRepository,
-    models::{config::app_config::get_json, response::ApiResponse},
+    models::{config::app_config::get_config, response::ApiResponse},
 };
 
 pub struct AuthService {
@@ -29,26 +30,14 @@ impl AuthService {
         }
     }
 
-    fn generate_hash(data: &String, salt: &String) -> String {
-        let mut hasher = Sha256::new();
-        hasher.update(data.as_bytes());
-        hasher.update(salt.as_bytes());
-        let hash_result = hasher.finalize();
-        format!("{:x}", hash_result)
-    }
-
-    fn generate_salt(length: usize) -> String {
-        thread_rng()
-            .sample_iter(&Alphanumeric)
-            .take(length)
-            .map(char::from)
-            .collect()
-    }
-
-    fn generate_jwt(&self, user: &Users, claims: &Vec<Auth>) -> Result<String, Box<dyn StdError>> {
-        let json = match get_json() {
-            Ok(cfg) => cfg,
-            Err(err) => return Err(err),
+    fn generate_jwt(
+        &self,
+        user: &Users,
+        claims: &Vec<UserProducts>,
+    ) -> Result<String, Box<dyn StdError>> {
+        let json = match get_config() {
+            Some(cfg) => cfg,
+            None => return Err(Box::new(ParseError::from("Configuration error"))),
         };
 
         let now = SystemTime::now();
@@ -63,7 +52,10 @@ impl AuthService {
             sid: user.username.to_string(),
             emailaddress: user.username.to_string(),
             name: vec![user.username.to_string(), user.display_name.to_string()],
-            role: claims.clone(),
+            role: claims
+                .iter()
+                .map(|p| format!("{}-{}", user.username, p.abbreviation))
+                .collect::<Vec<String>>(),
             culturename: "en-US".to_string(),
             iss: json.token_provider.token_issuer.to_string(),
             sub: user.username.to_string(),
@@ -75,9 +67,6 @@ impl AuthService {
         let header = Header::new(Algorithm::HS256);
         let secret = EncodingKey::from_secret(json.token_provider.token_security_key.as_bytes());
         let token = encode(&header, &claims, &secret)?;
-
-        self.redis_client
-            .insert_update_key(&user.username, &token)?;
 
         Ok(token)
     }
@@ -100,17 +89,45 @@ impl AuthService {
 
         let user = &entities[0];
 
-        if &Self::generate_hash(password, &user.salt) != &user.password {
+        let config = match get_config() {
+            Some(cfg) => cfg,
+            None => return Err("Internal error: Configuration not initialized".into())
+        };
+
+        if &SecurityUtils::generate_hash(password, &user.salt, &config.token_provider.token_security_algorithm)? != &user.password {
             return Err("Invalid password".into());
         }
 
-        let claims = match AuthRepository::get_claims(self.db_pool.clone(), username).await {
-            Ok(claims) => claims,
+        let products = match AuthRepository::get_products(self.db_pool.clone(), username).await {
+            Ok(products) => products,
             Err(e) => return Err(e.into()),
         };
 
-        match self.generate_jwt(user, &claims) {
-            Ok(token) => Ok(token),
+        match self.generate_jwt(user, &products) {
+            Ok(token) => Ok({
+                self.redis_client
+                    .insert_update_key(&user.username, &token)?;
+
+                for product in products {
+                    let claims = match AuthRepository::get_claims(
+                        self.db_pool.clone(),
+                        username,
+                        Some(product.full_name),
+                    )
+                    .await
+                    {
+                        Ok(claims) => claims,
+                        Err(e) => return Err(e.into()),
+                    };
+
+                    self.redis_client.insert_update_key(
+                        &format!("{}-{}", user.username, product.abbreviation),
+                        &serde_json::to_string(&claims).unwrap(),
+                    )?;
+                }
+
+                token
+            }),
             Err(e) => Err(e.into()),
         }
     }
@@ -119,15 +136,6 @@ impl AuthService {
         match self.validate(&entity.username, &entity.password).await {
             Ok(response) => ApiResponse::success(response),
             Err(e) => ApiResponse::error(e.to_string()),
-        }
-    }
-
-    pub fn encrypt_password(password: &String) -> PasswordCode {
-        let salt = Self::generate_salt(16);
-        let hash = Self::generate_hash(password, &salt);
-        PasswordCode {
-            password: hash,
-            salt: salt,
         }
     }
 }

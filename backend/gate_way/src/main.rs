@@ -3,7 +3,7 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 use awc::Client;
 use c3k_common::{
     middleware::middleware::InterHandler,
-    models::config::app_config::{get_json, AppConfig},
+    models::config::app_config::{get_config, initialize_config, AppConfig},
 };
 use std::{
     io::{Error, ErrorKind},
@@ -12,10 +12,15 @@ use std::{
 
 #[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
-    let config = match get_json() {
-        Ok(cfg) => Arc::new(cfg),
-        Err(err) => {
-            eprintln!("Error loading configuration: {}", err);
+    if let Err(err) = initialize_config().await {
+        eprintln!("Failed to initialize configuration: {}", err);
+        std::process::exit(1);
+    }
+
+    let config = match get_config() {
+        Some(cfg) => cfg,
+        None => {
+            eprintln!("Internal error: Configuration not initialized");
             return Err(Error::new(ErrorKind::Other, "Configuration error"));
         }
     };
@@ -33,9 +38,9 @@ async fn main() -> Result<(), std::io::Error> {
         }
 
         App::new()
-            .app_data(web::Data::new(config.clone()))
             .wrap(cors)
             .wrap(InterHandler)
+            .app_data(web::Data::new(Arc::new(config.clone())))
             .default_service(web::route().to(forward_request))
     });
 
