@@ -21,6 +21,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "jwt-decode":"^4.0.0",
+    "vue-i18n": "^10.0.4",
     "vue": "^3.5.8"
   },
   "devDependencies": {
