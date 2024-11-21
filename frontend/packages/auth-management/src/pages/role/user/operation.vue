@@ -35,7 +35,7 @@ onUnmounted(() => PubSub.unsubscribe<RecordPubSub>("ToggleDrawer", drawerAction)
 
 </script>
 <template>
-    <Drawer :isOpen="open" :title="title" position="right" size="w-1/3">
+    <Drawer :isOpen="open" :title="title" position="right" size="w-1/3" class="bg-black bg-opacity-50">
         <template #header>
             <div
                 class="w-full flex justify-between items-center p-4 bg-gradient-to-r from-indigo-500 to-violet-600 border-b">
@@ -47,15 +47,15 @@ onUnmounted(() => PubSub.unsubscribe<RecordPubSub>("ToggleDrawer", drawerAction)
                 <div>
                     <span class="font-semibold text-gray-700">User Name:</span>
                     <input v-model="entity.Username" placeholder="Enter username"
-                        class="input-bottom pl-2 w-full bg-white" required />
+                        class="input-bottom pl-2 mb-4 w-full bg-white" required />
 
                     <span class="font-semibold text-gray-700">Display Name:</span>
                     <input v-model="entity.DisplayName" placeholder="Enter display name"
-                        class="input-bottom pl-2 w-full bg-white" required />
+                        class="input-bottom pl-2 mb-4 w-full bg-white" required />
 
                     <span class="font-semibold text-gray-700" v-if="title.toLowerCase().startsWith('add')">Password:</span>
                     <input v-model="entity.Password" placeholder="Enter password"
-                        class="input-bottom pl-2 w-full bg-white" required  v-if="title.toLowerCase().startsWith('add')" />
+                        class="input-bottom pl-2 mb-4 w-full bg-white" required  v-if="title.toLowerCase().startsWith('add')" />
                 </div>
                 <div class="mb-4 relative">
                     <label class="block text-gray-700 font-semibold" for="status">Status:</label>

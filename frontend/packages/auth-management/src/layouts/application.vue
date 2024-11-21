@@ -13,7 +13,7 @@ const openAddRecord = () => {
     PubSub.publish<RecordPubSub>("ToggleDrawer", { open: true, title: "Add Record", entity: null } as RecordPubSub);
 };
 const exportData = () => {
-    store.exportData();
+    PubSub.publish<boolean>("ExportData", true);
 };
 
 const refreshData = () => {
