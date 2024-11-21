@@ -24,14 +24,17 @@ const columns = [
     { key: 'action', label: 'Action', sort: false, width: '300px', class: 'text-center' },
 ];
 
-const loadRecords = () => {
+const loadRecords = (action: boolean = true) => {
     repo.GetAll().then((res: any) => {
         if (res)
             data.value = res.data
     })
 }
 
+PubSub.subscribe<boolean>("RefreshData", loadRecords);
+
 onMounted(() => loadRecords());
+onUnmounted(() => PubSub.unsubscribe<boolean>("RefreshData", loadRecords));
 
 const operation = (action: string, record: IUser | any) => {
     entityTitle.value = action;

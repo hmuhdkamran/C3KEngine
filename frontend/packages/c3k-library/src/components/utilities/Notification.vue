@@ -2,7 +2,7 @@
   <transition name="fade" mode="out-in">
     <div v-if="visible" :style="{ top: `${positionOffset}px`, bottom: position.includes('bottom') ? `${positionOffset}px` : 'auto' }"
       :class="[
-      'absolute z-50 p-4 rounded-xl shadow-lg max-w-sm w-full flex transition-transform transform duration-500',
+      'absolute z-50 p-4 rounded-sm shadow-lg max-w-sm w-full flex transition-transform transform duration-500',
       notificationTypeClasses[type],
       positionClasses[position]
     ]" role="alert">
