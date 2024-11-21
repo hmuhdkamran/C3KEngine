@@ -39,13 +39,13 @@ impl Users {
 
     pub fn get_args(&self) -> PgArguments {
         let mut args = PgArguments::default();
-        let _ = args.add(self.user_id.clone());
+        let _ = args.add(self.user_id);
         let _ = args.add(self.username.clone());
         let _ = args.add(self.display_name.clone());
         let _ = args.add(self.language.clone());
         let _ = args.add(self.password.clone());
         let _ = args.add(self.salt.clone());
-        let _ = args.add(self.status_id.clone());
+        let _ = args.add(self.status_id);
 
         args
     }

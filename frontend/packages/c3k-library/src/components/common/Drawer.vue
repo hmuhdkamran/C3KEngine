@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { ref } from 'vue';
-import { defineProps, defineEmits, useSlots, watch, ref, toRef } from 'vue';
+import { defineProps, defineEmits, useSlots, watch, ref, toRef, onBeforeUnmount } from 'vue';
 
 interface Props {
   isOpen: boolean;
@@ -48,6 +48,22 @@ watch(positionRef, ()=> {
     drawerSize.value = 'w-full'
   }
 });
+
+const updateDrawerSize = () => {
+    const width = window.innerWidth;
+    if (width >= 1024) {
+        drawerSize.value = "w-1/3";
+    } else if (width >= 768) {
+        drawerSize.value = "w-1/2";
+    } else {
+        drawerSize.value = "w-full";
+    }
+};
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", updateDrawerSize);
+});
+
 
 const slots = useSlots();
 </script>

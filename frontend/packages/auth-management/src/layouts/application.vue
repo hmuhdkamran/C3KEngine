@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Filter } from 'c3k-library';
+import { Filter, PubSub } from 'c3k-library';
 import { computed, ref } from 'vue';
 import { useApplicationEventStore } from '@/stores/application';
+import type { RecordPubSub } from '@/models';
 
 const selectedCardTitle = ref('');
 const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
@@ -9,21 +10,21 @@ const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
 const store = useApplicationEventStore();
 
 const openAddRecord = () => {
-    // isModalVisible.value = true;
-    store.ToggleDrawer = true;
+    PubSub.publish<RecordPubSub>("ToggleDrawer", { open: true, title: "Add Record", entity: null } as RecordPubSub);
 };
 const exportData = () => {
-  store.exportData();
+    store.exportData();
 };
 
 const refreshData = () => {
-//   store.refreshData();
+    PubSub.publish<boolean>("RefreshData", true);
 };
 </script>
 
 <template>
     <div>
-        <div class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
+        <div
+            class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
             <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
                 <div class="px-3">
                     <h1 class="text-2xl font-bold text-gray-800">{{ pageHeading }}</h1>
@@ -45,7 +46,7 @@ const refreshData = () => {
                         <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="exportData">
                             <span class="icon-[pajamas--import] mr-2 text-white"></span>Export
                         </button>
-                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center"  @click="refreshData">
+                        <button class="btn-primary px-3 py-1 rounded-sm flex items-center" @click="refreshData">
                             <span class="icon-[tabler--refresh] mr-2 text-white"></span>Load
                         </button>
                     </template>

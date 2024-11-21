@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn status_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/auth/status")
+        web::scope("/api/auth/setup/status")
             .service(get_all)
             .service(get_by_filter)
             .service(add)
