@@ -26,7 +26,8 @@ export const emailValidator = (value: unknown) => {
 }
 
 // 👉 Password Validator
-export const passwordValidator = (password: string) => {
+export const passwordValidator = (password: unknown): string | boolean => {
+  if (typeof password !== 'string') return 'Invalid password type';
   const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()]).{8,}/
 
   const validPassword = regExp.test(password)

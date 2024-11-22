@@ -69,21 +69,24 @@ const execution = (action: RecordPubSub) => {
     <div>
         <DataTable :data="data" :columns="columns" :check-column="false">
             <template #action="{ row }">
-                <div class="flex justify-center space-x-3">
+                <div class="flex justify-center ">
                     <button
-                        class="actionbtn rounded-md bg-yellow-100 hover:bg-yellow-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                        transform hover:scale-110 p-1.5 flex items-center justify-center"
                         @click="operation('View Record', row)" title="View Record">
-                        <span class="icon-[ep--view] text-yellow-600"></span>
+                        <span class="icon-[ep--view] text-yellow-700 text-sm"></span>
                     </button>
                     <button
-                        class="actionbtn rounded-md bg-blue-100 hover:bg-blue-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                        transform hover:scale-110  p-1.5 flex items-center justify-center"
                         @click="operation('Edit Record', row)" title="Edit Record">
-                        <span class="icon-[akar-icons--edit] text-blue-600"></span>
+                        <span class="icon-[akar-icons--edit] text-blue-700 text-sm"></span>
                     </button>
                     <button
-                        class="actionbtn rounded-md bg-red-100 hover:bg-red-200 hover:shadow-lg transition duration-300 transform hover:scale-110"
+                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                        transform hover:scale-110 p-1.5 flex items-center justify-center"
                         @click="operation('Delete Record', row)" title="Delete Record">
-                        <span class="icon-[hugeicons--delete-02] text-red-600"></span>
+                        <span class="icon-[hugeicons--delete-02] text-red-700 text-sm"></span>
                     </button>
                 </div>
             </template>

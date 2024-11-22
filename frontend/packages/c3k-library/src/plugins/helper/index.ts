@@ -78,3 +78,23 @@ export const sortDataByColumn = <T>(data: T[], column: keyof T, ascending = true
     }
   });
 }
+
+export const exportCsv = (data: Record<string, any>[]) => {
+  if (data.length === 0) {
+    console.warn('No data to export.');
+    return;
+  }
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().replace(/[:.]/g, '-');
+  const fileName = `SK_${formattedDate}.csv`;
+
+
+  const headers = Object.keys(data[0]).join(',');
+  const rows = data.map(row => Object.values(row).join(',')).join('\n');
+  const csvContent = `${headers}\n${rows}`;
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+}
