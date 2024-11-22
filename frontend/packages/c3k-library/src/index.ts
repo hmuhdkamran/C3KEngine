@@ -24,7 +24,8 @@ export { default as BaseIcon } from './components/utilities/BaseIcon.vue';
 export { default as Card } from './components/utilities/Card.vue';
 
 export { default as Notification } from './components/utilities/Notification.vue';
-export * from "./components/utilities/useNotification";
+export * from './components/composables/useNotification';
+export * from './components/composables/useValidation';
 
 export { default as ConfirmationDialog } from './components/common/ConfirmationDialog.vue';
 export { default as Drawer } from './components/common/Drawer.vue';
@@ -37,3 +38,5 @@ export { default as TextInput } from './components/form/TextInput.vue';
 export { VNodeRenderer } from './components/extra/VNodeRenderer';
 export { default as TokenStatus } from './components/extra/TokenStatus.vue';
 export { default as SysLoader } from './components/extra/SysLoader.vue'
+
+export { requiredValidator, emailValidator, passwordValidator, lengthValidator, alphaValidator,confirmedValidator } from './plugins/helper/validators'
