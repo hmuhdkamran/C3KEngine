@@ -3,7 +3,7 @@ import type { IUser } from '@/plugins/models'
 import { useSystemStore } from '@/plugins/store/system-store';
 import { onMounted, ref, type Ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useNotification } from '@/components/utilities/useNotification';
+import { useNotification } from '@/components/composables/useNotification';
 
 interface Props {
     infoTimeout: number

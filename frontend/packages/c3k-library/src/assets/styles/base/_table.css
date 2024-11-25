@@ -20,21 +20,21 @@
     }
 
     th {
-        @apply text-center p-3 text-sm font-semibold text-gray-800 dark:text-gray-300;
+        @apply text-center p-2 text-sm font-semibold text-gray-800 dark:text-gray-800;
         @apply select-none;
     }
 
     td {
-        @apply p-3 text-sm text-gray-600 dark:text-gray-400;
+        @apply p-3 text-sm text-gray-600 dark:text-gray-600;
     }
 
     tbody tr,
     tbody tr:nth-child(odd) {
-        @apply hover:bg-gray-100 dark:hover:bg-slate-100/50;
+        @apply hover:bg-gray-100 dark:hover:bg-gray-100;
     }
 
     tbody tr:nth-child(odd) {
-        @apply bg-gray-50 dark:bg-slate-200/50;
+        @apply bg-gray-50 dark:bg-gray-50;
     }
 
     td:before {
