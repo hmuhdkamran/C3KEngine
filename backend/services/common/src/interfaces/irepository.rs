@@ -27,7 +27,7 @@ pub trait Model: Sized {
             if !first {
                 update_str.push_str(", ");
             }
-            update_str.push_str(&format!(r#""{}"=${}"#, column, i + 2));
+            update_str.push_str(&format!(r#""{}"=${}"#, column, i + 1));
             first = false;
         }
 
