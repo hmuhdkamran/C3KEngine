@@ -26,7 +26,7 @@ fn extract_path_data(path: &str, claim_sid: &str) -> (String, String) {
     let path_parts: Vec<&str> = path.split('/').collect();
 
     let role = format!("{}-api/{}", claim_sid, path_parts[0]);
-    
+
     let mut claims = String::new();
     for (i, part) in path_parts.iter().skip(1).enumerate() {
         if Uuid::parse_str(part).is_err() && !part.contains('"') && !part.contains('=') {
@@ -39,7 +39,6 @@ fn extract_path_data(path: &str, claim_sid: &str) -> (String, String) {
 
     (role, claims)
 }
-
 
 impl<S, B> Transform<S, ServiceRequest> for InterHandler
 where
@@ -134,7 +133,7 @@ where
                             &token,
                             &json.token_provider.token_security_key,
                             &json.token_provider.token_audience,
-                            &json.token_provider.token_security_algorithm
+                            &json.token_provider.token_security_algorithm,
                         ) {
                             Ok(claim) => claim,
                             Err(_) => {
@@ -152,7 +151,8 @@ where
 
                         match redis_client.get_key(&claim.sid) {
                             Ok(store_token) if token == store_token => {
-                                let (api_application, api_claim) = extract_path_data(&req.path(), &claim.sid);
+                                let (api_application, api_claim) =
+                                    extract_path_data(&req.path(), &claim.sid);
 
                                 match redis_client.get_key(&api_application) {
                                     Ok(application_keys_str) => {
