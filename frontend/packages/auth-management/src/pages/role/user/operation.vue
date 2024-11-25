@@ -34,7 +34,7 @@ const execute = (action: boolean) => {
     ])) {
         return;
     }
-    const record: RecordPubSub = { open: open.value, entity: action ? entity.value : null, title: title.value };
+    const record: RecordPubSub = { open: false, entity: action ? entity.value : null, title: title.value };
     emit('execute', record);
 }
 

@@ -1,4 +1,5 @@
 use std::future::{ready, Ready};
+use uuid::Uuid;
 
 use actix_web::{
     body::EitherBody,
@@ -19,6 +20,26 @@ use crate::{
 };
 
 pub struct InterHandler;
+
+fn extract_path_data(path: &str, claim_sid: &str) -> (String, String) {
+    let path = path.strip_prefix("/api/").unwrap_or(path);
+    let path_parts: Vec<&str> = path.split('/').collect();
+
+    let role = format!("{}-api/{}", claim_sid, path_parts[0]);
+    
+    let mut claims = String::new();
+    for (i, part) in path_parts.iter().skip(1).enumerate() {
+        if Uuid::parse_str(part).is_err() && !part.contains('"') && !part.contains('=') {
+            if i > 0 {
+                claims.push('-');
+            }
+            claims.push_str(part);
+        }
+    }
+
+    (role, claims)
+}
+
 
 impl<S, B> Transform<S, ServiceRequest> for InterHandler
 where
@@ -131,20 +152,7 @@ where
 
                         match redis_client.get_key(&claim.sid) {
                             Ok(store_token) if token == store_token => {
-                                let path = req.path();
-                                let api_claim = path
-                                    .strip_prefix("/api/")
-                                    .unwrap_or(path)
-                                    .split('/')
-                                    .skip(1)
-                                    .collect::<Vec<&str>>()
-                                    .join("-");
-
-                                let api_application = format!(
-                                    "{}-api/{}",
-                                    &claim.sid,
-                                    path.split('/').nth(2).unwrap_or("")
-                                );
+                                let (api_application, api_claim) = extract_path_data(&req.path(), &claim.sid);
 
                                 match redis_client.get_key(&api_application) {
                                     Ok(application_keys_str) => {

@@ -45,6 +45,8 @@ const operation = (action: string, record: IUser | any) => {
         entity.value = record;
     } else if (action.toLowerCase().startsWith('view')) {
         entity.value = record;
+    } else {
+        execution({ open: true, title: entityTitle.value, entity: record });
     }
 
     entityTitle.value.toLowerCase().startsWith('delete') ? deleteDialog.value = true : PubSub.publish<RecordPubSub>("ToggleDrawer", { open: true, title: entityTitle.value, entity: record });
@@ -57,7 +59,7 @@ const execution = (action: RecordPubSub) => {
         } else if (action.title.toLowerCase().startsWith('edit')) {
             repo.Update(action.entity as IUser).then(() => loadRecords());
         } else if (action.title.toLowerCase().startsWith('delete')) {
-            repo.delete((action.entity as IUser).UserId).then(() => loadRecords());
+            repo.Delete((action.entity as IUser).UserId).then(() => loadRecords());
         }
     }
 
