@@ -12,8 +12,6 @@ const data: Ref<IUser[]> = ref([]);
 const entity: Ref<IUser> = ref({ UserId: '', Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: '' });
 
 const deleteDialog: Ref<boolean> = ref(false);
-const entityDrawer: Ref<boolean> = ref(false);
-
 const entityTitle: Ref<string> = ref('');
 
 const columns = [
@@ -38,21 +36,18 @@ onUnmounted(() => PubSub.unsubscribe<boolean>("RefreshData", loadRecords));
 
 const operation = (action: string, record: IUser | any) => {
     entityTitle.value = action;
+    entity.value = record;
 
     if (action.toLowerCase().startsWith('add')) {
         entity.value = { UserId: '', Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: '' } as IUser;
-    } else if (action.toLowerCase().startsWith('edit')) {
-        entity.value = record;
-    } else if (action.toLowerCase().startsWith('view')) {
-        entity.value = record;
-    } else {
-        execution({ open: true, title: entityTitle.value, entity: record });
     }
 
     entityTitle.value.toLowerCase().startsWith('delete') ? deleteDialog.value = true : PubSub.publish<RecordPubSub>("ToggleDrawer", { open: true, title: entityTitle.value, entity: record });
 }
 
 const execution = (action: RecordPubSub) => {
+    console.log(JSON.stringify(action));
+
     if (action.entity !== null) {
         if (action.title.toLowerCase().startsWith('add')) {
             repo.AddOne(action.entity as IUser).then(() => loadRecords());
@@ -72,20 +67,17 @@ const execution = (action: RecordPubSub) => {
         <DataTable :data="data" :columns="columns" :check-column="false">
             <template #action="{ row }">
                 <div class="flex justify-center ">
-                    <button
-                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                    <button class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
                         transform hover:scale-110 p-1.5 flex items-center justify-center"
                         @click="operation('View Record', row)" title="View Record">
                         <span class="icon-[ep--view] text-yellow-700 text-sm"></span>
                     </button>
-                    <button
-                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                    <button class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
                         transform hover:scale-110  p-1.5 flex items-center justify-center"
                         @click="operation('Edit Record', row)" title="Edit Record">
                         <span class="icon-[akar-icons--edit] text-blue-700 text-sm"></span>
                     </button>
-                    <button
-                        class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
+                    <button class="actionbtn rounded-full bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition duration-300 
                         transform hover:scale-110 p-1.5 flex items-center justify-center"
                         @click="operation('Delete Record', row)" title="Delete Record">
                         <span class="icon-[hugeicons--delete-02] text-red-700 text-sm"></span>
@@ -95,6 +87,9 @@ const execution = (action: RecordPubSub) => {
         </DataTable>
 
         <EntityOperation @execute="execution" />
+        <ConfirmationDialog :is-visible="deleteDialog" title="Delete Record"
+            message="Are you sure you want to remove this record" @cancel="deleteDialog = !deleteDialog"
+            @confirm="execution({ open: false, title: 'Delete Record', entity: entity })" />
     </div>
 </template>
 <route lang="yaml">
