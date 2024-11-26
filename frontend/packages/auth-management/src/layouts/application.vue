@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { Filter, PubSub } from 'c3k-library';
+import { Filter, PubSub, useApplicationEventStore } from 'c3k-library';
 import { computed, ref } from 'vue';
-import { useApplicationEventStore } from '@/stores/application';
-import type { RecordPubSub } from '@/models';
 
 const selectedCardTitle = ref('');
 const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
@@ -10,14 +8,12 @@ const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
 const store = useApplicationEventStore();
 
 const openAddRecord = () => {
-    PubSub.publish<RecordPubSub>("ToggleDrawer", { open: true, title: "Add Record", entity: null } as RecordPubSub);
+    store.setDrawerEvent({Open: true, Title: 'Add Record', OperationType: 'add'});
 };
 const exportData = () => {
-    PubSub.publish<boolean>("ExportData", true);
 };
 
 const refreshData = () => {
-    PubSub.publish<boolean>("RefreshData", true);
 };
 </script>
 

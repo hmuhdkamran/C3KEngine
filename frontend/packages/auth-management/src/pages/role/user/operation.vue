@@ -1,46 +1,38 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, type Ref } from 'vue';
-import { Drawer, newGuid, PubSub, requiredValidator, emailValidator, passwordValidator, useValidation } from 'c3k-library';
-import type { IUser, IStatus, RecordPubSub } from '@/models';
+import { computed, onMounted, ref, watch, type Ref } from 'vue';
+import { Drawer, newGuid, requiredValidator, emailValidator, passwordValidator, useValidation } from 'c3k-library';
+import type { IUser, IStatus } from '@/models';
 import { StatusService } from '@/services';
+import { useRoleUserStore } from '@/stores';
 
 const repo: StatusService = new StatusService();
 const statusList: Ref<Array<IStatus>> = ref([]);
 
-interface Emits {
-    (e: 'execute', action: RecordPubSub): void;
-};
-
-const emit = defineEmits<Emits>();
-const isDropdownOpen = ref(false);
+const store = useRoleUserStore();
+const open = computed(() => store.store.Open && store.store.OperationType !== 'delete');
+const title = computed(() => store.store.Title);
+const addUpdate = computed(() => store.store.OperationType === 'add' || store.store.OperationType === 'edit');
 const entity: Ref<IUser | null> = ref(null);
-const title: Ref<string> = ref('');
-const open: Ref<boolean> = ref(false);
-const { validationErrors, validateForm } = useValidation();
 
-const drawerAction = (action: RecordPubSub) => {
-    open.value = action.open;
-    entity.value = open.value && action.entity === null ? { UserId: newGuid(), Username: '', DisplayName: '', Language: 'en-US', Password: '', Salt: '', StatusId: '' } : action.entity;
-    title.value = action.title;
-    validationErrors.value = {};
-}
-PubSub.subscribe<RecordPubSub>("ToggleDrawer", drawerAction);
+watch(() => store.store.OperationType,
+    () => entity.value = store.store.OperationType === 'add' ?
+        { UserId: newGuid(), Username: '', DisplayName: '', Language: 'en-US', Password: '', Salt: '', StatusId: '' } :
+        store.entity);
+
+const { validationErrors, validateForm } = useValidation();
 
 const execute = (action: boolean) => {
     if (action && entity.value && !validateForm(entity.value, [
         { field: 'Username', rules: [requiredValidator, emailValidator] },
         { field: 'DisplayName', rules: [requiredValidator] },
-        ...(title.value.toLowerCase().startsWith('add') ? [{ field: 'Password', rules: [requiredValidator, passwordValidator] }] : []),
+        ...(store.store.OperationType === 'add' ? [{ field: 'Password', rules: [requiredValidator, passwordValidator] }] : []),
     ])) {
         return;
     }
-    const record: RecordPubSub = { open: false, entity: action ? entity.value : null, title: title.value };
-    emit('execute', record);
+
+    action === false ? store.execute('get') : store.execute(store.store.OperationType as 'add' | 'delete' | 'get' | 'edit', entity.value as IUser);
 }
-
-onMounted(() => repo.GetAll().then((response: any) => statusList.value = response.data));
-onUnmounted(() => PubSub.unsubscribe<RecordPubSub>("ToggleDrawer", drawerAction));
-
+onMounted(() => repo.GetAll().then(res => statusList.value = (res as any).data))
 </script>
 <template>
     <Drawer :isOpen="open" :title="title" position="right" size="w-1/3" class="bg-black bg-opacity-50">
@@ -67,7 +59,7 @@ onUnmounted(() => PubSub.unsubscribe<RecordPubSub>("ToggleDrawer", drawerAction)
                             placeholder="Enter display name" required />
                         <span v-if="validationErrors.DisplayName" class="text-red-500 text-sm">{{
                             validationErrors.DisplayName
-                        }}</span>
+                            }}</span>
                     </div>
                     <div v-if="title.toLowerCase().startsWith('add')" class="flex flex-col">
                         <label for="password" class="font-semibold text-gray-700 mb-1">Password:</label>
@@ -80,22 +72,22 @@ onUnmounted(() => PubSub.unsubscribe<RecordPubSub>("ToggleDrawer", drawerAction)
                 <div class="py-2 relative">
                     <label class="block text-gray-700 font-semibold" for="status">Status:</label>
                     <div class="relative">
-                        <select v-model="entity.StatusId" id="status" class="input-bottom pl-2 w-full bg-white appearance-none pr-10"
-                            @focus="isDropdownOpen = true" @blur="isDropdownOpen = false">
-                            <option v-for="item in statusList" :key="item.StatusId" :value="item.StatusId">{{ item.FullName }}</option>
+                        <select v-model="entity.StatusId" id="status"
+                            class="input-bottom pl-2 w-full bg-white appearance-none pr-10">
+                            <option v-for="item in statusList" :key="item.StatusId" :value="item.StatusId">{{
+                                item.FullName }}
+                            </option>
                         </select>
-                        <span v-if="isDropdownOpen"
-                            class="icon-[iconamoon--arrow-up-2] absolute right-3 top-3 text-gray-600 pointer-events-none"></span>
-                        <span v-else class="icon-[iconamoon--arrow-down-2] absolute right-3 top-3 text-gray-600 pointer-events-none"></span>
+                        <span
+                            class="icon-[iconamoon--arrow-down-2] absolute right-3 top-3 text-gray-600 pointer-events-none"></span>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-end p-4 border-t">
                 <button class="btn-secondary px-3 py-1 mr-2" @click="execute(false)">Close</button>
-                <button class="btn-primary px-3 py-1" @click="execute(true)"
-                    v-if="!title.toLowerCase().startsWith('view')">
-                    <span v-if="title.toLowerCase().startsWith('add')">Add Record</span>
+                <button class="btn-primary px-3 py-1" @click="execute(true)" v-if="addUpdate">
+                    <span v-if="store.store.OperationType === 'add'">Add Record</span>
                     <span v-else>Update Record</span>
                 </button>
             </div>
