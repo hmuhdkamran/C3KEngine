@@ -53,10 +53,10 @@ const toggleSection = (index: number) => {
               </div>
               <transition name="slide-down">
                 <ul v-show="openSections[index]" class="mt-2 pl-4 space-y-1">
-                  <li v-for="(item, subIndex) in section.items" :key="subIndex">
-                    <router-link :to="item.link"
+                  <li v-for="(item, subIndex) in section.children || []" :key="subIndex">
+                    <router-link :to="item.route"
                       class="flex items-center space-x-2 py-1 px-3 rounded-md text-sm text-gray-600 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 transition-all duration-200 ease-in-out">
-                      <span>{{ item.name }}</span>
+                      <span>{{ item.title }}</span>
                     </router-link>
                   </li>
                 </ul>
