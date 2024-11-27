@@ -43,13 +43,18 @@ const toggleSection = (index: number) => {
           <ul class="space-y-2">
             <li v-for="(section, index) in sidebarMenu" :key="index">
               <div @click="toggleSection(index)"
-                class="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
-                <span class="flex items-center space-x-2">
+                class="relative group flex items-center justify-between px-3 py-2 cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
+                <span class="flex items-center space-x-2 relative z-10">
                   <span :class="`${section.icon} h-5 w-5 text-violet-600`"></span>
                   <span class="text-sm font-semibold text-gray-700">{{ section.title }}</span>
                 </span>
                 <span
                   :class="openSections[index] ? 'icon-[mdi--chevron-up] text-gray-600' : 'icon-[mdi--chevron-down] text-gray-500'"></span>
+                <div class="absolute top-0 left-0 bottom-0 bg-transparent overflow-hidden z-0 w-full">
+                  <div
+                    class="absolute top-0 left-0 h-full w-0.5 border-r-2 border-violet-600 transform group-hover:w-full transition-all duration-500 ease-in-out">
+                  </div>
+                </div>
               </div>
               <transition name="slide-down">
                 <ul v-show="openSections[index]" class="mt-2 pl-4 space-y-1">
