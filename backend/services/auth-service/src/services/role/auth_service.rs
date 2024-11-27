@@ -2,14 +2,14 @@ use c3k_common::handler::error_display::ParseError;
 use c3k_common::models::auth::{AuthModel, JwtClaims, UserProducts};
 use c3k_common::utilities::security_utils::SecurityUtils;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+use serde_json;
 use sqlx::PgPool;
 use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
-use serde_json;
 
 use crate::{
     models::role::users::Users,
-    repositories::role::{auth_repository::AuthRepository, users::UsersRepository},
+    repositories::role::{products::ProductsRepository, users::UsersRepository},
 };
 use c3k_common::{
     handler::redis_handler::RedisHandler,
@@ -91,14 +91,20 @@ impl AuthService {
 
         let config = match get_config() {
             Some(cfg) => cfg,
-            None => return Err("Internal error: Configuration not initialized".into())
+            None => return Err("Internal error: Configuration not initialized".into()),
         };
 
-        if &SecurityUtils::generate_hash(password, &user.salt, &config.token_provider.token_security_algorithm)? != &user.password {
+        if &SecurityUtils::generate_hash(
+            password,
+            &user.salt,
+            &config.token_provider.token_security_algorithm,
+        )? != &user.password
+        {
             return Err("Invalid password".into());
         }
 
-        let products = match AuthRepository::get_products(self.db_pool.clone(), username).await {
+        let products = match ProductsRepository::get_products(self.db_pool.clone(), username).await
+        {
             Ok(products) => products,
             Err(e) => return Err(e.into()),
         };
@@ -109,10 +115,10 @@ impl AuthService {
                     .insert_update_key(&user.username, &token)?;
 
                 for product in products {
-                    let claims = match AuthRepository::get_claims(
+                    let claims = match ProductsRepository::get_claims(
                         self.db_pool.clone(),
                         username,
-                        Some(product.full_name),
+                        &product.full_name,
                     )
                     .await
                     {

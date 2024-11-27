@@ -2,8 +2,11 @@ use crate::models::role::products::Products;
 use c3k_common::{
     handler::error_display::ParseError,
     interfaces::irepository::{IRepository, Model},
-    models::constants::{
-        MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
+    models::{
+        auth::{Auth, UserProducts},
+        constants::{
+            MESSAGE_CAN_NOT_DELETE_DATA, MESSAGE_CAN_NOT_INSERT_DATA, MESSAGE_CAN_NOT_UPDATE_DATA,
+        },
     },
 };
 pub use sqlx::{
@@ -102,5 +105,67 @@ impl IRepository<Products> for ProductsRepository {
         })
         .map_err(|e| Box::new(e) as Box<dyn StdError>)
         .unwrap_or_else(|e| Err(e))
+    }
+}
+
+impl ProductsRepository {
+    pub async fn get_products(
+        connection: PgPool,
+        username: &String,
+    ) -> Result<Vec<UserProducts>, Box<dyn StdError>> {
+        let query = if !username.is_empty() {
+            format!(
+                r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon", pr."FrontendIp", pr."FrontendPort" 
+            FROM "Role"."UserApplications" pr 
+            WHERE pr."Username" = '{}'"#,
+                username
+            )
+        } else {
+            let new_username = r#"WHERE pr."Username" IS NOT NULL"#;
+            format!(
+                r#"SELECT pr."ProductId", pr."Abbreviation", pr."FullName", pr."Description", pr."Icon", pr."FrontendIp", pr."FrontendPort" 
+            FROM "Role"."UserApplications" pr {}"#,
+            new_username
+            )
+        };
+
+        let result = sqlx::query(query.as_str())
+            .map(|row: PgRow| UserProducts::from_row(&row))
+            .fetch_all(&connection)
+            .await
+            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+
+        Ok(result)
+    }
+
+    pub async fn get_claims(
+        connection: PgPool,
+        username: &String,
+        product: &String,
+    ) -> Result<Vec<Auth>, Box<dyn StdError>> {
+        let query = if !product.is_empty() {
+            format!(
+                r#"SELECT uar."RouteName", uar."Operation" 
+                   FROM "Role"."UserApplicationRoles" uar 
+                   WHERE uar."Username"='{}' AND uar."Product"='{}'"#,
+                username, product
+            )
+        } else {
+            format!(
+                r#"SELECT ur."RouteName", ur."Operation" 
+                   FROM "Role"."UserRoles" ur 
+                   WHERE ur."Username"='{}'"#,
+                username
+            )
+        };
+
+        // Execute the query
+        let result = sqlx::query(query.as_str())
+            .map(|row: PgRow| Auth::from_row(&row))
+            .fetch_all(&connection)
+            .await
+            .map_err(|e| Box::new(e) as Box<dyn StdError>)?;
+
+        Ok(result)
     }
 }

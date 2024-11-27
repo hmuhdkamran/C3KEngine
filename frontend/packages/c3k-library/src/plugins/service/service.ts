@@ -52,7 +52,7 @@ export abstract class StoreService implements IStoreService {
     const onFulfilled = (value: any) => this.handleFulfilled<T>(value)
     const onRejection = (reason: any) => this.handleRejection<T>(reason)
 
-    return cb.then(onFulfilled, onRejection)
+    return cb.then(onFulfilled, onRejection);
   }
 
   request<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: string, data?: any, auth: boolean = true): Promise<IPayload<T>> {

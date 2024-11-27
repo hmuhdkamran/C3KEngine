@@ -2,7 +2,7 @@ import { setupLayouts } from 'virtual:generated-layouts';
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from '~pages';
 import { DefaultUser, RouteGuards } from 'c3k-library';
-import { microAppRoutes } from '@/spa';
+import { initializeMicroApps, microAppRoutes } from '@/spa';
 
 const options = {
   resolveUser: () => DefaultUser,
@@ -12,11 +12,13 @@ const options = {
   store: null,
 };
 
+await initializeMicroApps();
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...setupLayouts(routes),
-    ...microAppRoutes
+    ...microAppRoutes.value
   ],
 });
 

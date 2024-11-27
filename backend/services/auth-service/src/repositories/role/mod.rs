@@ -1,4 +1,3 @@
-pub mod auth_repository;
 pub mod queries;
 pub mod roles;
 pub mod routes;

@@ -26,7 +26,7 @@ export default defineConfig({
     Layouts({
       layoutsDirs: './src/layouts/',
     }),
-    qiankun('c3k-auth-management', { useDevMode })
+    qiankun('c3k-api-auth', { useDevMode })
   ],
   resolve: {
     alias: {

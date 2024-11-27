@@ -166,7 +166,7 @@ where
                                                             HttpResponse::InternalServerError()
                                                                 .json(ApiResponse::<String>::error(
                                                                     format!(
-                                                                        "Internal error: {}",
+                                                                        "Invalid Claim: {}",
                                                                         err
                                                                     ),
                                                                 ))

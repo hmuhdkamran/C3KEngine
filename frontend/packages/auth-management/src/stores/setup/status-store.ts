@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { IUser } from '@/models';
-import { UsersService } from '@/services/role/users-service'; // Assuming you have this path
+import type { IStatus } from '@/models';
+import { StatusService } from '@/services'; // Assuming you have this path
 import { useApplicationEventStore } from 'c3k-library';
 
-export const useRoleUserStore = defineStore('roleUserStore', {
+export const useRoleStatusStore = defineStore('roleStatusStore', {
     state: () => ({
-        items: ref<IUser[]>([]),
-        entity: ref<IUser | null>(null),
+        items: ref<IStatus[]>([]),
+        entity: ref<IStatus | null>(null),
         error: ref<string | null>(null),
         loading: ref<boolean>(false),
         store: useApplicationEventStore()
@@ -16,39 +16,39 @@ export const useRoleUserStore = defineStore('roleUserStore', {
         /**
          * Handles all operations (fetch, add, update, delete) based on provided action type
          * @param action The action type: 'get', 'add', 'update', or 'delete'
-         * @param entity The user entity to be added or updated (optional for 'get' and 'delete')
-         * @param filter Optional filter to get a user (only used for 'get' and 'getFindBy')
+         * @param entity The item entity to be added or updated (optional for 'get' and 'delete')
+         * @param filter Optional filter to get a item (only used for 'get' and 'getFindBy')
          */
-        async execute(action: 'get' | 'add' | 'edit' | 'delete', entity?: IUser, filter?: string) {
+        async execute(action: 'get' | 'add' | 'edit' | 'delete', entity?: IStatus, filter?: string) {
             this.loading = true;
             this.error = null;
 
-            const usersService = new UsersService();
+            const itemsService = new StatusService();
 
             try {
                 switch (action) {
                     case 'get':
-                        // Fetch all users or specific filtered users
+                        // Fetch all items or specific filtered items
                         const response = filter
-                            ? await usersService.GetFindBy(filter)
-                            : await usersService.GetAll();
+                            ? await itemsService.GetFindBy(filter)
+                            : await itemsService.GetAll();
 
-                        this.items = (response as any) as IUser[];
+                        this.items = (response as any) as IStatus[];
                         break;
 
                     case 'add':
-                        // Add a new user
+                        // Add a new item
                         if (entity) {
-                            await usersService.AddOne(entity);
+                            await itemsService.AddOne(entity);
                             this.items.push(entity);
                         }
                         break;
 
                     case 'edit':
-                        // Update an existing user
+                        // Update an existing item
                         if (entity) {
-                            await usersService.Update(entity);
-                            const index = this.items.findIndex(user => user.UserId === entity?.UserId);
+                            await itemsService.Update(entity);
+                            const index = this.items.findIndex(item => item.StatusId === entity?.StatusId);
                             if (index !== -1) {
                                 this.items[index] = entity;
                             }
@@ -56,10 +56,10 @@ export const useRoleUserStore = defineStore('roleUserStore', {
                         break;
 
                     case 'delete':
-                        // Delete a user by ID
-                        if (this.entity?.UserId) {
-                            await usersService.Delete(this.entity.UserId);
-                            this.items = this.items.filter(user => user.UserId !== this.entity?.UserId);
+                        // Delete a item by ID
+                        if (this.entity?.StatusId) {
+                            await itemsService.Delete(this.entity.StatusId);
+                            this.items = this.items.filter(item => item.StatusId !== this.entity?.StatusId);
                         }
                         break;
 
@@ -75,16 +75,16 @@ export const useRoleUserStore = defineStore('roleUserStore', {
         },
 
         /**
-         * Set the selected user entity
-         * @param user The user to be selected
+         * Set the selected item entity
+         * @param item The item to be selected
          */
-        selectItem(user: IUser, action: string) {
-            this.entity = user;
+        selectItem(item: IStatus, action: string) {
+            this.entity = item;
             this.store.setDrawerEvent({ Open: true, Title: action, OperationType: action.toLowerCase().split(' ')[0] });
         },
 
         /**
-         * Clear the selected user
+         * Clear the selected item
          */
         clearSelectedItem() {
             this.entity = null;
@@ -92,12 +92,12 @@ export const useRoleUserStore = defineStore('roleUserStore', {
     },
     getters: {
         /**
-         * Get a list of all users
+         * Get a list of all items
          */
         allItems: (state) => state.items,
 
         /**
-         * Get the currently selected user
+         * Get the currently selected item
          */
         selectedItem: (state) => state.entity,
 

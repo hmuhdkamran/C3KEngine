@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   isOpen: false,
   title: '',
   position: 'left',
-  size: '',
+  size: 'w-1/3',
   showCloseButton: true,
   closeOnOutside: true
 });
@@ -41,8 +41,8 @@ const transformClasses = {
 const drawerSize = ref('h-full');
 const positionRef = toRef(props, 'position');
 
-watch(positionRef, ()=> {
-  if(props.position == 'left' || props.position == 'right') {
+watch(positionRef, () => {
+  if (props.position == 'left' || props.position == 'right') {
     drawerSize.value = 'h-full'
   } else {
     drawerSize.value = 'w-full'
@@ -50,18 +50,18 @@ watch(positionRef, ()=> {
 });
 
 const updateDrawerSize = () => {
-    const width = window.innerWidth;
-    if (width >= 1024) {
-        drawerSize.value = "w-1/3";
-    } else if (width >= 768) {
-        drawerSize.value = "w-1/2";
-    } else {
-        drawerSize.value = "w-full";
-    }
+  const width = window.innerWidth;
+  if (width >= 1024) {
+    drawerSize.value = "w-1/3";
+  } else if (width >= 768) {
+    drawerSize.value = "w-1/2";
+  } else {
+    drawerSize.value = "w-full";
+  }
 };
 
 onBeforeUnmount(() => {
-    window.removeEventListener("resize", updateDrawerSize);
+  window.removeEventListener("resize", updateDrawerSize);
 });
 
 
@@ -90,7 +90,7 @@ const slots = useSlots();
         </div>
       </div>
     </transition>
-    <!-- Background Overlay --> 
+    <!-- Background Overlay -->
     <transition name="fade">
       <div v-if="props.isOpen && props.closeOnOutside" class="fixed inset-0 bg-black bg-opacity-50 z-40"
         @click="emit('toggleDrawer')"></div>

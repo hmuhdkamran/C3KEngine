@@ -1,10 +1,10 @@
-use crate::{
-    models::role::products::Products,
-    repositories::role::products::ProductsRepository,
-};
+use crate::{models::role::products::Products, repositories::role::products::ProductsRepository};
 use c3k_common::{
     interfaces::{irepository::IRepository, iservice::IService},
-    models::response::ApiResponse,
+    models::{
+        auth::{Auth, UserProducts},
+        response::ApiResponse,
+    },
 };
 pub use sqlx::PgPool;
 
@@ -41,6 +41,26 @@ impl IService<Products> for ProductsService {
 
     async fn delete(connection: PgPool, id: &String) -> ApiResponse<bool> {
         match ProductsRepository::delete(connection, id).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+}
+
+impl ProductsService {
+    pub async fn get_products(connection: PgPool, username: &String) -> ApiResponse<Vec<UserProducts>> {
+        match ProductsRepository::get_products(connection, username).await {
+            Ok(entity) => ApiResponse::success(entity),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    pub async fn get_claims(
+        connection: PgPool,
+        username: &String,
+        product: &String,
+    ) -> ApiResponse<Vec<Auth>> {
+        match ProductsRepository::get_claims(connection, username, product).await {
             Ok(entity) => ApiResponse::success(entity),
             Err(e) => ApiResponse::error(e.to_string()),
         }

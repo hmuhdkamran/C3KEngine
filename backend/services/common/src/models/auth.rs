@@ -72,6 +72,12 @@ pub struct AuthModel {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserProductModel {
+    pub username: String,
+    pub product: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct UserProducts {
     pub product_id: Uuid,

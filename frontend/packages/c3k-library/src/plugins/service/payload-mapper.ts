@@ -30,9 +30,9 @@ export class PayloadMapper {
     if (isPayload<T>(o.data)) { value = o.data }
     else {
       value = {
-        data: <any>o.data,
-        result: PayloadMessageTypes.success,
-        description: '',
+        data: <any>o.data.data,
+        result: <any>o.data.result,
+        description: <any>o.data.description,
       }
     }
 
@@ -44,7 +44,7 @@ export class PayloadMapper {
       return this.fromAxiosError<T>(o)
 
     if (o instanceof Error)
-      return this.fromError<T>(o)
+      return this.fromError<T>(o)    
 
     if (isAxiosResponse(o))
       return this.fromAxiosResponse<T>(o)

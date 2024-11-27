@@ -1,36 +1,34 @@
-import { registerMicroApps } from 'qiankun'
+import { ref, type Ref } from 'vue';
+import { TokenHelper } from 'c3k-library';
+import { AuthenticationService } from './services/authentication-service';
 
-// let initState = { count: 0 };
+export const microApps: Ref<Array<any>> = ref([]);
+export const microAppRoutes: Ref<Array<any>> = ref([]);
 
-// const actions = initGlobalState(store);
+const setMicroApp = (value: string) => `c3k-${value.replace('/', '-')}`;
 
-// actions.onGlobalStateChange((state: any) => {
-//     initState = state;
-//     store.count = initState.count;
-// }, true);
+export async function initializeMicroApps() {
+    const authService = new AuthenticationService();
+    
+    const products = await authService.allProducts();
 
-// const getGlobalState = () => initState;
-
-const microApps = [{
-    name: 'c3k-auth-management',
-    entry: '//localhost:8001',
-    activeRule: 'c3k-auth-management'
-}
-];
-
-export const apps = microApps.map((item) => {
-    return {
-        ...item,
-        container: "#child-viewport",
+    microApps.value = (products as Array<any>).map((product) => ({
+        name: setMicroApp(product.Abbreviation),
+        entry: `//${product.FrontendIp}:${product.FrontendPort}`,
+        activeRule: setMicroApp(product.Abbreviation),
+        container: '#child-viewport',
         props: {
-            routerBase: item.activeRule,
-            // getGlobalState
+            routerBase: setMicroApp(product.Abbreviation),
+            getGlobalState: () => ({
+                user: TokenHelper.parseUserToken(TokenHelper.getAccessToken()),
+            }),
         },
-    };
-});
+    }));
 
-export const microAppRoutes = microApps.map(app => ({
-    path: `/${app.activeRule}/:pathMatch(.*)*`,
-    name: app.name,
-    component: () => import('@/layouts/micro-frontend.vue'),
-}));
+    // Generate routes for micro apps
+    microAppRoutes.value = microApps.value.map((app) => ({
+        path: `/${app.activeRule}/:pathMatch(.*)*`,
+        name: app.name,
+        component: () => import('@/layouts/micro-frontend.vue'),
+    }));
+}
