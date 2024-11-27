@@ -36,11 +36,11 @@ export class AuthenticationService extends StoreService {
 
   login(credentials: ICredential) {
     const processResponse = (token: IPayload<string>) => {
-      if (token.data != null) {
-        TokenHelper.setAccessToken(token.data);
+      if (token!= null) {
+        TokenHelper.setAccessToken(`${token}`);
         const store = useSystemStore();
 
-        const parsed = TokenHelper.parseUserToken(token.data);
+        const parsed = TokenHelper.parseUserToken(`${token}`);
         store.updateUser(parsed);
 
         if (parsed.roles !== undefined) {
