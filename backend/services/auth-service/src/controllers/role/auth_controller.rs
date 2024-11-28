@@ -30,8 +30,8 @@ pub async fn products(
     Ok(HttpResponse::Ok().json(result))
 }
 
-#[post("/user_products_claims")]
-pub async fn products_claims(
+#[post("/user_product_claims")]
+pub async fn product_claims(
     connection: web::Data<PgPool>,
     entity: web::Json<UserProductModel>,
 ) -> Result<impl Responder, actix_web::Error> {
@@ -51,6 +51,6 @@ pub fn auth_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/api/auth")
             .service(login)
             .service(products)
-            .service(products_claims),
+            .service(product_claims),
     );
 }
