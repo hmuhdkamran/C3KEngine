@@ -57,9 +57,9 @@ function goToMain() {
                 <Filter />
             </div>
         </div>
-        <div v-if="!showModulePage" class="flex flex-1">
-            <div class="bg-gray-50 flex-1 mx-auto py-6 px-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div v-if="!showModulePage">
+            <div class="flex-1 mx-auto py-6 px-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                     <Card v-for="(card, index) in filteredCards" :key="index" :title="card.FullName"
                         :description="card.Description" :status="'Active'" :buttonText="'Explore...'"
                         :iconClass="card.Icon" @click="handleCardClick(card)">
