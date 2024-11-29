@@ -81,8 +81,7 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(cors)
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(redis_client.clone()))
-            .app_data(web::Data::new(communicator))            
-            .configure(users_routes)
+            .app_data(web::Data::new(communicator))             
             .configure(products_routes)
             .configure(roles_routes)
             .configure(routes_routes)
@@ -104,6 +103,7 @@ async fn main() -> Result<(), std::io::Error> {
             .configure(space_types_routes)
             .configure(status_routes)
             .configure(auth_routes)
+            .configure(users_routes)
     });
 
     println!("App is Running on http://{}", addr);
