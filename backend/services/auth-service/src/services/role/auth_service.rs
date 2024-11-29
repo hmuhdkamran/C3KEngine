@@ -138,8 +138,42 @@ impl AuthService {
         }
     }
 
+    async fn remove_chache(&self, username: &String) -> Result<bool, Box<dyn StdError>> {
+        // Fetch products associated with the username
+        let products = match ProductsRepository::get_products(self.db_pool.clone(), username).await {
+            Ok(products) => products,
+            Err(e) => return Err(e.into()), // Return the error if fetching fails
+        };
+    
+        // Iterate through each product and remove its cache
+        for product in products {
+            if !self
+                .redis_client
+                .remove_key(&format!("{}-{}", username, product.abbreviation))?
+            {
+                return Ok(false); // Return false if any key removal fails
+            }
+        }
+    
+        // Remove the main cache key associated with the username
+        if !self.redis_client.remove_key(username)? {
+            return Ok(false); // Return false if the main key removal fails
+        }
+    
+        // If all operations succeed, return true
+        Ok(true)
+    }
+    
+
     pub async fn login(&self, entity: &AuthModel) -> ApiResponse<String> {
         match self.validate(&entity.username, &entity.password).await {
+            Ok(response) => ApiResponse::success(response),
+            Err(e) => ApiResponse::error(e.to_string()),
+        }
+    }
+
+    pub async fn logout(&self, entity: &AuthModel) -> ApiResponse<bool> {
+        match self.remove_chache(&entity.username).await {
             Ok(response) => ApiResponse::success(response),
             Err(e) => ApiResponse::error(e.to_string()),
         }

@@ -29,6 +29,7 @@ export * from './components/composables/useValidation';
 
 export { default as ConfirmationDialog } from './components/common/ConfirmationDialog.vue';
 export { default as Drawer } from './components/common/Drawer.vue';
+export { default as PrintPreview } from './components/common/PrintPreview.vue';
 
 export { default as Button } from './components/common/Button.vue';
 export { default as ComboBox } from './components/form/ComboBox.vue';

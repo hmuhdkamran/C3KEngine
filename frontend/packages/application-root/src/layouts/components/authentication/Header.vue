@@ -5,46 +5,44 @@ import Moduledropdown from './ModuleMenu.vue';
 import Notifications from './UserNotification.vue';
 import ProfileDropdown from './UserProfile.vue';
 
-const isOpen = ref(false);
-const showSidebarDropdown = ref(false);
-const showModuleDropdown = ref(false);
-const showProfileDropdown = ref(false);
+const sidebar = ref(false);
+const dropdownStates = ref({
+  sidebar: false,
+  module: false,
+  profile: false,
+  notifications: false,
+});
 const isSmallScreen = ref(false);
 
 defineProps<{ selectedCardTitle: string }>();
 
-function toggleSidebar() {
-  showSidebarDropdown.value = !showSidebarDropdown.value;
-  isOpen.value = false;
-  showProfileDropdown.value = false;
-  showModuleDropdown.value = false;
+// General toggle function for dropdowns
+function toggleDropdown(key: keyof typeof dropdownStates.value) {
+  if (key === 'sidebar') {
+    sidebar.value = !sidebar.value;
+    return;
+  }
+
+  // Close all dropdowns first, then toggle the selected one
+  Object.keys(dropdownStates.value).forEach((state) => {
+    dropdownStates.value[state as keyof typeof dropdownStates.value] = false;
+  });
+  dropdownStates.value[key] = !dropdownStates.value[key];
 }
 
-function toggleModuleDropdown() {
-  showModuleDropdown.value = !showModuleDropdown.value;
-  isOpen.value = false;
-  showSidebarDropdown.value = false;
-  showProfileDropdown.value = false;
-}
-
-function toggleNotifications() {
-  isOpen.value = !isOpen.value;
-  showProfileDropdown.value = false;
-  showSidebarDropdown.value = false;
-  showModuleDropdown.value = false;
-}
-
-function toggleProfileDropdown() {
-  showProfileDropdown.value = !showProfileDropdown.value;
-  isOpen.value = false;
-  showSidebarDropdown.value = false;
-  showModuleDropdown.value = false;
-}
-
+// Handle screen size changes
 const checkScreenSize = () => {
   isSmallScreen.value = window.innerWidth < 640;
 };
 
+// Close all dropdowns
+function closeAllDropdowns() {
+  Object.keys(dropdownStates.value).forEach((key) => {
+    dropdownStates.value[key as keyof typeof dropdownStates.value] = false;
+  });
+}
+
+// Handle clicks outside specific elements
 function useClickOutside(callback: () => void) {
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
@@ -65,45 +63,35 @@ function useClickOutside(callback: () => void) {
   });
 }
 
-useClickOutside(() => {
-  showModuleDropdown.value = false;
-  isOpen.value = false;
-  showProfileDropdown.value = false;
-});
-
+useClickOutside(closeAllDropdowns);
 </script>
 
 <template>
   <div
     class="fixed top-0 left-0 w-full px-2 sm:px-6 lg:px-8 flex items-center bg-gradient-to-r from-indigo-500 to-violet-600 justify-between h-11 z-40">
     <div class="flex items-center space-x-2 sm:space-x-4">
-      <Sidebar @toggleSidebar="toggleSidebar" :showSidebarDropdown="showSidebarDropdown" />
-      <button @click="toggleSidebar" class="p-1 text-white hover:text-gray-300 focus:outline-none">
+      <Sidebar @toggleSidebar="() => toggleDropdown('sidebar')" :showSidebarDropdown="sidebar" />
+      <button @click="() => toggleDropdown('sidebar')" class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[fluent--navigation-unread-20-filled] h-6 w-6"></span>
       </button>
-      <Moduledropdown :selectedCardTitle="selectedCardTitle" :showModuleDropdown="showModuleDropdown" class="dropdown"
-        @toggleModuleDropdown="toggleModuleDropdown" />
-      <nav class="hidden justify-between md:flex space-x-6">
-        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">CRM Dashboard</a>
-        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Sales Overview</a>
-        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Customer Engagement</a>
-        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">Pipeline Management</a>
+      <Moduledropdown :selectedCardTitle="selectedCardTitle" :showModuleDropdown="dropdownStates.module"
+        class="dropdown" @toggleModuleDropdown="() => toggleDropdown('module')" />
+      <nav class="hidden md:flex space-x-6">
+        <RouterLink to="/dashboard" class="text-white text-sm hover:text-gray-200 transition duration-200">
+          Home Dashboard
+        </RouterLink>
       </nav>
     </div>
     <div class="flex items-center space-x-2">
-      <Notifications @toggleNotifications="toggleNotifications" :isOpen="isOpen" :isSmallScreen="isSmallScreen"
-        class="notification" />
-      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-chat] h-4 w-4 sm:h-5 sm:w-5"></span>
-      </button>
-      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-help] h-4 w-4 sm:h-5 sm:w-5"></span>
-      </button>
-      <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
-        <span class="icon-[ic--baseline-settings] h-4 w-4 sm:h-5 sm:w-5"></span>
-      </button>
-      <ProfileDropdown @toggleProfileDropdown="toggleProfileDropdown" :showProfileDropdown="showProfileDropdown"
-        class="profile" />
+      <Notifications @toggleNotifications="() => toggleDropdown('notifications')" :isOpen="dropdownStates.notifications"
+        :isSmallScreen="isSmallScreen" class="notification" />
+      <template v-for="icon in ['chat', 'help', 'settings']" :key="icon">
+        <button class="hidden sm:block p-1 text-white hover:text-gray-300 focus:outline-none">
+          <span :class="`icon-[ic--baseline-${icon}] h-4 w-4 sm:h-5 sm:w-5`"></span>
+        </button>
+      </template>
+      <ProfileDropdown @toggleProfileDropdown="() => toggleDropdown('profile')"
+        :showProfileDropdown="dropdownStates.profile" class="profile" />
     </div>
   </div>
 </template>
