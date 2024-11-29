@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn brand_social_maps_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/auth/brand_social_maps")
+        web::scope("/api/auth/setup/brand_social_maps")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

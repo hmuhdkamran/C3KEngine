@@ -19,6 +19,18 @@ pub async fn login(
     Ok(HttpResponse::Ok().json(result))
 }
 
+#[post("/logout")]
+pub async fn logout(
+    connection: web::Data<PgPool>,
+    redis_client: web::Data<RedisHandler>,
+    entity: web::Json<AuthModel>,
+) -> Result<impl Responder, actix_web::Error> {
+    let service = AuthService::new(connection.as_ref().clone(), redis_client.as_ref().clone());
+    let result = service.logout(&entity.into_inner()).await;
+
+    Ok(HttpResponse::Ok().json(result))
+}
+
 #[post("/user_products")]
 pub async fn products(
     connection: web::Data<PgPool>,
@@ -50,6 +62,7 @@ pub fn auth_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api/auth")
             .service(login)
+            .service(logout)
             .service(products)
             .service(product_claims),
     );

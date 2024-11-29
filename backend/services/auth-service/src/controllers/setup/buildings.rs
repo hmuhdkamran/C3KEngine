@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn buildings_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/auth/buildings")
+        web::scope("/api/auth/setup/buildings")
             .service(get_all)
             .service(get_by_filter)
             .service(add)
