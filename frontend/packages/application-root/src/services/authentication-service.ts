@@ -73,13 +73,19 @@ export class AuthenticationService extends StoreService {
         TokenHelper.removeAccessToken();
         window.localStorage.removeItem("microsoft-auth");
 
-        return user;
+        return true;
       } else {
-        return DefaultUser;
+        return false;
       }
     };
 
-    return Axios.put(`${GlobalConfig.uri.auth}logout`, null).then(onSuccess);
+    const token = TokenHelper.getAccessToken();
+    if (token) {
+      const user = TokenHelper.parseUserToken(token);
+
+      return this.post(`${GlobalConfig.uri.auth}/logout`, { username: user.username, password: '' }, true).then(onSuccess);
+    }
+    return false;
   }
 
   allProducts() {

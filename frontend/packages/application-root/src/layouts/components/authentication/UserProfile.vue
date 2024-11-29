@@ -2,11 +2,13 @@
 import { defineProps, defineEmits } from 'vue';
 import { useSystemStore } from "c3k-library";
 import avatar from "@/assets/images/avatar.jpg"
+import { AuthenticationService } from '@/services/authentication-service';
 
 defineProps<{ showProfileDropdown: boolean }>();
 defineEmits(['toggleProfileDropdown']);
 
 const store = useSystemStore()
+const repo = new AuthenticationService();
 
 </script>
 
@@ -73,7 +75,7 @@ const store = useSystemStore()
               <a href="#"
                 class="flex items-center space-x-2 py-1 px-3 rounded-md text-sm text-gray-600 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 transition-all duration-200 ease-in-out">
                 <span class="icon-[ic--baseline-logout] text-violet-500 h-4 w-4 mr-2"></span>
-                <span class="text-sm">Logout</span>
+                <span class="text-sm" @click.prevent="repo.logout()">Logout</span>
               </a>
             </li>
           </ul>

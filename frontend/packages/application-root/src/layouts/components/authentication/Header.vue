@@ -18,7 +18,7 @@ defineProps<{ selectedCardTitle: string }>();
 
 // General toggle function for dropdowns
 function toggleDropdown(key: keyof typeof dropdownStates.value) {
-  if(key === 'sidebar') {
+  if (key === 'sidebar') {
     sidebar.value = !sidebar.value;
     return;
   }
@@ -77,9 +77,9 @@ useClickOutside(closeAllDropdowns);
       <Moduledropdown :selectedCardTitle="selectedCardTitle" :showModuleDropdown="dropdownStates.module"
         class="dropdown" @toggleModuleDropdown="() => toggleDropdown('module')" />
       <nav class="hidden md:flex space-x-6">
-        <a href="#" class="text-white text-sm hover:text-gray-200 transition duration-200">
+        <RouterLink to="/dashboard" class="text-white text-sm hover:text-gray-200 transition duration-200">
           Home Dashboard
-        </a>
+        </RouterLink>
       </nav>
     </div>
     <div class="flex items-center space-x-2">
