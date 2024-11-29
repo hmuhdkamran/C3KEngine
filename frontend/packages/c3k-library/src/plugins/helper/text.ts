@@ -79,7 +79,7 @@ export class TextHelper {
    * @param text The input string.
    * @returns A hex color string.
    */
-  private static generateColorFromText(text: string): string {
+  public static generateColorFromText(text: string): string {
     let hash = 0;
 
     // Generate a simple hash from the text
