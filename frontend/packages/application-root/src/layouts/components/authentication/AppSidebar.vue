@@ -21,7 +21,8 @@ const toggleSection = (index: number) => {
 </script>
 
 <template>
-  <Drawer :isOpen="props.showSidebarDropdown"  title="My Sidebar" size="w-72" position="left" @toggleDrawer="emit('toggleSidebar')">
+  <Drawer :isOpen="props.showSidebarDropdown" title="My Sidebar" size="w-72" position="left"
+    @toggleDrawer="emit('toggleSidebar')" class="bg-black bg-opacity-50 z-50">
     <template #header>
       <div
         class="w-full flex items-center justify-between px-6 py-2 bg-white border-b border-gray-200 shadow-sm text-gray-700 space-x-6">
@@ -60,8 +61,13 @@ const toggleSection = (index: number) => {
                 <ul v-show="openSections[index]" class="mt-2 pl-4 space-y-1">
                   <li v-for="(item, subIndex) in section.children || []" :key="subIndex">
                     <router-link :to="item.route"
-                      class="flex items-center space-x-2 py-1 px-3 rounded-md text-sm text-gray-600 hover:text-violet-700 hover:bg-violet-50 hover:border-l-2 border-violet-500 transition-all duration-200 ease-in-out">
+                      class="relative group flex items-center px-3 py-1 text-sm cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
                       <span>{{ item.title }}</span>
+                      <div class="absolute top-0 left-0 bottom-0 bg-transparent overflow-hidden z-0 w-full">
+                        <div
+                          class="absolute top-0 left-0 h-full w-0.5 border-r-2 border-violet-600 transform group-hover:w-full transition-all duration-500 ease-in-out">
+                        </div>
+                      </div>
                     </router-link>
                   </li>
                 </ul>
