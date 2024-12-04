@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { UserProduct } from '@/models/user-products';
 import { store } from '@/stores';
+import { Icon } from '@iconify/vue';
 import { ref, computed, defineProps, defineEmits, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -59,7 +60,7 @@ function handleCardClick(card: UserProduct) {
                 <div v-if="filteredServices.length" v-for="(service, index) in filteredServices" :key="index"
                     class="flex items-center cursor-pointer bg-gray-50 border border-gray-200 rounded-sm border-l-4 p-1 sm:p-4 hover:bg-gray-100 hover:shadow-md transition-all duration-300 relative"
                     @click.prevent="handleCardClick(service)">
-                    <span :class="service.Icon + ' text-violet-600 h-5 w-5 sm:h-8 sm:w-8 mr-4'"></span>
+                    <Icon :icon="service.Icon" class="text-violet-600 h-5 w-5 sm:h-8 sm:w-8 mr-4" />
                     <div>
                         <h4 class="text-sm sm:text-md font-semibold text-gray-700">{{ service.FullName }}</h4>
                         <p class="text-xs sm:text-sm text-gray-500">{{ service.Description }}</p>
