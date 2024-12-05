@@ -1,59 +1,108 @@
 <script setup lang="ts">
 import { defineProps, withDefaults, useSlots } from 'vue';
+import { Icon } from '@iconify/vue';
+import { TextHelper } from '@/plugins/helper/text';
 
 interface CardProps {
-    title?: string;
-    description?: string;
+    title: string;
+    description: string;
     status?: string;
     buttonText?: string;
-    iconClass?: string;
+    iconClass: string;
     containerClass?: string;
     showHeader?: boolean;
     showFooter?: boolean;
 };
 
 const props = withDefaults(defineProps<CardProps>(), {
-    containerClass: "max-w-sm rounded overflow-hidden shadow-lg bg-white transition transform hover:scale-105 duration-200 sm:max-w-full lg:max-w-sm",
+    containerClass: "relative w-full max-w-sm h-80 sm:h-72 md:h-80 rounded-lg bg-gradient-to-b from-indigo-50 via-white to-purple-50 p-4  shadow-lg hover:translate-y-[-2px] transition-transform duration-300 group overflow-hidden",
     showHeader: true,
     showFooter: true,
 });
 
 const slots = useSlots();
+
+const { initials } = TextHelper.getInitialsWithColors(props.title);
+const truncatedDescription = TextHelper.truncateText(props.description, 100);
+const backgroundColor = TextHelper.generateColorFromText(props.title);
 </script>
 
 <template>
-    <div class="transition transform shadow-lg hover:scale-105 duration-200" :class="containerClass">
-
-        <div v-if="props.showHeader">
-            <div v-if="slots.header">
-                <slot name="header"></slot>
+    <div class="card-container" :class="props.containerClass">
+        <div class="absolute top-0 left-0 border border-purple-50 w-full h-3/5 pointer-events-none overflow-hidden"
+            :style="{ background: backgroundColor }">
+            <div
+                class="absolute w-96 h-96 bg-gradient-to-r from-purple-300 to-indigo-300 rounded-full opacity-30 blur-3xl -top-10 -left-10">
             </div>
-            <div v-else class="px-2 py-1 flex items-center gap-3">
-                <div class="relative w-10 h-10 bg-violet-200 rounded-full">
-                    <span
-                        :class="`${iconClass} absolute w-6 h-6 text-violet-700 transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2`"></span>
-                </div>
-                <div class="flex-1">
-                    <div class="font-bold text-xl mb-1 flex items-center justify-between">
-                        <span>{{ title }}</span>
-                        <span class="icon-[ph--dots-three-vertical-bold]"></span>
-                    </div>
-                    <p class="text-gray-500">{{ description }}</p>
+            <div
+                class="absolute w-72 h-72 bg-gradient-to-b from-indigo-300 to-purple-400 rounded-full opacity-20 blur-2xl -bottom-16 -right-8">
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div
+                    class="icon-container mx-auto flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                    <Icon :icon="iconClass"
+                        class="text-violet-50 w-48 h-48 transition-all duration-300 group-hover:text-violet-100" />
                 </div>
             </div>
         </div>
-
-        <slot />
-
-        <div v-if="props.showFooter">
-            <div v-if="slots.footer">
-                <slot name="footer"></slot>
+        <div class="relative z-10 flex flex-col h-full justify-between transition-all duration-500">
+            <div v-if="props.showHeader" class="absolute z-30 flex items-center justify-center">
+                <div v-if="slots.header">
+                    <slot name="header"></slot>
+                </div>
+                <div v-else>
+                    <span
+                        class="rounded-full text-gray-200 font-bold text-sm shadow-sm flex items-center justify-center"
+                        :style="{ background: backgroundColor, width: '50px', height: '50px' }">
+                        {{ initials }}
+                    </span>
+                </div>
             </div>
-            <div v-else class="px-2 py-1 text-green-500 text-sm flex justify-between">
-                <span>{{ status }}</span>
-                <button class="bg-transparent hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-2 rounded">
-                    {{ buttonText }}</button>
+
+            <div class="mt-auto mb-4 text-left h-24 flex flex-col justify-end overflow-hidden">
+                <h3 class="font-semibold text-lg md:text-md text-gray-800 transition-colors duration-300">
+                    {{ title }}
+                </h3>
+                <p class="text-gray-600 text-sm sm:text-xs mt-2 leading-relaxed group-hover:text-gray-800">
+                    {{ truncatedDescription }}
+                </p>
+            </div>
+
+            <div v-if="props.showFooter" class="px-2 py-1 text-green-500 text-sm flex justify-between">
+                <div v-if="slots.footer">
+                    <slot name="footer"></slot>
+                </div>
+                <div v-else>
+                    <span>{{ status }}</span>
+                    <button
+                        class="bg-transparent hover:bg-violet-500 text-violet-700 hover:text-white py-1 px-2 rounded">
+                        {{ buttonText }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-container {
+    border: 1px solid #e2e8f0;
+}
+
+.card-container:hover {
+    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+    transform: translateY(-2px);
+}
+
+.icon-container {
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease;
+}
+
+.icon-container:hover {
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+}
+
+.card-container:hover .icon-container {
+    transform: translateY(-4px);
+}
+</style>
