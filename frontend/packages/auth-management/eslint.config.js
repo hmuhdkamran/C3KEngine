@@ -20,6 +20,7 @@ export default [
   tseslint.config({
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
+      'vue/setup-compiler-macros': true
     },
   }),
 ]

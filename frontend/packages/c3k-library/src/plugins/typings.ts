@@ -3,20 +3,20 @@ import type { RouteLocationRaw } from 'vue-router'
 
 declare type ATagTargetAttrValues = '_blank' | '_self' | '_parent' | '_top' | 'framename'
 declare type ATagRelAttrValues =
-  | 'alternate'
-  | 'author'
-  | 'bookmark'
-  | 'external'
-  | 'help'
-  | 'license'
-  | 'next'
-  | 'nofollow'
-  | 'noopener'
-  | 'noreferrer'
-  | 'prev'
-  | 'search'
-  | 'tag'
-  
+    | 'alternate'
+    | 'author'
+    | 'bookmark'
+    | 'external'
+    | 'help'
+    | 'license'
+    | 'next'
+    | 'nofollow'
+    | 'noopener'
+    | 'noreferrer'
+    | 'prev'
+    | 'search'
+    | 'tag'
+
 export interface I18nLanguage {
     label: string
     i18nLang: string
@@ -65,3 +65,12 @@ export interface NavGroup extends Partial<AclProperties> {
     children: (NavLink | NavGroup)[]
     disable?: boolean
 }
+
+export interface IMenuItem {
+    name: string;
+    title: string;
+    icon: string;
+    route: string;
+    open: boolean;
+    children?: IMenuItem[];
+};

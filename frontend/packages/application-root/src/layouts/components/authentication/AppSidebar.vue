@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 import { defineProps } from 'vue';
 import { Drawer, VNodeRenderer, config } from 'c3k-library';
-import sidebarMenu from '@/navigation/sidebarConfig';
+import { store } from '@/stores';
+import MenuItem from './MenuItem.vue';
 
 interface Props {
   showSidebarDropdown: boolean
@@ -42,37 +43,7 @@ const toggleSection = (index: number) => {
       <div class="flex flex-col h-full">
         <div class="overflow-y-auto flex-grow px-4 py-3">
           <ul class="space-y-2">
-            <li v-for="(section, index) in sidebarMenu" :key="index">
-              <div @click="toggleSection(index)"
-                class="relative group flex items-center justify-between px-3 py-2 cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
-                <span class="flex items-center space-x-2 relative z-10">
-                  <span :class="`${section.icon} h-5 w-5 text-violet-600`"></span>
-                  <span class="text-sm font-semibold text-gray-700">{{ section.title }}</span>
-                </span>
-                <span
-                  :class="openSections[index] ? 'icon-[mdi--chevron-up] text-gray-600' : 'icon-[mdi--chevron-down] text-gray-500'"></span>
-                <div class="absolute top-0 left-0 bottom-0 bg-transparent overflow-hidden z-0 w-full">
-                  <div
-                    class="absolute top-0 left-0 h-full w-0.5 border-r-2 border-violet-600 transform group-hover:w-full transition-all duration-500 ease-in-out">
-                  </div>
-                </div>
-              </div>
-              <transition name="slide-down">
-                <ul v-show="openSections[index]" class="mt-2 pl-4 space-y-1">
-                  <li v-for="(item, subIndex) in section.children || []" :key="subIndex">
-                    <router-link :to="item.route"
-                      class="relative group flex items-center px-3 py-1 text-sm cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
-                      <span>{{ item.title }}</span>
-                      <div class="absolute top-0 left-0 bottom-0 bg-transparent overflow-hidden z-0 w-full">
-                        <div
-                          class="absolute top-0 left-0 h-full w-0.5 border-r-2 border-violet-600 transform group-hover:w-full transition-all duration-500 ease-in-out">
-                        </div>
-                      </div>
-                    </router-link>
-                  </li>
-                </ul>
-              </transition>
-            </li>
+            <MenuItem v-for="(item, index) in store.sideBarMneu" :key="index" :menuItem="item" />
           </ul>
         </div>
         <div class="px-4 py-3 bg-white border-t border-gray-200 shadow-sm mt-auto">
@@ -94,6 +65,7 @@ const toggleSection = (index: number) => {
 .slide-leave-active {
   transition: transform 0.4s ease;
 }
+
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(-100%);
@@ -108,14 +80,17 @@ const toggleSection = (index: number) => {
 .slide-down-leave-active {
   transition: max-height 0.3s ease, opacity 0.3s ease;
 }
+
 .slide-down-enter-from,
 .slide-down-leave-to {
   max-height: 0;
   opacity: 0;
 }
+
 .slide-down-enter-to,
 .slide-down-leave-from {
-  max-height: 200px; /* Adjust as needed for the content size */
+  max-height: 200px;
+  /* Adjust as needed for the content size */
   opacity: 1;
 }
 </style>

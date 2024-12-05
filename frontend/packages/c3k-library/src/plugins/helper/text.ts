@@ -14,7 +14,8 @@ export class TextHelper {
    */
   public static getInitialsWithColors(text: string): { initials: string; color: string } {
     if (!text) {
-      throw new Error("Input text cannot be empty.");
+      console.error("Input text cannot be empty.");
+      return { initials: '', color: '' };
     }
 
     // Extract the first two characters
@@ -56,7 +57,8 @@ export class TextHelper {
           .map((word) => word.toUpperCase())
           .join(" ");
       default:
-        throw new Error(`Unsupported case type: ${caseType}`);
+        console.error(`Unsupported case type: ${caseType}`);
+        return '';
     }
   }
 

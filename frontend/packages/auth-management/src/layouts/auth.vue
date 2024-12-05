@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router'; 
-import { useTableStore, Card } from 'c3k-library'
+import { useTableStore, Card, LocalStorageHelper } from 'c3k-library'
 
 const tableStore = useTableStore();
 
@@ -92,7 +92,7 @@ function filterByCategory(category: string) {
 }
 
 function handleCardClick(cardTitle: string) {
-    localStorage.setItem("application", "c3k-auth-management")
+    LocalStorageHelper.set("application", "c3k-auth-management")
     router.replace('/c3k-auth-management');
 
     // showModulePage.value = true;

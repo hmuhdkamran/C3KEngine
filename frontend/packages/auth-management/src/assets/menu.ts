@@ -6,7 +6,7 @@ export const sidebarMenu: Ref<IMenuItem[]> = ref([
     name: "Dashboard",
     title: "Dashboard",
     icon: "icon-[tabler--category-filled]",
-    route: "/dashboard",
+    route: "/c3k-api-auth/dashboard",
     open: false,
     children: [
       { name: "HRMS", title: "HRMS", icon: "icon-[fluent-mdl2--recruitment-management]", open: false, route: "/hrms" },

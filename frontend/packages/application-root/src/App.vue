@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Notification, UseAxios, useNotification } from 'c3k-library';
 import { computed } from 'vue';
+import { updateUserWithModules } from './stores';
 
 UseAxios();
 const { notifications } = useNotification();
@@ -11,6 +12,8 @@ const notificationsWithOffsets = computed(() =>
     positionOffset: index * 110
   }))
 );
+
+updateUserWithModules();
 
 </script>
 

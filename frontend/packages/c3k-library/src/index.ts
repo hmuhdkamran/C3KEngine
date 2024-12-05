@@ -34,7 +34,7 @@ export { default as PrintPreview } from './components/common/PrintPreview.vue';
 export { default as Button } from './components/common/Button.vue';
 export { default as ComboBox } from './components/form/ComboBox.vue';
 export { default as TextInput } from './components/form/TextInput.vue';
-// export { default as DatePicker } from './components/common/DatePicker.vue';
+// export { default as DatePicker } from './components/form/DatePicker.vue';
 
 export { VNodeRenderer } from './components/extra/VNodeRenderer';
 export { default as TokenStatus } from './components/extra/TokenStatus.vue';
