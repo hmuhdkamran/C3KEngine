@@ -7,14 +7,14 @@ import { TokenHelper } from '../helper/token-helper'
 export interface ICommonState {
   isLoading: boolean
   user: IUser
-  passwordChanged: boolean
+  toggleSidebar: boolean
 }
 
 export const useSystemStore = defineStore('system', {
   state: (): ICommonState => ({
     isLoading: false,
     user: DefaultUser,
-    passwordChanged: false,
+    toggleSidebar: false,
   }),
 
   actions: {
@@ -29,8 +29,8 @@ export const useSystemStore = defineStore('system', {
         this.user = user
     },
 
-    updatePasswordChanged(changed: boolean) {
-      this.passwordChanged = changed
+    updateToggleSidebar(changed: boolean) {
+      this.toggleSidebar = changed
     },
   },
 })

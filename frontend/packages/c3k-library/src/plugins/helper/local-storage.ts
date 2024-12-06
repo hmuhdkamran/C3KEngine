@@ -6,14 +6,14 @@ export class LocalStorageHelper {
   }
 
   // Get a value from localStorage
-  static get<T>(key: string): T | unknown {
+  static get<T>(key: string): T | null {
     const serializedValue = localStorage.getItem(key);
     
     if (serializedValue) {
       if(typeof serializedValue === 'object') {
         return JSON.parse(serializedValue) as T;
       } else {
-        return serializedValue as string;
+        return serializedValue as T;
       }
     }
 

@@ -33,22 +33,31 @@ const render = (props: any = {}): void => {
 }
 
 renderWithQiankun({
-    mount(props: any) {
+    async bootstrap() {
+        console.log('[c3k-api-auth] Bootstrap started');
+        return Promise.resolve();
+    },
+    async mount(props) {
+        console.log('[c3k-api-auth] Mounting app');
         render(props);
+        return Promise.resolve();
     },
-    bootstrap() {
+    async update(props: any) {
+        console.log('[c3k-api-auth] Updating app');
+        render(props);
+        return Promise.resolve();
     },
-    update(props: any) {
-        render(props)
-    },
-    unmount(_props: any) {
+    async unmount(props) {
+        console.log('[c3k-api-auth] Unmounting app');
         instance.unmount();
         instance._container.innerHTML = '';
+        return Promise.resolve();
     },
 });
 
 export async function mount(props: any) {
     render(props);
+    return Promise.resolve();
 }
 
 if (!qiankunWindow.__POWERED_BY_QIANKUN__) {

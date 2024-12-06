@@ -39,5 +39,6 @@ export { default as TextInput } from './components/form/TextInput.vue';
 export { VNodeRenderer } from './components/extra/VNodeRenderer';
 export { default as TokenStatus } from './components/extra/TokenStatus.vue';
 export { default as SysLoader } from './components/extra/SysLoader.vue'
+export { default as AppSidebar } from './components/extra/AppSidebar.vue';
 
-export { requiredValidator, emailValidator, passwordValidator, lengthValidator, alphaValidator,confirmedValidator } from './plugins/helper/validators'
+export { requiredValidator, emailValidator, passwordValidator, lengthValidator, alphaValidator, confirmedValidator } from './plugins/helper/validators'

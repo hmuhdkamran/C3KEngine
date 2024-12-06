@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { registerMicroApps, start, setDefaultMountApp, initGlobalState } from 'qiankun';
 import { onMounted, ref, type Ref } from 'vue';
-import { LocalStorageHelper, TokenHelper } from 'c3k-library';
-import { store } from '@/stores';
+import { DefaultUser, LocalStorageHelper, TokenHelper, type IMenuItem } from 'c3k-library';
+import { store, updateUserWithModules } from '@/stores';
 import { AuthenticationService } from '@/services/authentication-service';
 
 // Initialize authentication service
 const repo = new AuthenticationService();
 
 // Initialize global state with user data from the token
-let initState = { user: TokenHelper.parseUserToken(TokenHelper.getAccessToken()) };
+let initState = {
+    user: DefaultUser,
+    userModules: [],
+    sideBarMneu: [] as IMenuItem[],
+    toggleSidebar: false as boolean
+};
 
 // Create actions for global state communication
 const actions = initGlobalState(store);
@@ -17,11 +22,14 @@ const actions = initGlobalState(store);
 // Listen for global state changes and update local store
 actions.onGlobalStateChange((state: any) => {
     initState = state;
-    store.user = initState.user;
+    // store.user = initState.user;
+    store.toggleSidebar = initState.toggleSidebar;
 }, true);
 
 // Function to get the current global state
 const getGlobalState = () => initState;
+
+updateUserWithModules();
 
 // MicroApps management with reactive ref
 const microApps: Ref<Array<any>> = ref([]);
@@ -43,6 +51,11 @@ onMounted(() => {
                     routerBase: setMicroApp(element.Abbreviation), // Base route for the micro app
                     getGlobalState, // Function to share global state
                 },
+                timeout: {
+                    bootstrap: 8000,
+                    mount: 8000,
+                    unmount: 8000,
+                }
             });
         });
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IMenuItem } from 'c3k-library';
+import type { IMenuItem } from '@/index';
 
 interface Props {
     menuItem: IMenuItem;
@@ -7,9 +7,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const toggleMenu = (menu: IMenuItem) => {
-    console.log(`Before Update: ${JSON.stringify(menu)}`);
     menu.open = !menu.open;
-    console.log(`After Update: ${JSON.stringify(menu)}`);
 };
 
 </script>
@@ -17,7 +15,7 @@ const toggleMenu = (menu: IMenuItem) => {
 <template>
     <transition name="slide-down">
         <li v-if="menuItem.children">
-            <div @click.prevent="toggleMenu(menuItem)"
+            <div @click.prevent="toggleMenu(props.menuItem)"
                 class="relative group flex items-center justify-between px-3 py-2 cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
                 <span class="flex items-center space-x-2 relative z-10">
                     <span :class="`${menuItem.icon} h-5 w-5 text-violet-600`"></span>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import Sidebar from './AppSidebar.vue';
 import Moduledropdown from './ModuleMenu.vue';
 import Notifications from './UserNotification.vue';
 import ProfileDropdown from './UserProfile.vue';
+import { store } from '@/stores';
 
-const sidebar = ref(false);
 const dropdownStates = ref({
   sidebar: false,
   module: false,
@@ -19,7 +18,7 @@ defineProps<{ selectedCardTitle: string }>();
 // General toggle function for dropdowns
 function toggleDropdown(key: keyof typeof dropdownStates.value) {
   if (key === 'sidebar') {
-    sidebar.value = !sidebar.value;
+    store.toggleSidebar = !store.toggleSidebar;
     return;
   }
 
@@ -70,7 +69,6 @@ useClickOutside(closeAllDropdowns);
   <div
     class="fixed top-0 left-0 w-full px-2 sm:px-6 lg:px-8 flex items-center bg-gradient-to-r from-indigo-500 to-violet-600 justify-between h-11 z-40">
     <div class="flex items-center space-x-2 sm:space-x-4">
-      <Sidebar @toggleSidebar="() => toggleDropdown('sidebar')" :showSidebarDropdown="sidebar" />
       <button @click="() => toggleDropdown('sidebar')" class="p-1 text-white hover:text-gray-300 focus:outline-none">
         <span class="icon-[fluent--navigation-unread-20-filled] h-6 w-6"></span>
       </button>
@@ -78,7 +76,7 @@ useClickOutside(closeAllDropdowns);
         class="dropdown" @toggleModuleDropdown="() => toggleDropdown('module')" />
       <nav class="hidden md:flex space-x-6">
         <RouterLink to="/dashboard" class="text-white text-sm hover:text-gray-200 transition duration-200">
-          Home Dashboard
+          Home Dashboard {{ store.toggleSidebar }}
         </RouterLink>
       </nav>
     </div>

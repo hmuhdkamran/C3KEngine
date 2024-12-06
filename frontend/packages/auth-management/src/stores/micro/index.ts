@@ -4,5 +4,6 @@ import { reactive } from "vue";
 export const store = reactive({
     user: DefaultUser,
     userModules: [],
-    sideBarMneu: [] as IMenuItem[],
+    sideBarMenu: [] as IMenuItem[],
+    toggleSidebar: false as boolean
 });

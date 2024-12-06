@@ -11,7 +11,6 @@ import {
   type IAccessToken,
   type IUser,
   useSystemStore,
-  LocalStorageHelper,
 } from "c3k-library";
 
 import type { ExtractSubjectType, MongoQuery, SubjectRawRule } from "@casl/ability";
@@ -72,7 +71,6 @@ export class AuthenticationService extends StoreService {
         const user: IUser = Object.assign({}, DefaultUser);
 
         TokenHelper.removeAccessToken();
-        LocalStorageHelper.del("microsoft-auth");
 
         return true;
       } else {

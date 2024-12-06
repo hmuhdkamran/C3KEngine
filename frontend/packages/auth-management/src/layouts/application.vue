@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { Filter, PubSub, useApplicationEventStore } from 'c3k-library';
+import { Filter, useApplicationEventStore, AppSidebar } from 'c3k-library';
 import { computed, ref } from 'vue';
 
 const selectedCardTitle = ref('');
 const pageHeading = computed(() => `Manage ${selectedCardTitle.value} Users`);
 
-const store = useApplicationEventStore();
+const eventStore = useApplicationEventStore();
 
 const openAddRecord = () => {
-    store.setDrawerEvent({Open: true, Title: 'Add Record', OperationType: 'add'});
+    eventStore.setDrawerEvent({ Open: true, Title: 'Add Record', OperationType: 'add' });
 };
-const exportData = () => {
-};
+const exportData = () => { };
 
-const refreshData = () => {
-};
+const refreshData = () => { };
 </script>
 
 <template>
-    <div>
+    <div>        
         <div
             class="border-b border-gray-300 mt-12 py-2 px-4 flex flex-col md:flex-row justify-between shadow-md w-full space-y-4 md:space-y-0 md:space-x-8">
             <div class="w-full md:w-1/2 flex flex-col justify-center space-y-6">
