@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useTableStore, Filter, LocalStorageHelper } from 'c3k-library';
-import Card from '@/layouts/components/card.vue';
+import { useTableStore, Filter, LocalStorageHelper, Card } from 'c3k-library';
 import { store } from '@/stores';
 import type { UserProduct } from '@/models/user-products';
 
@@ -65,7 +64,7 @@ function goToMain() {
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
                     <Card v-for="(card, index) in store.userModules" :key="index" :title="card.FullName"
                         :description="card.Description" :status="'Active'" :buttonText="'Explore...'"
-                        :iconClass="card.Icon" @click="handleCardClick(card)">
+                        :iconClass="card.Icon" @click="handleCardClick(card)" :showHeader="true" :showFooter="false">
                     </Card>
                 </div>
             </div>
