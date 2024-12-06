@@ -2,6 +2,7 @@
 import type { UserProduct } from '@/models/user-products';
 import { store } from '@/stores';
 import { Icon } from '@iconify/vue';
+import { LocalStorageHelper } from 'c3k-library';
 import { ref, computed, defineProps, defineEmits, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -34,7 +35,7 @@ function toggleModuleDropdown() {
 }
 
 function handleCardClick(card: UserProduct) {
-    localStorage.setItem("application", `c3k-${card.Abbreviation.replace('/', '-')}`)
+    LocalStorageHelper.set("application", `c3k-${card.Abbreviation.replace('/', '-')}`)
     router.replace(`/c3k-${card.Abbreviation.replace('/', '-')}`);
 }
 

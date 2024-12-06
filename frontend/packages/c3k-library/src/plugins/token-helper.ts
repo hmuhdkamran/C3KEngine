@@ -1,5 +1,5 @@
 import { jwtDecode } from 'jwt-decode'
-import { pick } from './helper'
+import { LocalStorageHelper, pick } from './helper'
 import type { IJwtToken, IUser } from './models'
 import { DefaultUser, GlobalConfig } from './models'
 
@@ -14,27 +14,27 @@ const mapKeys = (obj: any, mapper: any) =>
 
 export class TokenHelper {
   public static getAccessToken(): string | null {
-    return localStorage.getItem(GlobalConfig.auth.accessTokenKey)
+    return LocalStorageHelper.get<string>(GlobalConfig.auth.accessTokenKey)
   }
 
   public static setAccessToken(token: string): void {
-    return localStorage.setItem(GlobalConfig.auth.accessTokenKey, token)
+    return LocalStorageHelper.set(GlobalConfig.auth.accessTokenKey, token)
   }
 
   public static removeAccessToken(): void {
-    return localStorage.removeItem(GlobalConfig.auth.accessTokenKey)
+    return LocalStorageHelper.del(GlobalConfig.auth.accessTokenKey)
   }
 
   public static setAbilities(ability: string): void {
-    return localStorage.setItem(GlobalConfig.auth.userAbility, ability)
+    return LocalStorageHelper.set(GlobalConfig.auth.userAbility, ability)
   }
 
   public static getAbilities(): string {
-    return localStorage.getItem(GlobalConfig.auth.userAbility) || '[]'
+    return LocalStorageHelper.get<string>(GlobalConfig.auth.userAbility) || '[]'
   }
 
   public static removeAbilities(): void {
-    return localStorage.removeItem(GlobalConfig.auth.userAbility)
+    return LocalStorageHelper.del(GlobalConfig.auth.userAbility)
   }
 
   public static parseUserToken(token: string | null): IUser {
@@ -70,10 +70,10 @@ export class TokenHelper {
   }
 
   public static getBearerToken() {
-    const token = localStorage.getItem(GlobalConfig.auth.accessTokenKey)
+    const token = LocalStorageHelper.get<string>(GlobalConfig.auth.accessTokenKey)
 
     return {
-      Authorization: token ? `Bearer ${localStorage.getItem(GlobalConfig.auth.accessTokenKey)}` : null,
+      Authorization: token ? `Bearer ${LocalStorageHelper.get<string>(GlobalConfig.auth.accessTokenKey)}` : null,
     }
   }
 

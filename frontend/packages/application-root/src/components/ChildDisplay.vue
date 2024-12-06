@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { registerMicroApps, start, setDefaultMountApp, initGlobalState } from 'qiankun';
 import { onMounted, ref, type Ref } from 'vue';
-import { TokenHelper } from 'c3k-library';
+import { LocalStorageHelper, TokenHelper } from 'c3k-library';
 import { store } from '@/stores';
 import { AuthenticationService } from '@/services/authentication-service';
 
@@ -59,7 +59,7 @@ onMounted(() => {
     });
 
     // Set the default application to mount
-    const application = localStorage.getItem("application");
+    const application = LocalStorageHelper.get<string>("application");
     if (application) {
         setDefaultMountApp(`/${application}`);
     }

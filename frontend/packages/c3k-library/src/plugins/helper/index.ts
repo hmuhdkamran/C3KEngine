@@ -5,6 +5,9 @@ export { pick } from './pick'
 export * from './text'
 
 export * from './files'
+export * from './local-storage';
+
+export * from './token-helper';
 
 export const shouldAllow = (find: string, operation: string) => {
   const store = useSystemStore()

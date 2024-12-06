@@ -1,5 +1,5 @@
 import { Ability } from '@casl/ability'
-import { TokenHelper } from '../token-helper'
+import { TokenHelper } from '../helper'
 import type { UserAbility } from './AppAbility'
 
 export const initialAbility: UserAbility[] = [
