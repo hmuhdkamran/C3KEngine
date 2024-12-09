@@ -13,7 +13,7 @@ import { Card } from "c3k-library";
         </div>
 
         <!-- Main Content Section -->
-        <Card :showHeader="false" :showFooter="false" containerClass="container mx-auto">
+        <div class="container mx-auto">
             <div class="flex flex-wrap justify-center bg-white shadow-xl rounded-lg -mt-64 py-16 px-12 relative z-10">
                 <div class="w-full text-center lg:w-8/12">
                     <!-- Decorative Icon or Emoji -->
@@ -49,6 +49,6 @@ import { Card } from "c3k-library";
                     <div class="text-center mt-16"></div>
                 </div>
             </div>
-        </Card>
+        </div>
     </section>
 </template>

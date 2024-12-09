@@ -3,7 +3,7 @@ import { config } from 'c3k-library';
 </script>
 
 <template>
-    <div class="container mx-auto my-20 px-6">
+    <div class="bg-gray-50 mx-auto py-20 px-6">
         <section class="text-gray-800">
             <div class="text-center mb-16">
                 <p class="text-violet-500 uppercase font-bold text-sm mb-4">Features</p>

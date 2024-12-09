@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notification, UseAxios, useNotification, AppSidebar, type IUser, type IMenuItem } from 'c3k-library';
+import { Notification, UseAxios, useNotification, type IUser, type IMenuItem } from 'c3k-library';
 import { computed } from 'vue';
 import { store } from '@/stores/micro';
 
@@ -40,7 +40,7 @@ const notificationsWithOffsets = computed(() =>
 
 <template>
   <div class="bg-gray-50 font-inter tracking-tight text-gray-900 antialiased">
-    <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" @toggle-sidebar="handleClick()" />
+    <!-- <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" @toggle-sidebar="handleClick()" /> -->
     <!-- <AuthHeader :showSidebarDropdown="true" class="z-100" /> -->
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"

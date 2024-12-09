@@ -35,11 +35,10 @@ import { Card, config } from "c3k-library";
                     </div>
 
                     <!-- Features Section -->
-                    <div class="w-full lg:w-1/2 flex flex-wrap -mx-4">
+                    <div class="w-full lg:w-1/2 flex flex-wrap -mx-4 py-3">
                         <div class="mb-8 lg:mb-0 w-full md:w-1/2 px-4">
                             <!-- Feature Card 1 -->
-                            <Card :showHeader="false" :showFooter="false"
-                                containerClass="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white">
+                            <div class="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
                                     <span class="icon-[tabler--photo] w-10 h-10 text-violet-600"></span>
                                 </span>
@@ -48,11 +47,10 @@ import { Card, config } from "c3k-library";
                                     Monitor stock levels, track orders, and manage your supply chain efficiently
                                     with our advanced inventory tools.
                                 </p>
-                            </Card>
+                            </div>
 
                             <!-- Feature Card 2 -->
-                            <Card :showHeader="false" :showFooter="false"
-                                containerClass="py-6 pl-6 pr-4 shadow rounded bg-white">
+                            <div class="py-6 pl-6 pr-4 shadow rounded bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
                                     <span class="icon-[fluent--toolbox-32-filled] w-10 h-10 text-violet-600"></span>
                                 </span>
@@ -61,13 +59,12 @@ import { Card, config } from "c3k-library";
                                     Streamline accounting, billing, and financial reporting with automated tools to
                                     improve accuracy and compliance.
                                 </p>
-                            </Card>
+                            </div>
                         </div>
 
                         <div class="w-full md:w-1/2 lg:mt-20 px-4">
                             <!-- Feature Card 3 -->
-                            <Card :showHeader="false" :showFooter="false"
-                                containerClass="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                            <div class="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded bg-violet-100">
                                     <span class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
                                 </span>
@@ -76,11 +73,10 @@ import { Card, config } from "c3k-library";
                                     Manage customer relationships with built-in CRM tools, providing a holistic view
                                     of customer data and interactions.
                                 </p>
-                            </Card>
+                            </div>
 
                             <!-- Feature Card 4 -->
-                            <Card :showHeader="false" :showFooter="false"
-                                containerClass="py-6 pl-6 pr-4 shadow rounded-lg bg-white">
+                            <div class="py-6 pl-6 pr-4 shadow rounded-lg bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded bg-violet-100">
                                     <span class="icon-[mdi--tick-decagram] w-10 h-10 text-violet-600"></span>
                                 </span>
@@ -89,7 +85,7 @@ import { Card, config } from "c3k-library";
                                     Ensure your business meets industry standards and regulations with automated
                                     compliance monitoring and risk assessments.
                                 </p>
-                            </Card>
+                            </div>
                         </div>
                     </div>
                 </div>

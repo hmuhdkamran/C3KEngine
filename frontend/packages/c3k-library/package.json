@@ -2,18 +2,19 @@
   "name": "c3k-library",
   "version": "1.0.1",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/c3k-library.umd.cjs",
   "module": "./dist/c3k-library.es.js",
-  "exports": {
+ "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/c3k-library.es.js",
-      "require": "./dist/c3k-library.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/c3k-library.umd.cjs"
     },
     "./style.css": "./dist/style.css"
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build && vue-tsc --emitDeclarationOnly",
@@ -21,10 +22,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "dayjs": "^1.11.13",
-    "jwt-decode":"^4.0.0",
-    "vue-i18n": "^10.0.4",
-    "vue": "^3.5.8"
+    "@casl/ability": "^6.7.1",
+    "@casl/vue": "^2.2.2",
+    "@iconify/vue": "^4.1.2",
+    "axios": "^1.7.7",
+    "build": "^0.1.4",
+    "dayjs": "^1.11.13",    
+    "jwt-decode": "^4.0.0",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.8",
+    "vue-router": "^4.4.5",
+    "vue-i18n": "^10.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.6.1",

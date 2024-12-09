@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Filter, useApplicationEventStore, AppSidebar } from 'c3k-library';
+import { Filter, useApplicationEventStore } from 'c3k-library';
 import { computed, ref } from 'vue';
 
 const selectedCardTitle = ref('');

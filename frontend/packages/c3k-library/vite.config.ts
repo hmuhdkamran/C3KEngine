@@ -21,6 +21,7 @@ export default defineConfig({
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, "src/index.ts"),
       name: "C3KLibrary",
+      formats: ['es', 'umd'],
       // the proper extensions will be added
       fileName:(format) => `c3k-library.${format}.js`,
     },
@@ -31,6 +32,7 @@ export default defineConfig({
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
+        assetFileNames: 'style.css',
         globals: {
           vue: "Vue",
         },
