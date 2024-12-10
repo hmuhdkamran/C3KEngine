@@ -6,29 +6,41 @@ import UserGrowthChart from '@/components/UserGrowthChart.vue';
 import RolesDistributionChart from '@/components/RolesDistributionChart.vue';
 import RecentActivities from '@/components/RecentActivities.vue';
 import UserTable from '@/components/UserTable.vue';
+import type { IUser } from '@/models';
+import { store } from '@/stores/micro';
 
-const users = ref([]);
-const recentActivities = ref([]);
+const users = ref<IUser[]>([]);
+const recentActivities = ref<{ activity: string, timestamp: string }[]>([]);
+const userClaims = ref<any[]>([]);
+const repo = new UsersService();
 
-const loadUsers = async () => {
+const loadUserClaims = async (product: string) => {
     try {
-        const response = await new UsersService().GetAll();
-        if (response?.data) {
-            users.value = response.data;
-            console.log("Users loaded:", users.value);
-            recentActivities.value = response.data.map(user => ({
-                activity: `${user.Username} ${user.Status ? 'activated' : 'deactivated'} their account`,
-                timestamp: new Date().toLocaleString(),
-            }));
+        const claims = await repo.userProductClaims(product);
+        if (claims && claims.length > 0) {
+            userClaims.value = claims;
+            store.userClaims = claims;
         }
     } catch (error) {
-        console.error("Failed to load users:", error);
+        console.error("Failed to load user claims:", error);
+    }
+};
+
+const loadUsers = async () => {
+    const response = await repo.GetAll();
+    if (response?.data) {
+        users.value = response.data;
+        console.log("Users loaded:", users.value);
+        recentActivities.value = response.data.map(user => ({
+            activity: `${user.Username} ${user.Status ? 'activated' : 'deactivated'} their account`,
+            timestamp: new Date().toLocaleString(),
+        }));
     }
 };
 
 const totalUsers = computed(() => users.value.length);
-const activeUsers = computed(() => users.value.filter(user => user.Status).length);
-const deactiveUsers = computed(() => users.value.filter(user => !user.Status).length);
+const activeUsers = computed(() => users.value.filter(user => user.StatusId).length);
+const deactiveUsers = computed(() => users.value.filter(user => !user.StatusId).length);
 const roles = computed(() => {
     const roleCount: { [key: string]: number } = { Admin: 3, User: 5, Moderator: 2, Guest: 1 };;
     users.value.forEach(user => {
@@ -38,8 +50,12 @@ const roles = computed(() => {
 });
 const newUsersThisWeek = 10;
 
-onMounted(() => loadUsers());
+onMounted(() => {
+    loadUserClaims("Authentication Management");
+    loadUsers();
+});
 </script>
+
 <template>
     <div class="p-8 space-y-6 bg-gray-100 min-h-screen">
         <header class="flex items-center justify-between pb-4 border-b border-gray-300">

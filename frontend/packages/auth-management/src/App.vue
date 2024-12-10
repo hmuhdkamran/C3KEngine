@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notification, UseAxios, useNotification, type IUser, type IMenuItem } from 'c3k-library';
+import { Notification, UseAxios, useNotification, type IUser, type IMenuItem, AppSidebar } from 'c3k-library';
 import { computed } from 'vue';
 import { store } from '@/stores/micro';
 
@@ -11,6 +11,9 @@ const props = defineProps<{
     toggleSidebar: boolean
   }) => void;
 }>();
+
+const userClaims = computed(() => store.userClaims || []);
+
 const handleClick = () => {
   if (props.setGlobalState) {
     store.toggleSidebar = !store.toggleSidebar
@@ -40,8 +43,7 @@ const notificationsWithOffsets = computed(() =>
 
 <template>
   <div class="bg-gray-50 font-inter tracking-tight text-gray-900 antialiased">
-    <!-- <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" @toggle-sidebar="handleClick()" /> -->
-    <!-- <AuthHeader :showSidebarDropdown="true" class="z-100" /> -->
+    <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" :userClaims="userClaims"  @toggle-sidebar="handleClick()" />
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
       :positionOffset="notification.positionOffset" :duration="9000" />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IMenuItem } from '@/index';
+import { Icon } from '@iconify/vue';
 
 interface Props {
     menuItem: IMenuItem;
@@ -18,12 +19,10 @@ const toggleMenu = (menu: IMenuItem) => {
             <div @click.prevent="toggleMenu(props.menuItem)"
                 class="relative group flex items-center justify-between px-3 py-2 cursor-pointer bg-gray-50 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200 ease-in-out">
                 <span class="flex items-center space-x-2 relative z-10">
-                    <span :class="`${menuItem.icon} h-5 w-5 text-violet-600`"></span>
-                    <span class="text-sm font-semibold text-gray-700">{{ menuItem.title }} {{ menuItem.open }}</span>
+                    <Icon :icon="menuItem.icon" class="h-5 w-5 text-violet-600" />
+                    <span class="text-sm font-semibold text-gray-700">{{ menuItem.title }}</span>
                 </span>
-                <span :class="menuItem.open
-                    ? 'icon-[mdi--chevron-up] text-gray-600'
-                    : 'icon-[mdi--chevron-down] text-gray-500'"></span>
+                <Icon :icon="menuItem.open ? 'mdi:chevron-up' : 'mdi:chevron-down'" class="h-4 w-4 text-gray-600" />
                 <div class="absolute top-0 left-0 bottom-0 bg-transparent overflow-hidden z-0 w-full">
                     <div
                         class="absolute top-0 left-0 h-full w-0.5 border-r-2 border-violet-600 transform group-hover:w-full transition-all duration-500 ease-in-out">
@@ -31,7 +30,7 @@ const toggleMenu = (menu: IMenuItem) => {
                 </div>
             </div>
             <transition name="slide-down">
-                <ul v-show="menuItem.open" class="mt-2 pl-4 space-y-1">
+                <ul v-show="menuItem.open" class="mt-2 pl-6 space-y-2">
                     <li v-for="(child, index) in menuItem.children || []" :key="index">
                         <MenuItem :menuItem="child" />
                     </li>

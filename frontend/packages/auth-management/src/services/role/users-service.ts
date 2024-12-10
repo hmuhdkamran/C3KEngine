@@ -9,8 +9,8 @@
  */
 
 // Importing necessary dependencies and modules.
-import type { IUser } from '@/models';
-import { GlobalConfig, StoreService } from 'c3k-library';
+import type { IUser, UserClaim } from '@/models';
+import { GlobalConfig, StoreService, TokenHelper } from 'c3k-library';
 
 // Setting the base URL for User API calls.
 const BASE_URL = `${GlobalConfig.uri.services}auth/role/users`;
@@ -68,5 +68,18 @@ export class UsersService extends StoreService {
     return this.delete(`${BASE_URL}/${id}`, true)
       .then((value: any) => this.processPayload(value))
       .catch((error: any) => console.error(error));
+  }
+
+  public async userProductClaims(product: string): Promise<UserClaim[] | undefined> {
+    const token = TokenHelper.getAccessToken();
+    if (token) {
+      const user = TokenHelper.parseUserToken(token);
+
+      if (user.username) {
+        const response = await this.post<UserClaim[]>(
+          `${GlobalConfig.uri.auth}/user_product_claims`, { username: user.username, product }, true);
+        return this.processPayload(response);
+      }
+    }
   }
 }
