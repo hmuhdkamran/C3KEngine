@@ -81,7 +81,12 @@ export class TextHelper {
    * @param text The input string.
    * @returns A hex color string.
    */
-  public static generateColorFromText(text: string): string {
+  public static generateColorFromText(text: string | null | undefined): string {
+    if (!text || text.trim().length === 0) {
+      console.warn("Input text is empty or invalid.");
+      return "#000000";
+    }
+    
     let hash = 0;
 
     // Generate a simple hash from the text

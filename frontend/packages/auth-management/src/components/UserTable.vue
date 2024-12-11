@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { IUser } from '@/models';
 import { defineProps } from 'vue';
 
-defineProps<{ users: { UserId: number; Username: string; role: string; Status: boolean }[] }>();
+const props = defineProps<{ users: IUser[] }>();
 </script>
 
 <template>
@@ -17,10 +18,10 @@ defineProps<{ users: { UserId: number; Username: string; role: string; Status: b
             </thead>
             <tbody>
                 <tr v-for="user in users" :key="user.UserId">
+                    <td class="px-4 py-2 text-gray-800">{{ user.DisplayName }}</td>
                     <td class="px-4 py-2 text-gray-800">{{ user.Username }}</td>
-                    <td class="px-4 py-2 text-gray-800">{{ user.role }}</td>
-                    <td :class="{ 'text-green-600': user.Status, 'text-red-600': !user.Status }" class="px-4 py-2">
-                        {{ user.Status ? 'Active' : 'Inactive' }}
+                    <td :class="{ 'text-green-600': user.StatusId, 'text-red-600': !user.StatusId }" class="px-4 py-2">
+                        {{ user.StatusId ? 'Active' : 'Inactive' }}
                     </td>
                 </tr>
             </tbody>
