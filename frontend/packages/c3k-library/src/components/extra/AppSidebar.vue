@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
-import { Drawer, VNodeRenderer, config, type IMenuItem } from '@/.';
+import { Drawer, VNodeRenderer, config, type IMenuItem, menuItems } from '@/.';
 import MenuItem from './MenuItem.vue';
 import { Icon } from '@iconify/vue';
 
@@ -14,31 +14,7 @@ const emit = defineEmits<{
   (event: 'toggle-sidebar'): void;
 }>();
 
-const menuItems = ref<IMenuItem[]>([
-  {
-    name: 'Home',
-    title: 'Home Dashboard',
-    icon: 'mdi:home',
-    route: '/dashboard',
-    open: false,
-    children: [
-      { name: 'Home', title: 'Dashboard', icon: '', route: '/dashboard', open: false },
-    ],
-
-  },
-  {
-    name: 'Role',
-    title: 'User Roles',
-    icon: 'mdi:users',
-    route: '/user-role',
-    open: false,
-    children: [
-      { name: 'User', title: 'User', icon: '', route: '/user', open: false },
-      { name: 'Role', title: 'Role', icon: '', route: '/user-role', open: false },
-      { name: 'Routes', title: 'Routes', icon: '', route: '/user-routes', open: false },
-    ],
-  },
-]);
+const items = ref<IMenuItem[]>(menuItems);
 
 // const filteredMenuItems = computed(() => {
 //   return props.menuItems.filter(item => item.name.startsWith('A') &&
@@ -70,11 +46,10 @@ const menuItems = ref<IMenuItem[]>([
       <div class="flex flex-col h-full">
         <div class="overflow-y-auto flex-grow px-4 py-3">
           <ul class="space-y-2">
-            <MenuItem v-for="(item, index) in menuItems" :key="index" :menuItem="item" />
+            <MenuItem v-for="(item, index) in items" :key="index" :menuItem="item" />
             <!-- <li v-for="(claim, index) in props.userClaims" :key="index" class="text-gray-700 px-4 py-2">
               {{ claim.route }} - {{ claim.allow }}
             </li> -->
-            
           </ul>
         </div>
         <div class="px-4 py-3 bg-white border-t border-gray-200 shadow-sm mt-auto space-y-2">
