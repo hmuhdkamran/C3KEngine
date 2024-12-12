@@ -21,6 +21,7 @@ export async function initializeMicroApps() {
             routerBase: setMicroApp(product.Abbreviation),
             getGlobalState: () => ({
                 user: TokenHelper.parseUserToken(TokenHelper.getAccessToken()),
+                toggleSidebar: false
             }),
         },
     }));

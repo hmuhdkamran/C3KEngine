@@ -4,6 +4,7 @@ import Moduledropdown from './ModuleMenu.vue';
 import Notifications from './UserNotification.vue';
 import ProfileDropdown from './UserProfile.vue';
 import { store } from '@/stores';
+import { PubSub } from 'c3k-library';
 
 const dropdownStates = ref({
   sidebar: false,
@@ -19,6 +20,8 @@ defineProps<{ selectedCardTitle: string }>();
 function toggleDropdown(key: keyof typeof dropdownStates.value) {
   if (key === 'sidebar') {
     store.toggleSidebar = !store.toggleSidebar;
+    const event = new CustomEvent('custom-event', { detail: store.toggleSidebar });
+    window.dispatchEvent(event);
     return;
   }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Notification, UseAxios, useNotification, type IUser, type IMenuItem, AppSidebar } from 'c3k-library';
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { store } from '@/stores/micro';
 
 const props = defineProps<{
@@ -28,8 +28,6 @@ const handleClick = () => {
 
 UseAxios();
 
-console.log(JSON.stringify(store));
-
 const { notifications } = useNotification();
 
 const notificationsWithOffsets = computed(() =>
@@ -39,15 +37,30 @@ const notificationsWithOffsets = computed(() =>
   }))
 );
 
+const handleCustomEvent = (event: Event) => {
+  const customEvent = event as CustomEvent;
+  store.toggleSidebar = customEvent.detail as boolean;
+};
+
+
+onMounted(() => {
+  window.addEventListener('custom-event', handleCustomEvent);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('custom-event', handleCustomEvent);
+});
+
 </script>
 
 <template>
   <div class="bg-gray-50 font-inter tracking-tight text-gray-900 antialiased">
-    <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" :userClaims="userClaims"  @toggle-sidebar="handleClick()" />
+    <AppSidebar :menu-items="store.sideBarMenu" :toggleSidebar="store.toggleSidebar" :userClaims="userClaims"
+      @toggle-sidebar="handleClick()" />
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
       :positionOffset="notification.positionOffset" :duration="9000" />
-      <button @click="store.toggleSidebar = !store.toggleSidebar">{{ store.toggleSidebar }}</button>      
+    <button @click="store.toggleSidebar = !store.toggleSidebar">{{ store.toggleSidebar }}</button>
     <router-view />
   </div>
 </template>

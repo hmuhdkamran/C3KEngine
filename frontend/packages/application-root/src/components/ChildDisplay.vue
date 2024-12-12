@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { registerMicroApps, start, setDefaultMountApp, initGlobalState } from 'qiankun';
+import { registerMicroApps, start, setDefaultMountApp, initGlobalState, type MicroAppStateActions } from 'qiankun';
 import { onMounted, ref, type Ref } from 'vue';
-import { DefaultUser, LocalStorageHelper, TokenHelper, type IMenuItem } from 'c3k-library';
+import { DefaultUser, LocalStorageHelper, type IMenuItem } from 'c3k-library';
 import { store, updateUserWithModules } from '@/stores';
 import { AuthenticationService } from '@/services/authentication-service';
 
@@ -9,25 +9,27 @@ import { AuthenticationService } from '@/services/authentication-service';
 const repo = new AuthenticationService();
 
 // Initialize global state with user data from the token
-let initState = {
+let globalState = {
     user: DefaultUser,
     userModules: [],
-    sideBarMneu: [] as IMenuItem[],
-    toggleSidebar: false as boolean
+    sideBarMenu: [] as IMenuItem[],
+    toggleSidebar: false as boolean,
+    action: {} as MicroAppStateActions
 };
 
 // Create actions for global state communication
 const actions = initGlobalState(store);
 
+globalState.action = actions;
+
 // Listen for global state changes and update local store
 actions.onGlobalStateChange((state: any) => {
-    initState = state;
-    // store.user = initState.user;
-    store.toggleSidebar = initState.toggleSidebar;
+    Object.assign(globalState, state);
+    store.toggleSidebar = globalState.toggleSidebar;
 }, true);
 
 // Function to get the current global state
-const getGlobalState = () => initState;
+const getGlobalState = () => globalState;
 
 updateUserWithModules();
 

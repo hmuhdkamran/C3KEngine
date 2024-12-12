@@ -1,6 +1,6 @@
 import { createApp, type App } from 'vue'
 import { createPinia } from 'pinia'
-import {routeHash} from "@/router";
+import { routeHash } from "@/router";
 
 import './assets/styles/main.css';
 
@@ -26,7 +26,8 @@ const render = (props: any = {}): void => {
     const store = useSystemStore();
 
     if (getGlobalState) {
-        store.updateUser(getGlobalState().user);        
+        store.updateUser(getGlobalState().user);
+        store.updateToggleSidebar(getGlobalState().toggleSidebar);
     }
 
     instance.mount(container ? container.querySelector('#app') : '#app');
