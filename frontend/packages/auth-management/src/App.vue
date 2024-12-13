@@ -60,7 +60,6 @@ onUnmounted(() => {
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
       :positionOffset="notification.positionOffset" :duration="9000" />
-    <button @click="store.toggleSidebar = !store.toggleSidebar">{{ store.toggleSidebar }}</button>
     <router-view />
   </div>
 </template>

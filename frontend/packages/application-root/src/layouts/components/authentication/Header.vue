@@ -79,7 +79,7 @@ useClickOutside(closeAllDropdowns);
         class="dropdown" @toggleModuleDropdown="() => toggleDropdown('module')" />
       <nav class="hidden md:flex space-x-6">
         <RouterLink to="/dashboard" class="text-white text-sm hover:text-gray-200 transition duration-200">
-          Home Dashboard {{ store.toggleSidebar }}
+          Home Dashboard
         </RouterLink>
       </nav>
     </div>
