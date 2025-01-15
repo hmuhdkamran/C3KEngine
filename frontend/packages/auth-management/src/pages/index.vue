@@ -28,11 +28,10 @@ const loadUserClaims = async (product: string) => {
 
 const loadUsers = async () => {
     const response = await repo.GetAll();
-    if (response?.data) {
-        users.value = response.data;
-        console.log("Users loaded:", users.value);
-        recentActivities.value = response.data.map(user => ({
-            activity: `${user.Username} ${user.Status ? 'activated' : 'deactivated'} their account`,
+    if (response) {
+        users.value = response as IUser[];
+        recentActivities.value = users.value.map(user => ({
+            activity: `${user.Username} ${user.StatusId ? 'activated' : 'deactivated'} their account`,
             timestamp: new Date().toLocaleString(),
         }));
     }
