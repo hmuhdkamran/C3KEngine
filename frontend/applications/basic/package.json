@@ -1,0 +1,48 @@
+{
+  "name": "basic",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "c3-library": "file:../../libraries/library",
+    "pinia": "^2.3.0",
+    "single-spa-css": "^2.0.0",
+    "single-spa-vue": "^3.0.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.294",
+    "@iconify/tailwind": "^1.2.0",
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.10.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/eslint-config-prettier": "^10.1.0",
+    "@vue/eslint-config-typescript": "^14.2.0",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.18.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "npm-run-all2": "^7.0.2",
+    "postcss": "^8.5.0",
+    "prettier": "^3.4.2",
+    "sass-embedded": "^1.83.4",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
+    "vite-plugin-vue-devtools": "^7.7.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
