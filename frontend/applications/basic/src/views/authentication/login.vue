@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/services/authentication-service";
 import { useNotification } from "c3k-library";
@@ -14,6 +14,7 @@ const { addNotification } = useNotification();
 
 const email: Ref<string> = ref("");
 const password: Ref<string> = ref("");
+const remember: Ref<boolean> = ref(false);
 
 const login = () => {
     const credentials = {
@@ -25,6 +26,15 @@ const login = () => {
         .login(credentials)
         .then((response: any) => {
             if (response) {
+                if (remember.value) {
+                    localStorage.setItem("rememberMe", "true");
+                    localStorage.setItem("email", email.value);
+                    localStorage.setItem("password", password.value);
+                } else {
+                    localStorage.removeItem("rememberMe");
+                    localStorage.removeItem("email");
+                    localStorage.removeItem("password");
+                }
                 router.replace(route.query.to ? String(route.query.to) : "/dashboard");
             } else {
                 addNotification(
@@ -46,6 +56,15 @@ const login = () => {
             );
         });
 };
+
+onMounted(() => {
+    if (localStorage.getItem("rememberMe") === "true") {
+        email.value = localStorage.getItem("email") || "";
+        password.value = localStorage.getItem("password") || "";
+        remember.value = true;
+    }
+});
+
 </script>
 
 <template>
