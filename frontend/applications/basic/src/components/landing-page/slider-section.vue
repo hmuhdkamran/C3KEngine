@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { config } from "c3-library";
-import illustration from '@/assets/images/hero.png'
+import { hero } from '@/assets/images/images';
 </script>
 
 <template>
@@ -43,7 +43,7 @@ import illustration from '@/assets/images/hero.png'
             <div class="w-full lg:w-6/12 mt-10 lg:mt-0">
                 <div class="text-center lg:text-right lg:ml-auto">
                     <div class="relative inline-block z-10 pt-11 lg:pt-0">
-                        <img :src="illustration" alt="ERP Illustration" class="max-w-full lg:ml-auto" />
+                        <img :src="hero" alt="ERP Illustration" class="max-w-full lg:ml-auto" />
                     </div>
                 </div>
             </div>
