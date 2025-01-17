@@ -1,185 +1,317 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/services/authentication-service";
-import { useNotification } from 'c3-library';
-
-import logo from "@/assets/logo.svg"
+import { useNotification } from "c3k-library";
+import { Icon } from "@iconify/vue";
+import logo from "@/assets/logo.svg";
 
 const service: AuthenticationService = new AuthenticationService();
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 const { addNotification } = useNotification();
 
-const email: Ref<string> = ref('')
-const password: Ref<string> = ref('')
+const email: Ref<string> = ref("");
+const password: Ref<string> = ref("");
+const remember: Ref<boolean> = ref(false);
 
 const login = () => {
     const credentials = {
         username: email.value.toLowerCase(),
         password: password.value,
-    }
+    };
 
-    service.login(credentials)
+    service
+        .login(credentials)
         .then((response: any) => {
             if (response) {
-                router.replace(route.query.to ? String(route.query.to) : '/dashboard');
+                if (remember.value) {
+                    localStorage.setItem("rememberMe", "true");
+                    localStorage.setItem("email", email.value);
+                    localStorage.setItem("password", password.value);
+                } else {
+                    localStorage.removeItem("rememberMe");
+                    localStorage.removeItem("email");
+                    localStorage.removeItem("password");
+                }
+                router.replace(route.query.to ? String(route.query.to) : "/dashboard");
             } else {
-                addNotification('Login failed. Please try again.', 'error', 'top-right', 'Error', 3000);
+                addNotification(
+                    "Login failed. Please try again.",
+                    "error",
+                    "top-right",
+                    "Error",
+                    3000
+                );
             }
         })
         .catch((error: any) => {
-            addNotification(`An error occurred during login. ${JSON.stringify(error)}.`, 'error', 'top-right', 'Error', 3000);
+            addNotification(
+                `An error occurred during login. ${JSON.stringify(error)}.`,
+                "error",
+                "top-right",
+                "Error",
+                3000
+            );
         });
+};
 
-}
+onMounted(() => {
+    if (localStorage.getItem("rememberMe") === "true") {
+        email.value = localStorage.getItem("email") || "";
+        password.value = localStorage.getItem("password") || "";
+        remember.value = true;
+    }
+});
 
 </script>
 
 <template>
-    <div class="min-h-screen py-6 flex flex-col justify-center sm:py-12 relative h-full md:flex items-center p-10
-    overflow-hidden bg-violet-900 text-white bg-no-repeat bg-cover">
-        <div class="absolute bg-gradient-to-b from-violet-500 to-purple-300 opacity-75 inset-0 z-0"></div>
-        <ul class="circles">
-            <li v-for="n in 30" :key="n"></li>
-        </ul>
-        <div class="relative py-3 sm:max-w-xl sm:mx-auto w-full">
-            <div class="absolute inset-0 bg-gradient-to-r from-violet-900 to-purple-900 shadow-lg
-            -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-md transition transform hover:scale-105 duration-500">
+    <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
+        <div
+            class="hidden md:flex w-1/2 bg-gradient-to-r from-indigo-500 via-blue-00 to-sky-500 text-white items-center justify-center p-10 rounded-sm shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-40 animate-starry-sky"></div>
+            <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none animate-clouds">
+                <div class="cloud1 w-60 h-20 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 left-0"></div>
+                <div class="cloud2 w-80 h-24 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 right-0"></div>
+                <div class="cloud3 w-70 h-18 bg-white opacity-40 rounded-full blur-xl absolute top-10 left-20"></div>
             </div>
-                <div class="flex flex-col bg-white box shadow-lg p-1 rounded-md transition transform hover:scale-105 duration-500">
-                    <div class="flex justify-center md:justify-start md:pl-6 md:-mb-12">
-                        <a href="/" class="text-white font-bold text-xl p-2">
-                            <img :src="logo" alt="Logo" class="h-8 md:h-24">
-                        </a>
-                    </div>
-                    <div class="flex flex-col justify-center md:justify-start px-2 my-auto md:pt-0 md:px-12">
-                        <p class="text-center text-2xl text-gray-800">Welcome.</p>
-                        <div class="flex flex-col pt-3 md:pt-8">
-                            <div class="flex flex-col pt-4">
-                                <label for="email" class="text-lg text-gray-800">Email</label>
-                                <input type="email" id="email" placeholder="your@email.com" v-model="email"
-                                    class="input-bottom">
-                            </div>
+            <div class="absolute inset-0 flex justify-center items-center pointer-events-none animate-particles">
+                <div class="particle w-2 h-2 bg-white rounded-full opacity-60 absolute animate-particle1"></div>
+                <div class="particle w-3 h-3 bg-white rounded-full opacity-60 absolute animate-particle2"></div>
+                <div class="particle w-1.5 h-1.5 bg-white rounded-full opacity-60 absolute animate-particle3"></div>
+                <div class="particle w-2.5 h-2.5 bg-white rounded-full opacity-60 absolute animate-particle4"></div>
+            </div>
+            <div class="text-center space-y-8 relative z-10">
+                <h1
+                    class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-blue-200 animate-slide-in">
+                    Welcome Back!</h1>
+                <p class="text-lg opacity-90 animate-slide-in delay-100">Manage your account and enjoy seamless access
+                    to all features with ease.</p>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-white opacity-20 rounded-xl blur-lg -z-10"></div>
+                    <p class="text-sm font-light opacity-80 animate-slide-in delay-200">Get back to work with just one
+                        click. Let's make things happen!</p>
+                </div>
+            </div>
+        </div>
 
-                            <div class="flex flex-col pt-4">
-                                <label for="password" class="text-lg text-gray-800">Password</label>
-                                <input type="password" id="password" placeholder="Password" v-model="password"
-                                    class="input-bottom">
-                            </div>
-
-                            <button @click="login" class="btn-gradient mt-6">Login</button>
-                        </div>
-
-                        <div class="text-center pt-12 pb-12">
-                            <p class="text-gray-800">Don't have an account?
-                                <RouterLink to="/auth/register" class="underline font-semibold text-violet-700">
-                                    Register here.
-                                </RouterLink>
-                            </p>
-                        </div>
+        <div class="flex flex-col justify-center w-full max-w-lg mx-auto p-6">
+            <div class="text-center mb-12">
+                <img :src="logo" alt="Logo" class="h-14 mx-auto" />
+                <h2 class="text-2xl font-bold mt-4 text-gray-800">Welcome Back!</h2>
+                <p class="text-sm text-gray-500 mt-1">Login to access your dashboard.</p>
+            </div>
+            <form @submit.prevent="login" class="space-y-5 mb-6 text-gray-700">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <div class="relative mt-1">
+                        <input id="email" type="email" v-model="email" placeholder="Enter your email"
+                            class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                        <Icon icon="mdi:email-outline"
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>
                 </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <div class="relative mt-1">
+                        <input id="password" type="password" v-model="password" placeholder="Enter your password"
+                            class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+                        <Icon icon="mdi:lock-outline"
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="remember" v-model="remember"
+                            class="h-4 w-4 rounded" />
+                        <label for="remember" class="text-sm text-gray-600">Remember me</label>
+                    </div>
+                    <a href="/forgot-password" class="text-xs text-gray-500 hover:underline">Forgot your password?</a>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-2.5 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition">
+                    Login
+                </button>
+            </form>
+            <div class="flex items-center justify-center my-6">
+                <div class="h-px bg-gray-300 w-1/4"></div>
+                <p class="mx-3 text-sm text-gray-500">or continue with</p>
+                <div class="h-px bg-gray-300 w-1/4"></div>
+            </div>
+
+            <div class="flex justify-center space-x-6">
+                <a href="#google" class="hover:text-red-500">
+                    <Icon icon="devicon:google" class="w-5 h-5" />
+                </a>
+                <a href="#facebook" class="hover:text-blue-600">
+                    <Icon icon="logos:facebook" class="w-5 h-5" />
+                </a>
+                <a href="#twitter" class=" hover:text-blue-400">
+                    <Icon icon="logos:twitter" class="w-5 h-5" />
+                </a>
+            </div>
+
+            <div class="text-center mt-6 text-sm text-gray-600">
+                <p>
+                    Don’t have an account?
+                    <RouterLink to="/auth/register" class="text-blue-400 font-medium hover:underline">
+                        Sign up
+                    </RouterLink>
+                </p>
+            </div>
+
+            <div class="text-center mt-6 text-xs text-gray-500">
+                <p>
+                    By logging in, you agree to our
+                    <a href="/terms" class="text-blue-400 hover:underline">Terms</a> and
+                    <a href="/privacy" class="text-blue-400 hover:underline">Privacy Policy</a>.
+                </p>
+            </div>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
-@use "sass:map";
-
-@property --border-angle {
-    inherits: false;
-    initial-value: 0deg;
-    syntax: '<angle>';
-}
-
-$circle-sizes: (
-    1: (left: 25%, width: 80px, height: 80px, delay: 0s),
-    2: (left: 10%, width: 20px, height: 20px, delay: 2s, duration: 12s),
-    3: (left: 70%, width: 20px, height: 20px, delay: 4s),
-    4: (left: 40%, width: 60px, height: 60px, delay: 0s, duration: 18s),
-    5: (left: 65%, width: 20px, height: 20px, delay: 0s),
-    6: (left: 75%, width: 110px, height: 110px, delay: 3s),
-    7: (left: 35%, width: 150px, height: 150px, delay: 7s),
-    8: (left: 50%, width: 25px, height: 25px, delay: 15s, duration: 45s),
-    9: (left: 20%, width: 15px, height: 15px, delay: 2s, duration: 35s),
-    10: (left: 85%, width: 150px, height: 150px, delay: 0s, duration: 11s)
-);
-
-.circles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-
-    li {
-        position: absolute;
-        display: block;
-        list-style: none;
-        width: 20px;
-        height: 20px;
-        background: rgba(255, 255, 255, 0.301);
-        animation: animate 25s linear infinite;
-        bottom: -150px;
-
-        // Loop through $circle-sizes map to apply individual styles
-        @each $index, $props in $circle-sizes {
-            &:nth-child(#{$index}) {
-                left: map.get($props, left);
-                width: map.get($props, width);
-                height: map.get($props, height);
-                animation-delay: map.get($props, delay);
-
-                // Optional duration override
-                @if map.has-key($props, duration) {
-                    animation-duration: map.get($props, duration);
-                }
-            }
-        }
-    }
-}
-
-@keyframes animate {
+<style scoped>
+@keyframes starry-sky {
     0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-        border-radius: 0;
+        transform: translateX(0) translateY(0);
     }
 
     100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-        border-radius: 50%;
+        transform: translateX(-100%) translateY(-100%);
     }
 }
 
-.box {
-  display: flex;
-  padding: 12px;
-  border: 3px solid #0000;
-  background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(
-        var(--angle),
-        #ffffff,
-        #fbff00,
-        #07f362,
-        #ff00f2
-      ) border-box;
-  animation: 6s rotate linear infinite;
+.animate-starry-sky {
+    animation: starry-sky 30s linear infinite;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy533.org/3YXgDcdNG+93L...)');
+    background-size: cover;
+    background-position: center;
 }
 
-@keyframes rotate {
-  to {
-    --angle: 360deg;
-  }
+@keyframes clouds {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
 }
 
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
+.animate-clouds {
+    animation: clouds 40s linear infinite;
 }
 
+.cloud1 {
+    animation-duration: 60s;
+}
+
+.cloud2 {
+    animation-duration: 90s;
+}
+
+.cloud3 {
+    animation-duration: 120s;
+}
+
+@keyframes particle1 {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateX(300px) translateY(200px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(600px) translateY(0);
+        opacity: 0.5;
+    }
+}
+
+@keyframes particle2 {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateX(-200px) translateY(300px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(200px) translateY(400px);
+        opacity: 0.5;
+    }
+}
+
+@keyframes particle3 {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateX(150px) translateY(-250px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-150px) translateY(200px);
+        opacity: 0.5;
+    }
+}
+
+@keyframes particle4 {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateX(-400px) translateY(100px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(300px) translateY(300px);
+        opacity: 0.5;
+    }
+}
+
+.animate-particles {
+    animation: particle1 5s ease-in-out infinite, particle2 6s ease-in-out infinite, particle3 8s ease-in-out infinite, particle4 7s ease-in-out infinite;
+}
+
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 1s ease-out forwards;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
 </style>
