@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTableStore } from '@/main';
+import { useTableStore } from '@/index';
 import { Icon } from '@iconify/vue';
 
 const tableStore = useTableStore();

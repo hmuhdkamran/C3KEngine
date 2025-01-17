@@ -35,6 +35,7 @@ export class AuthenticationService extends StoreService {
 
   login(credentials: ICredential) {
     const processResponse = (token: IPayload<string>) => {
+      console.log(token)
       if (token!= null) {
         TokenHelper.setAccessToken(`${token}`);
         const store = useSystemStore();

@@ -3,7 +3,6 @@ import { onMounted, ref, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/services/authentication-service";
 import { useNotification } from "c3k-library";
-import { Icon } from "@iconify/vue";
 import logo from "@/assets/logo.svg";
 
 const service: AuthenticationService = new AuthenticationService();
@@ -12,8 +11,8 @@ const route = useRoute();
 const router = useRouter();
 const { addNotification } = useNotification();
 
-const email: Ref<string> = ref("");
-const password: Ref<string> = ref("");
+const email: Ref<string> = ref("admin@sefame.com");
+const password: Ref<string> = ref("P@ssw0rd");
 const remember: Ref<boolean> = ref(false);
 
 const login = () => {
@@ -103,14 +102,13 @@ onMounted(() => {
                 <h2 class="text-2xl font-bold mt-4 text-gray-800">Welcome Back!</h2>
                 <p class="text-sm text-gray-500 mt-1">Login to access your dashboard.</p>
             </div>
-            <form @submit.prevent="login" class="space-y-5 mb-6 text-gray-700">
+            <form class="space-y-5 mb-6 text-gray-700">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                     <div class="relative mt-1">
                         <input id="email" type="email" v-model="email" placeholder="Enter your email"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
-                        <Icon icon="mdi:email-outline"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--email-outline]"></span>
                     </div>
                 </div>
                 <div>
@@ -118,8 +116,7 @@ onMounted(() => {
                     <div class="relative mt-1">
                         <input id="password" type="password" v-model="password" placeholder="Enter your password"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
-                        <Icon icon="mdi:lock-outline"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-outline]"></span>
                     </div>
                 </div>
 
@@ -132,7 +129,7 @@ onMounted(() => {
                     <a href="/forgot-password" class="text-xs text-gray-500 hover:underline">Forgot your password?</a>
                 </div>
 
-                <button type="submit"
+                <button @click.prevent="login"
                     class="w-full py-2.5 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600 transition">
                     Login
                 </button>
@@ -145,13 +142,13 @@ onMounted(() => {
 
             <div class="flex justify-center space-x-6">
                 <a href="#google" class="hover:text-red-500">
-                    <Icon icon="devicon:google" class="w-5 h-5" />
+                    <span class="icon-[devicon--google] w-5 h-5"></span>
                 </a>
                 <a href="#facebook" class="hover:text-blue-600">
-                    <Icon icon="logos:facebook" class="w-5 h-5" />
+                    <span class="icon-[logos--facebook] w-5 h-5"></span>
                 </a>
                 <a href="#twitter" class=" hover:text-blue-400">
-                    <Icon icon="logos:twitter" class="w-5 h-5" />
+                    <span class="icon-[logos--twitter] w-5 h-5"></span>
                 </a>
             </div>
 

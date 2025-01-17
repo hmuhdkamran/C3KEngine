@@ -1,4 +1,4 @@
-import { GlobalConfig, StoreService, type IRepository } from '@/main'
+import { GlobalConfig, StoreService, type IRepository } from '@/index'
 
 export class RepositoryService<TEntity> extends StoreService implements IRepository<TEntity> {
   private readonly baseUrl: string

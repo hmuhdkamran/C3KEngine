@@ -17,9 +17,10 @@
   },
   "scripts": {
     "build": "run-p type-check \"build-only {@}\" --",
+    "build:ts": "vite build && vue-tsc --emitDeclarationOnly",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build",
+    "type-check": "vue-tsc --build tsconfig.json",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },

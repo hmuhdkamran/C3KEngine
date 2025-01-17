@@ -8,6 +8,8 @@ import type { IClaimMeta } from "./route-meta";
 export const routeCheck = (user: IUser, to: string): boolean => {
   const requiredPermissions = user.roles as IRouteMeta[] || []
 
+  console.log(to);
+
   // Check if user is authenticated and has the required permissions
   return user.authenticated && requiredPermissions.every(() => /*can('read', to)*/ true)
 };

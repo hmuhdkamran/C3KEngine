@@ -22,7 +22,6 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.294",
     "@iconify/tailwind": "^1.2.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.10.5",

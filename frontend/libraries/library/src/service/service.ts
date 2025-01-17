@@ -4,7 +4,7 @@
  */
 import Axios from 'axios';
 
-import { useNotification, PayloadMapper, type IStoreService, TokenHelper, PayloadMessageTypes, type IPayload } from '../main'
+import { useNotification, PayloadMapper, type IStoreService, TokenHelper, PayloadMessageTypes, type IPayload } from '..'
 
 export abstract class StoreService implements IStoreService {
   constructor() { }
