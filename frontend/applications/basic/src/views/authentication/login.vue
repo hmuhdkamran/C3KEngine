@@ -11,7 +11,7 @@ const route = useRoute();
 const router = useRouter();
 const { addNotification } = useNotification();
 
-const email: Ref<string> = ref("admin@sefame.com");
+const email: Ref<string> = ref("admin@sefam.com");
 const password: Ref<string> = ref("P@ssw0rd");
 const remember: Ref<boolean> = ref(false);
 
