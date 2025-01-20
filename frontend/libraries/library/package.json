@@ -7,6 +7,7 @@
   ],
   "main": "./dist/c3-library.umd.cjs",
   "module": "./dist/c3-library.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,10 +18,10 @@
   },
   "scripts": {
     "build": "run-p type-check \"build-only {@}\" --",
-    "build:ts": "vite build && vue-tsc --emitDeclarationOnly",
+    "build:ts": "vite build && vue-tsc --project tsconfig.app.json --emitDeclarationOnly",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build tsconfig.json",
+    "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
@@ -45,6 +46,7 @@
     "prettier": "^3.4.2",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
+    "vite-plugin-dts": "^4.5.0",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vue-tsc": "^2.2.0"
   }
