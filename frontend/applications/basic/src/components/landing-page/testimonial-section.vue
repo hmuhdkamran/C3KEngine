@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { config } from "c3-library";
-import avatar from '@/assets/images/avatar.jpg'
+import { avatar} from '@/assets/images/images'
 </script>
 
 <template>
