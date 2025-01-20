@@ -1,7 +1,6 @@
 import './assets/main.css'
 
 import { type App, createApp, h } from 'vue'
-import { createPinia } from 'pinia'
 
 import singleSpaVue from 'single-spa-vue'
 import singleSpaCss from 'single-spa-css'
@@ -10,6 +9,7 @@ import SkApp from './App.vue'
 import router from './router'
 import { config } from './helpers/config'
 import { configKey, SingleSpaKey, type SingleSpaProps } from './models'
+import { installPinia } from 'c3-library'
 
 const cssLifecycles = singleSpaCss({
   cssUrls: import.meta.env.DEV
@@ -33,7 +33,8 @@ const vueLifecycles = singleSpaVue({
     },
   },
   handleInstance: (app: App, props: SingleSpaProps) => {
-    app.use(createPinia()).use(router)
+    app.use(router)
+    installPinia(app);
     app.provide(SingleSpaKey, props)
     app.provide(configKey, config)
   },
