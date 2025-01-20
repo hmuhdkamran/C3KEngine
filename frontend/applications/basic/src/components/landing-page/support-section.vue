@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { config } from "c3-library";
 
-import image1 from '@/assets/images/image1.jpg'
-import image2 from '@/assets/images/image2.jpg'
-import image3 from '@/assets/images/image3.jpg'
-import image4 from '@/assets/images/image4.jpg'
+import {image1, image3, image2, image4} from '@/assets/images/images'
 </script>
 
 <template>

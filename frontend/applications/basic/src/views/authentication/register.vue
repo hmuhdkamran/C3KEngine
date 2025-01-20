@@ -14,7 +14,6 @@ const confirmPassword: Ref<string> = ref("");
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
         <div
             class="hidden md:flex w-1/2 bg-gradient-to-r from-indigo-500 via-blue-00 to-sky-500 text-white items-center justify-center p-10 rounded-sm shadow-2xl relative overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-40 animate-starry-sky"></div>
             <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none animate-clouds">
                 <div class="cloud1 w-60 h-20 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 left-0"></div>
                 <div class="cloud2 w-80 h-24 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 right-0"></div>
@@ -52,8 +51,7 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="name" type="text" v-model="name" placeholder="Enter your full name"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md " />
-                        <Icon icon="bx:user"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[bx--user]"></span>
                     </div>
                 </div>
                 <div>
@@ -61,8 +59,7 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="email" type="email" v-model="email" placeholder="Enter your email"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                        <Icon icon="mdi:email-outline"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--email-outline]" ></span>
                     </div>
                 </div>
                 <div>
@@ -70,8 +67,7 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="password" type="password" v-model="password" placeholder="Enter your password"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                        <Icon icon="mdi:lock-outline"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-outline]" ></span>
                     </div>
                 </div>
                 <div>
@@ -80,8 +76,7 @@ const confirmPassword: Ref<string> = ref("");
                         <input id="confirmPassword" type="password" v-model="confirmPassword"
                             placeholder="Re-enter your password"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                        <Icon icon="mdi:lock-check-outline"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-check-outline]" ></span>
                     </div>
                 </div>
 
@@ -129,23 +124,6 @@ const confirmPassword: Ref<string> = ref("");
 </template>
 
 <style scoped>
-@keyframes starry-sky {
-    0% {
-        transform: translateX(0) translateY(0);
-    }
-
-    100% {
-        transform: translateX(-100%) translateY(-100%);
-    }
-}
-
-.animate-starry-sky {
-    animation: starry-sky 30s linear infinite;
-    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy533.org/3YXgDcdNG+93L...)');
-    background-size: cover;
-    background-position: center;
-}
-
 @keyframes clouds {
     0% {
         transform: translateX(-50%);

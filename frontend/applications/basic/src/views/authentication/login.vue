@@ -70,7 +70,6 @@ onMounted(() => {
     <div class="flex flex-col md:flex-row min-h-screen bg-gray-50">
         <div
             class="hidden md:flex w-1/2 bg-gradient-to-r from-indigo-500 via-blue-00 to-sky-500 text-white items-center justify-center p-10 rounded-sm shadow-2xl relative overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-40 animate-starry-sky"></div>
             <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none animate-clouds">
                 <div class="cloud1 w-60 h-20 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 left-0"></div>
                 <div class="cloud2 w-80 h-24 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 right-0"></div>
@@ -173,23 +172,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-@keyframes starry-sky {
-    0% {
-        transform: translateX(0) translateY(0);
-    }
-
-    100% {
-        transform: translateX(-100%) translateY(-100%);
-    }
-}
-
-.animate-starry-sky {
-    animation: starry-sky 30s linear infinite;
-    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy533.org/3YXgDcdNG+93L...)');
-    background-size: cover;
-    background-position: center;
-}
-
 @keyframes clouds {
     0% {
         transform: translateX(-50%);
