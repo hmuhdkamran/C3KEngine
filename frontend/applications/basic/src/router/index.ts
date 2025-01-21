@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import DefaultLayout from '@/components/layouts/default/index.vue'
 import BlankLayout from '@/components/layouts/blank/index.vue'
+import AuthLayout from '@/components/layouts/auth/index.vue'
 
 import LandingPage from '@/views/LandingPage.vue'
 import LoginPage from '@/views/authentication/login.vue'
@@ -41,9 +42,16 @@ const router = createRouter({
       ],
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
+      path: '/app',
+      name: 'app',
+      component: AuthLayout,
+      children: [
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: Dashboard,
+        }
+      ]
     },
   ],
 })

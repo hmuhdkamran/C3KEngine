@@ -45,7 +45,7 @@ const menuItems = [
   }
 ]
 
-import { useSidebar } from './useSidebar'
+import { useSidebar } from '../../../stores/useSidebar'
 const { isSidebarOpen } = useSidebar()
 
 const openDropdown = ref<string | null>(null)

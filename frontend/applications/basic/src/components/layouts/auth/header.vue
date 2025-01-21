@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
 
-import { useSidebar } from './useSidebar';
+import { useSidebar } from '@/stores/useSidebar';
 const { isSidebarOpen } = useSidebar();
 
 const toggleSidebar = () => {
