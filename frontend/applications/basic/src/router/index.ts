@@ -6,7 +6,7 @@ import BlankLayout from '@/components/layouts/blank/index.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import LoginPage from '@/views/authentication/login.vue'
 import RegisterPage from '@/views/authentication/register.vue'
-import Dashboard from '@/views/Dashboard.vue'
+import Dashboard from '@/views/dashboard/Dashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
