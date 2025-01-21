@@ -4,11 +4,11 @@ import { FeatureSection, GetStartedSection, ModuleSection, SliderSection, Suppor
 
 <template>
   <div>
-        <SliderSection />
-        <GetStartedSection />
-        <ModuleSection />
-        <SupportSection />
-        <FeatureSection />
-        <TestimonialSection />
-    </div>
+    <SliderSection />
+    <GetStartedSection />
+    <ModuleSection />
+    <SupportSection />
+    <FeatureSection />
+    <TestimonialSection />
+  </div>
 </template>

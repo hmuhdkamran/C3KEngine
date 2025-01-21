@@ -23,7 +23,7 @@ import { config, VNodeRenderer } from 'c3-library';
                         </a>
                     </li>
                     <li class="nav-item cursor-pointer ">
-                        <RouterLink to="/auth" class="btn-outline btn-primary px-4 py-1">
+                        <RouterLink to="/authentication/login" class="btn-outline btn-primary px-4 py-1">
                             Login
                         </RouterLink>
                     </li>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Header from "./header.vue";
-import Footer from "./footer.vue";
+import Header from "./default/header.vue";
+import Footer from "./default/footer.vue";
 
 </script>
 

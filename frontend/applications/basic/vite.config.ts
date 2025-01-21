@@ -4,6 +4,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import Layouts from 'vite-plugin-vue-layouts'
+import Pages from 'vite-plugin-pages'
 import dotenv from 'dotenv'
 
 const envFile = '.env'
@@ -15,10 +17,16 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
+    Layouts({
+      layoutsDirs: 'src/components/layouts/',
+    }),
+    Pages({
+      dirs: ['./src/views'],
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {

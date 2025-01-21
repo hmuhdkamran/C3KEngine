@@ -107,7 +107,7 @@ const confirmPassword: Ref<string> = ref("");
             <div class="text-center mt-6 text-sm text-gray-600">
                 <p>
                     Already have an account?
-                    <RouterLink to="/auth" class="text-blue-400 font-medium hover:underline">
+                    <RouterLink to="/authentication/login" class="text-blue-400 font-medium hover:underline">
                         Login
                     </RouterLink>
                 </p>
@@ -246,3 +246,8 @@ const confirmPassword: Ref<string> = ref("");
     animation-delay: 0.2s;
 }
 </style>
+<route lang="yaml">
+  meta:
+    layout: blank
+    redirectIfLoggedIn: true
+</route>
