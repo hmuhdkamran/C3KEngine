@@ -27,13 +27,13 @@ const toggleSidebar = () => {
                     class="h-5 w-5"></span>
             </button>
 
-            <div class="flex items-center relative w-full">
+            <div class="flex items-center text-gray-50 relative w-full">
                 <button
-                    class="text-gray-600 hover:text-blue-500 transition duration-200 absolute flex items-center justify-center w-8 h-8">
+                    class=" transition duration-200 absolute flex items-center justify-center w-8 h-8">
                     <span class="icon-[mdi--magnify] h-4 w-4"></span>
                 </button>
                 <input type="text" placeholder="Type for Search..."
-                    class="pl-9 py-1 w-max-sm text-sm border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition duration-200" />
+                    class="pl-9 py-1 text-gray-50 w-96 text-sm bg-transparent hover:bg-white hover:bg-opacity-10 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200" />
             </div>
         </div>
 

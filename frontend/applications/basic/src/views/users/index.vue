@@ -1,143 +1,134 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
+import type { PlusColumn, FieldValues, PlusTable, PlusDrawerForm } from 'plus-pro-components'
 
-const users = ref<any[]>([
-    { id: 1, name: 'Ahmed Khan', email: 'ahmed.khan@example.com', role: 'Admin', phone: '03001234567', address: 'Lahore, Punjab' },
-    { id: 2, name: 'Sarah Ali', email: 'sarah.ali@example.com', role: 'User', phone: '03007654321', address: 'Karachi, Sindh' },
-    { id: 3, name: 'Ali Raza', email: 'ali.raza@example.com', role: 'User', phone: '03001239876', address: 'Islamabad, Capital Territory' },
-    { id: 4, name: 'Zara Ahmed', email: 'zara.ahmed@example.com', role: 'Admin', phone: '03005432345', address: 'Peshawar, KPK' },
+interface User {
+    id: number
+    name: string
+    email: string
+    role: string
+}
+
+const users = ref<User[]>([
+    { id: 1, name: 'Ahmed Khan', email: 'ahmed.khan@example.com', role: 'Admin' },
+    { id: 2, name: 'Sarah Ali', email: 'sarah.ali@example.com', role: 'User' },
+    { id: 3, name: 'Ali Raza', email: 'ali.raza@example.com', role: 'User' },
+    { id: 4, name: 'Zara Ahmed', email: 'zara.ahmed@example.com', role: 'Admin' },
 ])
 
-const editUser = ref<any | null>(null)
-const userName = ref('')
-const userEmail = ref('')
-const userRole = ref('')
-const userPhone = ref('')
-const userAddress = ref('')
+const drawerVisible = ref(false)
+const drawerTitle = ref('Add User')
+const formData = ref<FieldValues>({})
 
-const createUser = () => {
-    const newUser = {
-        id: Date.now(),
-        name: userName.value,
-        email: userEmail.value,
-        role: userRole.value,
-        phone: userPhone.value,
-        address: userAddress.value,
+const columns: PlusColumn[] = [
+    { label: 'ID', prop: 'id', width: 60 },
+    { label: 'Name', prop: 'name', width: 120 },
+    { label: 'Email', prop: 'email', width: 200 },
+    { label: 'Role', prop: 'role', width: 120 },
+    {
+        label: 'Actions',
+        prop: 'actions',
+        valueType: 'slot',
+        fixed: 'right',
+        width: 200
     }
-    users.value.push(newUser)
-    clearForm()
-}
+]
 
-const editUserDetails = (user: any) => {
-    editUser.value = { ...user }
-    userName.value = user.name
-    userEmail.value = user.email
-    userRole.value = user.role
-    userPhone.value = user.phone
-    userAddress.value = user.address
-}
-
-const updateUser = () => {
-    if (editUser.value) {
-        editUser.value.name = userName.value
-        editUser.value.email = userEmail.value
-        editUser.value.role = userRole.value
-        editUser.value.phone = userPhone.value
-        editUser.value.address = userAddress.value
+const formColumns: PlusColumn[] = [
+    {
+        label: 'Name',
+        prop: 'name',
+        valueType: 'input',
+        fieldProps: { placeholder: 'Enter name' }
+    },
+    {
+        label: 'Email',
+        prop: 'email',
+        valueType: 'input',
+        fieldProps: { placeholder: 'Enter email' }
+    },
+    {
+        label: 'Role',
+        prop: 'role',
+        valueType: 'select',
+        options: [
+            { label: 'Admin', value: 'admin' },
+            { label: 'User', value: 'user' }
+        ]
     }
-    clearForm()
-    editUser.value = null
+]
+
+const formRules = {
+    name: [
+        { required: true, message: 'Name is required', trigger: 'blur' }
+    ],
+    email: [
+        { required: true, message: 'Email is required', trigger: 'blur' }
+    ],
+    role: [
+        { required: true, message: 'Role is required', trigger: 'change' }
+    ]
 }
 
-const deleteUser = (userId: number) => {
-    users.value = users.value.filter(user => user.id !== userId)
+const openDrawer = (action: 'add' | 'edit', record?: User) => {
+    drawerTitle.value = action === 'add' ? 'Add User' : 'Edit User'
+    formData.value = record || {}
+    drawerVisible.value = true
 }
 
-const clearForm = () => {
-    userName.value = ''
-    userEmail.value = ''
-    userRole.value = ''
-    userPhone.value = ''
-    userAddress.value = ''
+const closeDrawer = () => {
+    drawerVisible.value = false
+}
+
+const submitForm = () => {
+    if (drawerTitle.value === 'Add User') {
+        const newUser = { id: Date.now(), ...formData.value }
+        users.value.push(newUser)
+    } else {
+        const index = users.value.findIndex(user => user.id === formData.value.id)
+        if (index !== -1) {
+            users.value[index] = { ...formData.value }
+        }
+    }
+    closeDrawer()
+}
+
+const deleteUser = (id: number) => {
+    users.value = users.value.filter(user => user.id !== id)
 }
 </script>
 
 <template>
-    <main class="flex-1 bg-gray-100">
-        <div class="container mx-auto p-6">
-            <h1 class="text-2xl font-semibold mb-4">User Management</h1>
-
-            <div class="mb-6 p-4 border bg-white rounded-md shadow-md">
-                <h2 class="text-xl mb-4">{{ editUser ? 'Edit User' : 'Create User' }}</h2>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="block text-gray-700">Name</label>
-                        <input v-model="userName" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter name" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Email</label>
-                        <input v-model="userEmail" type="email" class="w-full p-2 border rounded-md"
-                            placeholder="Enter email" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Phone</label>
-                        <input v-model="userPhone" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter phone number" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Address</label>
-                        <input v-model="userAddress" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter address" />
-                    </div>
-                    <div class="w-full">
-                        <label class="block text-gray-700">Role</label>
-                        <select v-model="userRole" class="w-full p-2 border rounded-md">
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <button @click="editUser ? updateUser() : createUser()"
-                        class="bg-blue-500 text-white p-2 rounded-md">
-                        {{ editUser ? 'Update' : 'Create' }} User
-                    </button>
-                    <button v-if="editUser" @click="clearForm"
-                        class="ml-2 p-2 text-gray-500 border rounded-md">Cancel</button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto shadow-md bg-white border rounded-lg">
-                <table class="min-w-full table-auto">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border px-4 py-2">Name</th>
-                            <th class="border px-4 py-2">Email</th>
-                            <th class="border px-4 py-2">Phone</th>
-                            <th class="border px-4 py-2">Address</th>
-                            <th class="border px-4 py-2">Role</th>
-                            <th class="border px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="user in users" :key="user.id">
-                            <td class="border px-4 py-2">{{ user.name }}</td>
-                            <td class="border px-4 py-2">{{ user.email }}</td>
-                            <td class="border px-4 py-2">{{ user.phone }}</td>
-                            <td class="border px-4 py-2">{{ user.address }}</td>
-                            <td class="border px-4 py-2">{{ user.role }}</td>
-                            <td class="border px-4 py-2">
-                                <button @click="editUserDetails(user)" class="text-blue-500">Edit</button>
-                                <button @click="deleteUser(user.id)" class="ml-2 text-red-500">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="container mx-auto p-6">
+        <div class="flex justify-end mb-4">
+            <button @click="openDrawer('add')" class="px-4 py-2 bg-blue-900 text-white rounded-md">
+                Add User
+            </button>
         </div>
-    </main>
+        <div class="adaptive-table-wrapper">
+            <PlusTable ref="plusTableInstance" :columns="columns" :table-data="users" :pagination="{
+                total: users.length,
+                pageSizeList: [5, 10, 20]
+            }" adaptive>
+                <template #actions="{ record }">
+                    <button @click="openDrawer('edit', record)" class="px-2 py-1 bg-yellow-500 text-white rounded-md">
+                        Edit
+                    </button>
+                    <button @click="deleteUser(record.id)" class="px-2 py-1 bg-red-500 text-white rounded-md">
+                        Delete
+                    </button>
+                </template>
+            </PlusTable>
+        </div>
+
+        <PlusDrawerForm v-model:visible="drawerVisible" :form="{ columns: formColumns, rules: formRules }"
+            @submit="submitForm" :title="drawerTitle" />
+    </div>
 </template>
+
+<style scoped>
+
+</style>
 
 <route lang="yaml">
     meta:
