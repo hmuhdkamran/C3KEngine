@@ -20,7 +20,16 @@ export default [
   // Add TypeScript ESLint config with the custom rule
   tseslint.config({
     rules: {
-      '@typescript-eslint/no-explicit-any': 'error', // Enforce no explicit 'any'
+      '@typescript-eslint/no-explicit-any': 'error',
+      'import/no-unresolved': [2, {
+      ignore: [
+        '~pages$',
+        'virtual:generated-layouts',
+
+        // Ignore vite's ?raw imports
+        '.*\?raw',
+      ],
+    }],
     },
   }),
 ]
