@@ -2,9 +2,6 @@
 import Header from "./auth/header.vue";
 import Sidebar from "./auth/sidebar.vue";
 import ColorPalette from "../color.vue";
-import { useColorPalette } from '@/stores/colorPalette';
-
-const { state } = useColorPalette();
 </script>
 
 <template>

@@ -140,7 +140,7 @@ const clearForm = () => {
 </template>
 
 <route lang="yaml">
-  meta:
-    layout: auth
-    redirectIfLoggedIn: true
-</route>
+    meta:
+      layout: auth
+      redirectIfLoggedIn: true
+    </route>

@@ -2,12 +2,20 @@
 import { ref } from 'vue'
 import { avatar } from '@/assets/images/images'
 import { useSidebar } from '../../../stores/useSidebar'
+import { selectColor } from '@/stores/colorPalette';
 
 const { isSidebarOpen } = useSidebar()
 const openDropdown = ref<string | null>(null)
 const userName = ref('Admin')
 
 const menuItems = [
+{
+    name: 'Home',
+    icon: 'icon-[material-symbols--dashboard-outline]',
+    children: [
+      { name: 'Dashboard', link: '/dashboard' }
+    ],
+  },
   {
     name: 'HRM',
     icon: 'icon-[mdi--briefcase-outline]',
@@ -89,7 +97,7 @@ const toggleDropdown = (itemName: string) => {
           <ul v-if="isSidebarOpen && openDropdown === item.name" class="ml-8 border-l-2 border-gray-300">
             <li v-for="child in item.children" :key="child.name"
               class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
-              <a :href="child.link" class="block">{{ child.name }}</a>
+              <router-link :to="child.link" class="block">{{ child.name }}</router-link>
             </li>
           </ul>
 
@@ -98,7 +106,7 @@ const toggleDropdown = (itemName: string) => {
             <ul>
               <li v-for="child in item.children" :key="child.name"
                 class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700 rounded-sm">
-                <a :href="child.link" class="block">{{ child.name }}</a>
+                <router-link :to="child.link" class="block">{{ child.name }}</router-link>
               </li>
             </ul>
           </div>
@@ -108,7 +116,7 @@ const toggleDropdown = (itemName: string) => {
 
     <div class="p-4">
       <button
-        class="w-full bg-sky-500 text-white py-2 rounded-md flex items-center justify-center hover:bg-sky-600 transition">
+        class="w-full text-white py-2 rounded-sm flex items-center justify-center transition" :style="{ backgroundColor: selectColor() }">
         <span class="icon-[mdi--logout] h-5 w-5 mr-2"></span>
         <span v-if="isSidebarOpen">Logout</span>
       </button>

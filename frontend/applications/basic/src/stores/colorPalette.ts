@@ -1,17 +1,12 @@
-import { reactive } from 'vue';
+import { ref } from 'vue';
 
-export const useColorPalette = () => {
-  const state = reactive({
-    colors: ['#2196F3', '#4CAF50', '#FF5722', '#FFC107', '#9C27B0', '#00BCD4'],
-    selectedColor: '#4CAF50',
-  });
+export const colors = ref(['#1d6684', '#7653a0', '#8c5c47', '#993f5b', '#98a3b0','#265689', '#0ea5e9 ', '#b788f0', '#ea916a', '#d2649d']);
+const selectedColor = ref('#265689')
 
-  const selectColor = (color: string) => {
-    state.selectedColor = color;
-  };
+export function setColor(selected: string) {
+    selectedColor.value = selected;
+}
 
-  return {
-    state,
-    selectColor,
-  };
-};
+export function selectColor(): string {
+    return selectedColor.value;
+}

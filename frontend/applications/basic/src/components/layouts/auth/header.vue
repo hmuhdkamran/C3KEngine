@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
-
 import { useSidebar } from '@/stores/useSidebar';
-import { useColorPalette } from '@/stores/colorPalette';
-
-
-const { state } = useColorPalette();
+import { selectColor } from '@/stores/colorPalette';
 
 const { isSidebarOpen } = useSidebar();
-
-const props = defineProps({
-    bgColor: String,
-});
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
@@ -19,13 +11,13 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-    <div :style="{ backgroundColor: state.selectedColor }"
+    <div :style="{ backgroundColor: selectColor() }"
         class="shadow-md p-3 flex items-center justify-between sticky top-0 z-10 border-b border-gray-200">
         <div class="flex items-center justify-between space-x-4">
             <div class="flex items-center w-full space-x-2 mr-10">
                 <img :src="logo" alt="Logo" class="h-8 w-8" />
-                <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-700">
-                    Ultimate ERP Solution {{ state.selectedColor }}
+                <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-50">
+                    Ultimate ERP Solution
                 </h2>
             </div>
 
@@ -47,21 +39,21 @@ const toggleSidebar = () => {
 
         <div class="flex items-center space-x-4">
             <div class="relative">
-                <button class="relative text-gray-600 hover:text-blue-500 transition duration-200">
+                <button class="relative text-gray-50 hover:text-gray-100 transition duration-200">
                     <span class="icon-[mdi--bell] h-5 w-5"></span>
-                    <div class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></div>
+                    <div class="absolute top-0 right-0 h-2 w-2 bg-red-400 rounded-full"></div>
                 </button>
             </div>
 
-            <button class="text-gray-600 hover:text-blue-500 transition duration-200">
+            <button class="text-gray-50 hover:text-gray-100 transition duration-200">
                 <span class="icon-[mdi--message] h-5 w-5"></span>
             </button>
 
-            <button class="text-gray-600 hover:text-blue-500 transition duration-200">
+            <button class="text-gray-50 hover:text-gray-100 transition duration-200">
                 <span class="icon-[mdi--user] h-5 w-5"></span>
             </button>
 
-            <button class="text-gray-600 hover:text-blue-500 transition duration-200">
+            <button class="text-gray-50 hover:text-gray-100 transition duration-200">
                 <span class="icon-[mdi--cog] h-5 w-5"></span>
             </button>
         </div>
