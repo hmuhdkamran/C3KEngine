@@ -2,7 +2,16 @@
 import logo from '@/assets/logo.svg';
 
 import { useSidebar } from '@/stores/useSidebar';
+import { useColorPalette } from '@/stores/colorPalette';
+
+
+const { state } = useColorPalette();
+
 const { isSidebarOpen } = useSidebar();
+
+const props = defineProps({
+    bgColor: String,
+});
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
@@ -10,16 +19,17 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-    <header class="bg-white shadow-md p-3 flex items-center justify-between sticky top-0 z-10 border-b border-gray-200">
+    <div :style="{ backgroundColor: state.selectedColor }"
+        class="shadow-md p-3 flex items-center justify-between sticky top-0 z-10 border-b border-gray-200">
         <div class="flex items-center justify-between space-x-4">
             <div class="flex items-center w-full space-x-2 mr-10">
                 <img :src="logo" alt="Logo" class="h-8 w-8" />
                 <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-700">
-                    Ultimate ERP Solution
+                    Ultimate ERP Solution {{ state.selectedColor }}
                 </h2>
             </div>
 
-            <button @click="toggleSidebar" class="text-gray-500 flex items-center justify-center">
+            <button @click="toggleSidebar" class="text-gray-50 flex items-center justify-center">
                 <span
                     :class="isSidebarOpen ? 'icon-[fluent--navigation-16-filled]' : 'icon-[fluent--navigation-16-filled]'"
                     class="h-5 w-5"></span>
@@ -55,7 +65,5 @@ const toggleSidebar = () => {
                 <span class="icon-[mdi--cog] h-5 w-5"></span>
             </button>
         </div>
-    </header>
+    </div>
 </template>
-
-<style scoped></style>

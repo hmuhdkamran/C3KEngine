@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { avatar } from '@/assets/images/images'
+import { useSidebar } from '../../../stores/useSidebar'
+
+const { isSidebarOpen } = useSidebar()
+const openDropdown = ref<string | null>(null)
 const userName = ref('Admin')
 
 const menuItems = [
@@ -14,7 +18,7 @@ const menuItems = [
     ],
   },
   {
-    name: 'Authentication',
+    name: 'User Management',
     icon: 'icon-[mdi--account-key-outline]',
     children: [
       { name: 'Users', link: '/users' },
@@ -44,11 +48,6 @@ const menuItems = [
     ],
   }
 ]
-
-import { useSidebar } from '../../../stores/useSidebar'
-const { isSidebarOpen } = useSidebar()
-
-const openDropdown = ref<string | null>(null)
 
 const toggleDropdown = (itemName: string) => {
   openDropdown.value = openDropdown.value === itemName ? null : itemName
