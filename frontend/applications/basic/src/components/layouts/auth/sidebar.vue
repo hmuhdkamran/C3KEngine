@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { avatar } from '@/assets/images/images'
 import { useSidebar } from '../../../stores/useSidebar'
 import { selectColor } from '@/stores/colorPalette';
@@ -7,9 +8,12 @@ import { selectColor } from '@/stores/colorPalette';
 const { isSidebarOpen } = useSidebar()
 const openDropdown = ref<string | null>(null)
 const userName = ref('Admin')
+const isLogoutDialogOpen = ref(false)
+const isProcessingLogout = ref(false)
+const router = useRouter()
 
 const menuItems = [
-{
+  {
     name: 'Home',
     icon: 'icon-[material-symbols--dashboard-outline]',
     children: [
@@ -57,6 +61,23 @@ const menuItems = [
   }
 ]
 
+const openLogoutDialog = () => {
+  isLogoutDialogOpen.value = true
+}
+
+const cancelLogout = () => {
+  isLogoutDialogOpen.value = false
+}
+
+const confirmLogout = () => {
+  isProcessingLogout.value = true
+  setTimeout(() => {
+    isProcessingLogout.value = false
+    isLogoutDialogOpen.value = false
+    router.push('/authentication/login')
+  }, 1000)
+}
+
 const toggleDropdown = (itemName: string) => {
   openDropdown.value = openDropdown.value === itemName ? null : itemName
 }
@@ -66,7 +87,7 @@ const toggleDropdown = (itemName: string) => {
   <aside :class="{
     'w-64': isSidebarOpen,
     'w-16': !isSidebarOpen,
-  }" class="bg-white shadow-md flex flex-col transition-all duration-300">
+  }" class="bg-white shadow-md flex flex-col relative transition-all duration-300 min-h-screen">
     <div class="relative bg-white border-b-2 border-gray-200 p-4">
       <div class="flex flex-col items-center">
         <div class="relative">
@@ -114,12 +135,33 @@ const toggleDropdown = (itemName: string) => {
       </ul>
     </nav>
 
-    <div class="p-4">
-      <button
-        class="w-full text-white py-2 rounded-sm flex items-center justify-center transition" :style="{ backgroundColor: selectColor() }">
-        <span class="icon-[mdi--logout] h-5 w-5 mr-2"></span>
-        <span v-if="isSidebarOpen">Logout</span>
+    <div class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200"
+      :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
+      <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
+        :style="{ backgroundColor: selectColor() }" @click="openLogoutDialog">
+        <span class="icon-[mdi--logout] h-5 w-5"></span>
+        <span v-if="isSidebarOpen" class="ml-2">Logout</span>
       </button>
+    </div>
+
+    <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-md shadow-md w-1/4 p-6 text-center">
+        <h3 class="text-lg font-bold mb-4">Confirm Logout</h3>
+        <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
+        <div class="flex justify-center space-x-4">
+          <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
+          :style="{ backgroundColor: selectColor() }" :disabled="isProcessingLogout">
+            <span v-if="!isProcessingLogout">Yes, Logout</span>
+            <span v-else class="flex items-center">
+              <span class="icon-[uiw--loading] animate-spin mr-2"></span> Logging Out...
+            </span>
+          </button>
+          <button class="px-4 py-2 rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"
+            @click="cancelLogout" :disabled="isProcessingLogout">
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
   </aside>
 </template>
