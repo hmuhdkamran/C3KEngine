@@ -1,146 +1,100 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const users = ref<any[]>([
-    { id: 1, name: 'Ahmed Khan', email: 'ahmed.khan@example.com', role: 'Admin', phone: '03001234567', address: 'Lahore, Punjab' },
-    { id: 2, name: 'Sarah Ali', email: 'sarah.ali@example.com', role: 'User', phone: '03007654321', address: 'Karachi, Sindh' },
-    { id: 3, name: 'Ali Raza', email: 'ali.raza@example.com', role: 'User', phone: '03001239876', address: 'Islamabad, Capital Territory' },
-    { id: 4, name: 'Zara Ahmed', email: 'zara.ahmed@example.com', role: 'Admin', phone: '03005432345', address: 'Peshawar, KPK' },
-])
+const stats = [
+  { id: 1, label: "Total Users", value: "1,234", icon: "👤", bgColor: "bg-gray-200" },
+  { id: 2, label: "Active Projects", value: "87", icon: "📁", bgColor: "bg-gray-200" },
+  { id: 3, label: "Support Tickets", value: "23", icon: "📨", bgColor: "bg-gray-200" },
+  { id: 4, label: "Revenue", value: "$12,345", icon: "💰", bgColor: "bg-gray-200" },
+];
 
-const editUser = ref<any | null>(null)
-const userName = ref('')
-const userEmail = ref('')
-const userRole = ref('')
-const userPhone = ref('')
-const userAddress = ref('')
+const recentActivities = [
+  { id: 1, user: "John Doe", activity: "updated the project 'Website Redesign'", time: "2 hours ago" },
+  { id: 2, user: "Mary Smith", activity: "resolved ticket #456", time: "4 hours ago" },
+  { id: 3, user: "James Johnson", activity: "added a new user", time: "6 hours ago" },
+];
 
-const createUser = () => {
-    const newUser = {
-        id: Date.now(),
-        name: userName.value,
-        email: userEmail.value,
-        role: userRole.value,
-        phone: userPhone.value,
-        address: userAddress.value,
-    }
-    users.value.push(newUser)
-    clearForm()
-}
+const tasks = [
+  { id: 1, task: "Finish UI Design", status: "In Progress" },
+  { id: 2, task: "Review Team Feedback", status: "Pending" },
+  { id: 3, task: "Submit Report", status: "Completed" },
+];
 
-const editUserDetails = (user: any) => {
-    editUser.value = { ...user }
-    userName.value = user.name
-    userEmail.value = user.email
-    userRole.value = user.role
-    userPhone.value = user.phone
-    userAddress.value = user.address
-}
-
-const updateUser = () => {
-    if (editUser.value) {
-        editUser.value.name = userName.value
-        editUser.value.email = userEmail.value
-        editUser.value.role = userRole.value
-        editUser.value.phone = userPhone.value
-        editUser.value.address = userAddress.value
-    }
-    clearForm()
-    editUser.value = null
-}
-
-const deleteUser = (userId: number) => {
-    users.value = users.value.filter(user => user.id !== userId)
-}
-
-const clearForm = () => {
-    userName.value = ''
-    userEmail.value = ''
-    userRole.value = ''
-    userPhone.value = ''
-    userAddress.value = ''
-}
+const notifications = [
+  { id: 1, message: "Server maintenance scheduled at 12:00 AM.", time: "1 hour ago" },
+  { id: 2, message: "New support ticket received.", time: "3 hours ago" },
+  { id: 3, message: "User registration request pending approval.", time: "5 hours ago" },
+];
 </script>
 
 <template>
-    <main class="flex-1 bg-gray-100">
-        <div class="container mx-auto p-6">
-            <h1 class="text-2xl font-semibold mb-4">User Management</h1>
-
-            <div class="mb-6 p-4 border bg-white rounded-md shadow-md">
-                <h2 class="text-xl mb-4">{{ editUser ? 'Edit User' : 'Create User' }}</h2>
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                        <label class="block text-gray-700">Name</label>
-                        <input v-model="userName" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter name" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Email</label>
-                        <input v-model="userEmail" type="email" class="w-full p-2 border rounded-md"
-                            placeholder="Enter email" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Phone</label>
-                        <input v-model="userPhone" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter phone number" />
-                    </div>
-                    <div>
-                        <label class="block text-gray-700">Address</label>
-                        <input v-model="userAddress" type="text" class="w-full p-2 border rounded-md"
-                            placeholder="Enter address" />
-                    </div>
-                    <div class="w-full">
-                        <label class="block text-gray-700">Role</label>
-                        <select v-model="userRole" class="w-full p-2 border rounded-md">
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <button @click="editUser ? updateUser() : createUser()"
-                        class="bg-blue-500 text-white p-2 rounded-md">
-                        {{ editUser ? 'Update' : 'Create' }} User
-                    </button>
-                    <button v-if="editUser" @click="clearForm"
-                        class="ml-2 p-2 text-gray-500 border rounded-md">Cancel</button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto shadow-md bg-white border rounded-lg">
-                <table class="min-w-full table-auto">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="border px-4 py-2">Name</th>
-                            <th class="border px-4 py-2">Email</th>
-                            <th class="border px-4 py-2">Phone</th>
-                            <th class="border px-4 py-2">Address</th>
-                            <th class="border px-4 py-2">Role</th>
-                            <th class="border px-4 py-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="user in users" :key="user.id">
-                            <td class="border px-4 py-2">{{ user.name }}</td>
-                            <td class="border px-4 py-2">{{ user.email }}</td>
-                            <td class="border px-4 py-2">{{ user.phone }}</td>
-                            <td class="border px-4 py-2">{{ user.address }}</td>
-                            <td class="border px-4 py-2">{{ user.role }}</td>
-                            <td class="border px-4 py-2">
-                                <button @click="editUserDetails(user)" class="text-blue-500">Edit</button>
-                                <button @click="deleteUser(user.id)" class="ml-2 text-red-500">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+  <main class="flex-1 bg-gray-100 min-h-screen p-4">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div v-for="stat in stats" :key="stat.id"
+        class="p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition-shadow" :class="stat.bgColor">
+        <div class="text-4xl mr-4">{{ stat.icon }}</div>
+        <div>
+          <p class="text-lg font-semibold">{{ stat.label }}</p>
+          <p class="text-2xl font-bold">{{ stat.value }}</p>
         </div>
-    </main>
+      </div>
+    </div>
+
+    <section class="container mx-auto mt-8">
+      <h2 class="text-lg font-bold text-gray-700 mb-4">Tasks Overview</h2>
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <ul>
+          <li v-for="task in tasks" :key="task.id"
+            class="flex justify-between items-center py-3 border-b last:border-b-0">
+            <span>{{ task.task }}</span>
+            <span class="px-2 py-1 rounded text-sm" :class="{
+              'bg-yellow-100 text-yellow-700': task.status === 'Pending',
+              'bg-blue-100 text-blue-700': task.status === 'In Progress',
+              'bg-green-100 text-green-700': task.status === 'Completed'
+            }">
+              {{ task.status }}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container mx-auto mt-8">
+      <h2 class="text-lg font-bold text-gray-700 mb-4">Recent Activities</h2>
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <ul>
+          <li v-for="activity in recentActivities" :key="activity.id"
+            class="flex items-center py-3 border-b last:border-b-0">
+            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-4 text-gray-600">
+              {{ activity.user.charAt(0) }}
+            </div>
+            <div>
+              <p class="text-sm"><strong>{{ activity.user }}</strong> {{ activity.activity }}</p>
+              <p class="text-xs text-gray-500">{{ activity.time }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container mx-auto mt-8">
+      <h2 class="text-lg font-bold text-gray-700 mb-4">Notifications</h2>
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <ul>
+          <li v-for="notification in notifications" :key="notification.id" class="py-3 border-b last:border-b-0">
+            <p>{{ notification.message }}</p>
+            <p class="text-xs text-gray-500">{{ notification.time }}</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
 </template>
 
+<style scoped></style>
+
 <route lang="yaml">
-  meta:
-    layout: auth
-    redirectIfLoggedIn: true
+meta:
+  layout: auth
+  redirectIfLoggedIn: true
 </route>
