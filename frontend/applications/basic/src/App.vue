@@ -15,7 +15,7 @@ const notificationsWithOffsets = computed(() =>
 </script>
 
 <template>
-  <div class="font-inter bg-gray-100 tracking-tight text-gray-900 antialiased">
+  <div class="font-inter tracking-tight text-gray-900 antialiased">
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
       :positionOffset="notification.positionOffset" :duration="3000" />

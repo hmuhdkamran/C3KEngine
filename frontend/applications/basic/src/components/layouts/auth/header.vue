@@ -27,7 +27,7 @@ const toggleSidebar = () => {
                     class="h-5 w-5"></span>
             </button>
 
-            <div class="flex items-center text-white relative w-full">
+            <div class="flex items-center text-gray-50 relative w-full">
                 <button
                     class=" transition duration-200 absolute flex items-center justify-center w-8 h-8">
                     <span class="icon-[mdi--magnify] h-4 w-4"></span>

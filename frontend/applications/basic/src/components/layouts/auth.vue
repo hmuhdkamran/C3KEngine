@@ -5,7 +5,7 @@ import ColorPalette from "../color.vue";
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col h-screen">
     <Header />
     <ColorPalette />
     <div class="flex flex-grow">
