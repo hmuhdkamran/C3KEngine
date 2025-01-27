@@ -7,10 +7,6 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import Pages from 'vite-plugin-pages'
 import dotenv from 'dotenv'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { PlusProComponentsResolver } from '@plus-pro-components/resolver'
 
 const envFile = '.env'
 dotenv.config({ path: envFile })
@@ -27,12 +23,6 @@ export default defineConfig({
     Pages({
       dirs: ['./src/views'],
     }),
-    AutoImport({
-      resolvers: [ElementPlusResolver()]
-    }),
-    Components({
-      resolvers: [ElementPlusResolver(), PlusProComponentsResolver()]
-    })
   ],
   resolve: {
     alias: {

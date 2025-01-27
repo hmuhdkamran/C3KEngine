@@ -8,6 +8,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite-plugin-vue-layouts/client", "vite-plugin-pages/client-solid", "plus-pro-components/global", "node"]
+    "types": ["vite-plugin-vue-layouts/client", "vite-plugin-pages/client-solid"]
   }
 }

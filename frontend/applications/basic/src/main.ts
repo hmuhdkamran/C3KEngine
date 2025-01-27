@@ -2,12 +2,6 @@ import './assets/main.css'
 
 import { type App, createApp, h } from 'vue'
 
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import * as Icons from '@element-plus/icons-vue';
-import PlusProComponents from 'plus-pro-components'
-import 'plus-pro-components/index.css'
-
 import singleSpaVue from 'single-spa-vue'
 import singleSpaCss from 'single-spa-css'
 
@@ -43,11 +37,6 @@ const vueLifecycles = singleSpaVue({
     installPinia(app);
     app.provide(SingleSpaKey, props)
     app.provide(configKey, config)
-    app.use(ElementPlus)
-    app.use(PlusProComponents)
-    for (const [key, component] of Object.entries(Icons)) {
-      app.component(key, component);
-    }
   },
 })
 
