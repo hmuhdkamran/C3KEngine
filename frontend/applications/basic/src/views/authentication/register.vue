@@ -51,7 +51,8 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="name" type="text" v-model="name" placeholder="Enter your full name"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md " />
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[bx--user]"></span>
+                        <span
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-user"></span>
                     </div>
                 </div>
                 <div>
@@ -59,7 +60,8 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="email" type="email" v-model="email" placeholder="Enter your email"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--email-outline]" ></span>
+                        <span
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-envelope"></span>
                     </div>
                 </div>
                 <div>
@@ -67,16 +69,19 @@ const confirmPassword: Ref<string> = ref("");
                     <div class="relative mt-1">
                         <input id="password" type="password" v-model="password" placeholder="Enter your password"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-outline]" ></span>
+                        <span
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-lock-keyhole"></span>
                     </div>
                 </div>
                 <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm
+                        Password</label>
                     <div class="relative mt-1">
                         <input id="confirmPassword" type="password" v-model="confirmPassword"
                             placeholder="Re-enter your password"
                             class="block w-full px-9 py-2 border border-gray-300 rounded-md" />
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-check-outline]" ></span>
+                        <span
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-lock-keyhole"></span>
                     </div>
                 </div>
 
@@ -92,15 +97,15 @@ const confirmPassword: Ref<string> = ref("");
                 <div class="h-px bg-gray-300 w-1/4"></div>
             </div>
 
-            <div class="flex justify-center space-x-6">
-                <a href="#google" class="hover:text-red-500">
-                    <Icon icon="devicon:google" class="w-5 h-5" />
+            <div class="flex justify-center space-x-6 text-blue-500">
+                <a href="#google" class="hover:text-sky-500">
+                    <span class="fa-brands fa-google"></span>
                 </a>
-                <a href="#facebook" class="hover:text-blue-600">
-                    <Icon icon="logos:facebook" class="w-5 h-5" />
+                <a href="#facebook" class="hover:text-sky-500">
+                    <span class="fa-brands fa-facebook"></span>
                 </a>
-                <a href="#twitter" class=" hover:text-blue-400">
-                    <Icon icon="logos:twitter" class="w-5 h-5" />
+                <a href="#twitter" class=" hover:text-sky-500">
+                    <span class="fa-brands fa-twitter"></span>
                 </a>
             </div>
 

@@ -31,7 +31,7 @@ import { hero } from '@/assets/images/images';
                     <a class="mt-8 md:mt-12 group relative inline-flex items-center overflow-hidden rounded btn-gradient px-6 md:px-8 py-2 md:py-3 text-white focus:outline-none focus:ring active:bg-violet-700"
                         href="#">
                         <span class="absolute -end-full transition-all group-hover:end-4">
-                            <span class="icon-[heroicons--arrow-long-right] mt-2"
+                            <span class="fa-regular fa-arrow-right mt-2"
                                 style="width: 24px; height: 24px;"></span>
                         </span>
                         <span class="text-sm font-medium transition-all group-hover:me-4">Explore All Modules</span>

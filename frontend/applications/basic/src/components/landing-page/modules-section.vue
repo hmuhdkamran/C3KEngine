@@ -19,15 +19,15 @@ import { config } from "c3-library";
                             </p>
                             <ul class="text-gray-500 font-bold">
                                 <li class="flex mb-4">
-                                    <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                    <span class="fa-regular fa-circle-check mr-2 text-violet-600"></span>
                                     <span>Unified Business Management</span>
                                 </li>
                                 <li class="flex mb-4">
-                                    <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                    <span class="fa-regular fa-circle-check mr-2 text-violet-600"></span>
                                     <span>Automated Financial Processes</span>
                                 </li>
                                 <li class="flex mb-4">
-                                    <span class="icon-[ep--success-filled] mr-2 w-6 h-6 text-violet-600"></span>
+                                    <span class="fa-regular fa-circle-check mr-2 text-violet-600"></span>
                                     <span>Detailed Analytics & Reporting</span>
                                 </li>
                             </ul>
@@ -40,7 +40,7 @@ import { config } from "c3-library";
                             <!-- Feature Card 1 -->
                             <div class="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
-                                    <span class="fa-solid fa-face-awesome fa-2xl text-violet-600"></span>
+                                    <span class="fa-solid fa-warehouse fa-xl text-violet-600"></span>
                                 </span>
                                 <h4 class="mb-2 text-2xl font-bold font-heading">Inventory Management</h4>
                                 <p class="text-gray-500 leading-loose">
@@ -52,7 +52,7 @@ import { config } from "c3-library";
                             <!-- Feature Card 2 -->
                             <div class="py-6 pl-6 pr-4 shadow rounded bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
-                                    <span class="icon-[fluent--toolbox-32-filled] w-10 h-10 text-violet-600"></span>
+                                    <span class="fa-solid fa-coins fa-xl text-violet-600"></span>
                                 </span>
                                 <h4 class="mb-2 text-2xl font-bold font-heading">Financial Management</h4>
                                 <p class="text-gray-500 leading-loose">
@@ -66,7 +66,7 @@ import { config } from "c3-library";
                             <!-- Feature Card 3 -->
                             <div class="mb-8 py-6 pl-6 pr-4 shadow rounded-lg bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded bg-violet-100">
-                                    <span class="icon-[streamline--star-badge-solid] w-10 h-10 text-violet-600"></span>
+                                    <span class="fa-solid fa-toolbox fa-xl text-violet-600"></span>
                                 </span>
                                 <h4 class="mb-2 text-2xl font-bold font-heading">CRM Integration</h4>
                                 <p class="text-gray-500 leading-loose">
@@ -78,7 +78,7 @@ import { config } from "c3-library";
                             <!-- Feature Card 4 -->
                             <div class="py-6 pl-6 pr-4 shadow rounded-lg bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded bg-violet-100">
-                                    <span class="icon-[mdi--tick-decagram] w-10 h-10 text-violet-600"></span>
+                                    <span class="fa-solid fa-user-shield fa-xl text-violet-600"></span>
                                 </span>
                                 <h4 class="mb-2 text-2xl font-bold font-heading">Compliance and Risk Management</h4>
                                 <p class="text-gray-500 leading-loose">

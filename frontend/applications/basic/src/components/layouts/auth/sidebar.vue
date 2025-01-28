@@ -15,14 +15,14 @@ const router = useRouter()
 const menuItems = [
   {
     name: 'Home',
-    icon: 'icon-[material-symbols--dashboard-outline]',
+    icon: 'fa-solid fa-house',
     children: [
       { name: 'Dashboard', link: '/dashboard' }
     ],
   },
   {
     name: 'HRM',
-    icon: 'icon-[mdi--briefcase-outline]',
+    icon: 'fa-solid fa-briefcase',
     children: [
       { name: 'Employee Management', link: '#' },
       { name: 'Payroll', link: '#' },
@@ -31,7 +31,7 @@ const menuItems = [
   },
   {
     name: 'User Management',
-    icon: 'icon-[mdi--account-key-outline]',
+    icon: 'fa-solid fa-user-shield',
     children: [
       { name: 'Users', link: '/users' },
       { name: 'User Roles', link: '#' },
@@ -43,7 +43,7 @@ const menuItems = [
   },
   {
     name: 'Production',
-    icon: 'icon-[material-symbols--factory-outline]',
+    icon: 'fa-solid fa-conveyor-belt-arm',
     children: [
       { name: 'Inventory', link: '#' },
       { name: 'Manufacturing', link: '#' },
@@ -52,7 +52,7 @@ const menuItems = [
   },
   {
     name: 'Retail',
-    icon: 'icon-[mdi--cart-outline]',
+    icon: 'fa-solid fa-shopping-cart',
     children: [
       { name: 'Point of Sale', link: '#' },
       { name: 'Sales Reports', link: '#' },
@@ -111,8 +111,8 @@ const toggleDropdown = (itemName: string) => {
             @click="toggleDropdown(item.name)">
             <span :class="item.icon" class="h-5 w-5"></span>
             <span v-if="isSidebarOpen" class="ml-4 font-medium">{{ item.name }}</span>
-            <span v-if="isSidebarOpen" :class="openDropdown === item.name ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'
-              " class="h-5 w-5 ml-auto"></span>
+            <span v-if="isSidebarOpen" :class="openDropdown === item.name ? 'fa-solid fa-angle-up' : 'fa-solid fa-angle-down'
+              " class="ml-auto"></span>
           </div>
 
           <ul v-if="isSidebarOpen && openDropdown === item.name" class="ml-8 border-l-2 border-gray-300">
@@ -139,13 +139,13 @@ const toggleDropdown = (itemName: string) => {
       :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
       <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
         :style="{ backgroundColor: selectColor() }" @click="openLogoutDialog">
-        <span class="icon-[mdi--logout] h-5 w-5"></span>
+        <span class="fa-solid fa-right-from-bracket"></span>
         <span v-if="isSidebarOpen" class="ml-2">Logout</span>
       </button>
     </div>
 
-    <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-md shadow-md w-1/4 p-6 text-center">
+    <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-sm shadow-md w-1/4 p-6 text-center">
         <h3 class="text-lg font-bold mb-4">Confirm Logout</h3>
         <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
         <div class="flex justify-center space-x-4">
@@ -153,7 +153,7 @@ const toggleDropdown = (itemName: string) => {
           :style="{ backgroundColor: selectColor() }" :disabled="isProcessingLogout">
             <span v-if="!isProcessingLogout">Yes, Logout</span>
             <span v-else class="flex items-center">
-              <span class="icon-[uiw--loading] animate-spin mr-2"></span> Logging Out...
+              <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span> Logging Out...
             </span>
           </button>
           <button class="px-4 py-2 rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"

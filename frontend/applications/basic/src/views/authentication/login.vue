@@ -108,7 +108,7 @@ onMounted(() => {
             <input id="email" type="email" v-model="email" placeholder="Enter your email"
               class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
             <span
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--email-outline]"></span>
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-user"></span>
           </div>
         </div>
         <div>
@@ -117,7 +117,7 @@ onMounted(() => {
             <input id="password" type="password" v-model="password" placeholder="Enter your password"
               class="block w-full px-9 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
             <span
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 icon-[mdi--lock-outline]"></span>
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 fa-sm fa-solid fa-lock-keyhole"></span>
           </div>
         </div>
 
@@ -140,15 +140,15 @@ onMounted(() => {
         <div class="h-px bg-gray-300 w-1/4"></div>
       </div>
 
-      <div class="flex justify-center space-x-6">
-        <a href="#google" class="hover:text-red-500">
-          <span class="icon-[devicon--google] w-5 h-5"></span>
+      <div class="flex justify-center space-x-6 text-blue-500">
+        <a href="#google" class="hover:text-sky-500">
+          <span class="fa-brands fa-google"></span>
         </a>
-        <a href="#facebook" class="hover:text-blue-600">
-          <span class="icon-[logos--facebook] w-5 h-5"></span>
+        <a href="#facebook" class="hover:text-sky-500">
+          <span class="fa-brands fa-facebook"></span>
         </a>
-        <a href="#twitter" class=" hover:text-blue-400">
-          <span class="icon-[logos--twitter] w-5 h-5"></span>
+        <a href="#twitter" class=" hover:text-sky-500">
+          <span class="fa-brands fa-twitter"></span>
         </a>
       </div>
 

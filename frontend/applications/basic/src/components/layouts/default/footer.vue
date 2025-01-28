@@ -137,20 +137,20 @@ import { config, VNodeRenderer } from 'c3-library';
                         <ul class="mt-8 space-y-4 text-sm">
                             <li>
                                 <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
-                                    <span class="icon-[wpf--message-outline]"></span>
+                                    <span class="fa-solid fa-envelope"></span>
                                     <span class="text-gray-700">admin@c3k.org</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a class="flex items-center justify-center gap-1.5 sm:justify-start" href="/">
-                                    <span class="icon-[fluent--call-28-regular]"></span>
+                                    <span class="fa-solid fa-phone"></span>
                                     <span class="text-gray-700">+012 345 6789</span>
                                 </a>
                             </li>
 
                             <li class="flex items-start justify-center gap-1.5 sm:justify-start">
-                                <span class="icon-[ep--location]"></span>
+                                <span class="fa-sharp fa-solid fa-location-dot"></span>
                                 <address class="-mt-0.5 not-italic text-gray-700">
                                     8 Waris Road, Lahore, Pakistan
                                 </address>

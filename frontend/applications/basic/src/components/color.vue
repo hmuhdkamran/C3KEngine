@@ -10,14 +10,14 @@ const isOpen = ref(false);
         <button @click="isOpen = !isOpen"
             class="p-2 text-white rounded-l-lg shadow-md focus:outline-none transition-colors duration-300 flex items-center justify-center"
             :style="{ backgroundColor: selectColor() }">
-            <span class="icon-[ic--round-color-lens] w-6 h-6"></span>
+            <span class="fa-solid fa-palette"></span>
         </button>
 
         <div v-if="isOpen" class="absolute top-16 right-0 w-64 p-3 bg-white rounded-l-lg shadow-lg z-50">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-gray-700">Select Color</h3>
                 <button @click="isOpen = false" class="text-gray-500 hover:text-gray-700 transition duration-200">
-                    <span class="icon-[ic--round-close] w-5 h-5"></span>
+                    <span class="fa-solid fa-xmark"></span>
                 </button>
             </div>
 
@@ -27,7 +27,7 @@ const isOpen = ref(false);
                     @click="setColor(color)">
                     <span v-if="selectColor() === color"
                         class="absolute inset-0 flex items-center justify-center text-white text-lg">
-                        <span class="icon-[ic--round-check] w-6 h-6"></span>
+                        <span class="fa-solid fa-check"></span>
                     </span>
                 </div>
             </div>
