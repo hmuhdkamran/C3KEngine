@@ -40,7 +40,7 @@ import { config } from "c3-library";
                             <!-- Feature Card 1 -->
                             <div class="mb-8 py-6 pl-6 pr-4 shadow rounded bg-white hover:translate-y-[-2px] transition-transform duration-300">
                                 <span class="mb-4 inline-block p-3 rounded-lg bg-violet-100">
-                                    <span class="icon-[tabler--photo] w-10 h-10 text-violet-600"></span>
+                                    <span class="fa-solid fa-face-awesome fa-2xl text-violet-600"></span>
                                 </span>
                                 <h4 class="mb-2 text-2xl font-bold font-heading">Inventory Management</h4>
                                 <p class="text-gray-500 leading-loose">

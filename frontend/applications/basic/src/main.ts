@@ -41,13 +41,14 @@ const vueLifecycles = singleSpaVue({
 })
 
 // Render directly in development mode
-// if (import.meta.env.DEV) {
-//   const app = createApp(SkApp)
-//   app.use(createPinia()).use(router)
-//   app.provide(SingleSpaKey, {})
-//   app.provide(configKey, config)
-//   app.mount('#app')
-// }
+if (import.meta.env.DEV) {
+  const app = createApp(SkApp)
+  app.use(router);
+  installPinia(app);
+  app.provide(SingleSpaKey, {} as SingleSpaProps)
+  app.provide(configKey, config)
+  app.mount('#app')
+}
 
 export const bootstrap = [cssLifecycles.bootstrap, vueLifecycles.bootstrap]
 export const mount = [cssLifecycles.mount, vueLifecycles.mount]
