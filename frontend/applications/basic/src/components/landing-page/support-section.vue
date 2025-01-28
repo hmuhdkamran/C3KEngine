@@ -27,7 +27,7 @@ import {image1, image3, image2, image4} from '@/assets/images/images'
                                 <div class="flex">
                                     <span
                                         class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 dark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        <span class="fa-solid fa-check"></span>
                                     </span>
                                     <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
                                         Real-time Updates
@@ -38,7 +38,7 @@ import {image1, image3, image2, image4} from '@/assets/images/images'
                                 <div class="flex">
                                     <span
                                         class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 dark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        <span class="fa-solid fa-check"></span>
                                     </span>
                                     <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
                                         Comprehensive Data Tracking
@@ -49,7 +49,7 @@ import {image1, image3, image2, image4} from '@/assets/images/images'
                                 <div class="flex">
                                     <span
                                         class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 dark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        <span class="fa-solid fa-check"></span>
                                     </span>
                                     <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
                                         24/7 Support
@@ -60,7 +60,7 @@ import {image1, image3, image2, image4} from '@/assets/images/images'
                                 <div class="flex">
                                     <span
                                         class="flex items-center justify-center flex-shrink-0 w-6 h-6 text-violet-800 bg-violet-100 rounded-full dark:text-violet-500 dark:bg-transparent">
-                                        <span class="icon-[charm--tick] w-4 h-4"></span>
+                                        <span class="fa-solid fa-check"></span>
                                     </span>
                                     <span class="ml-4 text-base font-medium leading-6 text-gray-500 dark:text-gray-200">
                                         Tips to Optimize Work Time

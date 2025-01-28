@@ -16,8 +16,8 @@ import { config } from 'c3-library';
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">24/7 Support</p>
@@ -26,8 +26,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Employee Tracking</p>
@@ -35,8 +35,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Comprehensive Reporting</p>
@@ -45,8 +45,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Advanced Analytics</p>
@@ -55,8 +55,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Community Support</p>
@@ -64,8 +64,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Seamless Integration</p>
@@ -73,8 +73,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Customizable Dashboards</p>
@@ -82,8 +82,8 @@ import { config } from 'c3-library';
                     </div>
                 </div>
                 <div class="flex items-start space-x-4 mb-12">
-                    <div class="flex-shrink-0 bg-violet-100 p-3 rounded-full">
-                        <span class="icon-[mdi--tick-circle] w-7 h-7 text-violet-600"></span>
+                    <div class="flex-shrink-0 bg-violet-100 p-2 rounded-full">
+                        <span class="fa-solid fa-circle-check text-violet-600"></span>
                     </div>
                     <div>
                         <p class="text-lg font-semibold mb-1">Intuitive User Interface</p>

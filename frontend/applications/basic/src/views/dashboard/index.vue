@@ -45,7 +45,7 @@ const notifications = [
       <div class="bg-white rounded-lg shadow-md p-4">
         <ul>
           <li v-for="task in tasks" :key="task.id"
-            class="flex justify-between items-center py-3 border-b last:border-b-0">
+            class="flex justify-between items-center py-3 border-b border-gray-300 last:border-b-0">
             <span>{{ task.task }}</span>
             <span class="px-2 py-1 rounded text-sm" :class="{
               'bg-yellow-100 text-yellow-700': task.status === 'Pending',
@@ -64,7 +64,7 @@ const notifications = [
       <div class="bg-white rounded-lg shadow-md p-4">
         <ul>
           <li v-for="activity in recentActivities" :key="activity.id"
-            class="flex items-center py-3 border-b last:border-b-0">
+            class="flex items-center py-3 border-b border-gray-300 last:border-b-0">
             <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-4 text-gray-600">
               {{ activity.user.charAt(0) }}
             </div>
@@ -81,7 +81,7 @@ const notifications = [
       <h2 class="text-lg font-bold text-gray-700 mb-4">Notifications</h2>
       <div class="bg-white rounded-lg shadow-md p-4">
         <ul>
-          <li v-for="notification in notifications" :key="notification.id" class="py-3 border-b last:border-b-0">
+          <li v-for="notification in notifications" :key="notification.id" class="py-3 border-b border-gray-300 last:border-b-0">
             <p>{{ notification.message }}</p>
             <p class="text-xs text-gray-500">{{ notification.time }}</p>
           </li>

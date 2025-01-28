@@ -19,19 +19,19 @@ import { avatar} from '@/assets/images/images'
                 <div class="lg:max-w-xl space-y-4 text-lg md:text-xl leading-7">
                     <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
                         <div class="shrink-0 text-violet-500">
-                            <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            <span class="fa-solid fa-badge-check"></span>
                         </div>
                         <div>Free to get started with comprehensive features</div>
                     </div>
                     <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
                         <div class="shrink-0 text-violet-500">
-                            <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            <span class="fa-solid fa-badge-check"></span>
                         </div>
                         <div>Easy migration checklist</div>
                     </div>
                     <div class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 font-semibold">
                         <div class="shrink-0 text-violet-500">
-                            <span class="icon-[mdi--tick-decagram]" style="width: 36px; height: 36px;"></span>
+                            <span class="fa-solid fa-badge-check"></span>
                         </div>
                         <div>Personalized support from our team</div>
                     </div>

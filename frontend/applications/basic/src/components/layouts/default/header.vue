@@ -12,7 +12,7 @@ import { config, VNodeRenderer } from 'c3-library';
                 <button
                     class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
                     type="button">
-                    <span class="icon-[fa-solid--bars]"></span>
+                    <span class="fa-solid fa-bars"></span>
                 </button>
             </div>
             <div class="lg:flex flex-grow items-center hidden">
