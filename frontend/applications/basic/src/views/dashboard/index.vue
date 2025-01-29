@@ -28,7 +28,7 @@ const notifications = [
 </script>
 
 <template>
-  <main class="flex-1 bg-gray-100 min-h-screen p-4">
+  <main class="flex-1 min-h-screen">
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
       <div v-for="stat in stats" :key="stat.id"
         class="p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition-shadow" :class="stat.bgColor">
