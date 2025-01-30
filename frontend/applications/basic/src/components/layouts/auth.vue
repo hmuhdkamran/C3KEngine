@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import Header from "./auth/header.vue";
 import Sidebar from "./auth/sidebar.vue";
-import Breadcrumb from "./auth/breadcrumbs.vue";
+import Breadcrumb from "../breadcrumbs.vue";
 import ColorPalette from "../color.vue";
 import { menuItems } from '@/stores/menuData';
 
@@ -36,7 +36,6 @@ const generateBreadcrumbs = () => {
     breadcrumbs.value.push({
       name: childMenu.name,
       link: childMenu.link,
-      icon: undefined,
     });
   }
 };
