@@ -1,93 +1,48 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { avatar } from '@/assets/images/images'
-import { useSidebar } from '../../../stores/useSidebar'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { avatar } from '@/assets/images/images';
+import { useSidebar } from '@/stores/useSidebar';
 import { selectColor } from '@/stores/colorPalette';
+import { menuItems } from '@/stores/menuData'
+import { sidebarStore } from '@/stores/menuStore';
 
-const { isSidebarOpen } = useSidebar()
-const openDropdown = ref<string | null>(null)
-const userName = ref('Admin')
-const isLogoutDialogOpen = ref(false)
-const isProcessingLogout = ref(false)
-const router = useRouter()
+const { isSidebarOpen } = useSidebar();
+const openDropdown = ref<string | null>(null);
+const userName = ref('Admin');
+const isLogoutDialogOpen = ref(false);
+const isProcessingLogout = ref(false);
+const router = useRouter();
 
-const menuItems = [
-  {
-    name: 'Home',
-    icon: 'fa-solid fa-house',
-    children: [
-      { name: 'Dashboard', link: '/dashboard' }
-    ],
-  },
-  {
-    name: 'HRM',
-    icon: 'fa-solid fa-briefcase',
-    children: [
-      { name: 'Employee Management', link: '#' },
-      { name: 'Payroll', link: '#' },
-      { name: 'Attendance', link: '#' },
-    ],
-  },
-  {
-    name: 'User Management',
-    icon: 'fa-solid fa-user-shield',
-    children: [
-      { name: 'Users', link: '/users' },
-      { name: 'User Roles', link: '#' },
-      { name: 'Routes', link: '#' },
-      { name: 'Roles Routes Map', link: '#' },
-      { name: 'Users Roles Map', link: '#' },
-      { name: 'Queries', link: '#' },
-    ],
-  },
-  {
-    name: 'Production',
-    icon: 'fa-solid fa-conveyor-belt-arm',
-    children: [
-      { name: 'Inventory', link: '#' },
-      { name: 'Manufacturing', link: '#' },
-      { name: 'Quality Control', link: '#' },
-    ],
-  },
-  {
-    name: 'Retail',
-    icon: 'fa-solid fa-shopping-cart',
-    children: [
-      { name: 'Point of Sale', link: '#' },
-      { name: 'Sales Reports', link: '#' },
-      { name: 'Customer Feedback', link: '#' },
-    ],
-  }
-]
+const setActive = (menu: { name: string; link: string }) => {
+  sidebarStore.setActiveParent(menu);
+};
 
-const openLogoutDialog = () => {
-  isLogoutDialogOpen.value = true
-}
+const handleClick = (parent: string, child: { name: string; link: string }) => {
+  setActive(child);
+  openDropdown.value = openDropdown.value === parent ? null : parent;
+};
 
-const cancelLogout = () => {
-  isLogoutDialogOpen.value = false
-}
+const openLogoutDialog = () => (isLogoutDialogOpen.value = true);
+const cancelLogout = () => (isLogoutDialogOpen.value = false);
 
 const confirmLogout = () => {
-  isProcessingLogout.value = true
+  isProcessingLogout.value = true;
   setTimeout(() => {
-    isProcessingLogout.value = false
-    isLogoutDialogOpen.value = false
-    router.push('/authentication/login')
-  }, 1000)
-}
+    isProcessingLogout.value = false;
+    isLogoutDialogOpen.value = false;
+    router.push('/authentication/login');
+  }, 1000);
+};
 
 const toggleDropdown = (itemName: string) => {
-  openDropdown.value = openDropdown.value === itemName ? null : itemName
-}
+  openDropdown.value = openDropdown.value === itemName ? null : itemName;
+};
 </script>
 
 <template>
-  <aside :class="{
-    'w-64': isSidebarOpen,
-    'w-16': !isSidebarOpen,
-  }" class="bg-white shadow-md flex flex-col relative transition-all duration-300 min-h-screen">
+  <aside :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
+    class="bg-white shadow-md flex flex-col relative transition-all duration-300">
     <div class="relative bg-white border-b-2 border-gray-200 p-4">
       <div class="flex flex-col items-center">
         <div class="relative">
@@ -111,19 +66,21 @@ const toggleDropdown = (itemName: string) => {
             @click="toggleDropdown(item.name)">
             <span :class="item.icon" class="h-5 w-5"></span>
             <span v-if="isSidebarOpen" class="ml-4 font-medium">{{ item.name }}</span>
-            <span v-if="isSidebarOpen" :class="openDropdown === item.name ? 'fa-solid fa-angle-up' : 'fa-solid fa-angle-down'
+            <span v-if="isSidebarOpen" :class="openDropdown === item.name
+              ? 'fa-solid fa-angle-up'
+              : 'fa-solid fa-angle-down'
               " class="ml-auto"></span>
           </div>
 
           <ul v-if="isSidebarOpen && openDropdown === item.name" class="ml-8 border-l-2 border-gray-300">
-            <li v-for="child in item.children" :key="child.name"
+            <li v-for="child in item.children" :key="child.name" @click="handleClick(item.name, child)"
               class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
               <router-link :to="child.link" class="block">{{ child.name }}</router-link>
             </li>
           </ul>
 
           <div v-if="!isSidebarOpen"
-            class="tooltip hidden absolute left-full top-0 transform -translate-y-1/2 bg-white border border-gray-300 p-1 z-50 group-hover:block w-48">
+            class="tooltip hidden absolute left-full top-1/2 -translate-y-1/2 bg-white border border-gray-300 p-1 z-50 group-hover:block w-48 shadow-md">
             <ul>
               <li v-for="child in item.children" :key="child.name"
                 class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700 rounded-sm">
@@ -150,7 +107,7 @@ const toggleDropdown = (itemName: string) => {
         <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
         <div class="flex justify-center space-x-4">
           <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
-          :style="{ backgroundColor: selectColor() }" :disabled="isProcessingLogout">
+            :style="{ backgroundColor: selectColor() }" :disabled="isProcessingLogout">
             <span v-if="!isProcessingLogout">Yes, Logout</span>
             <span v-else class="flex items-center">
               <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span> Logging Out...

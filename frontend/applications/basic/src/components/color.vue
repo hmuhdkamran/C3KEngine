@@ -6,9 +6,9 @@ const isOpen = ref(false);
 </script>
 
 <template>
-    <div class="fixed top-20 right-0 flex flex-col items-end z-50">
+    <div class="fixed right-0 flex flex-col items-end z-50">
         <button @click="isOpen = !isOpen"
-            class="p-2 text-white rounded-l-lg shadow-md focus:outline-none transition-colors duration-300 flex items-center justify-center"
+            class="p-3 cursor-pointer text-white rounded-l-lg shadow-md focus:outline-none transition-colors duration-300 flex items-center justify-center"
             :style="{ backgroundColor: selectColor() }">
             <span class="fa-solid fa-palette"></span>
         </button>
@@ -16,7 +16,7 @@ const isOpen = ref(false);
         <div v-if="isOpen" class="absolute top-16 right-0 w-64 p-3 bg-white rounded-l-lg shadow-lg z-50">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-gray-700">Select Color</h3>
-                <button @click="isOpen = false" class="text-gray-500 hover:text-gray-700 transition duration-200">
+                <button @click="isOpen = false" class="text-gray-500 hover:text-gray-700 cursor-pointer transition duration-200">
                     <span class="fa-solid fa-xmark"></span>
                 </button>
             </div>
