@@ -153,6 +153,11 @@ const setPage = (page: number) => {
   font-family: 'Arial', sans-serif;
   margin: 0 auto;
 }
+.user-management {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  margin: 0 auto;
+}
 </style>
 
 <route lang="yaml">

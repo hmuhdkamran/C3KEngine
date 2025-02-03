@@ -6,6 +6,7 @@ import Sidebar from "./auth/sidebar.vue";
 import Breadcrumb from "../breadcrumbs.vue";
 import ColorPalette from "../color.vue";
 import { menuItems } from '@/stores/menuData';
+import Filter from "../filter.vue";
 
 interface Breadcrumb {
   name: string;
@@ -50,7 +51,10 @@ watch(() => route.path, generateBreadcrumbs, { immediate: true });
     <div class="flex flex-grow">
       <Sidebar />
       <div class="flex flex-col flex-grow relative">
-        <Breadcrumb :breadcrumbs="breadcrumbs" />
+        <div class="flex items-center justify-between p-4">
+          <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <Filter />
+        </div>
         <div class="flex-grow p-4 bg-gray-100">
           <RouterView v-slot="{ Component }">
             <Transition name="fade" mode="out-in">
