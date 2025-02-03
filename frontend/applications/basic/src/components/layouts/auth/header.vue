@@ -16,7 +16,7 @@ const toggleSidebar = () => {
         <div class="flex items-center justify-between space-x-4">
             <div class="flex items-center w-full space-x-2 mr-10">
                 <img :src="logo" alt="Logo" class="h-8 w-8" />
-                <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-50">
+                <h2 v-if="isSidebarOpen" class="hidden md:block text-md font-semibold text-gray-50">
                     Ultimate ERP Solution
                 </h2>
             </div>

@@ -80,43 +80,50 @@ const toggleSelectAll = () => {
 
 <template>
     <div>
-        <div class="overflow-x-auto border rounded-sm shadow-md">
+        <div class="overflow-x-auto rounded-sm shadow-md">
             <table class="table-auto w-full border-collapse">
                 <thead>
-                <tr class="bg-gray-200 border-b border-gray-300">
-                    <template v-for="column in props.columns" :key="column.key">
-                        <th v-if="column.check ?? false"
-                        class="cursor-pointer">
-                        <input class="cursor-pointer" type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
-                    </th>
-                        <th v-else @click="changeSort(column.key, column.sort ?? false)"
-                            :class="['cursor-pointer', column.class || '']"
-                            :style="{ width: column.width || 'auto' }">
-                            {{ column.label }}
-                            <span v-if="sortColumn === column.key && column.sort !== false" class="ml-1 text-md">
-                                {{ sortOrder === 'asc' ? '↑' : '↓' }}
-                            </span>
-                        </th>
-                    </template>
-                </tr>
-            </thead>
-                <tbody>
-                <tr v-for="record in paginatedRecords" :key="record[props.columns[0].key]">
-                    <template v-for="column in props.columns">
-                        <template v-if="column.check ?? false">
-                            <td class="cursor-pointer text-center">
-                                <input class="cursor-pointer" type="checkbox" v-model="selectedRecords" :value="record" />
-                            </td>
+                    <tr class="border-b bg-gray-50 border-gray-300">
+                        <template v-for="column in props.columns" :key="column.key">
+                            <th v-if="column.check ?? false" class="cursor-pointer">
+                                <input class="cursor-pointer" type="checkbox" v-model="selectAll"
+                                    @change="toggleSelectAll" />
+                            </th>
+                            <th v-else @click="changeSort(column.key, column.sort ?? false)"
+                                :class="['cursor-pointer', column.class || '']"
+                                :style="{ width: column.width || 'auto' }">
+                                {{ column.label }}
+                                <span v-if="sortColumn === column.key && column.sort !== false" class="ml-1 text-md">
+                                    {{ sortOrder === 'asc' ? '↑' : '↓' }}
+                                </span>
+                            </th>
                         </template>
-                        <template v-else>
-                        <td class="p-1" :class="column.class || ''" :style="{ width: column.width || 'auto' }" :key="column.key">
-                            <slot :name="column.key" :field="column.key" :row="record" v-if="$slots[column.key]"></slot>
-                            <span v-html="record[column.key]" v-else></span>
-                        </td>
-                    </template>
-                    </template>
-                </tr>
-            </tbody>
+                    </tr>
+                </thead>
+
+                <tbody class="text-sm">
+                    <tr v-for="(record, index) in paginatedRecords" :key="record[props.columns[0].key]" :class="[
+                        index % 2 === 0 ? 'bg-gray-50' : 'bg-white',
+                        'hover:shadow-lg hover:bg-gray-100 transition-shadow duration-200'
+                    ]">
+                        <template v-for="column in props.columns">
+                            <template v-if="column.check ?? false">
+                                <td class="cursor-pointer text-center">
+                                    <input class="cursor-pointer" type="checkbox" v-model="selectedRecords"
+                                        :value="record" />
+                                </td>
+                            </template>
+                            <template v-else>
+                                <td class="p-2" :class="column.class || ''" :style="{ width: column.width || 'auto' }"
+                                    :key="column.key">
+                                    <slot :name="column.key" :field="column.key" :row="record"
+                                        v-if="$slots[column.key]"></slot>
+                                    <span v-html="record[column.key]" v-else></span>
+                                </td>
+                            </template>
+                        </template>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div class="mt-4 text-sm flex justify-between items-center">
@@ -134,5 +141,9 @@ const toggleSelectAll = () => {
 .overflow-x-auto {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+thead tr th {
+    height: 40px;
 }
 </style>
