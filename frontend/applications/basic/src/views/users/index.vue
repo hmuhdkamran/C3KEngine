@@ -1,86 +1,72 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { selectColor } from '@/stores/colorPalette';
-import { DataTable, Pagination } from 'c3-library';
+import { DataTable, newGuid, Pagination, RepositoryService } from 'c3-library';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
+interface IUser {
+  UserId: string;
+  Username: string;
+  DisplayName: string;
+  Language: string;
+  Password: string;
+  Salt: string;
+  StatusId: string;
 }
 
-const users = ref<User[]>([]);
-const currentUser = ref<User>({ id: 0, name: '', email: '', role: '' });
+const service = new RepositoryService<IUser>('auth/role/users');
+const entities = ref<IUser[]>([]);
+const entity = ref<IUser>({ UserId: newGuid(), Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: '' });
+
 const isEditMode = ref(false);
 const currentPage = ref(1);
 const itemsPerPage = 10;
 
 const columns = [
-  { key: 'name', label: 'Name', sort: true },
-  { key: 'email', label: 'Email', sort: true },
-  { key: 'role', label: 'Role', sort: true },
+  { key: 'DisplayName', label: 'Name', sort: true },
+  { key: 'Username', label: 'Email', sort: true },
+  { key: 'Language', label: 'Role', sort: true },
   { key: 'actions', label: 'Actions', sort: false, class: 'text-center' },
 ];
 
-const generateDummyUsers = (count: number): User[] => {
-  const firstNames = ['Ali', 'Ahmed', 'Fatima', 'Zainab', 'Usman', 'Hassan', 'Ayesha', 'Bilal', 'Sana', 'Amal'];
-  const lastNames = ['Khan', 'Ali', 'Ahmed', 'Raza', 'Malik', 'Hussain', 'Shah', 'Akhtar', 'Qureshi', 'Baig'];
-  const roles = ['Admin', 'Editor', 'Viewer', 'Manager'];
-
-  return Array.from({ length: count }, (_, index) => ({
-    id: index + 1,
-    name: `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
-    email: `user${index + 1}@example.com`,
-    role: roles[Math.floor(Math.random() * roles.length)],
-  }));
-};
-
 const fetchUsers = () => {
-  users.value = generateDummyUsers(10);
+  service.getAll().then(result => entities.value = result);
 };
 
-const openForm = (user: User | null = null) => {
+const openForm = (user: IUser | null = null) => {
   if (user) {
-    currentUser.value = { ...user };
+    entity.value = { ...user };
     isEditMode.value = true;
   } else {
-    currentUser.value = { id: 0, name: '', email: '', role: '' };
+    entity.value = { UserId: newGuid(), Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: '' };
     isEditMode.value = false;
   }
 };
 
 const saveUser = () => {
-  if (isEditMode.value) {
-    const index = users.value.findIndex((u) => u.id === currentUser.value.id);
-    if (index !== -1) {
-      users.value[index] = { ...currentUser.value };
-    }
-    alert('User updated successfully');
+  if (isEditMode.value) {    
+    service.update(entity.value).then(() => fetchUsers());
   } else {
-    currentUser.value.id = users.value.length + 1;
-    users.value.push({ ...currentUser.value });
-    alert('User created successfully');
+    service.add(entity.value).then(() =>fetchUsers());
   }
 
   openForm();
 };
 
-const deleteUser = (id: number) => {
+const deleteUser = (userId: string) => {
   if (confirm('Are you sure you want to delete this user?')) {
-    users.value = users.value.filter((user) => user.id !== id);
+    entities.value = entities.value.filter((user) => user.UserId !== userId);
     alert('User deleted successfully');
   }
 };
 
 const totalPages = computed(() => {
-  return Math.ceil(users.value.length / itemsPerPage);
+  return Math.ceil(entities.value.length / itemsPerPage);
 });
 
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return users.value.slice(start, end);
+  return entities.value.slice(start, end);
 });
 
 const setPage = (page: number) => {
@@ -96,24 +82,24 @@ onMounted(() => {
 
 <template>
   <div class="user-management relative">
-    <div v-if="currentUser.id !== 0" class="p-4 bg-white rounded-sm shadow-sm">
+    <div v-if="isEditMode" class="p-4 bg-white rounded-sm shadow-sm">
       <h2 class="text-lg font-semibold mb-6">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
       <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="mb-3">
           <label for="name" class="text-sm font-medium text-gray-700">Name:</label>
-          <input type="text" id="name" v-model="currentUser.name" required
+          <input type="text" id="name" v-model="entity.DisplayName" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
         </div>
         <div class="mb-3">
           <label for="email" class="text-sm font-medium text-gray-700">Email:</label>
-          <input type="email" id="email" v-model="currentUser.email" required
+          <input type="email" id="email" v-model="entity.Username" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
         </div>
         <div class="mb-3">
-          <label for="role" class="text-sm font-medium text-gray-700">Role:</label>
-          <input type="text" id="role" v-model="currentUser.role" required
+          <label for="role" class="text-sm font-medium text-gray-700">Language:</label>
+          <input type="text" id="role" v-model="entity.Language" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
         </div>
@@ -128,11 +114,11 @@ onMounted(() => {
     </div>
 
     <div v-else>
-      <DataTable :data="users" :columns="columns">
+      <DataTable :data="entities" :columns="columns">
         <template #actions="{ row }">
           <div class="flex justify-center space-x-1">
             <button class="w-6 h-6 cursor-pointer shadow-md flex items-center justify-center bg-white rounded-full"
-              @click="openForm(row)" :style="{ color: selectColor() }">
+              @click="openForm(row as any)" :style="{ color: selectColor() }">
               <span class="fas fa-pen"></span>
             </button>
             <button class="w-6 h-6 cursor-pointer shadow-md flex items-center justify-center bg-white rounded-full"
