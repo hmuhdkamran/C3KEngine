@@ -1,4 +1,5 @@
 use crate::{models::role::users::Users, repositories::role::users::UsersRepository};
+use uuid::Uuid;
 use c3k_common::{
     interfaces::{irepository::IRepository, iservice::IService},
     models::{config::app_config::get_config, response::ApiResponse},
@@ -24,6 +25,7 @@ impl IService<Users> for UsersService {
     }
 
     async fn add(connection: PgPool, entity: &Users) -> ApiResponse<bool> {
+        
         let config = match get_config() {
             Some(cfg) => cfg,
             None => {
@@ -39,10 +41,13 @@ impl IService<Users> for UsersService {
         .expect("Failed to encrypt password");
 
         let new_entity = Users {
+            user_id: Uuid::new_v4(),
             salt,
             password: hash,
             ..entity.clone()
         };
+
+        println!("Received user data: {:?} and Formated data is: {:?}", entity, new_entity);
 
         match UsersRepository::add(connection, &new_entity).await {
             Ok(entity) => ApiResponse::success(entity),

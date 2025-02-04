@@ -26,6 +26,7 @@ pub async fn add(
     connection: web::Data<PgPool>,
     entity: web::Json<Users>,
 ) -> Result<impl Responder, actix_web::Error> {
+    println!("Data Recieved: {:?}", entity);
     let result = UsersService::add(connection.as_ref().clone(), &entity.into_inner()).await;
     Ok(HttpResponse::Ok().json(result))
 }
