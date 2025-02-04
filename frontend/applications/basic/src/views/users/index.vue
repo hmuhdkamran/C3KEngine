@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue';
-import { DataTable, newGuid, Pagination } from 'c3-library';
+import { DataTable, Pagination } from 'c3-library';
 import { selectColor } from '@/stores/colorPalette';
 import { UserService } from '@/services/user-service';
 import type { User } from '@/models/user';
@@ -57,15 +57,15 @@ const openForm = (user?: User) => {
     isEditMode.value = true;
   } else {
     currentUser.value = {
-      UserId: newGuid(),
+      UserId: '',
       Username: '',
       DisplayName: '',
       Language: 'English',
       Password: '',
-      Salt: 'xxx',
+      Salt: '',
       StatusId: 'Active',
     };
-    confirmPassword.value = '';
+    confirmPassword.value = ''; 
     isEditMode.value = false;
   }
   isFormOpen.value = true;
