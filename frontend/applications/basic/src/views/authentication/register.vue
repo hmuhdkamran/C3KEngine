@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, type Ref } from "vue";
-import { Icon } from "@iconify/vue";
 import logo from "@/assets/logo.svg";
 
 const name: Ref<string> = ref("");
