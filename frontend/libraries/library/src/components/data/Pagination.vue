@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTableStore } from '@/index';
-import { Icon } from '@iconify/vue';
 
 const tableStore = useTableStore();
 
@@ -11,11 +10,11 @@ const tableStore = useTableStore();
         <div class="flex items-center space-x-2">
             <button @click="tableStore.setPage(1)" :disabled="tableStore.currentPage === 1"
                 class="text-gray-800 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <Icon icon="material-symbols:first-page" class="w-4 h-4" />
+                <span class="fa-solid fa-angles-left w-4 h-4"></span>
             </button>
             <button @click="tableStore.setPage(tableStore.currentPage - 1)" :disabled="tableStore.currentPage === 1"
                 class="text-gray-800  hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <Icon icon="material-symbols:keyboard-arrow-left" class="w-4 h-4" />
+                <span class="fa-solid fa-angle-left w-4 h-4"></span>
             </button>
             <div class="text-gray-800  text-sm">
                 <span class="text-bold">Page</span> {{ tableStore.currentPage }} of {{ tableStore.totalPages }}
@@ -23,12 +22,12 @@ const tableStore = useTableStore();
             <button @click="tableStore.setPage(tableStore.currentPage + 1)"
                 :disabled="tableStore.currentPage === tableStore.totalPages"
                 class="text-gray-800  hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <Icon icon="material-symbols:keyboard-arrow-right" class="w-4 h-4" />
+                <span class="fa-solid fa-angle-right w-4 h-4"></span>
             </button>
             <button @click="tableStore.setPage(tableStore.totalPages)"
                 :disabled="tableStore.currentPage === tableStore.totalPages"
                 class="text-gray-800  hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <Icon icon="material-symbols:last-page" class="w-4 h-4" />
+                <span class="fa-solid fa-angles-right w-4 h-4"></span>
             </button>
         </div>
     </div>

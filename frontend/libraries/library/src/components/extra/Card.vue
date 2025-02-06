@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { defineProps, withDefaults, useSlots } from 'vue';
-import { Icon } from '@iconify/vue';
 import { TextHelper } from '@/helpers';
 
 interface CardProps {
@@ -40,8 +39,8 @@ const backgroundColor = TextHelper.generateColorFromText(props.title);
             <div class="absolute inset-0 flex items-center justify-center">
                 <div
                     class="icon-container mx-auto flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                    <Icon :icon="iconClass"
-                        class="text-violet-50 w-48 h-48 transition-all duration-300 group-hover:text-violet-100" />
+                    <span :class="iconClass"
+                        class="text-violet-50 w-48 h-48 transition-all duration-300 group-hover:text-violet-100"></span>
                 </div>
             </div>
         </div>
