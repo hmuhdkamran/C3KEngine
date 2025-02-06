@@ -81,7 +81,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="user-management relative">
+  <div class="relative">
     <div v-if="isEditMode" class="p-4 bg-white rounded-sm shadow-sm">
       <h2 class="text-lg font-semibold mb-6">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
       <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -138,11 +138,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.user-management {
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
-  margin: 0 auto;
-}
+
 </style>
 
 <route lang="yaml">
