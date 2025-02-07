@@ -20,7 +20,7 @@ const emit = defineEmits<Emit>();
 </script>
 
 <template>
-    <div class="flex gap-1 px-4">
+    <div class="flex gap-1">
         <button @click="showFilter = !showFilter"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: selectColor() }">

@@ -43,12 +43,6 @@ const generateBreadcrumbs = () => {
 
 watch(() => route.path, generateBreadcrumbs, { immediate: true });
 
-const openForm = () => {
-  const userManagementComponent = document.querySelector('.user-management');
-  if (userManagementComponent) {
-    userManagementComponent.dispatchEvent(new CustomEvent('openForm'));
-  }
-};
 </script>
 
 <template>
@@ -59,7 +53,7 @@ const openForm = () => {
       <div class="flex flex-col flex-grow relative">
         <div class="flex items-center justify-between p-4">
           <Breadcrumb :breadcrumbs="breadcrumbs" />
-          <Filter @openForm="openForm" />
+          <Filter />
         </div>
         <div class="flex-grow p-4 bg-gray-100">
           <RouterView v-slot="{ Component }">
