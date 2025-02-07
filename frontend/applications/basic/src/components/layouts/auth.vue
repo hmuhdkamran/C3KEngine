@@ -7,6 +7,7 @@ import Breadcrumb from "../breadcrumbs.vue";
 import ColorPalette from "../color.vue";
 import { menuItems } from '@/stores/menuData';
 import Filter from "../filter.vue";
+import { setFormOpen } from "@/stores/edit-form";
 
 interface Breadcrumb {
   name: string;

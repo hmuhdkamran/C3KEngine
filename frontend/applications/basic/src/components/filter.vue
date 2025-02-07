@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { selectColor } from '@/stores/colorPalette';
+import { setFormOpen } from '@/stores/edit-form';
 
 const showFilter = ref(false);
 
@@ -11,16 +12,10 @@ const dropdownOptions = [
     { label: 'Priority', options: ['High', 'Medium', 'Low'] },
 ];
 
-interface Emit {
-    (e: 'openForm'): void;
-}
-
-const emit = defineEmits<Emit>();
-
 </script>
 
 <template>
-    <div class="flex gap-1">
+    <div class="flex gap-1 px-4">
         <button @click="showFilter = !showFilter"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: selectColor() }">
@@ -32,14 +27,9 @@ const emit = defineEmits<Emit>();
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div v-for="(dropdown, index) in dropdownOptions" :key="index" class="flex flex-col gap-1">
                     <label class="text-sm font-medium text-gray-600">{{ dropdown.label }}</label>
-                    <select class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all" :style="{
-                        '--ring-color': selectColor(),
-                        '--border-color': selectColor(),
-                    }" :class="[
-                        'focus:ring-1',
-                        'focus:ring-[var(--ring-color)]',
-                        'focus:border-[var(--border-color)]'
-                    ]">
+                    <select class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all"
+                        :style="{ '--ring-color': selectColor(), '--border-color': selectColor(), }"
+                        :class="['focus:ring-1', 'focus:ring-[var(--ring-color)]', 'focus:border-[var(--border-color)]']">
                         <option v-for="(option, i) in dropdown.options" :key="i" :value="option">
                             {{ option }}
                         </option>
@@ -47,7 +37,7 @@ const emit = defineEmits<Emit>();
                 </div>
             </div>
         </div>
-        <button @click="emit('openForm')"
+        <button @click="setFormOpen(true)"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: selectColor() }">
             <span class="fas fa-plus fa-sm"></span>
