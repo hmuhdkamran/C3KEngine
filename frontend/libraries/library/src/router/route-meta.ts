@@ -8,4 +8,5 @@ export interface IRouteMeta {
   RouteName: string;
   Operation: string;
   authRequired?: boolean;
+  name?:string;
 }

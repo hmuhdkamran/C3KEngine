@@ -3,25 +3,31 @@ import type { IRouteGuardOptions } from './route-guard-option';
 import type { IRouteMeta } from './route-meta';
 import { TokenHelper } from '../helpers';
 import type { IUser } from '../models';
-// import type { IClaimMeta } from "./route-meta";
+
+const getUserRoles = (user: IUser): IRouteMeta[] => {
+    return (user.roles as IRouteMeta[]) || [];
+};
 
 export const routeCheck = (user: IUser, toRouteMeta: IRouteMeta | undefined): boolean => {
-    if (!user.authenticated || !toRouteMeta || !toRouteMeta.RouteName) {
-        return false; // Or true, depending on your default behavior for public routes
+    if (!user.authenticated || !toRouteMeta?.name) {
+        return false;
     }
 
-    const userRoles = user.roles as IRouteMeta[] || [];
+    const userRoles = getUserRoles(user);
 
-    // Check if the user has at least one role that matches the route's required role.
-    return userRoles.some(userRole => userRole.RouteName === toRouteMeta.RouteName && userRole.Operation === toRouteMeta.Operation);
+    return userRoles.some(userRole =>
+        userRole.RouteName === toRouteMeta.RouteName && userRole.Operation === toRouteMeta.Operation
+    );
 };
 
 export const verifyCheck = (user: IUser, meta: any): boolean => {
-    if (user.authenticated && (meta?.authRequired || meta?.claims)) {
+    const authRequired = meta?.authRequired === true;
+    const hasClaims = meta?.claims !== undefined;
+
+    if (user.authenticated && (authRequired || hasClaims)) {
         return !user.verified;
-    } else {
-        return false;
     }
+    return false;
 };
 
 export let ActivedRoutes: RouteRecordRaw[] = [];
@@ -32,19 +38,31 @@ export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
 
         to.matched.forEach((record: any) => ActivedRoutes.push(record));
 
-        const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());
+        let user: IUser | null = null;
+        try {
+            const token = TokenHelper.getAccessToken();
+            if (token) {
+                user = TokenHelper.parseUserToken(token);
+            } else {
+                user = { authenticated: false } as IUser;
+            }
+        } catch (error) {
+            user = { authenticated: false } as IUser;
+        }
+
         const routeMeta: IRouteMeta | undefined = to.meta as any;
 
-        if (routeMeta?.authRequired === true && !routeCheck(user, routeMeta)) {
-            if (user.authenticated) {
+        if (routeMeta?.authRequired === true && !routeCheck(user || { authenticated: false } as IUser, routeMeta)) {
+            if (user?.authenticated) {
                 next(options.forbiddenRouteName);
             } else {
                 next({ name: options.loginRouteName, query: { redirect: to.fullPath } });
             }
         } else if (
             to.name !== options.verifyRouteName &&
-            to.matched.some((r) => verifyCheck(user, r.meta))
+            to.matched.some((r) => verifyCheck(user || { authenticated: false } as IUser, r.meta))
         ) {
+            console.log(`To: ${JSON.stringify(to)}, Options: ${JSON.stringify(options)}, IUser: ${JSON.stringify(user)}`);
             next(options.loginRouteName);
         } else {
             next();
