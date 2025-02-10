@@ -30,12 +30,9 @@ export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
     return async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
         ActivedRoutes = [];
 
-        console.log(`Try to find: ${JSON.stringify(to.meta)}`)
-
         to.matched.forEach((record: any) => ActivedRoutes.push(record));
 
-        const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());        
-
+        const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());
         const routeMeta: IRouteMeta | undefined = to.meta as any;
 
         if (routeMeta?.authRequired === true && !routeCheck(user, routeMeta)) {
