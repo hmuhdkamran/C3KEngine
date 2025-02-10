@@ -2,6 +2,7 @@
 meta:
   name: dashboard
   title: dashboard
+  authRequired: true
   breadcrumb:
     - dashboard
 </route>

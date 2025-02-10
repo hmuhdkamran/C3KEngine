@@ -1,51 +1,58 @@
-import type { NavigationGuard, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
-import type { IRouteGuardOptions } from './route-guard-option'
-import type { IRouteMeta } from './route-meta'
-import { TokenHelper } from '../helpers'
-import type { IUser } from '../models'
-import type { IClaimMeta } from "./route-meta";
+import type { NavigationGuard, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+import type { IRouteGuardOptions } from './route-guard-option';
+import type { IRouteMeta } from './route-meta';
+import { TokenHelper } from '../helpers';
+import type { IUser } from '../models';
+// import type { IClaimMeta } from "./route-meta";
 
-export const routeCheck = (user: IUser, to: string): boolean => {
-  const requiredPermissions = user.roles as IRouteMeta[] || []
+export const routeCheck = (user: IUser, toRouteMeta: IRouteMeta | undefined): boolean => {
+    if (!user.authenticated || !toRouteMeta || !toRouteMeta.RouteName) {
+        return false; // Or true, depending on your default behavior for public routes
+    }
 
-  console.log(to);
+    const userRoles = user.roles as IRouteMeta[] || [];
 
-  // Check if user is authenticated and has the required permissions
-  return user.authenticated && requiredPermissions.every(() => /*can('read', to)*/ true)
+    // Check if the user has at least one role that matches the route's required role.
+    return userRoles.some(userRole => userRole.RouteName === toRouteMeta.RouteName && userRole.Operation === toRouteMeta.Operation);
 };
 
-export const verifyCheck = (user: IUser, meta: IClaimMeta): boolean => {
-  if (user.authenticated && (meta.private || meta.claims)) {
-    return !user.verified;
-  } else {
-    return false;
-  }
+export const verifyCheck = (user: IUser, meta: any): boolean => {
+    if (user.authenticated && (meta?.authRequired || meta?.claims)) {
+        return !user.verified;
+    } else {
+        return false;
+    }
 };
 
 export let ActivedRoutes: RouteRecordRaw[] = [];
 
 export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
-  return async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    ActivedRoutes = [];
-    to.matched.forEach((record: any) => ActivedRoutes.push(record));
+    return async (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+        ActivedRoutes = [];
 
-    const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());
+        console.log(`Try to find: ${JSON.stringify(to.meta)}`)
 
-    if (to.matched.some((_r) => routeCheck(user, to.name as string))) {
-      if (user.authenticated && to.meta.claims) {
-        next(options.forbiddenRouteName);
-      } else {
-        next(options.loginRouteName);
-      }
-    } else if (
-      to.name !== options.verifyRouteName &&
-      to.matched.some((r) => verifyCheck(user, r.meta as IClaimMeta))
-    ) {
-      next(options.loginRouteName);
-    } else {
-      next();
-    }
+        to.matched.forEach((record: any) => ActivedRoutes.push(record));
 
-    window.scrollTo(0, 0);
-  };
+        const user: IUser = TokenHelper.parseUserToken(TokenHelper.getAccessToken());        
+
+        const routeMeta: IRouteMeta | undefined = to.meta as any;
+
+        if (routeMeta?.authRequired === true && !routeCheck(user, routeMeta)) {
+            if (user.authenticated) {
+                next(options.forbiddenRouteName);
+            } else {
+                next({ name: options.loginRouteName, query: { redirect: to.fullPath } });
+            }
+        } else if (
+            to.name !== options.verifyRouteName &&
+            to.matched.some((r) => verifyCheck(user, r.meta))
+        ) {
+            next(options.loginRouteName);
+        } else {
+            next();
+        }
+
+        window.scrollTo(0, 0);
+    };
 };

@@ -42,8 +42,4 @@ watch(() => notificationsStore.messages, (newVal: ToastNotification[], oldVal: T
   padding: 0 4px;
   background-color: transparent !important;
 }
-
-.n-layout-content {
-  // height: 100vh !important;
-}
 </style>

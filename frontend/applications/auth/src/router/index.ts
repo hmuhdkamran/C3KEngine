@@ -10,7 +10,7 @@ const generatedRoutesTyped = generatedRoutes as RouteRecordRaw[];
 const routeGuardOptions: IRouteGuardOptions = {
   resolveUser: () => DefaultUser,
   forbiddenRouteName: 'not-authorized',
-  loginRouteName: 'login',
+  loginRouteName: 'account/login',
   verifyRouteName: 'access-control',
   store: null,
 }
@@ -31,6 +31,6 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-// router.beforeEach(RouteGuards(routeGuardOptions))
+router.beforeEach(RouteGuards(routeGuardOptions))
 
 export default router
