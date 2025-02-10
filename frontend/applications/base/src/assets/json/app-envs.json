@@ -1,7 +1,8 @@
 {
     "local": {},
     "dev": {
-        "@c3k/base": "http://localhost:3001/src/main.ts"
+        "@c3k/base": "http://localhost:3001/src/main.ts",
+        "@c3k/auth": "http://localhost:3002/src/main.ts"
     },
     "staging": {},
     "prod": {}

@@ -1,0 +1,102 @@
+.p-button:focus {
+  box-shadow: none;
+}
+
+.language {
+  .p-button.p-button-text.p-button-plain:enabled:hover {
+    background: transparent;
+    color: #444;
+  }
+}
+
+.p-sidebar {
+  background: transparent;
+  box-shadow: none;
+
+
+  
+}
+
+.p-sidebar-left {
+  max-width: var(--sidebar-width);
+}
+
+.p-button.p-button-link:enabled:focus {
+  box-shadow: none;
+  color: #000;
+}
+
+.p-overlay-badge .p-badge {
+  top: 2px;
+}
+
+
+.rtl {
+  .n-menu-item-content__icon {
+    margin-left: 8px;
+    margin-right: 5px !important;
+  }
+
+  .n-menu .n-submenu .n-menu-item-content {
+    padding-left: 1.2rem !important;
+  }
+
+  .n-menu .n-submenu .n-submenu-children .n-menu-item .n-menu-item-content {
+    padding-right: 64px;
+    padding-left: 1.2rem !important;
+  }
+
+  .p-overlay-badge .p-badge {
+    left: -6px;
+    right: auto;
+    top: 2px;
+  }
+
+  .n-pagination {
+    flex-direction: row-reverse !important;
+  }
+
+  .n-data-table-expand-trigger {
+    transform: rotate(180deg);
+    margin-left: 8px;
+    margin-right: 0 !important;
+  }
+
+  .n-rate {
+    direction: ltr;
+  }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0 1000px #eff0f1 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+// ApexCharts
+.dark {
+  .apexcharts-text {
+    fill: #fff;
+  }
+
+  .apexcharts-tooltip,
+  .apexcharts-tooltip-title {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+  }
+
+  .apexcharts-legend-text {
+    color: #fff !important;
+    border: 1px solid #555 !important;
+  }
+}
