@@ -4,7 +4,7 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import routes from '~pages'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL + 'basic'),
   routes: [
     ...setupLayouts(routes)
   ],

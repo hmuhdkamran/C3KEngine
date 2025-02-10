@@ -2,7 +2,7 @@
     "routes": [
       {
         "type": "route",
-        "path": "/base",
+        "path": "/basic",
         "routes": [
           {
             "type": "application",
