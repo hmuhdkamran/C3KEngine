@@ -1,14 +1,26 @@
+<script setup lang="ts">
+import { FeatureSection, GetStartedSection, ModuleSection, SliderSection, SupportSection, TestimonialSection } from "~/components/landing-page";
+</script>
+
 <route lang="yaml">
 meta:
   name: dashboard
   title: dashboard
-  authRequired: true
+  authRequired: false
   breadcrumb:
     - dashboard
 </route>
 
 <template>
-  <DashboardPage />
+  <!-- <DashboardPage /> -->
+  <div>
+    <SliderSection />
+    <GetStartedSection />
+    <ModuleSection />
+    <SupportSection />
+    <FeatureSection />
+    <TestimonialSection />
+  </div>
 </template>
 
 <style scoped></style>

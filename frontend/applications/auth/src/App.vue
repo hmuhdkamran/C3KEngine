@@ -69,7 +69,6 @@ watch(() => layout.themeColor, (newValue) => {
       <n-message-provider placement="bottom-right">
         <n-dialog-provider>
           <router-view />
-          <GithubButton />
         </n-dialog-provider>
       </n-message-provider>
     </n-notification-provider>

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import Header from "./default/header.vue";
-import Footer from "./default/footer.vue";
-
 import type { ToastNotification } from '~/store/notify.store'
 
 const notification = useNotification()
@@ -23,12 +20,10 @@ watch(() => notificationsStore.messages, (newVal: ToastNotification[], oldVal: T
 
 <template>
   <main class="text-gray-700 dark:text-gray-200">
-    <Header />
     <RouterView v-slot="{ Component }">
       <Transition name="fade" mode="out-in">
         <Component :is="Component" />
       </Transition>
     </RouterView>
-    <Footer />
   </main>
 </template>

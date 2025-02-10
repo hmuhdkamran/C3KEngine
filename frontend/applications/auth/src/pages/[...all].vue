@@ -19,7 +19,13 @@ const { t } = useI18n()
       <router-link to="/">
         <n-button round size="large" secondary type="warning" m="3 t8">
           {{ t('common.goHome') }}
-        </n-button>
+        </n-button>        
+      </router-link>
+      
+      <router-link to="/account/login">
+        <n-button round size="large" secondary type="info" m="3 t8">
+          {{ t('login.title') }}
+        </n-button>        
       </router-link>
     </div>
   </Layout>
