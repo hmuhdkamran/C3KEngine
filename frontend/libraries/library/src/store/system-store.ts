@@ -1,4 +1,5 @@
-import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import type { IUser } from '../models'
 import { DefaultUser } from '../models'
@@ -10,27 +11,35 @@ export interface ICommonState {
   toggleSidebar: boolean
 }
 
-export const useSystemStore = defineStore('system', {
-  state: (): ICommonState => ({
-    isLoading: false,
-    user: DefaultUser,
-    toggleSidebar: false,
-  }),
+export const useSystemStore = defineStore('system', () => {
+  const isLoading = ref(false);
+  const user = ref<IUser>(DefaultUser);
+  const toggleSidebar = ref(false);
 
-  actions: {
-    updateLoading(loading: boolean) {
-      this.isLoading = loading
-    },
+  function updateLoading(loading: boolean) {
+    isLoading.value = loading
+  }
 
-    updateUser(user: IUser | string) {
-      if (typeof user === 'string')
-        this.user = TokenHelper.parseUserToken(user)
-      else
-        this.user = user
-    },
+  function updateUser(usr: IUser | string) {
+    if (typeof usr === 'string')
+      user.value = TokenHelper.parseUserToken(usr)
+    else
+      user.value = usr
+  }
 
-    updateToggleSidebar(changed: boolean) {
-      this.toggleSidebar = changed
-    },
-  },
-})
+  function updateToggleSidebar(changed: boolean) {
+    toggleSidebar.value = changed
+  }
+
+  return {
+    user,
+    isLoading,
+    toggleSidebar,
+    updateLoading,
+    updateUser,
+    updateToggleSidebar
+  }
+}, { persist: true })
+
+if (import.meta.hot)
+  import.meta.hot.accept(acceptHMRUpdate(useSystemStore, import.meta.hot))

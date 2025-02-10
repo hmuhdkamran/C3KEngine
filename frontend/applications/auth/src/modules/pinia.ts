@@ -1,3 +1,4 @@
+import { installPinia } from 'c3-library';
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import type { AppModule } from '~/types'
@@ -5,6 +6,7 @@ import type { AppModule } from '~/types'
 // Setup Pinia
 // https://pinia.vuejs.org/
 export const install: AppModule = (app) => {
+  installPinia(app);
   const pinia = createPinia()
   pinia.use(piniaPluginPersistedstate)
   app.use(pinia)

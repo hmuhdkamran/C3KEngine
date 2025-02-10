@@ -8,21 +8,23 @@ import AppleIcon from '~/components/CustomIcons/AppleIcon.vue'
 import type { LoginViewModel } from '~/models/Account'
 
 const { t } = useI18n()
+
 const accountStore = useAccountStore()
 const { isLoading } = storeToRefs(accountStore)
-const loginInfo = ref<LoginViewModel>({ username: 'Yummy', password: 'Admin!' })
+const loginInfo = ref<LoginViewModel>({ username: 'admin@sefam.com', password: 'P@ssw0rd' })
 const loginFailed = ref(false)
 const router = useRouter()
 const formRef = ref<FormInst | null>(null)
 async function login() {
   formRef.value?.validate(async (errors: any) => {
-    if (!errors) {
+    if (!errors) {      
       const loginSucceed = await accountStore.login(loginInfo.value)
       if (loginSucceed) {
         useNotifyStore().success(t('login.successMessage'))
-        setTimeout(() => router.push('/'), 500)
+        setTimeout(() => router.push('/dashboard'), 500)
       }
       else {
+        useNotifyStore().error(t('login.failedMessage'))
         loginFailed.value = true
         setTimeout(() => {
           loginFailed.value = false

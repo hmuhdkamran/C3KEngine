@@ -12,7 +12,6 @@ meta:
 </route>
 
 <template>
-  <!-- <DashboardPage /> -->
   <div>
     <SliderSection />
     <GetStartedSection />
