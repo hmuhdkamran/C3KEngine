@@ -7,8 +7,8 @@ import GermanyIcon from '../CustomIcons/GermanyIcon.vue'
 import ChineseIcon from '../CustomIcons/ChineseIcon.vue'
 import ArabicIcon from '../CustomIcons/ArabicIcon.vue'
 import TurkishIcon from '../CustomIcons/TurkishIcon.vue'
-
 import PersianIcon from '../CustomIcons/PersianIcon.vue'
+import UrduIcon from '../CustomIcons/UrduIcon.vue'
 
 defineProps<{ showTitle?: boolean }>()
 const { t } = useI18n()
@@ -50,6 +50,8 @@ function getLanguageIcon(language: string) {
       return PersianIcon
     case 'ch':
       return ChineseIcon
+    case 'ur':
+      return UrduIcon
     default:
       return EnglandIcon
   }

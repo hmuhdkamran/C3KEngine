@@ -1,0 +1,236 @@
+ur:
+  Github:
+    button: گٹ ہب
+    tooltip: گٹ ہب پر ستارہ ⭐️ دے کر اس پروجیکٹ کو سپورٹ کریں
+  ar: عربی
+  brands:
+    create:
+      brandName: نام
+      buttonTitle: بنائیں
+      image: تصویر
+      title: نیا برانڈ بنائیں
+      url: یو آر ایل
+    createButton: بنائیں
+    name: برانڈ
+    shortName: مختصر نام
+    title: برانڈز
+    validations:
+      image: تصویر درکار ہے
+      name: نام درکار ہے
+      url: یو آر ایل درکار ہے
+  button:
+    about: کے بارے میں
+    back: پیچھے
+    go: جاؤ
+    home: ہوم
+    toggle_dark: ڈارک موڈ تبدیل کریں
+    toggle_langs: زبانیں تبدیل کریں
+  categories:
+    create:
+      buttonTitle: بنائیں
+      categoryName: نام
+      parent: والدین
+      title: نیا زمرہ بنائیں
+    createButton: بنائیں
+    stat: شماریات
+    title: زمرہ جات
+    validations:
+      nameRequired: نام درکار ہے
+      parentRequired: والدین منتخب نہیں
+  category:
+    name: زمرہ
+    productsCount: مصنوعات کی تعداد
+  ch: چینی
+  colors:
+    color: رنگ
+    create:
+      buttonTitle: بنائیں
+      color: رنگ
+      name: نام
+      title: نیا رنگ بنائیں
+    createButton: بنائیں
+    name: نام
+    title: رنگ
+    validations:
+      colorRequired: رنگ منتخب نہیں
+      nameRequired: نام درکار ہے
+  common:
+    403Error: آپ کو رسائی کی اجازت نہیں
+    404Error: 404 خرابی
+    404Message: >-
+      معذرت، لیکن آپ جو صفحہ تلاش کر رہے ہیں وہ موجود نہیں ہے، ہٹا دیا گیا ہے،
+      نام تبدیل کر دیا گیا ہے یا عارضی طور پر دستیاب نہیں ہے۔
+    actions: اعمال
+    date: تاریخ
+    delete: حذف کریں
+    deleteConfirm: کیا آپ واقعی اس شے کو حذف کرنا چاہتے ہیں؟
+    goHome: ہوم پر واپس جائیں
+    name: نام
+    new: نیا
+    notFound: نہیں ملا
+    oops: افسوس! صفحہ
+    price: قیمت
+    search: تلاش
+    status: حالت
+  currencySign: روپے
+  customers:
+    customerName: گاہک کا نام
+    email: ای میل
+    joinDate: تاریخ شمولیت
+    ordersCount: آرڈرز کی تعداد
+    phone: فون
+    title: گاہک
+  customize:
+    color: رنگ
+    language: زبان
+    layout: ترتیب
+    theme: تھیم
+    title: حسب مرضی
+  dashboard:
+    activeOrders: فعال آرڈرز
+    products: مصنوعات
+    recentOrders: حالیہ آرڈرز
+    registers: رجسٹریشنز
+    sells: فروخت
+    summary: خلاصہ
+    transactions: لین دین
+    trendingProducts: مقبول مصنوعات
+    visits: وزٹس
+  de: جرمن
+  description: مفت Vue 3 ڈیش بورڈ
+  direction: rtl
+  en: انگریزی
+  enums:
+    OrderStatus:
+      Delivered: فراہم کردہ
+      Processing: پروسیسنگ
+      ReadyToSend: بھیجنے کے لیے تیار
+      Sent: بھیجا گیا
+      Submitted: جمع کرایا گیا
+    ProductStatus:
+      Active: فعال
+      Draft: ڈرافٹ
+      NotActive: غیر فعال
+  fa: فارسی
+  forgot:
+    button: بحال کریں
+    email: ای میل
+    emailValidation: ای میل درست نہیں
+    haveNotAccount: اکاؤنٹ نہیں ہے؟
+    login: لاگ ان
+    register: نیا بنائیں!
+    rememberInfo: پاسورڈ یاد آگیا؟
+    resetPassword: پاسورڈ ری سیٹ
+    sendEmailSuccess: ای میل کامیابی سے بھیج دی گئی، براہ کرم اپنا ای میل چیک کریں
+    title: پاسورڈ بھول گئے
+    username: صارف نام
+  home: ہوم
+  login:
+    createAccount: نیا بنائیں!
+    failedMessage: لاگ ان ناکام
+    forgetPassword: پاسورڈ بھول گئے؟
+    haveNotAccount: اکاؤنٹ نہیں ہے؟
+    loginButton: لاگ ان
+    message: اپنے اکاؤنٹ تک رسائی کے لیے یہاں لاگ ان کریں
+    password: پاسورڈ
+    rememberMe: مجھے یاد رکھیں
+    skipLogin: لاگ ان چھوڑیں
+    successMessage: کامیابی سے لاگ ان ہو گئے 🎉
+    title: لاگ ان
+    username: صارف نام
+    validations:
+      passwordRequired: پاسورڈ درکار ہے
+      userNameRequired: صارف نام درج کریں
+    welcome: خوش آمدید!
+  menu:
+    accountSettings: اکاؤنٹ کی ترتیبات
+    announcement: اعلان
+    authentication: تصدیق
+    blog: بلاگ
+    brands: برانڈز
+    categories: زمرہ جات
+    colors: رنگ
+    comments: تبصرے
+    createProduct: مصنوعہ بنائیں
+    customers: گاہک
+    dashboard: ڈیش بورڈ
+    feedbacks: فیڈ بیک
+    forgetPassword: پاسورڈ بھول گئے
+    login: لاگ ان
+    messages: پیغامات
+    news: خبریں
+    notFound: 404 خرابی
+    notifications: اطلاعات
+    orders: آرڈرز
+    other: دیگر
+    pages: صفحات
+    productManagement: مصنوعات کا انتظام
+    products: مصنوعات
+    register: رجسٹر
+    reviews: جائزے
+    settings: ترتیبات
+    sms: ایس ایم ایس
+    support: سپورٹ
+    users: صارفین
+    websiteSettings: ویب سائٹ کی ترتیبات
+  not-found: نہیں ملا
+  notifications:
+    clear: سب صاف کریں
+    empty: کوئی اطلاعات نہیں
+    title: اطلاعات
+  notify:
+    welcome: >-
+      فریم ورک میں خوش آمدید! NaiveUI اور Vue3 پر مبنی مفت ایڈمن پینل،
+      براہ کرم گٹ ہب پر ستارہ ⭐️ دے کر اس پروجیکٹ کو سپورٹ کریں
+  orders:
+    customer: گاہک
+    itemsCount: اشیاء کی تعداد
+  products:
+    category: زمرہ
+    create:
+      barcode: بارکوڈ
+      brand: برانڈ
+      category: زمرہ
+      description: تفصیل
+      discountedPrice: رعایتی قیمت
+      imageName: تصویر
+      inStock: اسٹاک میں
+      keywords: کلیدی الفاظ
+      media: میڈیا
+      name: مصنوعات کا نام
+      newKeyword: نیا کلیدی لفظ
+      price: قیمت
+      pricing: قیمتوں کا تعین
+      productInformation: مصنوعات کی معلومات
+      sku: SKU
+      title: مصنوعات بنائیں
+    name: مصنوعات کا نام
+    rate: ریٹنگ
+    stoke: اسٹاک
+  register:
+    button: رجسٹر
+    haveAccount: پہلے سے اکاؤنٹ ہے؟
+    login: لاگ ان!
+    password: پاسورڈ
+    successMessage: کامیابی سے رجسٹر ہو گئے 🎉
+    title: رجسٹر
+    username: صارف نام
+  reviews:
+    comment: تبصرہ
+    customer: گاہک
+    date: تاریخ
+    product: مصنوعات
+    rate: ریٹنگ
+  title: فریم ورک
+  tr: ترکی
+  userMenu:
+    dark: ڈارک
+    en: انگریزی
+    fa: فارسی
+    language: زبان
+    light: لائٹ
+    logout: لاگ آؤٹ
+    options: اختیارات
+    profile: پروفائل
+    theme: تھیم
+  ur: Urdu

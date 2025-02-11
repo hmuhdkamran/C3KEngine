@@ -93,6 +93,7 @@ declare module 'vue' {
     ThemeSwitch: typeof import('./components/Navbar/ThemeSwitch.vue')['default']
     TrendingProducts: typeof import('./components/Dahboard/TrendingProducts.vue')['default']
     TurkishIcon: typeof import('./components/CustomIcons/TurkishIcon.vue')['default']
+    UrduIcon: typeof import('./components/CustomIcons/UrduIcon.vue')['default']
     UserProfile: typeof import('./components/Navbar/UserProfile.vue')['default']
   }
 }
