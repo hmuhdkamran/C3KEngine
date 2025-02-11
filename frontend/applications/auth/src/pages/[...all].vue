@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useSystemStore } from 'c3-library';
+
 const resource = useRoute().path.split('/').pop()
 const { t } = useI18n()
+const store = useSystemStore();
 </script>
 
 <template>
@@ -16,13 +19,17 @@ const { t } = useI18n()
         {{ t('common.404Message') }}
       </p>
 
-      <router-link to="/">
+      <router-link to="/dashboard" v-if="store.user.authenticated">
+        <n-button round size="large" secondary type="warning" m="3 t8">
+          {{ t('menu.dashboard') }}
+        </n-button>                
+      </router-link>
+      <router-link to="/" v-else>
         <n-button round size="large" secondary type="warning" m="3 t8">
           {{ t('common.goHome') }}
-        </n-button>        
+        </n-button>
       </router-link>
-      
-      <router-link to="/account/login">
+      <router-link to="/account/login" v-if="!store.user.authenticated">
         <n-button round size="large" secondary type="info" m="3 t8">
           {{ t('login.title') }}
         </n-button>        

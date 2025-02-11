@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { type DataTableColumns } from 'naive-ui/es/components'
 import type { RowData } from 'naive-ui/es/data-table/src/interface'
-import { OrderStatus } from '~/models/Order'
 
 const { t } = useI18n()
-const store = useOrderStore()
-const { getStatusColor } = useOrders()
 const { renderPrice, renderTag } = useRender()
 
 onMounted(getItems)
 
 function getItems() {
-  store.getRecentOrders(7)
+  []
 }
 
 const columns: DataTableColumns<RowData> = [
@@ -29,7 +26,7 @@ const columns: DataTableColumns<RowData> = [
     key: 'status',
     fixed: 'right',
     width: 80,
-    render: row => renderTag(row.status, getStatusColor(row.status), OrderStatus, 'OrderStatus'),
+    render: row => renderTag(row.status, 'default', '', 'OrderStatus'),
   },
 ]
 </script>
@@ -37,7 +34,7 @@ const columns: DataTableColumns<RowData> = [
 <template>
   <div>
     <n-data-table
-      :bordered="false" :columns="columns" :data="store.orders.items" :loading="store.isLoading"
+      :bordered="false" :columns="columns" :data="[]" :loading="false"
       :scroll-x="500"
     />
   </div>

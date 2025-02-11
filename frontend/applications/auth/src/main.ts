@@ -27,11 +27,11 @@ const cssLifecycles = singleSpaCss({
   },
 })
 
-// declare module '@vue/runtime-core' {
-//   export interface ComponentCustomProperties {
-//     $filters: any
-//   }
-// }
+declare module '@vue/runtime-core' {
+  export interface ComponentCustomProperties {
+    $filters: any
+  }
+}
 
 const vueLifecycles = singleSpaVue({
   createApp,

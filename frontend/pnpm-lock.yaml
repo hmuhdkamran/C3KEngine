@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      c3k-library:
+      c3-library:
         specifier: file:./libraries/library
         version: link:libraries/library
     devDependencies:

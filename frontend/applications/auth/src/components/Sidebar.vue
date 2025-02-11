@@ -21,6 +21,7 @@ import {
   ContentSettings20Regular as WebsiteSettingsIcon,
 } from '@vicons/fluent'
 import { storeToRefs } from 'pinia'
+import { config } from "c3-library";
 
 const layoutStore = useLayoutStore()
 const { collapsed, forceCollapsed, mobileMode, mobileMenuClosed } = storeToRefs(layoutStore)
@@ -41,61 +42,23 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(DashboardIcon),
   },
   {
-    label: () => t('menu.productManagement'),
-    key: 'productManagement',
-    icon: renderIcon(ProductsIcon),
-    children: [
-      {
-        label: () => renderLabel(t('menu.products'), '/products'),
-        key: 'products',
-        icon: renderIcon(ProductsIcon2),
-      },
-      {
-        label: () => renderLabel(t('menu.categories'), '/categories'),
-        key: 'categories',
-        icon: renderIcon(CategoryIcon),
-      },
-      {
-        label: () => renderLabel(t('menu.brands'), '/brands'),
-        key: 'brands',
-        icon: renderIcon(BrandsIcon),
-      },
-      {
-        label: () => renderLabel(t('menu.colors'), '/colors'),
-        key: 'colors',
-        icon: renderIcon(ColorsIcon),
-      },
-      {
-        label: () => renderLabel(t('menu.reviews'), '/reviews'),
-        key: 'reviews',
-        icon: renderIcon(ReviewIcon),
-      },
-    ],
-  },
-  {
-    label: () => renderLabel(t('menu.orders'), '/orders'),
-    key: 'orders',
-    icon: renderIcon(InvoicesIcon, true),
-  },
-  {
-    label: () => renderLabel(t('menu.customers'), '/customers'),
-    key: 'customers',
-    icon: renderIcon(CustomersIcon),
-  },
-
-  {
     label: () => t('menu.authentication'),
     key: 'auth',
     icon: renderIcon(AuthIcon),
     children: [
       {
-        label: () => renderLabel(t('menu.login'), '/account/login'),
+        label: () => renderLabel(t('menu.users'), '/auth/users'),
         key: 'login',
         icon: renderIcon(LoginIcon),
       },
       {
-        label: () => renderLabel(t('menu.register'), '/account/register'),
-        key: 'register',
+        label: () => renderLabel(t('menu.products'), '/account/products'),
+        key: 'products',
+        icon: renderIcon(LoginIcon),
+      },
+      {
+        label: () => renderLabel(t('menu.productManagement'), '/account/productManagement'),
+        key: 'products-management',
         icon: renderIcon(RegisterIcon),
       },
 
@@ -123,17 +86,6 @@ const menuOptions: MenuOption[] = [
       },
     ],
   },
-  {
-    label: () => t('menu.other'),
-    key: 'other',
-    icon: renderIcon(PagesIcon),
-    children: [
-      {
-        label: () => renderLabel(t('menu.notFound'), '/404'),
-        key: 'not-found',
-      },
-    ],
-  },
 ]
 
 const route = useRoute()
@@ -147,7 +99,7 @@ onMounted(() => {
 function activateCurrentRoute() {
   const keys = menuOptions.flatMap(m => m.children || m) as [{ key: string }]
   if (keys !== undefined) {
-    selectedMenuKey.value = keys.find(k => k.key.toLowerCase() === route.name.toLowerCase())?.key ?? 'index'
+    selectedMenuKey.value = keys.find(k => k.key.toLowerCase() === (route.name as string).toLowerCase())?.key ?? 'index'
     menuRef.value?.showOption(selectedMenuKey.value)
   }
 }
@@ -168,7 +120,7 @@ router.beforeEach(() => {
         <div flex w-full justify-start items-center>
           <img src="@/assets/images/logo.svg" alt="logo" class="logo">
           <h1 class="main-title">
-            {{ t('title') }}
+            {{ config.application }}
           </h1>
         </div>
 

@@ -18,6 +18,6 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
-        "c3k-library": "file:./libraries/library"
+        "c3-library": "file:./libraries/library"
     }
 }

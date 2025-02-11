@@ -2,7 +2,7 @@
 import { onMounted, ref, type Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { AuthenticationService } from "@/services/authentication-service";
-import { useNotification } from "c3k-library";
+import { useNotification } from "c3-library";
 import logo from "@/assets/logo.svg";
 
 const service: AuthenticationService = new AuthenticationService();
