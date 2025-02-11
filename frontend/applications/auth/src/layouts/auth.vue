@@ -26,7 +26,7 @@ watch(() => notificationsStore.messages, (newVal: ToastNotification[], oldVal: T
         <div class="px-0 py-1 md:p-3 md:pb-15 relative md:container md:mx-auto">
           <router-view v-slot="{ Component, route }">
             <transition name="route" mode="out-in">
-              <div :(key)="route">
+              <div :key="route.hash">
                 <component :is="Component" />
               </div>
             </transition>

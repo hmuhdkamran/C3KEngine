@@ -5,6 +5,7 @@
 meta:
   name: dashboard
   title: dashboard
+  layout: auth
   authRequired: true
   breadcrumb:
     - dashboard

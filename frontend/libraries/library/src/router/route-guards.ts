@@ -9,15 +9,21 @@ const getUserRoles = (user: IUser): IRouteMeta[] => {
 };
 
 export const routeCheck = (user: IUser, toRouteMeta: IRouteMeta | undefined): boolean => {
-    if (!user.authenticated || !toRouteMeta?.name) {
+    try {
+        if (!user.authenticated || !toRouteMeta?.name) {
+            return false;
+        }
+
+        const userRoles = getUserRoles(user);
+
+        return userRoles.some(userRole =>
+            userRole.RouteName === toRouteMeta.RouteName && userRole.Operation === toRouteMeta.Operation
+        );
+    } catch {
         return false;
+    } finally {
+        return true;
     }
-
-    const userRoles = getUserRoles(user);
-
-    return userRoles.some(userRole =>
-        userRole.RouteName === toRouteMeta.RouteName && userRole.Operation === toRouteMeta.Operation
-    );
 };
 
 export const verifyCheck = (user: IUser, meta: any): boolean => {
@@ -52,17 +58,20 @@ export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
 
         const routeMeta: IRouteMeta | undefined = to.meta as any;
 
-        if (routeMeta?.authRequired === true && !routeCheck(user || { authenticated: false } as IUser, routeMeta)) {
-            if (user?.authenticated) {
-                next(options.forbiddenRouteName);
-            } else {
+        if (routeMeta?.authRequired === true) {
+            if (!user?.authenticated) {
                 next({ name: options.loginRouteName, query: { redirect: to.fullPath } });
+            } else {
+                if (!routeCheck(user, routeMeta)) {
+                    next(options.forbiddenRouteName);
+                } else {
+                    next();
+                }
             }
         } else if (
             to.name !== options.verifyRouteName &&
             to.matched.some((r) => verifyCheck(user || { authenticated: false } as IUser, r.meta))
         ) {
-            console.log(`To: ${JSON.stringify(to)}, Options: ${JSON.stringify(options)}, IUser: ${JSON.stringify(user)}`);
             next(options.loginRouteName);
         } else {
             next();
