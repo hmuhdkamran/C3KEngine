@@ -2,6 +2,10 @@ Github:
   button: Github
   tooltip: 请在Github上给这个项目一个⭐️支持
 ar: Arabic
+generic:
+  continue: 或继续
+  tagline1: Manage your account and enjoy seamless access to all features effortlessly.
+  tagline2: Get back to work with just one click. Let's make things happen!
 brands:
   create:
     brandName: 名称

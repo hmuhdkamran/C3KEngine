@@ -2,6 +2,10 @@ Github:
   button: GitHub
   tooltip: Bu projeye ⭐️ Github'da destek verin
 ar: Arabic
+generic:
+  continue: veya devam et
+  tagline1: Manage your account and enjoy seamless access to all features effortlessly.
+  tagline2: Get back to work with just one click. Let's make things happen!
 brands:
   create:
     brandName: İsim

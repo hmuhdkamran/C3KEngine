@@ -2,6 +2,10 @@ Github:
   button: Github
   tooltip: Support this project by giving a star ⭐️ on GitHub
 ar: Arabic
+generic:
+  continue: or continue with
+  tagline1: Manage your account and enjoy seamless access to all features effortlessly.
+  tagline2: Get back to work with just one click. Let's make things happen!
 brands:
   create:
     brandName: Name
