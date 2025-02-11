@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { FormInst, FormRules } from 'naive-ui/es/form/src/interface'
 import { storeToRefs } from 'pinia'
-import GoogleIcon from '~/components/CustomIcons/GoogleIcon.vue'
-import MicrosoftIcon from '~/components/CustomIcons/MicrosoftIcon.vue'
-import AppleIcon from '~/components/CustomIcons/AppleIcon.vue'
 
 import type { LoginViewModel } from '~/models/Account'
 
