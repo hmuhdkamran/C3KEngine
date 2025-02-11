@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { NButton, NPopconfirm, type DataTableColumns } from 'naive-ui/es/components'
+import { NButton, type DataTableColumns } from 'naive-ui/es/components'
 import type { RowData } from 'naive-ui/es/data-table/src/interface'
 import { storeToRefs } from 'pinia';
 import { IUser } from '~/models/roles/IUser';
 import { useRoleUserStore } from '~/store/role/user-store';
 import AddEdit from './addedit.vue';
-import { resolveDirective, withDirectives } from 'vue';
+import { createActionColumn } from '~/composables/column'
 
 const { t } = useI18n()
 const store = useRoleUserStore();
-const { item, isLoading, searchText, dialogVisible } = storeToRefs(store)
-const vPermission = resolveDirective('permission')
+const { item, isLoading, searchText, dialogVisible } = storeToRefs(store);
 
 function getItems() {
     store.getItems();
@@ -19,6 +18,7 @@ function getItems() {
 onMounted(getItems);
 
 function handleAdd() {
+    item.value = { DisplayName: '', Language: 'en', Password: '', Salt: '', StatusId: '', UserId: '', Username: '' };
     dialogVisible.value = true;
 }
 
@@ -44,48 +44,7 @@ const columns: DataTableColumns<RowData> = [
         title: t('role.user.language'),
         key: 'Language',
     },
-    {
-        title: t('forms.action'),
-        key: 'action',
-        width: 80,
-        render(row) {
-            return h('div', {}, [
-                h(NButton, {
-                    size: 'small',
-                    text: true,
-                    onClick: () => handleEdit(row as IUser)
-                }, {
-                    icon: () => h('i', { class: 'fa-solid fa-pen' }),
-                }),
-                h(
-                    NPopconfirm,
-                    {
-                        onPositiveClick: () => handleDelete(row as IUser),
-                        onNegativeClick: () => { },
-                    },
-                    {
-                        trigger: () =>
-                            withDirectives(
-                                h(
-                                    NButton,
-                                    {
-                                        text: true,
-                                        size: 'small',
-                                        type: 'error',
-                                        style: 'margin-left: 8px;',
-                                    },
-                                    {
-                                        icon: () => h('i', { class: 'fa-solid fa-trash-can' }),
-                                    }
-                                ),
-                                [[vPermission, 'delete']]
-                            ),
-                        default: () => h('div', {}, t('forms.deleteText')),
-                    }
-                )
-            ]);
-        }
-    }
+    createActionColumn((row) => handleEdit(row as IUser), (row) => handleDelete(row as IUser), t),
 ]
 
 </script>
