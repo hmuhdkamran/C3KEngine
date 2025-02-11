@@ -1,5 +1,5 @@
 export default function useColors() {
-  const primaryColors = ['#00ad4c', '#cb2025', '#f8b334', '#FF8000', '#00a096', '#9575cd']
+  const primaryColors = ['#00ad4c', '#cb2025', '#f8b334', '#FF8000', '#00a096', '#9575cd', '#4b0082']
 
   function buildThemeColorSeries(count: number) {
     const color = useLayoutStore().themeColor

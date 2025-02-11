@@ -237,3 +237,14 @@ userMenu:
   profile: Profile
   theme: Theme
 ur: Urdu
+forms:
+  action: Action
+  cancel: Cancel
+  save: Save
+  deleteText: Are you sure you want to delete this Record?
+role:
+  user:
+    title: Users
+    username: Username
+    displayName: Name
+    language: Language

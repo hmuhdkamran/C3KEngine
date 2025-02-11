@@ -7,10 +7,14 @@ export const useRoleUserStore = defineStore('RoleUser', () => {
     const items = ref<Array<IUser>>([])
     const item = ref<IUser>()
     const isLoading = ref(false)
+    const dialogVisible = ref(false)
+    const shouldUpdate = ref(false)
+    const searchText = ref('')
 
     async function getItems() {
         isLoading.value = true;
         try {
+            items.value = [];
             const response = await service.getAll();
             items.value = response as Array<IUser>;
         } catch (err) {
@@ -20,10 +24,10 @@ export const useRoleUserStore = defineStore('RoleUser', () => {
         }
     }
 
-    async function createOrUpdateItem(item: IUser, insert: boolean = false) {
+    async function createOrUpdateItem(item: IUser) {
         isLoading.value = true;
         try {
-            await insert ? service.add(item) : service.update(item);
+            await shouldUpdate ? service.update(item) : service.add(item);
             getItems();
         } catch (err) {
             console.error(`Error: ${err}`)
@@ -48,6 +52,9 @@ export const useRoleUserStore = defineStore('RoleUser', () => {
         item,
         items,
         isLoading,
+        dialogVisible,
+        shouldUpdate,
+        searchText,
         getItems,
         createOrUpdateItem,
         deleteItem
