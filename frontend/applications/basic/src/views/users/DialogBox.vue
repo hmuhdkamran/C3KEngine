@@ -1,26 +1,6 @@
-<template>
-    <Teleport to="body">
-        <transition name="dialog">
-            <div v-if="show" class="dialog-overlay">
-                <div class="dialog" :style="{ width: width, maxWidth: '95%', }">
-                    <div class="dialog-header" v-if="$slots.header">
-                        <slot name="header" />
-                        <button class="close-btn" @click="closeDialog">×</button>
-                    </div>
-                    <div class="dialog-body">
-                        <slot />
-                    </div>
-                    <div class="dialog-footer" v-if="$slots.footer">
-                        <slot name="footer" />
-                    </div>
-                </div>
-            </div>
-        </transition>
-    </Teleport>
-</template>
-
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
+import { selectColor } from '@/stores/colorPalette';
 
 const props = defineProps({
     show: {
@@ -39,6 +19,27 @@ const closeDialog = () => {
     emit('close');
 };
 </script>
+
+<template>
+    <Teleport to="body">
+        <transition name="dialog">
+            <div v-if="show" class="dialog-overlay">
+                <div class="dialog" :style="{ width: width, maxWidth: '95%', }">
+                    <div class="dialog-header" :style="{'background-color': selectColor()}" v-if="$slots.header">
+                        <slot name="header" />
+                        <button class="close-btn" @click="closeDialog">×</button>
+                    </div>
+                    <div class="dialog-body">
+                        <slot />
+                    </div>
+                    <div class="dialog-footer" v-if="$slots.footer">
+                        <slot name="footer" />
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </Teleport>
+</template>
 
 <style scoped>
 /* Dialog Overlay Styles */
@@ -75,7 +76,6 @@ const closeDialog = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f8f8f8;
 }
 
 .close-btn {

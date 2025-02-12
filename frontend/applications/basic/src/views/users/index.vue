@@ -85,75 +85,78 @@ onMounted(() => {
 
 <template>
   <div class="relative">
-    <DialogBox :show="formStatus" @close="formStatus = false">
-      <div class="p-4 bg-white rounded-sm shadow-sm">
-        <h2 class="text-lg font-semibold mb-6">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
-        <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="mb-3">
-            <label for="DisplayName" class="text-sm font-medium text-gray-700">Name:</label>
-            <input type="text" id="DisplayName" v-model="entity.DisplayName" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
+    <DialogBox :show="formStatus" @close="setFormOpen(false)">
+      <template #header>
+        <h2 class="text-lg font-semibold">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+      </template>
+
+      <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="mb-3">
+          <label for="DisplayName" class="text-sm font-medium text-gray-700">Name:</label>
+          <input type="text" id="DisplayName" v-model="entity.DisplayName" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
+        </div>
+        <div class="mb-3">
+          <label for="Username" class="text-sm font-medium text-gray-700">Email:</label>
+          <input type="email" id="Username" v-model="entity.Username" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
+        </div>
+        <div class="mb-3">
+          <label for="Language" class="text-sm font-medium text-gray-700">Language:</label>
+          <select id="Language" v-model="entity.Language" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }">
+            <option value="English">English</option>
+            <option value="Urdu">Urdu</option>
+          </select>
+        </div>
+        <div class="mb-3" v-if="!isEditMode">
+          <label for="Password" class="text-sm font-medium text-gray-700">Password:</label>
+          <input type="password" id="Password" v-model="entity.Password" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
+        </div>
+        <div class="mb-3" v-if="!isEditMode">
+          <label for="ConfirmPassword" class="text-sm font-medium text-gray-700">Confirm Password:</label>
+          <input type="password" id="ConfirmPassword" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
+        </div>
+        <div class="mb-3" v-if="!isEditMode">
+          <label for="UserRole" class="text-sm font-medium text-gray-700">User Role:</label>
+          <select id="UserRole" v-model="entity.StatusId" required
+            class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+            :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }">
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
+            <option value="Guest">Guest</option>
+          </select>
+        </div>
+        <div class="mb-3" v-if="isEditMode">
+          <label for="Status" class="text-sm font-medium text-gray-700">Status:</label>
+          <div class="mt-1">
+            <button class="inline-flex items-center" :class="{
+              'text-green-700': entity.StatusId === 'Active',
+              'text-red-600': entity.StatusId !== 'Active'
+            }">
+              <span v-if="entity.StatusId === 'Active'" class="fa-solid fa-toggle-on fa-xl"></span>
+              <span v-else class="fa-solid fa-toggle-off fa-xl"></span>
+              <span class="ml-2">{{ entity.StatusId === 'Active' ? 'Active' : 'Inactive' }}</span>
+            </button>
           </div>
-          <div class="mb-3">
-            <label for="Username" class="text-sm font-medium text-gray-700">Email:</label>
-            <input type="email" id="Username" v-model="entity.Username" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
-          </div>
-          <div class="mb-3">
-            <label for="Language" class="text-sm font-medium text-gray-700">Language:</label>
-            <select id="Language" v-model="entity.Language" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }">
-              <option value="English">English</option>
-              <option value="Urdu">Urdu</option>
-            </select>
-          </div>
-          <div class="mb-3" v-if="!isEditMode">
-            <label for="Password" class="text-sm font-medium text-gray-700">Password:</label>
-            <input type="password" id="Password" v-model="entity.Password" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
-          </div>
-          <div class="mb-3" v-if="!isEditMode">
-            <label for="ConfirmPassword" class="text-sm font-medium text-gray-700">Confirm Password:</label>
-            <input type="password" id="ConfirmPassword" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }" />
-          </div>
-          <div class="mb-3" v-if="!isEditMode">
-            <label for="UserRole" class="text-sm font-medium text-gray-700">User Role:</label>
-            <select id="UserRole" v-model="entity.StatusId" required
-              class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-              :style="{ '--ring-color': selectColor(), '--border-color': selectColor() }">
-              <option value="Admin">Admin</option>
-              <option value="User">User</option>
-              <option value="Guest">Guest</option>
-            </select>
-          </div>
-          <div class="mb-3" v-if="isEditMode">
-            <label for="Status" class="text-sm font-medium text-gray-700">Status:</label>
-            <div class="mt-1">
-              <button class="inline-flex items-center" :class="{
-                'text-green-700': entity.StatusId === 'Active',
-                'text-red-600': entity.StatusId !== 'Active'
-              }">
-                <span v-if="entity.StatusId === 'Active'" class="fa-solid fa-toggle-on fa-xl"></span>
-                <span v-else class="fa-solid fa-toggle-off fa-xl"></span>
-                <span class="ml-2">{{ entity.StatusId === 'Active' ? 'Active' : 'Inactive' }}</span>
-              </button>
-            </div>
-          </div>
-          <div class="flex justify-end gap-3 mt-4 col-span-2">
-            <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition"
-              @click="setFormOpen(false)">Cancel</button>
-            <button type="submit"
-              class="px-3 py-1.5 text-white rounded-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
-              :style="{ backgroundColor: selectColor() }">Save</button>
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
+      <template #footer>
+        <div class="flex justify-end gap-3 col-span-2">
+          <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition"
+            @click="setFormOpen(false)">Cancel</button>
+          <button type="submit"
+            class="px-3 py-1.5 text-white rounded-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
+            :style="{ backgroundColor: selectColor() }">Save</button>
+        </div>
+      </template>
     </DialogBox>
 
     <div>
