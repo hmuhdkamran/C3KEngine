@@ -59,93 +59,95 @@ meta:
 </route>
 
 <template>
-  <div class="flex flex-col md:flex-row min-h-screen bg-gray-50 dark:bg-slate-800">
-    <div
-      class="hidden md:flex w-1/2 bg-gradient-to-r from-indigo-500 via-blue-00 to-sky-500 text-white items-center justify-center p-10 rounded-sm shadow-2xl relative overflow-hidden">
-      <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none animate-clouds">
-        <div class="cloud1 w-60 h-20 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 left-0"></div>
-        <div class="cloud2 w-80 h-24 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 right-0"></div>
-        <div class="cloud3 w-70 h-18 bg-white opacity-40 rounded-full blur-xl absolute top-10 left-20"></div>
-      </div>
-      <div class="absolute inset-0 flex justify-center items-center pointer-events-none animate-particles">
-        <div class="particle w-2 h-2 bg-white rounded-full opacity-60 absolute animate-particle1"></div>
-        <div class="particle w-3 h-3 bg-white rounded-full opacity-60 absolute animate-particle2"></div>
-        <div class="particle w-1.5 h-1.5 bg-white rounded-full opacity-60 absolute animate-particle3"></div>
-        <div class="particle w-2.5 h-2.5 bg-white rounded-full opacity-60 absolute animate-particle4"></div>
-      </div>
-      <div class="text-center space-y-8 relative z-10">
-        <h1
-          class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-blue-200 animate-slide-in">
-          {{ t('login.welcome') }}</h1>
-        <p class="text-lg opacity-90 animate-slide-in delay-100">{{ t('generic.tagline1') }}</p>
-        <div class="relative">
-          <div class="absolute inset-0 bg-white opacity-20 rounded-xl blur-lg -z-10"></div>
-          <p class="text-sm font-light opacity-80 animate-slide-in delay-200">{{ t('generic.tagline2') }}</p>
-        </div>
-      </div>
+  <div class="relative flex flex-col min-h-screen bg-gray-50 dark:bg-slate-800">
+    <div class="absolute top-0 right-0 mt-3 mr-3 flex justify-end items-center">
+      <LanguageSelect />
+      <ThemeSwitch class="mr-2" />
     </div>
-
-    <div class="flex flex-col justify-center w-full max-w-lg mx-auto p-6">
-      <div class="mt-3 flex justify-between items-center">
-        <LanguageSelect />
-        <ThemeSwitch class="mr-2" />
-      </div>
-      <div class="text-center mb-12">
-        <img :src="logo" alt="Logo" class="h-14 mx-auto" />
-        <h2 class="text-2xl font-bold mt-4 text-gray-800">{{ t('login.welcome') }}</h2>
-        <p class="text-sm text-gray-500 mt-1">{{ t('login.message') }}</p>
-      </div>
-      <n-form ref="formRef" :model="loginInfo" :rules="rules" @submit.prevent="login()">
-        <n-form-item class="mb-1" path="username" :label="t('login.username')">
-          <n-input id="name" v-model:value="loginInfo.username" autofocus :placeholder="t('login.username')" />
-        </n-form-item>
-        <n-form-item class="mb-1" path="password" :label="t('login.password')">
-          <n-input id="name" v-model:value="loginInfo.password" type="password" show-password-on="mousedown"
-            :placeholder="t('login.password')" />
-        </n-form-item>
-
-        <div class="flex align-items-center justify-between mb-2">
-          <RouterLink to="/Account/ForgotPassword" class="no-underline ml-2 text-blue-500 text-right cursor-pointer">
-            {{ t('login.forgetPassword') }}
-          </RouterLink>
+    <div class="flex flex-col md:flex-row min-h-screen">
+      <div
+        class="hidden md:flex w-1/2 bg-gradient-to-r from-indigo-500 via-blue-500 to-sky-500 text-white items-center justify-center p-10 rounded-sm shadow-2xl relative overflow-hidden">
+        <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none animate-clouds">
+          <div class="cloud1 w-60 h-20 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 left-0"></div>
+          <div class="cloud2 w-80 h-24 bg-white opacity-40 rounded-full blur-xl absolute bottom-0 right-0"></div>
+          <div class="cloud3 w-70 h-18 bg-white opacity-40 rounded-full blur-xl absolute top-10 left-20"></div>
         </div>
-        <n-button attr-type="submit" size="large" :block="true" type="primary" :loading="isLoading">
-          {{ t('login.loginButton') }}
-        </n-button>
-      </n-form>
-      <div class="flex items-center justify-center my-6">
-        <div class="h-px bg-gray-300 w-1/4"></div>
-        <p class="mx-3 text-sm text-gray-500">or continue with</p>
-        <div class="h-px bg-gray-300 w-1/4"></div>
+        <div class="absolute inset-0 flex justify-center items-center pointer-events-none animate-particles">
+          <div class="particle w-2 h-2 bg-white rounded-full opacity-60 absolute animate-particle1"></div>
+          <div class="particle w-3 h-3 bg-white rounded-full opacity-60 absolute animate-particle2"></div>
+          <div class="particle w-1.5 h-1.5 bg-white rounded-full opacity-60 absolute animate-particle3"></div>
+          <div class="particle w-2.5 h-2.5 bg-white rounded-full opacity-60 absolute animate-particle4"></div>
+        </div>
+        <div class="text-center space-y-8 relative z-10">
+          <h1
+            class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-blue-200 animate-slide-in">
+            {{ t('login.welcome') }}</h1>
+          <p class="text-lg opacity-90 animate-slide-in delay-100">{{ t('generic.tagline1') }}</p>
+          <div class="relative">
+            <div class="absolute inset-0 bg-white opacity-20 rounded-xl blur-lg -z-10"></div>
+            <p class="text-sm font-light opacity-80 animate-slide-in delay-200">{{ t('generic.tagline2') }}</p>
+          </div>
+        </div>
       </div>
 
-      <div class="flex justify-center space-x-6 text-blue-500">
-        <a href="#google" class="hover:text-sky-500">
-          <span class="fa-brands fa-google"></span>
-        </a>
-        <a href="#facebook" class="hover:text-sky-500">
-          <span class="fa-brands fa-facebook"></span>
-        </a>
-        <a href="#twitter" class=" hover:text-sky-500">
-          <span class="fa-brands fa-twitter"></span>
-        </a>
-      </div>
+      <div class="flex flex-col justify-center w-full max-w-lg mx-auto p-6">
+        <div class="text-center mb-12">
+          <img :src="logo" alt="Logo" class="h-14 mx-auto" />
+          <h2 class="text-2xl font-bold mt-4 text-gray-800">{{ t('login.welcome') }}</h2>
+          <p class="text-sm text-gray-500 mt-1">{{ t('login.message') }}</p>
+        </div>
+        <n-form ref="formRef" :model="loginInfo" :rules="rules" @submit.prevent="login()">
+          <n-form-item class="mb-1" path="username" :label="t('login.username')">
+            <n-input id="name" v-model:value="loginInfo.username" autofocus :placeholder="t('login.username')" />
+          </n-form-item>
+          <n-form-item class="mb-1" path="password" :label="t('login.password')">
+            <n-input id="name" v-model:value="loginInfo.password" type="password" show-password-on="mousedown"
+              :placeholder="t('login.password')" />
+          </n-form-item>
 
-      <div class="text-center mt-6 text-sm text-gray-600">
-        <p>
-          {{ t('login.haveNotAccount') }}
-          <RouterLink to="/account/register" class="text-blue-400 font-medium hover:underline">
-            {{ t('login.createAccount') }}
-          </RouterLink>
-        </p>
-      </div>
+          <div class="flex align-items-center justify-between mb-2">
+            <RouterLink to="/Account/ForgotPassword" class="no-underline ml-2 text-blue-500 text-right cursor-pointer">
+              {{ t('login.forgetPassword') }}
+            </RouterLink>
+          </div>
+          <n-button attr-type="submit" size="large" :block="true" type="primary" :loading="isLoading">
+            {{ t('login.loginButton') }}
+          </n-button>
+        </n-form>
+        <div class="flex items-center justify-center my-6">
+          <div class="h-px bg-gray-300 w-1/4"></div>
+          <p class="mx-3 text-sm text-gray-500">or continue with</p>
+          <div class="h-px bg-gray-300 w-1/4"></div>
+        </div>
 
-      <div class="text-center mt-6 text-xs text-gray-500">
-        <p>
-          By logging in, you agree to our
-          <a href="/terms" class="text-blue-400 hover:underline">Terms</a> and
-          <a href="/privacy" class="text-blue-400 hover:underline">Privacy Policy</a>.
-        </p>
+        <div class="flex justify-center space-x-6 text-blue-500">
+          <a href="#google" class="hover:text-sky-500">
+            <span class="fa-brands fa-google"></span>
+          </a>
+          <a href="#facebook" class="hover:text-sky-500">
+            <span class="fa-brands fa-facebook"></span>
+          </a>
+          <a href="#twitter" class=" hover:text-sky-500">
+            <span class="fa-brands fa-twitter"></span>
+          </a>
+        </div>
+
+        <div class="text-center mt-6 text-sm text-gray-600">
+          <p>
+            {{ t('login.haveNotAccount') }}
+            <RouterLink to="/account/register" class="text-blue-400 font-medium hover:underline">
+              {{ t('login.createAccount') }}
+            </RouterLink>
+          </p>
+        </div>
+
+        <div class="text-center mt-6 text-xs text-gray-500">
+          <p>
+            By logging in, you agree to our
+            <a href="/terms" class="text-blue-400 hover:underline">Terms</a> and
+            <a href="/privacy" class="text-blue-400 hover:underline">Privacy Policy</a>.
+          </p>
+        </div>
       </div>
     </div>
   </div>

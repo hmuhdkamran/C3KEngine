@@ -19,6 +19,7 @@ import {
   StarThreeQuarter20Filled as ReviewIcon,
   Settings28Regular as SettingsIcon,
   ContentSettings20Regular as WebsiteSettingsIcon,
+  DoorArrowRight20Regular as LogoutIcon,
 } from '@vicons/fluent'
 import { storeToRefs } from 'pinia'
 import { config } from "c3-library";
@@ -86,6 +87,17 @@ const menuOptions: MenuOption[] = [
       },
     ],
   },
+  {
+    label: () => t('menu.other'),
+    key: 'other',
+    icon: renderIcon(PagesIcon),
+    children: [
+      {
+        label: () => renderLabel(t('menu.notFound'), '/404'),
+        key: 'not-found',
+      },
+    ],
+  },
 ]
 
 const route = useRoute()
@@ -108,6 +120,11 @@ const router = useRouter()
 router.beforeEach(() => {
   layoutStore.closeSidebar()
 })
+
+function logout() {
+  router.push('/account/login');
+}
+
 </script>
 
 <template>
@@ -137,10 +154,31 @@ router.beforeEach(() => {
       ref="menuRef" v-model:value="selectedMenuKey" :collapsed-width="mobileMode ? 0 : 64"
       :collapsed-icon-size="mobileMode ? 30 : 20" :options="menuOptions"
     />
+    <div class="logout-container">
+      <n-button @click="logout" type="primary" class="w-full">
+        <span class="main-title">{{ t('userMenu.logout') }}</span>
+        <template #icon>
+            <NIcon size="1.2rem">
+              <LogoutIcon />
+            </NIcon>
+          </template>
+      </n-button>
+    </div>
   </n-layout-sider>
 </template>
 
 <style lang="scss">
+.logout-container {
+  position: absolute;
+  width: 100%;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0.8rem 0.5rem 1.1rem;
+  transition: all 100ms;
+  line-height: 1;
+}
+
 .logo-container {
   display: flex;
   align-items: center;
@@ -150,7 +188,7 @@ router.beforeEach(() => {
 
   .main-title {
     font-family: Quicksand;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 500;
     user-select: none;
 
@@ -177,6 +215,10 @@ router.beforeEach(() => {
 .collapsed {
 
   .logo-container {
+    padding: 1.5rem 0.5rem 0.5rem .5rem;
+  }
+
+  .logout-container {
     padding: 1.5rem 0.5rem 0.5rem .5rem;
   }
 
