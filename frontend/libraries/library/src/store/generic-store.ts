@@ -13,14 +13,11 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
         const items = ref<Array<T>>([]);
         const item = ref<T>();
         const isLoading = ref(false);
-        const dialogVisible = ref(false);
         const shouldUpdate = ref(false);
-        const searchText = ref('');
 
         async function getItems() {
             isLoading.value = true;
             try {
-                items.value = [];
                 const response = await service.getAll();
                 items.value = response as Array<T>;
             } catch (err) {
@@ -59,9 +56,7 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
             item,
             items,
             isLoading,
-            dialogVisible,
             shouldUpdate,
-            searchText,
             getItems,
             createOrUpdateItem,
             deleteItem,

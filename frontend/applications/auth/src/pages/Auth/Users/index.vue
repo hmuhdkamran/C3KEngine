@@ -6,6 +6,7 @@ import { IUser } from '~/models/roles/IUser';
 import { useRoleUserStore } from '~/store/role/user-store';
 import AddEdit from './addedit.vue';
 import { createActionColumn } from '~/composables/column'
+import { DataTable } from 'c3-library';
 
 const { t } = useI18n()
 const store = useRoleUserStore();
@@ -67,6 +68,10 @@ const columns: DataTableColumns<RowData> = [
         </n-page-header>
         <n-data-table size="small" :bordered="false" :columns="columns" :data="store.items" :loading="isLoading"
             :scroll-x="500" />
+
+        <DataTable>
+
+        </DataTable>
 
         <AddEdit />
     </div>

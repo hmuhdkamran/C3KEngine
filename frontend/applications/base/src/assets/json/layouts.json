@@ -1,24 +1,24 @@
 {
     "routes": [
       {
-        "type": "route",
-        "path": "/basic",
+        "type": "route",        
         "routes": [
           {
             "type": "application",
             "name": "@c3k/base"
           }
-        ]
+        ],
+        "default": true
       },
       {
         "type": "route",
+        "path": "/auth",
         "routes": [
           {
             "type": "application",
             "name": "@c3k/auth"
           }
-        ],
-        "default": true
+        ]        
       }
     ]
   }
