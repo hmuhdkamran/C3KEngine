@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
 import { useSidebar } from '@/stores/useSidebar';
-import { useThemePaletteStore } from 'c3-library';
+import { useThemePalleteStore } from 'c3-library';
 import { computed } from 'vue';
 
 const { isSidebarOpen } = useSidebar();
 
-const store = useThemePaletteStore();
+const store = useThemePalleteStore();
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
