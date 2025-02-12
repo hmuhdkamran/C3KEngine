@@ -1,16 +1,20 @@
 <script setup lang='ts'>
-import type { FormInst, FormRules } from 'naive-ui';
+import type { FormInst } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { reactive, watch, computed, ref } from 'vue';
 
 import { IUser } from '~/models/roles/IUser';
 import { useRoleUserStore } from '~/store/role/user-store';
+import { useSetupStatusStore } from '~/store/setup/status-store';
 
 const { t } = useI18n();
 const formRef = ref<FormInst | null>(null);
 const store = useRoleUserStore();
+const statuStore = useSetupStatusStore();
 const { item, dialogVisible } = storeToRefs(store);
+
+onMounted(() => statuStore.getItems())
 
 // Form data model including confirmation password
 const formData = reactive<{
@@ -45,7 +49,7 @@ watch(dialogVisible, (val) => {
 
 // Language options
 const languageOptions = [
-    { label: 'en', value: 'en' },
+    { label: 'English', value: 'en' },
     { label: 'de', value: 'de' },
     { label: 'ar', value: 'ar' },
     { label: 'tr', value: 'tr' },
@@ -53,12 +57,6 @@ const languageOptions = [
     { label: 'ch', value: 'ch' },
     { label: 'ur', value: 'ur' },
 ];
-
-// Status options with translated labels
-const statusOptions = computed(() => [
-    { label: t('role.user.status.active'), value: 'Active' },
-    { label: t('role.user.status.inactive'), value: 'Inactive' },
-]);
 
 // Form validation rules
 const rules = computed(() => ({
@@ -164,8 +162,8 @@ async function execute() {
             <!-- Status -->
             <div class="form-control">
                 <n-form-item path="StatusId" :label="t('role.user.status')">
-                    <n-select v-model:value="formData.StatusId" :placeholder="t('role.user.statusPlaceholder')"
-                        :options="statusOptions" />
+                    <n-select v-model:value="formData.StatusId" valueField="StatusId" labelField="FullName"
+                        :placeholder="t('role.user.statusPlaceholder')" :options="statuStore.items" />
                 </n-form-item>
             </div>
         </n-form>
