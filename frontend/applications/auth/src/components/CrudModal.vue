@@ -35,9 +35,15 @@ const show = computed({
 </script>
 
 <template>
-    <n-modal v-model:show="show" :style="{ width }" preset="dialog" :title="title" size="huge" :bordered="false" draggable
-        :positive-text="t('forms.save')" :negative-text="t('forms.cancel')" @positive-click="emit('onSave')"
-        @negative-click="show = false">
+    <n-modal v-model:show="show" :style="{ width }" preset="card" :title="title" size="huge" :bordered="false" draggable>
         <slot />
+        <template v-if="showFooter" #footer>
+            <footer flex justify-end>
+                <slot name="footer">
+                    <n-button @click="show = false">{{ t('forms.cancel') }}</n-button>
+                    <n-button :loading="loading" ml-20 type="primary" @click="emit('onSave')">{{ t('forms.save') }}</n-button>
+                </slot>
+            </footer>
+        </template>
     </n-modal>
 </template>
