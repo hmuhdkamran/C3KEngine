@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
-import { useThemePalleteStore } from 'c3-library';
+import { useThemePaletteStore } from 'c3-library';
 import { DataTable, newGuid, Pagination, RepositoryService } from 'c3-library';
 import type { IUser } from '@/models';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
@@ -9,7 +9,7 @@ import DialogBox from './DialogBox.vue';
 import { useRoleUserStore } from '@/stores/roles/user-store';
 
 const store = useRoleUserStore();
-const color = useThemePalleteStore();
+const color = useThemePaletteStore();
 
 const service = new RepositoryService<IUser>('auth/role/users');
 const entities = ref<IUser[]>([]);

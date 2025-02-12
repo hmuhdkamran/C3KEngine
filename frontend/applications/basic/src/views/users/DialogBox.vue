@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useThemePalleteStore } from 'c3-library';
-import { defineProps, defineEmits } from 'vue';
+import { useThemePaletteStore } from 'c3-library';
+import { defineProps, defineEmits, computed } from 'vue';
 
-const store = useThemePalleteStore();
+const store = useThemePaletteStore();
 
 const props = defineProps({
     show: {

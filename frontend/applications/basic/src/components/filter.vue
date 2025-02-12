@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useThemePalleteStore } from 'c3-library';
+import { useThemePaletteStore } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
-const store = useThemePalleteStore();
+const store = useThemePaletteStore();
+
 const showFilter = ref(false);
 
 const dropdownOptions = [
