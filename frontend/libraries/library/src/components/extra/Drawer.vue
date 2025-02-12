@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// import { ref } from 'vue';
-import { defineProps, defineEmits, useSlots, watch, ref, toRef, onBeforeUnmount } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 interface Props {
   isOpen: boolean;
@@ -23,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCloseButton: true,
   closeOnOutside: true
 });
+
 const emit = defineEmits<Emit>();
 
 const positionClasses = {
@@ -31,53 +31,33 @@ const positionClasses = {
   top: 'inset-x-0 top-0',
   bottom: 'inset-x-0 bottom-0'
 };
+
 const transformClasses = {
-  left: 'translate-x-[-100%]',
-  right: 'translate-x-[100%]',
-  top: 'translate-y-[-100%]',
-  bottom: 'translate-y-[100%]'
+  left: '-translate-x-full',
+  right: 'translate-x-full',
+  top: '-translate-y-full',
+  bottom: 'translate-y-full'
 };
 
-const drawerSize = ref('h-full');
-const positionRef = toRef(props, 'position');
-
-watch(positionRef, () => {
-  if (props.position == 'left' || props.position == 'right') {
-    drawerSize.value = 'h-full'
-  } else {
-    drawerSize.value = 'w-full'
-  }
-});
-
-const updateDrawerSize = () => {
-  const width = window.innerWidth;
-  if (width >= 1024) {
-    drawerSize.value = "w-1/3";
-  } else if (width >= 768) {
-    drawerSize.value = "w-1/2";
-  } else {
-    drawerSize.value = "w-full";
-  }
+const sizeClasses = {
+  left: 'h-full',
+  right: 'h-full',
+  top: 'w-full',
+  bottom: 'w-full'
 };
 
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateDrawerSize);
-});
-
-
-const slots = useSlots();
 </script>
 
 <template>
-  <div>
+  <Teleport to="body">
     <!-- Drawer -->
     <transition :name="`${props.position}-slide`">
       <div v-if="props.isOpen"
-        :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} ${drawerSize} bg-white text-gray-800 shadow-lg z-50`"
+        :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} ${sizeClasses[props.position]} bg-white text-gray-800 shadow-lg z-50`"
         class="rounded-sm flex flex-col z-50">
         <!-- Header -->
         <div class="flex items-center justify-between bg-blue-600 text-violet-600">
-          <template v-if="slots.header">
+          <template v-if="$slots.header">
             <slot name="header" />
           </template>
           <template v-else>
@@ -95,7 +75,7 @@ const slots = useSlots();
       <div v-if="props.isOpen && props.closeOnOutside" class="fixed inset-0 bg-black bg-opacity-50 z-40"
         @click="emit('toggleDrawer')"></div>
     </transition>
-  </div>
+  </Teleport>
 </template>
 
 <style scoped>

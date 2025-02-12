@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { selectColor } from '@/stores/colorPalette';
+import { useThemePalleteStore } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
+const store = useThemePalleteStore();
 const showFilter = ref(false);
 
 const dropdownOptions = [
@@ -18,7 +19,7 @@ const dropdownOptions = [
     <div class="flex gap-1 px-4">
         <button @click="showFilter = !showFilter"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
-            :style="{ backgroundColor: selectColor() }">
+            :style="{ backgroundColor: store.selectedColor }">
             <span class="fas fa-filter fa-sm"></span>
         </button>
 
@@ -28,7 +29,7 @@ const dropdownOptions = [
                 <div v-for="(dropdown, index) in dropdownOptions" :key="index" class="flex flex-col gap-1">
                     <label class="text-sm font-medium text-gray-600">{{ dropdown.label }}</label>
                     <select class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all"
-                        :style="{ '--ring-color': selectColor(), '--border-color': selectColor(), }"
+                        :style="{ '--ring-color': store.selectedColor, '--border-color': store.selectedColor, }"
                         :class="['focus:ring-1', 'focus:ring-[var(--ring-color)]', 'focus:border-[var(--border-color)]']">
                         <option v-for="(option, i) in dropdown.options" :key="i" :value="option">
                             {{ option }}
@@ -39,7 +40,7 @@ const dropdownOptions = [
         </div>
         <button @click="setFormOpen(true)"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
-            :style="{ backgroundColor: selectColor() }">
+            :style="{ backgroundColor: store.selectedColor }">
             <span class="fas fa-plus fa-sm"></span>
         </button>
     </div>

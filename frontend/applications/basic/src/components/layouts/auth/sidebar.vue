@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { avatar } from '@/assets/images/images';
 import { useSidebar } from '@/stores/useSidebar';
-import { selectColor } from '@/stores/colorPalette';
+import { useThemePalleteStore } from 'c3-library';
 import { menuItems } from '@/stores/menuData'
 import { sidebarStore } from '@/stores/menuStore';
 
@@ -13,6 +13,7 @@ const userName = ref('Admin');
 const isLogoutDialogOpen = ref(false);
 const isProcessingLogout = ref(false);
 const router = useRouter();
+const store = useThemePalleteStore();
 
 const setActive = (menu: { name: string; link: string }) => {
   sidebarStore.setActiveParent(menu);
@@ -95,7 +96,7 @@ const toggleDropdown = (itemName: string) => {
     <div class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200"
       :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
       <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
-        :style="{ backgroundColor: selectColor() }" @click="openLogoutDialog">
+        :style="{ backgroundColor: store.selectedColor }" @click="openLogoutDialog">
         <span class="fa-solid fa-right-from-bracket"></span>
         <span v-if="isSidebarOpen" class="ml-2">Logout</span>
       </button>
@@ -107,7 +108,7 @@ const toggleDropdown = (itemName: string) => {
         <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
         <div class="flex justify-center space-x-4">
           <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
-            :style="{ backgroundColor: selectColor() }" :disabled="isProcessingLogout">
+            :style="{ backgroundColor: store.selectedColor }" :disabled="isProcessingLogout">
             <span v-if="!isProcessingLogout">Yes, Logout</span>
             <span v-else class="flex items-center">
               <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span> Logging Out...

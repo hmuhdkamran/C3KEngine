@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useThemePalleteStore } from 'c3-library';
 import { defineProps, defineEmits } from 'vue';
-import { selectColor } from '@/stores/colorPalette';
+
+const store = useThemePalleteStore();
 
 const props = defineProps({
     show: {
@@ -25,7 +27,7 @@ const closeDialog = () => {
         <transition name="dialog">
             <div v-if="show" class="dialog-overlay">
                 <div class="dialog" :style="{ width: width, maxWidth: '95%', }">
-                    <div class="dialog-header" :style="{'background-color': selectColor()}" v-if="$slots.header">
+                    <div class="dialog-header" :style="{ backgroundColor: store.selectedColor }" v-if="$slots.header">
                         <slot name="header" />
                         <button class="close-btn" @click="closeDialog">×</button>
                     </div>

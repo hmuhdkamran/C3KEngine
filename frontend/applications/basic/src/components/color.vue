@@ -1,39 +1,49 @@
 <script setup lang="ts">
-import { colors, setColor, selectColor } from '@/stores/colorPalette';
+import { useThemePalleteStore, Drawer } from 'c3-library';
 import { ref } from 'vue';
 
+const store = useThemePalleteStore();
 const isOpen = ref(false);
+
 </script>
 
 <template>
     <div class="fixed right-0 flex flex-col items-end z-50">
+        <!-- Theme Palette Button -->
         <button @click="isOpen = !isOpen"
-            class="p-3 cursor-pointer text-white rounded-l-lg shadow-md focus:outline-none transition-colors duration-300 flex items-center justify-center"
-            :style="{ backgroundColor: selectColor() }">
-            <span class="fa-solid fa-palette"></span>
+            class="p-3 cursor-pointer flex items-center justify-center rounded-l-lg shadow-md focus:outline-none transition duration-300 hover:shadow-lg"
+            :style="{ backgroundColor: store.selectedColor }">
+            <span class="fa-solid fa-palette text-white"></span>
         </button>
 
-        <div v-if="isOpen" class="absolute top-16 right-0 w-64 p-3 bg-white rounded-l-lg shadow-lg z-50">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-700">Select Color</h3>
-                <button @click="isOpen = false" class="text-gray-500 hover:text-gray-700 cursor-pointer transition duration-200">
-                    <span class="fa-solid fa-xmark"></span>
-                </button>
-            </div>
+        <!-- Color Selection Drawer -->
+        <Drawer :is-open="isOpen" title="Theme Setting" position="right" size="w-1/4">
+            <template #header>
+                <div class="flex items-center justify-between w-full px-4 py-3"
+                    :style="{ backgroundColor: store.selectedColor, color: 'white' }">
+                    <h3 class="text-lg font-semibold">Select Color</h3>
+                    <button @click="isOpen = false" class="text-white hover:text-gray-300 transition duration-200">
+                        <span class="fa-solid fa-xmark"></span>
+                    </button>
+                </div>
+            </template>
 
-            <div class="grid grid-cols-5 gap-2">
-                <div v-for="color in colors" :key="color" :style="{ backgroundColor: color }"
-                    class="relative w-10 h-10 rounded-full cursor-pointer transition-transform duration-300 ease-in-out transform hover:translate-y-[-2px] hover:ring-2 hover:ring-gray-300"
-                    @click="setColor(color)">
-                    <span v-if="selectColor() === color"
-                        class="absolute inset-0 flex items-center justify-center text-white text-lg">
-                        <span class="fa-solid fa-check"></span>
-                    </span>
+            <!-- Color Palette Grid -->
+            <div class="p-4">
+                <h2>Color</h2>
+                <div class="grid grid-cols-5 gap-4 m-10">
+                    <div v-for="color in store.colors" :key="color" :style="{ backgroundColor: color }"
+                        class="relative w-10 h-10 rounded-full cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
+                        @click="store.setSelectedColor(color)">
+                        <!-- Checkmark for Selected Color -->
+                        <span v-if="store.selectedColor === color"
+                            class="absolute inset-0 flex items-center justify-center text-white text-lg">
+                            <span class="fa-solid fa-check"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div v-if="isOpen" class="fixed top-0 left-0 w-full h-full bg-gray-900 opacity-40 z-40" @click="isOpen = false">
-        </div>
+        </Drawer>
     </div>
 </template>
 
