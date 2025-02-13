@@ -86,9 +86,10 @@ onMounted(() => {
 
 <template>
   <div class="relative">
-    <DialogBox :show="formStatus" @close="setFormOpen(false)">
+    <DialogBox :show="formStatus" :showClose="false" @close="setFormOpen(false)">
       <template #header>
-        <h2 class="text-lg font-semibold">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+        <h2 class="text-lg font-semibold">{{ isEditMode ? 'User Edit Form' : 'Add User Form' }}</h2>
+        <p class="text-sm text-gray-500">{{ isEditMode ? 'Edit Record' : 'Add Record' }}</p>
       </template>
 
       <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -177,7 +178,7 @@ onMounted(() => {
       </DataTable>
 
       <!-- Pagination positioned at the bottom right -->
-      <div class="absolute bottom-4 right-4">
+      <div class="absolute bottom-0 right-1">
         <Pagination :totalPages="totalPages" :currentPage="currentPage" @page-changed="setPage" />
       </div>
     </div>

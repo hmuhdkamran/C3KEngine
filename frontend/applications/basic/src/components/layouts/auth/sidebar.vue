@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import logo from '@/assets/logo.svg';
 import { avatar } from '@/assets/images/images';
 import { useSidebar } from '@/stores/useSidebar';
-import { useThemePalleteStore, Drawer } from 'c3-library';
+import { useThemePaletteStore, Drawer } from 'c3-library';
 import { menuItems } from '@/stores/menuData'
 import { sidebarStore } from '@/stores/menuStore';
 
@@ -14,7 +14,7 @@ const userName = ref('Admin');
 const isLogoutDialogOpen = ref(false);
 const isProcessingLogout = ref(false);
 const router = useRouter();
-const store = useThemePalleteStore();
+const store = useThemePaletteStore();
 
 const setActive = (menu: { name: string; link: string }) => {
   sidebarStore.setActiveParent(menu);

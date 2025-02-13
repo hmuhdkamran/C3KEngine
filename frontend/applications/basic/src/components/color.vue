@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useThemePalleteStore, Drawer } from 'c3-library';
+import { useThemePaletteStore, Drawer } from 'c3-library';
 import { ref } from 'vue';
 
-const store = useThemePalleteStore();
+const store = useThemePaletteStore();
 
 const isOpen = ref(false);
 
@@ -21,9 +21,9 @@ const isOpen = ref(false);
         <Drawer :is-open="isOpen" title="Theme Setting" position="right" size="w-1/4">
             <template #header>
                 <div class="flex items-center justify-between w-full px-4 py-3"
-                    :style="{ backgroundColor: store.selectedColor, color: 'white' }">
-                    <h3 class="text-lg font-semibold">Select Preset</h3>
-                    <button @click="isOpen = false" class="text-white hover:text-gray-300 transition duration-200">
+                    >
+                    <h3 class="text-lg font-semibold text-gray-700">Select Preset</h3>
+                    <button @click="isOpen = false" class="text-gray-600 hover:text-gray-500 cursor-pointer transition duration-200">
                         <span class="fa-solid fa-xmark"></span>
                     </button>
                 </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
+import circuit from '@/assets/images/headerbg.jpeg';
 
 interface Props {
   isOpen: boolean;
@@ -56,7 +57,14 @@ const sizeClasses = {
         :class="`fixed ${positionClasses[props.position]} ${transformClasses[props.position]} ${props.size} ${sizeClasses[props.position]} bg-white text-gray-800 shadow-lg z-50`"
         class="rounded-sm flex flex-col z-50">
         <!-- Header -->
-        <div class="flex items-center justify-between bg-blue-600 text-violet-600">
+        <div class="flex items-center justify-between bg-blue-600 text-violet-600"
+             :style="{ 
+               backgroundImage: `url(${circuit})`,
+               backgroundSize: '70% auto',
+               backgroundPosition: 'right center',
+               backgroundRepeat: 'no-repeat',
+               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+             }">
           <template v-if="$slots.header">
             <slot name="header" />
           </template>
