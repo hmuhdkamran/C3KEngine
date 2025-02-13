@@ -1,0 +1,250 @@
+Github:
+  button: Github
+  tooltip: Support this project by giving a star ⭐️ on GitHub
+ar: Arabic
+generic:
+  continue: or continue with
+  tagline1: Manage your account and enjoy seamless access to all features effortlessly.
+  tagline2: Get back to work with just one click. Let's make things happen!
+brands:
+  create:
+    brandName: Name
+    buttonTitle: Create
+    image: Image
+    title: Create New Brand
+    url: Url
+  createButton: Create
+  name: Brand
+  shortName: Short Name
+  title: Brands
+  validations:
+    image: Image is required
+    name: Name is required
+    url: Url is required
+button:
+  about: About
+  back: Back
+  go: GO
+  home: Home
+  toggle_dark: Toggle dark mode
+  toggle_langs: Change languages
+categories:
+  create:
+    buttonTitle: Create
+    categoryName: Name
+    parent: Parent
+    title: Create New Category
+  createButton: Create
+  stat: Statistics
+  title: Categories
+  validations:
+    nameRequired: Name is required
+    parentRequired: Parent Not Selected
+category:
+  name: Category
+  productsCount: Products Count
+ch: Chinese
+colors:
+  color: Color
+  create:
+    buttonTitle: Create
+    color: Color
+    name: Name
+    title: Create New Color
+  createButton: Create
+  name: Name
+  title: Colors
+  validations:
+    colorRequired: Color not selected
+    nameRequired: Name is required
+common:
+  403Error: You have not Permission to access
+  404Error: 404 Error
+  404Message: >-
+    Sorry but the page you are looking for does not exist, have been removed.
+    name changed or is temporarily unavailable
+  actions: Actions
+  date: Date
+  delete: Delete
+  deleteConfirm: Are you sure to delete this item?
+  goHome: Back To Home
+  name: Name
+  new: New
+  notFound: Not Found
+  oops: Oops Page
+  price: Price
+  search: Search
+  status: Status
+currencySign: $
+customers:
+  customerName: Customer Name
+  email: Email
+  joinDate: Join Date
+  ordersCount: Orders Count
+  phone: Phone
+  title: Customers
+customize:
+  color: Color
+  language: Language
+  layout: Layout
+  theme: Theme
+  title: Customize
+dashboard:
+  activeOrders: Active Orders
+  products: Products
+  recentOrders: Recent Orders
+  registers: Registers
+  sells: Sells
+  summary: Summary
+  transactions: Transactions
+  trendingProducts: Trending Products
+  visits: Visits
+de: German
+description: Free Vue 3 Dashboard
+direction: ltr
+en: English
+enums:
+  OrderStatus:
+    Delivered: Delivered
+    Processing: Processing
+    ReadyToSend: ReadyToSend
+    Sent: Sent
+    Submitted: Submitted
+  ProductStatus:
+    Active: Active
+    Draft: Draft
+    NotActive: NotActive
+fa: Persian
+forgot:
+  button: Recover
+  email: Email
+  emailValidation: Email is not valid
+  haveNotAccount: Haven't Account?
+  login: Login
+  register: Create One!
+  rememberInfo: Remembered Password?
+  resetPassword: Reset Password
+  sendEmailSuccess: Email Sent Successfully, Please Check Your Email
+  title: Forgot Password
+  username: User Name
+home: Home
+login:
+  createAccount: Create One!
+  failedMessage: Login Failed
+  forgetPassword: Forget Password
+  haveNotAccount: Don't have an account?
+  loginButton: Login
+  message: To access to your account please login here
+  password: Password
+  rememberMe: Remember Me
+  skipLogin: Skip Login
+  successMessage: Logged In Successfully 🎉
+  title: Login
+  username: User Name
+  validations:
+    passwordRequired: Password is required
+    userNameRequired: Enter username
+  welcome: Welcome Back!
+menu:
+  accountSettings: Account Settings
+  announcement: Announcement
+  authentication: Authentication
+  blog: Blog
+  brands: Brands
+  categories: Categories
+  colors: Colors
+  comments: Comments
+  createProduct: Create Product
+  customers: Customers
+  dashboard: Dashboard
+  feedbacks: Feedbacks
+  forgetPassword: Forget Password
+  login: Login
+  messages: Messages
+  news: News
+  notFound: 404 Error
+  notifications: Notifications
+  orders: Orders
+  other: Other
+  pages: Pages
+  productManagement: Products Management
+  products: Products
+  register: Register
+  reviews: Reviews
+  settings: Settings
+  sms: Sms
+  support: Support
+  users: Users
+  websiteSettings: Website Settings
+not-found: Not found
+notifications:
+  clear: Clear All
+  empty: No notifications
+  title: Notifications
+notify:
+  welcome: >-
+    Welcome to Framework! Free Admin Panel based on NaiveUI and Vue3, please
+    Support this project by giving a star ⭐️ on GitHub
+orders:
+  customer: Customer
+  itemsCount: Items Count
+products:
+  category: Category
+  create:
+    barcode: Barcode
+    brand: Brand
+    category: Category
+    description: Description
+    discountedPrice: Discounted Price
+    imageName: Image
+    inStock: InStock
+    keywords: Keywords
+    media: Media
+    name: Product Name
+    newKeyword: New Keyword
+    price: Price
+    pricing: Pricing
+    productInformation: Product Information
+    sku: SKU
+    title: Create Product
+  name: Product Name
+  rate: Rate
+  stoke: Stoke
+register:
+  button: Register
+  haveAccount: Have Account?
+  login: Login!
+  password: Password
+  successMessage: Registered Successfully 🎉
+  title: Register
+  username: User Name
+reviews:
+  comment: Comment
+  customer: Customer
+  date: Date
+  product: Product
+  rate: Rate
+title: Framework
+tr: Turkish
+userMenu:
+  dark: Dark
+  en: English
+  fa: Persian
+  language: Language
+  light: Light
+  logout: Logout
+  options: Options
+  profile: Profile
+  theme: Theme
+ur: Urdu
+forms:
+  action: Action
+  cancel: Cancel
+  save: Save
+  deleteText: Are you sure you want to delete this Record?
+role:
+  user:
+    title: Users
+    username: Username
+    displayName: Name
+    language: Language

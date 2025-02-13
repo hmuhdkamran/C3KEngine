@@ -5,6 +5,7 @@ import { resolve } from "path";
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import dts from 'vite-plugin-dts'
 
 // https://vite.dev/config/
@@ -16,7 +17,13 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       tsconfigPath: "./tsconfig.app.json",
-    })
+    }),
+    VueI18n({
+      runtimeOnly: true,
+      compositionOnly: true,
+      fullInstall: true,
+      include: [resolve(__dirname, "locales/**")],
+    }),
   ],
   resolve: {
     alias: {

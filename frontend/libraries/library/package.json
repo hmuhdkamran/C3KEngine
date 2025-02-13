@@ -26,29 +26,32 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vueuse/core": "^12.5.0",
     "axios": "^1.7.9",
     "jwt-decode": "^4.0.0",
-    "pinia": "^2.3.0",
+    "pinia": "^3.0.1",
     "vue": "^3.5.13",
+    "vue-i18n": "^11.1.1",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "^6.0.3",
     "@tsconfig/node22": "^22.0.0",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.13.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
-    "@vue/eslint-config-prettier": "^10.1.0",
-    "@vue/eslint-config-typescript": "^14.2.0",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.4.0",
     "@vue/tsconfig": "^0.7.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.20.1",
     "eslint-plugin-vue": "^9.32.0",
     "npm-run-all2": "^7.0.2",
     "pinia-plugin-persistedstate": "^4.2.0",
-    "prettier": "^3.4.2",
+    "prettier": "^3.5.0",
     "typescript": "^5.7.3",
-    "vite": "^6.0.7",
+    "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",
-    "vite-plugin-vue-devtools": "^7.7.0",
+    "vite-plugin-vue-devtools": "^7.7.2",
     "vue-tsc": "^2.2.0"
   }
 }

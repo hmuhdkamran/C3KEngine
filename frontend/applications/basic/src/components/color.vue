@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useThemePalleteStore, Drawer } from 'c3-library';
+import { useThemePaletteStore, Drawer } from 'c3-library';
 import { ref } from 'vue';
 
-const store = useThemePalleteStore();
+const store = useThemePaletteStore();
 
 const isOpen = ref(false);
 

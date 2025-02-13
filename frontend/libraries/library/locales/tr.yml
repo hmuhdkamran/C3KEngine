@@ -1,0 +1,234 @@
+Github:
+  button: GitHub
+  tooltip: Bu projeye ⭐️ Github'da destek verin
+ar: Arabic
+generic:
+  continue: veya devam et
+  tagline1: Manage your account and enjoy seamless access to all features effortlessly.
+  tagline2: Get back to work with just one click. Let's make things happen!
+brands:
+  create:
+    brandName: İsim
+    buttonTitle: Oluştur
+    image: Resim
+    title: Yeni Marka Oluştur
+    url: URL
+  createButton: Oluştur
+  name: Marka Adı
+  shortName: Kisaltma
+  title: Markalar
+  validations:
+    image: Resim gerekli
+    name: İsim gerekli
+    url: URL gerekli
+button:
+  about: Hakkında
+  back: Geri
+  go: GİT
+  home: Ana Sayfa
+  toggle_dark: Karanlık modu değiştir
+  toggle_langs: Dil değiştir
+categories:
+  create:
+    buttonTitle: Oluştur
+    categoryName: İsim
+    parent: Üst Kategori
+    title: Yeni Kategori Oluştur
+  createButton: Oluştur
+  title: Kategoriler
+  validations:
+    nameRequired: İsim gerekli
+    parentRequired: Üst kategori seçilmedi
+category:
+  name: Kategori
+  productsCount: Produkte Anzahl
+colors:
+  color: Renk
+  create:
+    buttonTitle: Oluştur
+    color: Renk
+    name: İsim
+    title: Yeni Renk Oluştur
+  name: İsim
+  title: Renkler
+  validations:
+    colorRequired: Renk seçilmedi
+    nameRequired: İsim gerekli
+common:
+  403Error: Erişim izniniz yok
+  404Error: 404 Hatası
+  404Message: >-
+    Üzgünüz, aradığınız sayfa mevcut değil, kaldırılmış, adı değiştirilmiş veya
+    geçici olarak kullanılamıyor
+  actions: Eylemler
+  date: Tarih
+  delete: Silmek
+  deleteConfirm: Bu öğeyi sileceğinizden emin misiniz?
+  goHome: Ana Sayfaya Dön
+  new: Yeni
+  notFound: Bulunamadı
+  price: Fiyat
+  search: Ara
+  status: Durum
+currencySign: ₺
+customers:
+  customerName: Müşteri Adı
+  email: Email
+  joinDate: Katılma Tarihi
+  ordersCount: Sipariş Sayısı
+  phone: Telefon
+  title: Müşteriler
+customize:
+  color: Renk
+  language: Dil
+  layout: Düzen
+  theme: Tema
+  title: Özelleştir
+dashboard:
+  activeOrders: Aktif Siparişler
+  products: Ürünler
+  recentOrders: Son siparişler
+  registers: Kayıtlar
+  sells: Satışlar
+  summary: Özet
+  transactions: İşlemler
+  trendingProducts: trend olan Ürünler
+  visits: Ziyaretler
+de: German
+description: Ücretsiz Vue 3 Gösterge Paneli
+direction: ltr
+en: English
+enums:
+  OrderStatus:
+    Delivered: Teslim Edildi
+    Processing: İşleniyor
+    ReadyToSend: Gönderime Hazır
+    Sent: Gönderildi
+    Submitted: Gönderildi
+  ProductStatus:
+    Active: Aktif
+    Draft: Taslak
+    NotActive: Aktif Değil
+fa: Persian
+forgot:
+  button: Kurtar
+  email: Email
+  emailValidation: Email geçerli değil
+  haveNotAccount: Hesabınız yok mu?
+  login: Giriş
+  register: Hesap Oluştur!
+  rememberInfo: Şifreyi Hatırladınız mı?
+  resetPassword: Şifreyi Sıfırla
+  sendEmailSuccess: Email Başarıyla Gönderildi, Lütfen E-postanızı Kontrol Edin
+  title: Şifremi Unuttum
+  username: Kullanıcı Adı
+home: Ana Sayfa
+login:
+  createAccount: Hesap Oluştur!
+  failedMessage: Giriş Başarısız
+  forgetPassword: Şifremi Unuttum
+  haveNotAccount: Hesabınız yok mu?
+  loginButton: Giriş Yap
+  message: Hesabınıza erişmek için lütfen giriş yapın
+  password: Şifre
+  rememberMe: Beni Hatırla
+  skipLogin: Girişi Atla
+  successMessage: Başarıyla Giriş Yapıldı 🎉
+  title: Giriş
+  username: Kullanıcı Adı
+  validations:
+    passwordRequired: Şifre gerekli
+    userNameRequired: Kullanıcı adı girin
+  welcome: Tekrar Hoşgeldiniz!
+menu:
+  accountSettings: Hesap Ayarları
+  announcement: Duyuru
+  authentication: kimlik doğrulama
+  blog: Blog
+  brands: Markalar
+  categories: Kategoriler
+  colors: Renkler
+  comments: Yorumlar
+  createProduct: Ürün Oluştur
+  customers: Müşteriler
+  dashboard: Gösterge Paneli
+  feedbacks: Geri Bildirimler
+  forgetPassword: Şifremi Unuttum
+  login: Giriş
+  messages: Mesajlar
+  news: Haberler
+  notFound: '404'
+  notifications: Bildirimler
+  orders: Siparişler
+  other: Diğer
+  pages: Sayfalar
+  productManagement: Ürün Yönetimi
+  products: Ürünler
+  register: Kayıt Ol
+  reviews: İncelemeler
+  settings: Ayarlar
+  sms: SMS
+  support: Destek
+  users: Kullanıcılar
+  websiteSettings: Website Ayarları
+not-found: Bulunamadı
+notifications:
+  clear: Hepsini temizlemek
+  empty: Hiçbir bildirim yok
+  title: Bildirimler
+notify:
+  welcome: >-
+    Framework'e hoş geldiniz! Naive UI ve Vue 3 tabanlı Ücretsiz Admin Paneli,
+    lütfen GitHub'da bir yıldız ⭐️ vererek bu projeyi destekleyin
+orders:
+  customer: Müşteri Adı
+  itemsCount: Öğe sayısı
+products:
+  category: Kategori
+  create:
+    barcode: Barkod
+    brand: Marka
+    category: Kategori
+    description: Açıklama
+    discountedPrice: İndirimli Fiyat
+    imageName: Resim
+    inStock: Stokta
+    keywords: Anahtar Kelimeler
+    media: Medya
+    name: Ürün Adı
+    newKeyword: Yeni Anahtar Kelime
+    price: Fiyat
+    pricing: Fiyatlandırma
+    productInformation: Ürün Bilgisi
+    sku: Stok Kodu
+    title: Ürün Oluştur
+  name: Ürün Adı
+  rate: Oran
+  stock: Stok
+register:
+  button: Kayıt Ol
+  haveAccount: Hesabınız var mı?
+  login: Giriş Yap!
+  password: Şifre
+  successMessage: Başarıyla kayıtlı 🎉
+  title: Kayıt Ol
+  username: Kullanıcı Adı
+reviews:
+  comment: Yorum
+  customer: Müşteri
+  date: Tarih
+  product: Ürün
+  rate: Oran
+title: Framework
+tr: Turkish
+userMenu:
+  dark: Karanlık
+  en: İngilizce
+  fa: Farsça
+  language: Dil
+  light: Aydınlık
+  logout: Çıkış
+  options: Seçenekler
+  profile: Profil
+  theme: Tema
+ur: Urdu

@@ -1,48 +1,28 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, type RouteMeta } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { BreadCrumbs } from "c3-library";
+
 import Header from "./auth/header.vue";
 import Sidebar from "./auth/sidebar.vue";
-import Breadcrumb from "../breadcrumbs.vue";
 import ColorPalette from "../color.vue";
-import { menuItems } from '@/stores/menuData';
 import Filter from "../filter.vue";
-import { setFormOpen } from "@/stores/edit-form";
+import { ref, watch } from "vue";
 
-interface Breadcrumb {
-  name: string;
-  link?: string;
-  icon?: string;
+const route = useRoute();
+const { t } = useI18n()
+
+const breadcrumbs = ref<string[]>([]);
+interface CustomRouteMeta extends RouteMeta {
+  breadcrumb?: string[];
 }
 
-const breadcrumbs = ref<Breadcrumb[]>([]);
-const route = useRoute();
+function updateTranslatedBreadcrumbs() {
+  const breadcrumbKeys = (route.meta as CustomRouteMeta)?.breadcrumb || [];
+  breadcrumbs.value = breadcrumbKeys.map((key) => t(`menu.${key}`));
+}
 
-const generateBreadcrumbs = () => {
-  breadcrumbs.value = [];
-
-  const parentMenu = menuItems.find((menu) =>
-    menu.children.some((child) => child.link === route.path)
-  );
-
-  const childMenu = parentMenu?.children.find((child) => child.link === route.path);
-
-  if (parentMenu) {
-    breadcrumbs.value.push({
-      name: parentMenu.name,
-      link: parentMenu.link || undefined,
-    });
-  }
-
-  if (childMenu) {
-    breadcrumbs.value.push({
-      name: childMenu.name,
-      link: childMenu.link,
-    });
-  }
-};
-
-watch(() => route.path, generateBreadcrumbs, { immediate: true });
+watch(() => route.path, () => updateTranslatedBreadcrumbs(), { immediate: true });
 
 </script>
 
@@ -53,7 +33,7 @@ watch(() => route.path, generateBreadcrumbs, { immediate: true });
       <Sidebar />
       <div class="flex flex-col flex-grow relative">
         <div class="flex items-center justify-between p-4">
-          <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <BreadCrumbs :breadcrumb="breadcrumbs" />
           <Filter />
         </div>
         <div class="flex-grow p-4 bg-gray-100">
