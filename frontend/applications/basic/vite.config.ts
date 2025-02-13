@@ -21,8 +21,13 @@ export default defineConfig({
     vueDevTools(),
     Layouts({
       layoutsDirs: 'src/components/layouts/',
+      pagesDirs: 'src/views',
+      defaultLayout: 'default',
     }),
     Pages({
+      extensions: ['vue'],
+      importMode: 'async',
+      syncIndex: false,
       dirs: ['./src/views'],
     }),
     VueI18n({

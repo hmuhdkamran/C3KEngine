@@ -7,6 +7,6 @@ export interface IClaimMeta {
 export interface IRouteMeta {
   RouteName: string;
   Operation: string;
-  authRequired?: boolean;
-  name?:string;
+  authentication?: boolean;
+  module?:string;
 }

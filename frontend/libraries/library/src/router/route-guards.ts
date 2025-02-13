@@ -10,7 +10,7 @@ const getUserRoles = (user: IUser): IRouteMeta[] => {
 
 export const routeCheck = (user: IUser, toRouteMeta: IRouteMeta | undefined): boolean => {
     try {
-        if (!user.authenticated || !toRouteMeta?.name) {
+        if (!user.authenticated || !toRouteMeta?.module) {
             return false;
         }
 
@@ -21,8 +21,6 @@ export const routeCheck = (user: IUser, toRouteMeta: IRouteMeta | undefined): bo
         );
     } catch {
         return false;
-    } finally {
-        return true;
     }
 };
 
@@ -58,7 +56,7 @@ export const RouteGuards = (options: IRouteGuardOptions): NavigationGuard => {
 
         const routeMeta: IRouteMeta | undefined = to.meta as any;
 
-        if (routeMeta?.authRequired === true) {
+        if (routeMeta?.authentication === true) {
             if (!user?.authenticated) {
                 next({ name: options.loginRouteName, query: { redirect: to.fullPath } });
             } else {
