@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useThemePaletteStore } from 'c3-library';
+import { useThemePalleteStore } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
-const store = useThemePaletteStore();
+const store = useThemePalleteStore();
 
 const showFilter = ref(false);
 

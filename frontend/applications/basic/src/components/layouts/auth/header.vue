@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
 import { useSidebar } from '@/stores/useSidebar';
-import { useThemePaletteStore } from 'c3-library';
+import { useThemePalleteStore } from 'c3-library';
 import { computed } from 'vue';
 
 const { isSidebarOpen } = useSidebar();
 
-const store = useThemePaletteStore();
+const store = useThemePalleteStore();
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
@@ -17,23 +17,23 @@ const toggleSidebar = () => {
     <div :style="{ backgroundColor: store.selectedColor }"
         class="shadow-md p-3 flex items-center justify-between sticky top-0 z-10 border-b border-gray-200">
         <div class="flex items-center justify-between space-x-4">
-            <div class="flex items-center w-full space-x-2 mr-10">
+            <div class="flex items-center space-x-2">
                 <img :src="logo" alt="Logo" class="h-8 w-8" />
-                <h2 v-if="isSidebarOpen" class="hidden md:block text-md font-semibold text-gray-50">
+                <h2 v-if="isSidebarOpen" class="hidden md:block text-md font-semibold text-gray-50 whitespace-nowrap overflow-hidden text-ellipsis">
                     Ultimate ERP Solution
                 </h2>
             </div>
 
-            <button @click="toggleSidebar" class="text-gray-50 flex items-center justify-center">
+            <button @click="toggleSidebar" class="text-gray-50 flex items-center justify-center p-2 cursor-pointer">
                 <span :class="isSidebarOpen ? 'fa-solid fa-bars' : 'fa-solid fa-bars'"></span>
             </button>
 
-            <div class="flex items-center text-gray-50 relative w-full">
+            <div class="flex items-center text-gray-50 relative flex-1">
                 <button class=" transition duration-200 absolute flex items-center justify-center w-8 h-8">
                     <span class="fa-solid fa-magnifying-glass fa-sm"></span>
                 </button>
                 <input type="text" placeholder="Type for Search..."
-                    class="pl-9 py-1 text-gray-50 w-96 text-sm bg-transparent hover:bg-gray-50/10 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200" />
+                    class="pl-9 py-1 text-gray-50 w-full text-sm bg-transparent hover:bg-gray-50/10 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200" />
             </div>
         </div>
 
@@ -59,3 +59,11 @@ const toggleSidebar = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+@media (max-width: 768px) {
+    .hidden-md {
+        display: none;
+    }
+}
+</style>
