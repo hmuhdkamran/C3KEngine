@@ -1,4 +1,5 @@
 export { default as BaseIcon } from './extra/BaseIcon.vue';
+export { default as BreadCrumbs } from './extra/BreadCrumbs.vue';
 export { default as Card } from './extra/Card.vue';
 export { default as DataTable } from './data/DataTable.vue';
 export { default as Drawer } from './extra/Drawer.vue';

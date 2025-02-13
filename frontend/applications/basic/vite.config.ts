@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import { resolve } from "path";
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -6,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import Pages from 'vite-plugin-pages'
+import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import dotenv from 'dotenv'
 
 const envFile = '.env'
@@ -19,9 +21,20 @@ export default defineConfig({
     vueDevTools(),
     Layouts({
       layoutsDirs: 'src/components/layouts/',
+      pagesDirs: 'src/views',
+      defaultLayout: 'default',
     }),
     Pages({
+      extensions: ['vue'],
+      importMode: 'async',
+      syncIndex: false,
       dirs: ['./src/views'],
+    }),
+    VueI18n({
+      runtimeOnly: true,
+      compositionOnly: true,
+      fullInstall: true,
+      include: [resolve(__dirname, "locales/**")],
     }),
   ],
   resolve: {

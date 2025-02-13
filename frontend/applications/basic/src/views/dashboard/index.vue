@@ -96,5 +96,9 @@ const notifications = [
 <route lang="yaml">
 meta:
   layout: auth
-  redirectIfLoggedIn: true
+  authentication: true
+  product: auth
+  module: dashboard
+  breadcrumb:
+    - dashboard
 </route>

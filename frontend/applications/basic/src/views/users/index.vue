@@ -190,5 +190,10 @@ onMounted(() => {
 <route lang="yaml">
   meta:
     layout: auth
-    redirectIfLoggedIn: true
-  </route>
+    authentication: true
+    product: auth
+    module: role-user
+    breadcrumb:
+      - role
+      - user
+</route>

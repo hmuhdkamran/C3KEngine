@@ -9,7 +9,7 @@ import SkApp from './App.vue'
 import router from './router'
 import { config } from './helpers/config'
 import { configKey, SingleSpaKey, type SingleSpaProps } from './models'
-import { installPinia } from 'c3-library'
+import { installI18n, installPinia } from 'c3-library'
 
 const cssLifecycles = singleSpaCss({
   cssUrls: import.meta.env.DEV
@@ -35,20 +35,20 @@ const vueLifecycles = singleSpaVue({
   handleInstance: (app: App, props: SingleSpaProps) => {
     app.use(router)
     installPinia(app);
+    installI18n(app);
     app.provide(SingleSpaKey, props)
     app.provide(configKey, config)
   },
 })
 
-// Render directly in development mode
-if (import.meta.env.DEV) {
-  const app = createApp(SkApp)
-  app.use(router);
-  installPinia(app);
-  app.provide(SingleSpaKey, {} as SingleSpaProps)
-  app.provide(configKey, config)
-  app.mount('#app')
-}
+// if (import.meta.env.DEV) {
+//   const app = createApp(SkApp)
+//   app.use(router);
+//   installPinia(app);
+//   app.provide(SingleSpaKey, {} as SingleSpaProps)
+//   app.provide(configKey, config)
+//   app.mount('#app')
+// }
 
 export const bootstrap = [cssLifecycles.bootstrap, vueLifecycles.bootstrap]
 export const mount = [cssLifecycles.mount, vueLifecycles.mount]
