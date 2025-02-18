@@ -9,57 +9,60 @@ const props = defineProps({
     },
     columns: {
         type: Array as () => {
-            key: string,
-            label: string,
-            sort?: boolean,
-            width?: string,
-            class?: string,
-            check?: boolean
+            key: string;
+            label: string;
+            sort?: boolean;
+            width?: string;
+            class?: string;
+            check?: boolean;
         }[],
-        default: () => []
+        default: () => [],
     },
-    checkColumn: {
-        type: Boolean,
-        default: false,
-    }
+    uniqueKey: {
+        type: String,
+        default: 'id',
+    },
 });
 
 const tableStore = useTableStore();
-
-const itemsPerPage = computed(() => tableStore.itemsPerPage);
 const sortColumn = ref<string>('');
 const sortOrder = ref<'asc' | 'desc'>('asc');
-const selectedRecords = ref<Record<string, any>[]>([]);
+const selectedRecords = ref<string[]>([]);
 const selectAll = ref(false);
 
+// Computed Properties
+const itemsPerPage = computed(() => tableStore.itemsPerPage);
 const filteredRecords = computed(() => {
     const query = tableStore.searchQuery.toLowerCase();
-    const filteredRecords = props.data.filter(record =>
+    let records = props.data.filter(record =>
         Object.values(record).some(value =>
-            value.toString().toLowerCase().includes(query)
+            String(value).toLowerCase().includes(query)
         )
-    ).sort((a, b) => {
-        const compareA = a[sortColumn.value]?.toString().toLowerCase() || '';
-        const compareB = b[sortColumn.value]?.toString().toLowerCase() || '';
-        if (compareA < compareB) return sortOrder.value === 'asc' ? -1 : 1;
-        if (compareA > compareB) return sortOrder.value === 'asc' ? 1 : -1;
-        return 0;
-    });
+    );
 
-    tableStore.updateTotalRecords(filteredRecords.length);
-    return filteredRecords;
+    if (sortColumn.value) {
+        const key = sortColumn.value;
+        const order = sortOrder.value;
+        records = records.sort((a, b) => {
+            const valA = String(a[key]).toLowerCase();
+            const valB = String(b[key]).toLowerCase();
+            if (valA < valB) return order === 'asc' ? -1 : 1;
+            if (valA > valB) return order === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    tableStore.updateTotalRecords(records.length);
+    return records;
 });
 
 const paginatedRecords = computed(() => {
     const start = (tableStore.currentPage - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return filteredRecords.value.slice(start, end);
+    return filteredRecords.value.slice(start, start + itemsPerPage.value);
 });
 
-const changeSort = (column: string, sort: boolean = true) => {
-    if (!sort) {
-        return;
-    }
+// Methods
+const changeSort = (column: string) => {
     if (sortColumn.value === column) {
         sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
     } else {
@@ -69,13 +72,13 @@ const changeSort = (column: string, sort: boolean = true) => {
 };
 
 const toggleSelectAll = () => {
-    if (selectAll.value) {
-        selectedRecords.value = [...paginatedRecords.value];
-    } else {
-        selectedRecords.value = [];
-    }
+    selectAll.value = !selectAll.value;
+    selectedRecords.value = selectAll.value
+        ? paginatedRecords.value.map(record => record[props.uniqueKey!])
+        : [];
 };
 
+// const isSelected = (record: Record<string, any>) => selectedRecords.value.includes(record[props.uniqueKey!]);
 </script>
 
 <template>
@@ -85,42 +88,35 @@ const toggleSelectAll = () => {
                 <thead>
                     <tr class="border-b bg-gray-50 border-gray-300">
                         <template v-for="column in props.columns" :key="column.key">
-                            <th v-if="column.check ?? false" class="cursor-pointer">
+                            <th v-if="column.check" class="cursor-pointer">
                                 <input class="cursor-pointer" type="checkbox" v-model="selectAll"
                                     @change="toggleSelectAll" />
                             </th>
-                            <th v-else @click="changeSort(column.key, column.sort ?? false)"
-                                :class="['cursor-pointer', column.class || '']"
-                                :style="{ width: column.width || 'auto' }">
+                            <th v-else class="cursor-pointer" :class="column.class" :style="{ width: column.width }"
+                                @click="column.sort && changeSort(column.key)">
                                 {{ column.label }}
-                                <span v-if="sortColumn === column.key && column.sort !== false" class="ml-1 text-md">
-                                    {{ sortOrder === 'asc' ? '↑' : '↓' }}
-                                </span>
+                                <span v-if="sortColumn === column.key" class="ml-1 text-md">{{ sortOrder === 'asc' ? '↑'
+                                    : '↓' }}</span>
                             </th>
                         </template>
                     </tr>
                 </thead>
 
                 <tbody class="text-sm">
-                    <tr v-for="(record, index) in paginatedRecords" :key="record[props.columns[0].key]" :class="[
-                        index % 2 === 0 ? 'bg-gray-50' : 'bg-white',
-                        'hover:shadow-lg hover:bg-gray-100 transition-shadow duration-200'
+                    <tr v-for="(record, index) in paginatedRecords" :key="record[props.uniqueKey!]" :class="[
+                        (index % 2 === 0) ? 'bg-gray-50' : 'bg-white',
+                        'hover:shadow-lg hover:bg-gray-100 transition-shadow duration-200',
+                        'border-b border-gray-300 border-dashed',
                     ]">
-                        <template v-for="column in props.columns">
-                            <template v-if="column.check ?? false">
-                                <td class="cursor-pointer text-center">
-                                    <input class="cursor-pointer" type="checkbox" v-model="selectedRecords"
-                                        :value="record" />
-                                </td>
-                            </template>
-                            <template v-else>
-                                <td class="p-2" :class="column.class || ''" :style="{ width: column.width || 'auto' }"
-                                    :key="column.key">
-                                    <slot :name="column.key" :field="column.key" :row="record"
-                                        v-if="$slots[column.key]"></slot>
-                                    <span v-html="record[column.key]" v-else></span>
-                                </td>
-                            </template>
+                        <template v-for="column in props.columns" :key="column.key">
+                            <td v-if="column.check" class="cursor-pointer text-center p-1">
+                                <input class="cursor-pointer" type="checkbox" :value="record[props.uniqueKey!]"
+                                    v-model="selectedRecords" />
+                            </td>
+                            <td v-else :class="[column.class, 'p-1']" :style="{ width: column.width }">
+                                <slot :name="column.key" :field="column.key" :row="record" v-if="$slots[column.key]"></slot>
+                                <span v-else>{{ record[column.key] }}</span>
+                            </td>
                         </template>
                     </tr>
                 </tbody>
@@ -129,11 +125,10 @@ const toggleSelectAll = () => {
         <div class="mt-4 text-sm flex justify-between items-center">
             <div>
                 Showing {{ (tableStore.currentPage - 1) * itemsPerPage + 1 }} to
-                {{ Math.min(tableStore.currentPage * itemsPerPage, filteredRecords.length) }} of
-                {{ filteredRecords.length }} records
+                {{ Math.min(tableStore.currentPage * itemsPerPage, filteredRecords.length) }}
+                of {{ filteredRecords.length }} records
             </div>
         </div>
-
     </div>
 </template>
 

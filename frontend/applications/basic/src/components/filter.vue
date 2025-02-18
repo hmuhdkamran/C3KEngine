@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useThemePaletteStore } from 'c3-library';
+import { useThemePaletteStore, useTableStore } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
 const store = useThemePaletteStore();
+const table = useTableStore();
 
 const showFilter = ref(false);
 
@@ -27,15 +28,9 @@ const dropdownOptions = [
         <div v-if="showFilter"
             class="absolute right-0 mt-12 w-[98%] bg-white shadow-sm rounded-sm border border-gray-200 p-4 z-50">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div v-for="(dropdown, index) in dropdownOptions" :key="index" class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-600">{{ dropdown.label }}</label>
-                    <select class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all"
-                        :style="{ '--ring-color': store.selectedColor, '--border-color': store.selectedColor, }"
-                        :class="['focus:ring-1', 'focus:ring-[var(--ring-color)]', 'focus:border-[var(--border-color)]']">
-                        <option v-for="(option, i) in dropdown.options" :key="i" :value="option">
-                            {{ option }}
-                        </option>
-                    </select>
+                <div class="flex flex-col gap-1">
+                    <label class="text-sm font-medium text-gray-600">Search</label>
+                    <input type="text" class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all" v-model="table.searchQuery" />
                 </div>
             </div>
         </div>
