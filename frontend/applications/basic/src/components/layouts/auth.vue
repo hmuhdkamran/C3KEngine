@@ -23,17 +23,16 @@ function updateTranslatedBreadcrumbs() {
 }
 
 watch(() => route.path, () => updateTranslatedBreadcrumbs(), { immediate: true });
-
 </script>
 
 <template>
-  <div class="flex flex-col h-screen">
-    <Header />
-    <div class="flex flex-grow">
-      <Sidebar />
+  <div class="flex h-screen">
+    <Sidebar />
+    <div class="flex flex-col flex-grow">
+      <Header />
       <div class="flex flex-col flex-grow relative">
-        <div class="flex items-center justify-between p-4">
-          <BreadCrumbs :breadcrumb="breadcrumbs" />
+        <div class="flex items-center justify-end p-4">
+          <!-- <BreadCrumbs :breadcrumb="breadcrumbs" /> -->
           <Filter />
         </div>
         <div class="flex-grow p-4 bg-gray-100">
