@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
-import { useThemePaletteStore } from 'c3-library';
+import { useSystemStore } from 'c3-library';
 import { DataTable, newGuid, Pagination, RepositoryService } from 'c3-library';
 import type { IUser } from '@/models';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
@@ -9,7 +9,7 @@ import DialogBox from './DialogBox.vue';
 import { useRoleUserStore } from '@/stores/roles/user-store';
 
 const store = useRoleUserStore();
-const color = useThemePaletteStore();
+const color = useSystemStore();
 
 const service = new RepositoryService<IUser>('auth/role/users');
 const entities = ref<IUser[]>([]);
@@ -97,19 +97,19 @@ onMounted(() => {
           <label for="DisplayName" class="text-sm font-medium text-gray-700">Name:</label>
           <input type="text" id="DisplayName" v-model="entity.DisplayName" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }" />
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }" />
         </div>
         <div class="mb-3">
           <label for="Username" class="text-sm font-medium text-gray-700">Email:</label>
           <input type="email" id="Username" v-model="entity.Username" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }" />
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }" />
         </div>
         <div class="mb-3">
           <label for="Language" class="text-sm font-medium text-gray-700">Language:</label>
           <select id="Language" v-model="entity.Language" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }">
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }">
             <option value="English">English</option>
             <option value="Urdu">Urdu</option>
           </select>
@@ -118,19 +118,19 @@ onMounted(() => {
           <label for="Password" class="text-sm font-medium text-gray-700">Password:</label>
           <input type="password" id="Password" v-model="entity.Password" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }" />
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }" />
         </div>
         <div class="mb-3" v-if="!isEditMode">
           <label for="ConfirmPassword" class="text-sm font-medium text-gray-700">Confirm Password:</label>
           <input type="password" id="ConfirmPassword" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }" />
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }" />
         </div>
         <div class="mb-3" v-if="!isEditMode">
           <label for="UserRole" class="text-sm font-medium text-gray-700">User Role:</label>
           <select id="UserRole" v-model="entity.StatusId" required
             class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            :style="{ '--ring-color': color.selectedColor, '--border-color': color.selectedColor }">
+            :style="{ '--ring-color': color.application.primaryColor , '--border-color': color.application.primaryColor  }">
             <option value="Admin">Admin</option>
             <option value="User">User</option>
             <option value="Guest">Guest</option>
@@ -156,7 +156,7 @@ onMounted(() => {
             @click="setFormOpen(false)">Cancel</button>
           <button type="submit"
             class="px-3 py-1.5 text-white rounded-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
-            :style="{ backgroundColor: color.selectedColor }">Save</button>
+            :style="{ backgroundColor: color.application.primaryColor  }">Save</button>
         </div>
       </template>
     </DialogBox>
@@ -166,11 +166,11 @@ onMounted(() => {
         <template #actions="{ row }">
           <div class="flex justify-center space-x-1">
             <button class="w-6 h-6 cursor-pointer shadow-md flex items-center justify-center bg-white rounded-full"
-              @click="openForm(row as any)" :style="{ color: color.selectedColor }">
+              @click="openForm(row as any)" :style="{ color: color.application.primaryColor  }">
               <span class="fas fa-pen"></span>
             </button>
             <button class="w-6 h-6 cursor-pointer shadow-md flex items-center justify-center bg-white rounded-full"
-              @click="deleteUser(row as IUser)" :style="{ color: color.selectedColor }">
+              @click="deleteUser(row as IUser)" :style="{ color: color.application.primaryColor  }">
               <span class="fas fa-trash-can"></span>
             </button>
           </div>

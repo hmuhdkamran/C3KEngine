@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { config } from 'c3-library';
+import { useSystemStore } from 'c3-library';
+const config = useSystemStore();
 </script>
 
 <template>
@@ -9,7 +10,7 @@ import { config } from 'c3-library';
                 <p class="text-violet-500 uppercase font-bold text-sm mb-4">Features</p>
                 <h2 class="text-4xl font-extrabold mb-6">Why is it so great?</h2>
                 <p class="text-gray-600 text-lg mb-12">
-                    Explore the exceptional features that make our {{ config.application }} a must-have for your
+                    Explore the exceptional features that make our {{ config.application.name }} a must-have for your
                     business. From
                     seamless integration to real-time analytics, our solution has it all.
                 </p>

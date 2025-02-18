@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { useThemePaletteStore, Drawer } from 'c3-library';
+import { useSystemStore, Drawer } from 'c3-library';
 import { ref } from 'vue';
 
-const store = useThemePaletteStore();
+const store = useSystemStore();
 
 const isOpen = ref(false);
+
+function updateColors () {
+    store.updateApplication(store.application);
+}
 
 </script>
 
@@ -13,7 +17,7 @@ const isOpen = ref(false);
         <!-- Theme Palette Button -->
         <button @click="isOpen = !isOpen"
             class="p-3 cursor-pointer flex items-center justify-center rounded-l-lg shadow-md focus:outline-none transition duration-300 hover:shadow-lg"
-            :style="{ backgroundColor: store.selectedColor }">
+            :style="{ backgroundColor: store.application.primaryColor }">
             <span class="fa-solid fa-palette text-white"></span>
         </button>
 
@@ -31,8 +35,20 @@ const isOpen = ref(false);
 
             <!-- Color Preset Grid -->
             <div class="p-4">
-                <h2 class="mb-4">Color Presets</h2>
-                <input type="color" v-model="store.selectedColor" />
+                <h2 class="mb-4">Primary Color</h2>
+                <input type="color" v-model="store.application.primaryColor" @chage="updateColors" />
+            </div>
+            <div class="p-4">
+                <h2 class="mb-4">Title Color</h2>
+                <input type="color" v-model="store.application.titleColor" @chage="updateColors" />
+            </div>
+            <div class="p-4">
+                <h2 class="mb-4">Background Color</h2>
+                <input type="color" v-model="store.application.backgroundColor" @chage="updateColors" />
+            </div>
+            <div class="p-4">
+                <h2 class="mb-4">Sidebar Color</h2>
+                <input type="color" v-model="store.application.sidebarColor" @chage="updateColors" />
             </div>
         </Drawer>
     </div>

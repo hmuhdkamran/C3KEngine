@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { config } from "c3-library";
+import { useSystemStore } from "c3-library";
 import { hero } from '@/assets/images/images';
+const config = useSystemStore();
 </script>
 
 <template>
@@ -16,9 +17,9 @@ import { hero } from '@/assets/images/images';
             <div class="w-full md:w-8/12 lg:w-6/12 px-4 relative z-10">
                 <div class="pt-16 md:pt-24 lg:pt-32">
                     <h2 class="font-semibold text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-gray-800">
-                        The {{ config.application.slice(0, Math.ceil(config.application.length / 2)) }}
+                        The {{ config.application.name.slice(0, Math.ceil(config.application.name.length / 2)) }}
                         <span class="bg-gradient-to-tr from-violet-800 to-violet-400 bg-clip-text text-transparent">
-                            {{ config.application.slice(Math.ceil(config.application.length / 2)) }}
+                            {{ config.application.name.slice(Math.ceil(config.application.name.length / 2)) }}
                         </span>
                         for Any Business
                     </h2>

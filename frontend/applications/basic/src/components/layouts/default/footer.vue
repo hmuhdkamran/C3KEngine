@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { config, VNodeRenderer } from 'c3-library';
+import { useSystemStore, VNodeRenderer } from 'c3-library';
+const config = useSystemStore();
 </script>
 
 <template>
@@ -14,8 +15,8 @@ import { config, VNodeRenderer } from 'c3-library';
                 <div>
                     <div class="flex justify-center sm:justify-start">
                         <h4 class="text-3xl font-semibold">
-                            <VNodeRenderer :nodes="config.logo" />
-                            {{ config.application }}
+                            <VNodeRenderer :nodes="config.application.logo" />
+                            {{ config.application.name }}
                         </h4>
                     </div>
                     <p
@@ -24,7 +25,7 @@ import { config, VNodeRenderer } from 'c3-library';
                         business days.
                     </p>
                     <ul class="mt-8 flex justify-center gap-4 sm:justify-start">
-                        <li class="nav-item" v-for="item in config.socialMedia">
+                        <li class="nav-item" v-for="item in config.application.socialMedia">
                             <a :href="item.link" class="btn-rounded" target="_blank">
                                 <span :class="item.icon"></span>
                             </a>

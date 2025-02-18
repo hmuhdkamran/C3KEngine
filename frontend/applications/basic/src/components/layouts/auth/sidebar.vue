@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import logo from '@/assets/logo.svg';
 import { avatar } from '@/assets/images/images';
 import { useSidebar } from '@/stores/useSidebar';
-import { useThemePaletteStore, Drawer } from 'c3-library';
+import { useSystemStore, Drawer } from 'c3-library';
 import { menuItems } from '@/stores/menuData'
 import { sidebarStore } from '@/stores/menuStore';
 
@@ -14,7 +14,7 @@ const userName = ref('Admin');
 const isLogoutDialogOpen = ref(false);
 const isProcessingLogout = ref(false);
 const router = useRouter();
-const store = useThemePaletteStore();
+const store = useSystemStore();
 
 const setActive = (menu: { name: string; link: string }) => {
   sidebarStore.setActiveParent(menu);
@@ -60,7 +60,7 @@ onUnmounted(() => {
 
 <template>
   <aside v-if="!isSmallScreen" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
-    class="bg-white shadow-md flex flex-col relative transition-all duration-300">
+    class="shadow-md flex flex-col relative transition-all duration-300" :style="{backgroundColor: store.application.sidebarColor}">
     <div class="relative bg-white border-b-2 border-gray-200 p-4">
       <div class="flex flex-col items-center">
         <div class="relative">
@@ -113,7 +113,7 @@ onUnmounted(() => {
     <div class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200"
       :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
       <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
-        :style="{ backgroundColor: store.selectedColor }" @click="openLogoutDialog">
+        :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
         <span class="fa-solid fa-right-from-bracket"></span>
         <span v-if="isSidebarOpen" class="ml-2">Logout</span>
       </button>
@@ -125,7 +125,7 @@ onUnmounted(() => {
         <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
         <div class="flex justify-center space-x-4">
           <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
-            :style="{ backgroundColor: store.selectedColor }" :disabled="isProcessingLogout">
+            :style="{ backgroundColor: store.application.primaryColor }" :disabled="isProcessingLogout">
             <span v-if="!isProcessingLogout">Yes, Logout</span>
             <span v-else class="flex items-center">
               <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span>Logging Out...
@@ -143,7 +143,7 @@ onUnmounted(() => {
   <Drawer v-else :is-open="isSidebarOpen" title=" " position="left" size="w-full" @click="toggleSidebar">
     <template #header>
       <div class="flex items-center justify-between w-full px-4 py-3"
-        :style="{ backgroundColor: store.selectedColor, color: 'white' }">
+        :style="{ backgroundColor: store.application.sidebarColor, color: 'white' }">
 
 
         <div class="flex items-center w-full space-x-2 mr-10">
@@ -191,7 +191,7 @@ onUnmounted(() => {
       <div class="fixed bottom-0 w-full left-0 p-4 bg-white border-t border-gray-200"
         :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
         <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
-          :style="{ backgroundColor: store.selectedColor }" @click="openLogoutDialog">
+          :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
           <span class="fa-solid fa-right-from-bracket"></span>
           <span v-if="isSidebarOpen" class="ml-2">Logout</span>
         </button>
@@ -203,7 +203,7 @@ onUnmounted(() => {
           <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
           <div class="flex justify-center space-x-4">
             <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
-              :style="{ backgroundColor: store.selectedColor }" :disabled="isProcessingLogout">
+              :style="{ backgroundColor: store.application.primaryColor }" :disabled="isProcessingLogout">
               <span v-if="!isProcessingLogout">Yes, Logout</span>
               <span v-else class="flex items-center">
                 <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span>Logging Out...

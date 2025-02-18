@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { config } from "c3-library";
-import { avatar} from '@/assets/images/images'
+import { useSystemStore } from "c3-library";
+import { avatar} from '@/assets/images/images';
+const config = useSystemStore();
 </script>
 
 <template>
     <div class="bg-white dark:bg-gray-800 py-16 lg:py-20">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="pb-4 text-3xl md:text-5xl font-bold text-gray-900 dark:text-white text-center">Get Started
-                with Our {{ config.application }} Today</h2>
+                with Our {{ config.application.name }} Today</h2>
             <p class="mx-auto max-w-3xl pb-8 text-gray-700 dark:text-gray-300 text-lg md:text-xl text-center">
-                Experience a seamless transition to our {{ config.application }}. With intuitive features and
+                Experience a seamless transition to our {{ config.application.name }}. With intuitive features and
                 user-friendly
                 design, our platform simplifies enterprise management, making it easier for your team to stay
                 organized and
@@ -42,7 +43,7 @@ import { avatar} from '@/assets/images/images'
                         <img :src="avatar" width="150" height="150" class="block w-32 h-32 rounded-full mx-auto sm:mx-0"
                             alt="Customer Testimonial" loading="lazy">
                         <p class="flex-grow py-6 text-gray-600 dark:text-gray-300">
-                            “Adopting this {{ config.application }} was straightforward and effective. Its intuitive
+                            “Adopting this {{ config.application.name }} was straightforward and effective. Its intuitive
                             design and powerful
                             features have revolutionized our enterprise management.”
                         </p>

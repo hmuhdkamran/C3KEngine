@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { config } from "c3-library";
+import { useSystemStore } from "c3-library";
+const config = useSystemStore();
 </script>
 
 <template>
@@ -10,7 +11,7 @@ import { config } from "c3-library";
                     <!-- Text Section -->
                     <div class="w-full lg:w-1/2 mb-12 lg:mb-0">
                         <div class="max-w-md lg:mx-auto">
-                            <span class="text-violet-600 font-bold">{{ config.application }}</span>
+                            <span class="text-violet-600 font-bold">{{ config.application.name }}</span>
                             <h2 class="my-2 text-4xl lg:text-5xl font-bold font-heading">Streamline Your Business
                                 Operations</h2>
                             <p class="mb-6 text-violet-500 leading-loose">

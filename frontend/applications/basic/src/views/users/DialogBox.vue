@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { useThemePaletteStore } from 'c3-library';
 import { defineProps, defineEmits, computed } from 'vue';
 import { circuit } from '@/assets/images/images';
-
-const store = useThemePaletteStore();
 
 const props = defineProps({
     show: {

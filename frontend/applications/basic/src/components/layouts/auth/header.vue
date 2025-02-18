@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.svg';
 import { useSidebar } from '@/stores/useSidebar';
-import { useThemePaletteStore } from 'c3-library';
+import { useSystemStore } from 'c3-library';
 import { computed } from 'vue';
 
 const { isSidebarOpen } = useSidebar();
 
-const store = useThemePaletteStore();
+const store = useSystemStore();
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
@@ -14,7 +14,7 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-    <div :style="{ backgroundColor: store.selectedColor }"
+    <div :style="{ backgroundColor: store.application.titleColor }"
         class="shadow-md p-3 flex items-center justify-between sticky top-0 z-10 border-b border-gray-200">
         <div class="flex items-center justify-between space-x-4">
             <div class="flex items-center space-x-2">

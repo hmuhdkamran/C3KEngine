@@ -29,11 +29,15 @@ interface ISocialMedia {
 };
 
 export interface IConfiguration {
-    application: string,
-    logo: VNode,
-    enableI18n: boolean,
-    language: string,
-    isRtl: boolean,
+    name: string;
+    logo: VNode;
+    enableI18n: boolean;
+    language: string;
+    isRtl: boolean;
+    titleColor: string;
+    primaryColor: string;
+    backgroundColor: string;
+    sidebarColor: string;
     socialMedia: ISocialMedia[]
 };
 

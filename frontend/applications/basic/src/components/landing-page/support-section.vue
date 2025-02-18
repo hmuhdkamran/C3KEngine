@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { config } from "c3-library";
-
+import { useSystemStore } from "c3-library";
 import {image1, image3, image2, image4} from '@/assets/images/images'
+
+const config = useSystemStore();
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import {image1, image3, image2, image4} from '@/assets/images/images'
                 <div class="lg:grid lg:grid-flow-row-dense lg:grid-cols-1 lg:gap-8 lg:items-center">
                     <div class="ml-16 lg:col-start-2 lg:max-w-2xl lg:ml-36">
                         <p class="text-base font-semibold leading-6 text-violet-600 uppercase">
-                            {{ config.application }}
+                            {{ config.application.name }}
                         </p>
                         <h4
                             class="mt-2 text-2xl font-extrabold leading-8 text-gray-900 dark:text-white sm:text-3xl sm:leading-9">

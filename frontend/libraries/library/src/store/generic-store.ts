@@ -14,9 +14,11 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
     const item = ref<T>()
     const isLoading = ref(false)
     const shouldUpdate = ref(false)
+    const filteringText = ref('')
 
     async function getItems(filter: string = '') {
       isLoading.value = true
+      filteringText.value = filter;
       try {
         const response =
           filter.length > 0 ? await service.getByFilter(filter) : await service.getAll()
@@ -32,7 +34,7 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
       isLoading.value = true
       try {
         ;(await shouldUpdate.value) ? service.update(itemToSave) : service.add(itemToSave)
-        await getItems()
+        await getItems(filteringText.value)
       } catch (err) {
         console.error(`Error: ${err}`)
       } finally {
@@ -45,7 +47,7 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
       try {
         const primaryKeyValue = itemToDelete[primaryKey]
         await service.remove(primaryKeyValue)
-        await getItems()
+        await getItems(filteringText.value)
       } catch (err) {
         console.error(`Error: ${err}`)
       } finally {

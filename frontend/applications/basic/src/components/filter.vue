@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useThemePaletteStore, useTableStore } from 'c3-library';
+import { useSystemStore, useTableStore } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
-const store = useThemePaletteStore();
+const store = useSystemStore();
 const table = useTableStore();
 
 const showFilter = ref(false);
@@ -21,7 +21,7 @@ const dropdownOptions = [
     <div class="flex gap-1 px-4">
         <button @click="showFilter = !showFilter"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
-            :style="{ backgroundColor: store.selectedColor }">
+            :style="{ backgroundColor: store.application.primaryColor }">
             <span class="fas fa-filter fa-sm"></span>
         </button>
 
@@ -36,7 +36,7 @@ const dropdownOptions = [
         </div>
         <button @click="setFormOpen(true)"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
-            :style="{ backgroundColor: store.selectedColor }">
+            :style="{ backgroundColor: store.application.primaryColor }">
             <span class="fas fa-plus fa-sm"></span>
         </button>
     </div>

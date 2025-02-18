@@ -7,7 +7,6 @@ export * from '@/router'
 export * from '@/store'
 
 export * from '@/axios'
-export * from '@/config'
 export * from '@/typings'
 
 export * from '@/composables'
