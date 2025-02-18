@@ -2,6 +2,7 @@
 import logo from '@/assets/logo.svg';
 import { useSidebar } from '@/stores/useSidebar';
 import { useThemePaletteStore } from 'c3-library';
+import { computed } from 'vue';
 
 const { isSidebarOpen } = useSidebar();
 

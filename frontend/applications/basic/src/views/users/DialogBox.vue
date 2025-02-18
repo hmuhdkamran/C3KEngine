@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useThemePaletteStore } from 'c3-library';
 import { defineProps, defineEmits, computed } from 'vue';
+import { circuit } from '@/assets/images/images';
 
 const store = useThemePaletteStore();
 
@@ -12,6 +13,10 @@ const props = defineProps({
     width: {
         type: String,
         default: '50%',
+    },
+    showClose: {
+        type: Boolean,
+        default: true,
     },
 });
 
@@ -27,9 +32,15 @@ const closeDialog = () => {
         <transition name="dialog">
             <div v-if="show" class="dialog-overlay">
                 <div class="dialog" :style="{ width: width, maxWidth: '95%', }">
-                    <div class="dialog-header" :style="{ backgroundColor: store.selectedColor }" v-if="$slots.header">
+                    <div class="dialog-header" :style="{ 
+                        backgroundImage: `url(${circuit})`,
+                        backgroundSize: '50% auto, 100% 100%',
+                        backgroundPosition: 'right center, center center',
+                        backgroundRepeat: 'no-repeat, no-repeat',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }" v-if="$slots.header">
                         <slot name="header" />
-                        <button class="close-btn" @click="closeDialog">×</button>
+                        <button v-if="showClose" class="close-btn" @click="closeDialog">×</button>
                     </div>
                     <div class="dialog-body">
                         <slot />
@@ -61,7 +72,7 @@ const closeDialog = () => {
 /* Dialog Container Styles */
 .dialog {
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-height: 90vh;
@@ -73,11 +84,10 @@ const closeDialog = () => {
 
 /* Header Styles */
 .dialog-header {
-    padding: 16px;
+    padding: 12px;
     border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
+    text-align: left;
 }
 
 .close-btn {
@@ -96,7 +106,7 @@ const closeDialog = () => {
 
 /* Footer Styles */
 .dialog-footer {
-    padding: 16px;
+    padding: 10px;
     border-top: 1px solid #e0e0e0;
     display: flex;
     justify-content: flex-end;
@@ -128,5 +138,11 @@ const closeDialog = () => {
 .dialog-leave-to .dialog {
     transform: scale(0.9);
     opacity: 0;
+}
+
+@media (max-width: 900px) {
+    .dialog-header {
+        background-size: 100% auto, 100% 100% !important;
+    }
 }
 </style>
