@@ -73,7 +73,7 @@ const sizeClasses = {
           </template>
         </div>
         <!-- Content -->
-        <div class="flex-grow overflow-y-auto">
+        <div class="flex-grow overflow-y-auto p-4">
           <slot />
         </div>
       </div>

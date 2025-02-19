@@ -22,7 +22,7 @@ export const useSystemStore = defineStore(
         titleColor: '#265689',
         primaryColor: '#265689',
         backgroundColor: '#265689',
-        sidebarColor: '#265689',
+        sidebarColor: '#fff',
         socialMedia: [
           {
             name: 'Facebook',

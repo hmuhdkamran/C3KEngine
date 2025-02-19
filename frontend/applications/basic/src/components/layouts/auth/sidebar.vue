@@ -60,8 +60,16 @@ onUnmounted(() => {
 
 <template>
   <aside v-if="!isSmallScreen" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
-    class="shadow-md flex flex-col relative transition-all duration-300" :style="{backgroundColor: store.application.sidebarColor}">
-    <div class="relative bg-white border-b-2 border-gray-200 p-4">
+    class="shadow-md flex flex-col relative transition-all duration-300"
+    :style="{ backgroundColor: store.application.sidebarColor }">
+    <div class="flex items-center border-b border-gray-200 p-3 space-x-2">
+      <img :src="logo" alt="Logo" class="h-8 w-8" />
+      <h2 v-if="isSidebarOpen"
+        class="hidden md:block text-md font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
+        Ultimate ERP Solution
+      </h2>
+    </div>
+    <!-- <div class="relative bg-white border-b-2 border-gray-200 p-4">
       <div class="flex flex-col items-center">
         <div class="relative">
           <img :src="avatar" alt="User"
@@ -75,7 +83,7 @@ onUnmounted(() => {
           <p class="text-sm text-gray-700 font-light">Administrator</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <nav class="flex-1 mt-4">
       <ul class="space-y-2 text-sm">
