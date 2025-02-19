@@ -21,8 +21,8 @@
     "port": "8292",
     "host": "127.0.0.1",
     "cors": [
-      "http://localhost:5001",
-      "http://127.0.0.1:5001"
+      "http://localhost:3000",
+      "http://127.0.0.1:3000"
     ]
   },
   "services": [

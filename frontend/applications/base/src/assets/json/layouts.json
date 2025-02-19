@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "type": "route",
+      "routes": [
+        {
+          "type": "application",
+          "name": "@c3k/base"
+        }
+      ],
+      "default": true
+    }
+  ]
+}

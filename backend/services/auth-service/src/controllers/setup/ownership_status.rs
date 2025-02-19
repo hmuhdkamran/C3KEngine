@@ -50,7 +50,7 @@ pub async fn delete(
 
 pub fn ownership_status_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/api/auth/ownership_status")
+        web::scope("/api/auth/setup/ownership_status")
             .service(get_all)
             .service(get_by_filter)
             .service(add)

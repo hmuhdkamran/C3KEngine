@@ -20,29 +20,33 @@ impl RedisHandler {
             "redis://{}:{}/",
             json.redis.redis_host, json.redis.redis_port
         ))
-        .map_err(|_| {
-            Box::new(ParseError::from("Redis client error:")) as Box<dyn StdError>
-        })?;
+        .map_err(|_| Box::new(ParseError::from("Redis client error:")) as Box<dyn StdError>)?;
 
         Ok(RedisHandler { client })
     }
 
     pub fn insert_update_key(
         &self,
-        username: &String,
-        token: &String,
+        key: &String,
+        value: &String,
     ) -> Result<bool, Box<dyn StdError>> {
         let mut con = self.client.get_connection()?;
-        let _: () = con.set(username, token)?;
+        let _: () = con.set(key, value)?;
         Ok(true)
     }
 
-    pub fn get_key(&self, username: &str) -> Result<String, Box<dyn StdError>> {
+    pub fn get_key(&self, key: &str) -> Result<String, Box<dyn StdError>> {
         let mut con = self.client.get_connection()?;
-        let result: Option<String> = con.get(username)?;
+        let result: Option<String> = con.get(key)?;
         match result {
             Some(value) => Ok(value),
             None => Err("Value not found".into()),
         }
+    }
+
+    pub fn remove_key(&self, key: &str) -> Result<bool, Box<dyn StdError>> {
+        let mut con = self.client.get_connection()?;
+        let result: i32 = con.del(key)?;
+        Ok(result > 0)
     }
 }

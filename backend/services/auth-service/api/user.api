@@ -3,7 +3,6 @@
 # @name login
 POST {{host}}/auth HTTP/1.1
 Content-Type: application/json
-
 {
     "username": "admin@sefam.com",
     "password": "P@ssw0rd"

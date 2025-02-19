@@ -1,0 +1,8 @@
+{
+    "local": {},
+    "dev": {
+        "@c3k/base": "http://localhost:3001/src/main.ts"
+    },
+    "staging": {},
+    "prod": {}
+}
