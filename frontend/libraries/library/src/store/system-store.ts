@@ -23,14 +23,24 @@ export const useSystemStore = defineStore(
         primaryColor: '#265689',
         backgroundColor: '#265689',
         sidebarColor: '#fff',
+        fontSize: '16px',
+        fontFamily: "'Arial', sans-serif",
         socialMedia: [
           {
             name: 'Facebook',
             link: 'https://www.facebook.com/hmuhdkamran',
             icon: 'icon-[fa--facebook-square]',
           },
-          { name: 'Twitter', link: 'https://twitter.com/hmuhdkamran', icon: 'icon-[fa--twitter]' },
-          { name: 'Github', link: 'https://github.com/hmuhdkamran', icon: 'icon-[fa--github]' },
+          {
+            name: 'Twitter',
+            link: 'https://twitter.com/hmuhdkamran',
+            icon: 'icon-[fa--twitter]',
+          },
+          {
+            name: 'Github',
+            link: 'https://github.com/hmuhdkamran',
+            icon: 'icon-[fa--github]',
+          },
         ],
       },
     )
@@ -44,9 +54,13 @@ export const useSystemStore = defineStore(
       toggleSidebar.value = changed
     }
 
-    function updateApplication(value: IConfiguration) {
-      application.value = value
-      LocalStorageHelper.set('configuration', application.value);
+    function updateApplication(value: Partial<IConfiguration>) {
+      application.value = {
+        ...application.value,
+        ...value,
+        socialMedia: value.socialMedia ?? application.value.socialMedia,
+      }
+      LocalStorageHelper.set('configuration', application.value)
     }
 
     return {

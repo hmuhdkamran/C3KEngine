@@ -7,7 +7,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <nav class="px-6 py-3">
+  <nav class="p-2">
     <ul class="flex items-center">
       <li v-for="item in props.breadcrumb" :key="item" class="flex items-center">
         <div class="flex items-center space-x-2">

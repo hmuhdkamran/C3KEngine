@@ -42,6 +42,18 @@ export default {
         'fade-in': 'fade-in 250ms ease-in-out',
         border: 'border 4s linear infinite',
       },
+      colors: {
+        primary: 'var(--primary-color)',
+        title: 'var(--title-color)',
+        background: 'var(--background-color)',
+        sidebar: 'var(--sidebar-color)',
+      },
+      fontSize: {
+        'base': 'var(--font-size)',
+      },
+      fontFamily: {
+        'primary': 'var(--font-family)',
+      },
     },
   },
   plugins: [

@@ -1,3 +1,4 @@
 @import "tailwindcss";
-
+@import './css/input.css';
+@import './css//variables.css';
 @import 'c3-library/style.css';
