@@ -83,12 +83,7 @@ const toggleSelectAll = () => {
   <div>
     <div class="overflow-x-auto rounded-sm shadow-md">
       <!-- Check for template-list slot -->
-      <slot
-        name="template-list"
-        :records="paginatedRecords"
-        :unique-key="props.uniqueKey"
-        v-if="$slots['template-list']"
-      ></slot>
+      <slot name="template" :records="paginatedRecords" :unique-key="props.uniqueKey" v-if="$slots.template"></slot>
 
       <!-- Default Table -->
       <table v-else class="table-auto w-full border-collapse">
@@ -96,20 +91,10 @@ const toggleSelectAll = () => {
           <tr class="border-b bg-gray-50 border-gray-300">
             <template v-for="column in props.columns" :key="column.key">
               <th v-if="column.check" class="cursor-pointer">
-                <input
-                  class="cursor-pointer"
-                  type="checkbox"
-                  v-model="selectAll"
-                  @change="toggleSelectAll"
-                />
+                <input class="cursor-pointer" type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
               </th>
-              <th
-                v-else
-                class="cursor-pointer"
-                :class="column.class"
-                :style="{ width: column.width }"
-                @click="column.sort && changeSort(column.key)"
-              >
+              <th v-else class="cursor-pointer" :class="column.class" :style="{ width: column.width }"
+                @click="column.sort && changeSort(column.key)">
                 {{ column.label }}
                 <span v-if="sortColumn === column.key" class="ml-1 text-md">
                   {{ sortOrder === 'asc' ? '↑' : '↓' }}
@@ -120,31 +105,18 @@ const toggleSelectAll = () => {
         </thead>
 
         <tbody class="text-sm">
-          <tr
-            v-for="(record, index) in paginatedRecords"
-            :key="record[props.uniqueKey!]"
-            :class="[
-              index % 2 === 0 ? 'bg-gray-50' : 'bg-white',
-              'hover:shadow-lg hover:bg-gray-100 transition-shadow duration-200',
-              'border-b border-gray-300 border-dashed',
-            ]"
-          >
+          <tr v-for="(record, index) in paginatedRecords" :key="record[props.uniqueKey!]" :class="[
+            index % 2 === 0 ? 'bg-gray-50' : 'bg-white',
+            'hover:shadow-lg hover:bg-gray-100 transition-shadow duration-200',
+            'border-b border-gray-300 border-dashed',
+          ]">
             <template v-for="column in props.columns" :key="column.key">
               <td v-if="column.check" class="cursor-pointer text-center p-1">
-                <input
-                  class="cursor-pointer"
-                  type="checkbox"
-                  :value="record[props.uniqueKey!]"
-                  v-model="selectedRecords"
-                />
+                <input class="cursor-pointer" type="checkbox" :value="record[props.uniqueKey!]"
+                  v-model="selectedRecords" />
               </td>
               <td v-else :class="[column.class, 'p-1']" :style="{ width: column.width }">
-                <slot
-                  :name="column.key"
-                  :field="column.key"
-                  :row="record"
-                  v-if="$slots[column.key]"
-                ></slot>
+                <slot :name="column.key" :field="column.key" :row="record" v-if="$slots[column.key]"></slot>
                 <span v-else>{{ record[column.key] }}</span>
               </td>
             </template>

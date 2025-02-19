@@ -81,7 +81,7 @@ const closeDialog = () => {
 
 /* Header Styles */
 .dialog-header {
-    padding: 12px;
+    padding: 8px;
     border-bottom: 1px solid #e0e0e0;
     align-items: center;
     text-align: left;
