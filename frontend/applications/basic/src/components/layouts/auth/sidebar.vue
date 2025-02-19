@@ -66,25 +66,9 @@ onUnmounted(() => {
       <img :src="logo" alt="Logo" class="h-8 w-8" />
       <h2 v-if="isSidebarOpen"
         class="hidden md:block text-md font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
-        Ultimate ERP Solution
+        {{ store.application.name }}
       </h2>
     </div>
-    <!-- <div class="relative bg-white border-b-2 border-gray-200 p-4">
-      <div class="flex flex-col items-center">
-        <div class="relative">
-          <img :src="avatar" alt="User"
-            class="rounded-full border-2 border-sky-400 transform hover:scale-105 transition duration-300"
-            :class="{ 'h-16 w-16': isSidebarOpen, 'h-8 w-8': !isSidebarOpen }" />
-          <div class="absolute bottom-0 right-1 bg-green-500 rounded-full"
-            :class="{ 'h-4 w-4': isSidebarOpen, 'h-2 w-2': !isSidebarOpen }"></div>
-        </div>
-        <div v-if="isSidebarOpen" class="text-gray-800 text-center mt-2">
-          <h3 class="text-lg font-bold">{{ userName }}</h3>
-          <p class="text-sm text-gray-700 font-light">Administrator</p>
-        </div>
-      </div>
-    </div> -->
-
     <nav class="flex-1 mt-4">
       <ul class="space-y-2 text-sm">
         <li v-for="item in menuItems" :key="item.name" class="px-2 text-gray-700 relative group">

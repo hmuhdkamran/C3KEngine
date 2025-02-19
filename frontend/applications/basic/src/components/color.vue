@@ -74,7 +74,7 @@ function updateColors() {
             type="text"
             v-model="store.application.name"
             placeholder="Application Name"
-            class="ml-4 p-2 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-full p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
           />
         </div>
         <div class="flex items-center mb-4">
@@ -84,7 +84,7 @@ function updateColors() {
             type="text"
             v-model="logoUrl"
             placeholder="https://example.com/logo.png"
-            class="ml-4 p-2 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-full p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             @input="updateColors"
           />
           <img :src="logoUrl" />
@@ -110,7 +110,7 @@ function updateColors() {
           <select
             id="language"
             v-model="store.application.language"
-            class="ml-4 p-2 border rounded-lg w-full focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-full p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
           >
             <option value="en">English</option>
             <option value="fr">French</option>
@@ -129,27 +129,27 @@ function updateColors() {
         <div
           v-for="(item, index) in store.application.socialMedia"
           :key="index"
-          class="flex items-center mb-4 pb-4 border-b border-[#dee2e6]"
+          class="flex items-center border-b border-[#dee2e6]"
         >
           <input
             type="text"
             v-model="item.name"
             placeholder="Facebook"
-            class="p-2 border rounded-lg w-1/4 focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-1/4 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             @input="updateColors"
           />
           <input
             type="text"
             v-model="item.link"
             placeholder="https://facebook.com/user"
-            class="p-2 border rounded-lg w-1/2 ml-4 focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-1/2 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             @input="updateColors"
           />
           <input
             type="text"
             v-model="item.icon"
             placeholder="fab fa-facebook"
-            class="p-2 border rounded-lg w-1/4 ml-4 focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-1/4 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
             @input="updateColors"
           />
           <button

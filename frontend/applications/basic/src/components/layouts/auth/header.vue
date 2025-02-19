@@ -32,27 +32,12 @@ watch(() => route.path, () => updateTranslatedBreadcrumbs(), { immediate: true }
 
 <template>
     <div :style="{ backgroundColor: store.application.titleColor }"
-        class=" p-2 flex items-center justify-between sticky top-0 z-10">
+        class="flex items-center justify-between sticky top-0 z-10">
         <div class="flex items-center justify-between space-x-4">
-            <!-- <div class="flex items-center space-x-2">
-                <img :src="logo" alt="Logo" class="h-8 w-8" />
-                <h2 v-if="isSidebarOpen" class="hidden md:block text-md font-semibold text-gray-50 whitespace-nowrap overflow-hidden text-ellipsis">
-                    Ultimate ERP Solution
-                </h2>
-            </div> -->
-
             <button @click="toggleSidebar" class="text-gray-800 flex items-center justify-center p-2 cursor-pointer">
                 <span :class="isSidebarOpen ? 'fa-solid fa-bars' : 'fa-solid fa-bars'"></span>
             </button>
             <BreadCrumbs :breadcrumb="breadcrumbs" />
-
-            <!-- <div class="flex items-center text-gray-50 relative flex-1">
-                <button class=" transition duration-200 absolute flex items-center justify-center w-8 h-8">
-                    <span class="fa-solid fa-magnifying-glass fa-sm"></span>
-                </button>
-                <input type="text" placeholder="Type for Search..."
-                    class="pl-9 py-1 text-gray-50 w-full text-sm bg-transparent hover:bg-gray-50/10 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-500 transition duration-200" />
-            </div> -->
         </div>
 
         <!-- <div class="flex items-center space-x-4">
