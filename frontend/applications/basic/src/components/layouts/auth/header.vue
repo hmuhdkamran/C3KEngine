@@ -34,7 +34,7 @@ watch(() => route.path, () => updateTranslatedBreadcrumbs(), { immediate: true }
     <div :style="{ backgroundColor: store.application.titleColor }"
         class="flex items-center justify-between sticky top-0 z-10">
         <div class="flex items-center justify-between space-x-4">
-            <button @click="toggleSidebar" class="text-gray-800 flex items-center justify-center p-2 cursor-pointer">
+            <button @click="toggleSidebar" class="text-gray-800 flex items-center justify-center px-6 cursor-pointer">
                 <span :class="isSidebarOpen ? 'fa-solid fa-bars' : 'fa-solid fa-bars'"></span>
             </button>
             <BreadCrumbs :breadcrumb="breadcrumbs" />

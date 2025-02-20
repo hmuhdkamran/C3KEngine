@@ -30,7 +30,7 @@ const dropdownOptions = [
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-medium text-gray-600">Search</label>
-                    <input type="text" class="p-1 border border-gray-300 rounded-sm focus:outline-none transition-all" v-model="table.searchQuery" />
+                    <input type="text" class="input-primary" v-model="table.searchQuery" />
                 </div>
             </div>
         </div>

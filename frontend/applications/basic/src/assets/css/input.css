@@ -1,0 +1,75 @@
+
+.input-compact {
+  width: 100%;
+  border: 1px solid var(--primary-color);
+  transition: border-color 0.3s ease;
+}
+
+.input-compact:hover {
+  border-bottom-color: #e2e8f0;
+}
+
+/* Default Input Style */
+.input-default {
+  width: 100%;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+/* Primary Input Style */
+.input-primary {
+  width: 100%;
+  border: 1px solid transparent;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--primary-color);
+  transition: border-color 0.3s ease;
+}
+
+.input-primary:hover, .input-primary:focus {
+  border-color: lightgray; /* No border color */
+  border-bottom-color: var(--primary-color); /* Bottom border remains primary color */
+  outline: none; /* Remove any default outline */
+}
+
+/* Secondary Input Style */
+.input-secondary {
+  width: 100%;
+  border: 1px solid transparent;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--secondary-color); /* Use a secondary color variable */
+  transition: border-color 0.3s ease;
+}
+
+.input-secondary:hover, .input-secondary:focus {
+  border-color: lightgray; /* Light gray border on hover and focus */
+  border-bottom-color: var(--secondary-color); /* Bottom border remains secondary color */
+  outline: none; /* Remove any default outline */
+}
+
+/* Disabled Input Style */
+.input-disabled {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  background-color: #f7fafc;
+  cursor: not-allowed;
+}
+
+/* Error Input Style */
+.input-error {
+  width: 100%;
+  border: 1px solid #e53e3e;
+  transition: border-color 0.3s ease;
+}
+
+/* Success Input Style */
+.input-success {
+  width: 100%;
+  border: 1px solid #38a169;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus Ring Input Style */
+.input-focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}

@@ -62,7 +62,7 @@ onUnmounted(() => {
   <aside v-if="!isSmallScreen" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
     class="shadow-md flex flex-col relative transition-all duration-300"
     :style="{ backgroundColor: store.application.sidebarColor }">
-    <div class="flex items-center border-b border-gray-200 p-3 space-x-2">
+    <div class="flex items-center p-3 space-x-2">
       <img :src="logo" alt="Logo" class="h-8 w-8" />
       <h2 v-if="isSidebarOpen"
         class="hidden md:block text-md font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -140,12 +140,12 @@ onUnmounted(() => {
 
         <div class="flex items-center w-full space-x-2 mr-10">
           <img :src="logo" alt="Logo" class="h-8 w-8" />
-          <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-50">
+          <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-800">
             Ultimate ERP Solution
           </h2>
         </div>
 
-        <button @click="toggleSidebar" class="text-white hover:text-gray-300 transition duration-200">
+        <button @click="toggleSidebar" class="text-gray-800 hover:text-gray-500 transition cursor-pointer duration-200">
           <span class="fa-solid fa-xmark"></span>
         </button>
       </div>

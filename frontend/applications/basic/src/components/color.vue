@@ -1,41 +1,31 @@
 <script setup lang="ts">
 import { useSystemStore, Drawer } from 'c3-library'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 const store = useSystemStore()
 
 const isOpen = ref(false)
 
-const logoUrl = computed({
-  get() {
-    return store.application.logo?.props?.src || ''
-  },
-  set(value) {
-    store.application.logo = h('img', { src: value, class: 'inline-block w-10' })
-  },
-})
-
-// Functions to manage social media links
-function addSocial() {
-  store.application.socialMedia.push({
-    name: '',
-    link: '',
-    icon: '',
-  })
-}
-
-function removeSocial(index: number) {
-  store.application.socialMedia.splice(index, 1)
+function updateSettings() {
+  document.documentElement.style.setProperty('--primary-color', store.application.primaryColor);
+  document.documentElement.style.setProperty('--title-color', store.application.titleColor);
+  document.documentElement.style.setProperty('--background-color', store.application.backgroundColor);
+  document.documentElement.style.setProperty('--sidebar-color', store.application.sidebarColor);
+  document.documentElement.style.setProperty('--font-size', store.application.fontSize);
+  document.documentElement.style.setProperty('--font-family', store.application.fontFamily);
 }
 
 // Save configuration function
 function saveConfiguration() {
-  store.updateApplication(store.application)
-}
-
-// Update colors on change
-function updateColors() {
-  store.updateApplication(store.application)
+  store.updateApplication({
+    ...store.application,
+    primaryColor: store.application.primaryColor,
+    titleColor: store.application.titleColor,
+    backgroundColor: store.application.backgroundColor,
+    sidebarColor: store.application.sidebarColor,
+    fontSize: store.application.fontSize,
+    fontFamily: store.application.fontFamily,
+  });
 }
 </script>
 
@@ -51,10 +41,10 @@ function updateColors() {
     </button>
 
     <!-- Color Selection Drawer -->
-    <Drawer :is-open="isOpen" title="Theme Setting" position="right" size="w-1/4">
+    <Drawer :is-open="isOpen" title="Theme Settings" position="right" size="w-1/3">
       <template #header>
         <div class="flex items-center justify-between w-full px-4 py-3">
-          <h3 class="text-lg font-semibold text-gray-700">Select Preset</h3>
+          <h3 class="text-lg font-semibold text-gray-700">Theme Settings</h3>
           <button
             @click="isOpen = false"
             class="text-gray-600 hover:text-gray-500 cursor-pointer transition duration-200"
@@ -64,35 +54,83 @@ function updateColors() {
         </div>
       </template>
 
-      <!-- Color Preset Grid -->
-      <div>
-        <h2 class="mb-4 font-semibold text-gray-700">Branding</h2>
-        <div class="flex items-center mb-4">
-          <label for="appName" class="block text-sm font-medium text-gray-700">Name:</label>
-          <input
-            id="appName"
-            type="text"
-            v-model="store.application.name"
-            placeholder="Application Name"
-            class="mt-1 block w-full p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-          />
+      <!-- Color Presets -->
+      <div class="px-4">
+        <h2 class="mb-4 font-semibold text-gray-700">Color Presets</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm block mb-2">Primary Color</label>
+            <input
+              type="color"
+              v-model="store.application.primaryColor"
+              class="w-full"
+              @change="updateSettings"
+            />
+          </div>
+          <div>
+            <label class="text-sm block mb-2">Title Color</label>
+            <input
+              type="color"
+              v-model="store.application.titleColor"
+              class="w-full"
+              @change="updateSettings"
+            />
+          </div>
+          <div>
+            <label class="text-sm block mb-2">Background Color</label>
+            <input
+              type="color"
+              v-model="store.application.backgroundColor"
+              class="w-full"
+              @change="updateSettings"
+            />
+          </div>
+          <div>
+            <label class="text-sm block mb-2">Sidebar Color</label>
+            <input
+              type="color"
+              v-model="store.application.sidebarColor"
+              class="w-full"
+              @change="updateSettings"
+            />
+          </div>
         </div>
-        <div class="flex items-center mb-4">
-          <label for="appLogo" class="block text-sm font-medium text-gray-700">Logo URL:</label>
-          <input
-            id="appLogo"
-            type="text"
-            v-model="logoUrl"
-            placeholder="https://example.com/logo.png"
-            class="mt-1 block w-full p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            @input="updateColors"
-          />
-          <img :src="logoUrl" />
+      </div>
+
+      <!-- Typography Settings -->
+      <div class="px-4 mt-6">
+        <h2 class="mb-4 font-semibold text-gray-700">Typography</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm block mb-2">Font Size</label>
+            <input
+              type="range"
+              min="12"
+              max="24"
+              v-model="store.application.fontSize"
+              class="w-full"
+              @change="updateSettings"
+            />
+            <span class="text-xs">{{ store.application.fontSize }}px</span>
+          </div>
+          <div>
+            <label class="text-sm block mb-2">Font Family</label>
+            <select
+              v-model="store.application.fontFamily"
+              class="w-full"
+              @change="updateSettings"
+            >
+              <option value="'Arial', sans-serif">Arial</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="'Courier New', monospace">Courier New</option>
+              <option value="'Roboto', sans-serif">Roboto</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <!-- Internationalization -->
-      <div>
+      <div class="px-4 mt-6">
         <h2 class="mb-4 font-semibold text-gray-700">Internationalization</h2>
         <div class="flex items-center mb-4">
           <label for="enableI18n" class="block text-sm font-medium text-gray-700"
@@ -123,109 +161,14 @@ function updateColors() {
         </div>
       </div>
 
-      <!-- Social Media Links -->
-      <div>
-        <h2 class="mb-4 font-semibold text-gray-700">Social Media Links</h2>
-        <div
-          v-for="(item, index) in store.application.socialMedia"
-          :key="index"
-          class="flex items-center border-b border-[#dee2e6]"
-        >
-          <input
-            type="text"
-            v-model="item.name"
-            placeholder="Facebook"
-            class="mt-1 block w-1/4 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            @input="updateColors"
-          />
-          <input
-            type="text"
-            v-model="item.link"
-            placeholder="https://facebook.com/user"
-            class="mt-1 block w-1/2 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            @input="updateColors"
-          />
-          <input
-            type="text"
-            v-model="item.icon"
-            placeholder="fab fa-facebook"
-            class="mt-1 block w-1/4 p-1 shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-            @input="updateColors"
-          />
-          <button
-            @click="removeSocial(index)"
-            class="ml-4 text-red-500 hover:text-red-700"
-            title="Remove Entry"
-          >
-            <span class="fa-solid fa-trash"></span>
-          </button>
-        </div>
-        <button
-          @click="addSocial"
-          class="px-4 py-2 mt-4 text-sm text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200"
-        >
-          Add Social Media
-        </button>
-      </div>
-
-      <!-- Color Presets -->
-      <div>
-        <h2 class="mb-4 font-semibold text-gray-700">Color Presets</h2>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="text-sm">Primary Color</label>
-            <input
-              type="color"
-              v-model="store.application.primaryColor"
-              class="w-full mt-2"
-              @change="updateColors"
-            />
-          </div>
-          <div>
-            <label class="text-sm">Title Color</label>
-            <input
-              type="color"
-              v-model="store.application.titleColor"
-              class="w-full mt-2"
-              @change="updateColors"
-            />
-          </div>
-          <div>
-            <label class="text-sm">Background Color</label>
-            <input
-              type="color"
-              v-model="store.application.backgroundColor"
-              class="w-full mt-2"
-              @change="updateColors"
-            />
-          </div>
-          <div>
-            <label class="text-sm">Sidebar Color</label>
-            <input
-              type="color"
-              v-model="store.application.sidebarColor"
-              class="w-full mt-2"
-              @change="updateColors"
-            />
-          </div>
-        </div>
-      </div>
-
       <!-- Footer Buttons -->
-      <div class="flex justify-end mt-4 mb-4">
-        <button
-          @click="isOpen = false"
-          class="px-4 py-2 mr-4 text-gray-700 border rounded-lg hover:bg-gray-100 focus:outline-none"
-        >
-          Cancel
-        </button>
-        <button
-          @click="saveConfiguration"
-          class="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none"
-        >
-          Save
-        </button>
-      </div>
+      <div class="flex justify-end gap-3 col-span-2 fixed bottom-0 right-0 p-4">
+          <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition"
+          @click="isOpen = false">Cancel</button>
+          <button  @click="saveConfiguration"
+            class="px-3 py-1.5 text-white rounded-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
+            :style="{ backgroundColor: store.application.primaryColor  }">Save</button>
+        </div>
     </Drawer>
   </div>
 </template>

@@ -39,6 +39,8 @@ export interface IConfiguration {
     backgroundColor: string;
     sidebarColor: string;
     socialMedia: ISocialMedia[]
+    fontSize: string,
+    fontFamily: string
 };
 
 interface AclProperties {
