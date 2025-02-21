@@ -136,8 +136,7 @@ const toggleSettingsMenu = () => {
       </div>
       <div class="flex flex-col space-y-2 mt-4">
         <button
-          class="cursor-pointer w-full text-sm text-white rounded-sm flex items-center justify-center transition relative"
-          :class="{ 'py-1': isSidebarOpen, 'py-2': !isSidebarOpen }"
+          class="cursor-pointer w-full text-sm py-2 text-white rounded-sm flex items-center justify-center transition relative"
           :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
           <span class="fa-solid fa-right-from-bracket"></span>
           <span v-if="isSidebarOpen" class="ml-2">Logout</span>
