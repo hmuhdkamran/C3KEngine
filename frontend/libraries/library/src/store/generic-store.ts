@@ -33,7 +33,7 @@ export function createGenericPiniaStore<T extends Record<string, any>, K extends
     async function createOrUpdateItem(itemToSave: T) {
       isLoading.value = true
       try {
-        ;(await shouldUpdate.value) ? service.update(itemToSave) : service.add(itemToSave)
+        (await shouldUpdate.value) ? service.update(itemToSave) : service.add(itemToSave)
         await getItems(filteringText.value)
       } catch (err) {
         console.error(`Error: ${err}`)
