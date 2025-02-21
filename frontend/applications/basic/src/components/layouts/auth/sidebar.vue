@@ -11,6 +11,7 @@ import { sidebarStore } from '@/stores/menuStore';
 const { isSidebarOpen, toggleSidebar } = useSidebar();
 const openDropdown = ref<string | null>(null);
 const userName = ref('Admin');
+const userEmail = ref('admin@example.com');
 const isLogoutDialogOpen = ref(false);
 const isProcessingLogout = ref(false);
 const router = useRouter();
@@ -55,6 +56,12 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', checkScreenSize);
 });
+
+const isSettingsMenuOpen = ref(false);
+
+const toggleSettingsMenu = () => {
+  isSettingsMenuOpen.value = !isSettingsMenuOpen.value;
+};
 
 </script>
 
@@ -103,12 +110,39 @@ onUnmounted(() => {
     </nav>
 
     <div class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200"
-      :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
-      <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
-        :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
-        <span class="fa-solid fa-right-from-bracket"></span>
-        <span v-if="isSidebarOpen" class="ml-2">Logout</span>
-      </button>
+      :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
+      :style="{ backgroundColor: store.application.sidebarColor }">
+      <div class="flex items-center mb-4">
+        <img :src="avatar" alt="User" class="rounded-full mr-2"
+          :class="{ 'w-10 h-10': isSidebarOpen, 'w-8 h-8': !isSidebarOpen }" />
+        <div class="flex-1 hidden md:block whitespace-nowrap overflow-hidden text-ellipsis">
+          <h3 class="text-sm font-bold">{{ userName }}</h3>
+          <p class="text-sm">{{ userEmail }}</p>
+        </div>
+        <button
+          class=" hidden md:block text-gray-500 hover:text-gray-700 cursor-pointer p-2 rounded-full whitespace-nowrap overflow-hidden transition"
+          @click="toggleSettingsMenu">
+          <span class="fa-solid fa-ellipsis-vertical"></span>
+        </button>
+      </div>
+
+      <div v-if="isSettingsMenuOpen"
+        class="absolute left-7 bottom-20 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-10">
+        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Account</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+        </div>
+      </div>
+      <div class="flex flex-col space-y-2 mt-4">
+        <button
+          class="cursor-pointer w-full text-sm text-white rounded-sm flex items-center justify-center transition relative"
+          :class="{ 'py-1': isSidebarOpen, 'py-2': !isSidebarOpen }"
+          :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
+          <span class="fa-solid fa-right-from-bracket"></span>
+          <span v-if="isSidebarOpen" class="ml-2">Logout</span>
+        </button>
+      </div>
     </div>
 
     <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
@@ -116,14 +150,14 @@ onUnmounted(() => {
         <h3 class="text-lg font-bold mb-4">Confirm Logout</h3>
         <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
         <div class="flex justify-center space-x-4">
-          <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
+          <button class="px-4 py-2 rounded-sm text-white transition cursor-pointer" @click="confirmLogout"
             :style="{ backgroundColor: store.application.primaryColor }" :disabled="isProcessingLogout">
             <span v-if="!isProcessingLogout">Yes, Logout</span>
             <span v-else class="flex items-center">
               <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span>Logging Out...
             </span>
           </button>
-          <button class="px-4 py-2 rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"
+          <button class="px-4 py-2 cursor-pointer rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"
             @click="cancelLogout" :disabled="isProcessingLogout">
             Cancel
           </button>
@@ -134,17 +168,13 @@ onUnmounted(() => {
 
   <Drawer v-else :is-open="isSidebarOpen" title=" " position="left" size="w-full" @click="toggleSidebar">
     <template #header>
-      <div class="flex items-center justify-between w-full px-4 py-3"
-        :style="{ backgroundColor: store.application.sidebarColor, color: 'white' }">
-
-
+      <div class="flex items-center justify-between w-full px-4 py-3">
         <div class="flex items-center w-full space-x-2 mr-10">
           <img :src="logo" alt="Logo" class="h-8 w-8" />
           <h2 v-if="isSidebarOpen" class="text-md font-semibold text-gray-800">
             Ultimate ERP Solution
           </h2>
         </div>
-
         <button @click="toggleSidebar" class="text-gray-800 hover:text-gray-500 transition cursor-pointer duration-200">
           <span class="fa-solid fa-xmark"></span>
         </button>
@@ -155,8 +185,8 @@ onUnmounted(() => {
       <div class="flex items-center mb-4">
         <img :src="avatar" alt="User" class="rounded-full h-12 w-12 mr-2" />
         <div>
-          <h3 class="text-lg font-bold">{{ userName }}</h3>
-          <p class="text-sm text-gray-700">Administrator</p>
+          <h3 class="text-sm font-bold">{{ userName }}</h3>
+          <p class="text-sm text-gray-700">{{ userEmail }}</p>
         </div>
       </div>
       <nav class="flex-1">
@@ -182,11 +212,14 @@ onUnmounted(() => {
       </nav>
       <div class="fixed bottom-0 w-full left-0 p-4 bg-white border-t border-gray-200"
         :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
-        <button class="w-full text-white py-2 rounded-sm flex items-center justify-center transition relative"
-          :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
-          <span class="fa-solid fa-right-from-bracket"></span>
-          <span v-if="isSidebarOpen" class="ml-2">Logout</span>
-        </button>
+        <div class="flex flex-col space-y-2">
+          <button
+            class="w-full cursor-pointer text-white py-2 rounded-sm flex items-center justify-center transition relative"
+            :style="{ backgroundColor: store.application.primaryColor }" @click="openLogoutDialog">
+            <span class="fa-solid fa-right-from-bracket"></span>
+            <span v-if="isSidebarOpen" class="ml-2">Logout</span>
+          </button>
+        </div>
       </div>
 
       <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
@@ -194,14 +227,14 @@ onUnmounted(() => {
           <h3 class="text-lg font-bold mb-4">Confirm Logout</h3>
           <p class="text-gray-600 mb-6">Are you sure you want to log out?</p>
           <div class="flex justify-center space-x-4">
-            <button class="px-4 py-2 rounded-sm text-white transition" @click="confirmLogout"
+            <button class="px-4 py-2 cursor-pointer rounded-sm text-white transition" @click="confirmLogout"
               :style="{ backgroundColor: store.application.primaryColor }" :disabled="isProcessingLogout">
               <span v-if="!isProcessingLogout">Yes, Logout</span>
               <span v-else class="flex items-center">
                 <span class="fa-duotone fa-light fa-spinner-scale animate-spin mr-2"></span>Logging Out...
               </span>
             </button>
-            <button class="px-4 py-2 rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"
+            <button class="px-4 py-2 cursor-pointer rounded-sm text-gray-800 bg-gray-200 hover:bg-gray-300 transition"
               @click="cancelLogout" :disabled="isProcessingLogout">
               Cancel
             </button>
@@ -210,7 +243,6 @@ onUnmounted(() => {
       </div>
     </div>
   </Drawer>
-
 </template>
 
 <style lang="css" scoped>

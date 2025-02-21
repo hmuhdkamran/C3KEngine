@@ -26,7 +26,7 @@ watch(() => route.path, () => updateTranslatedBreadcrumbs(), { immediate: true }
 </script>
 
 <template>
-  <div class="flex h-screen">
+  <div class="flex min-h-screen">
     <Sidebar />
     <div class="flex flex-col flex-grow">
       <Header />
