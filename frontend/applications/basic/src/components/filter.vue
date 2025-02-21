@@ -15,6 +15,8 @@ const dropdownOptions = [
     { label: 'Priority', options: ['High', 'Medium', 'Low'] },
 ];
 
+const reloadTableData = () => {
+};
 </script>
 
 <template>
@@ -38,6 +40,12 @@ const dropdownOptions = [
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: store.application.primaryColor }">
             <span class="fas fa-plus fa-sm"></span>
+        </button>
+
+        <button @click="reloadTableData"
+            class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
+            :style="{ backgroundColor: store.application.primaryColor }">
+            <span class="fas fa-sync-alt fa-sm"></span>
         </button>
     </div>
 </template>
