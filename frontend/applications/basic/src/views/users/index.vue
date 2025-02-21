@@ -6,7 +6,7 @@ import type { IUser } from '@/models';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 
 import AddEdit from './add-edit.vue';
-import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore } from '@/stores';
+import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
 
 const store = useRoleUserStore();
 const color = useSystemStore();
@@ -14,6 +14,7 @@ const tableStore = useTableStore();
 
 const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
+const statusStore = useSetupStatusStore();
 
 const entities = ref<IUser[]>([]);
 
@@ -48,6 +49,7 @@ onMounted(() => {
   });
 
   roleStore.getItems();
+  statusStore.getItems();
 });
 </script>
 

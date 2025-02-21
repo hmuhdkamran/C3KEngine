@@ -3,7 +3,7 @@ import { defineProps, defineEmits, ref } from 'vue';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser } from '@/models';
 import { newGuid, useSystemStore } from 'c3-library';
-import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore } from '@/stores';
+import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
 
 import DialogBox from './DialogBox.vue';
 
@@ -11,6 +11,7 @@ const color = useSystemStore();
 const store = useRoleUserStore();
 const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
+const statusStore = useSetupStatusStore();
 
 function saveUser () {
     store.createOrUpdateItem(store.item)
@@ -90,16 +91,11 @@ function role(value: string) {
             </div>
             <div class="mb-3" v-if="store.shouldUpdate">
                 <label for="Status" class="text-sm font-medium text-gray-700">Status:</label>
-                <div class="mt-1">
-                    <button class="inline-flex items-center" :class="{
-                        'text-green-700': store.item.StatusId === 'Active',
-                        'text-red-600': store.item.StatusId !== 'Active'
-                    }">
-                        <span v-if="store.item.StatusId === 'Active'" class="fa-solid fa-toggle-on fa-xl"></span>
-                        <span v-else class="fa-solid fa-toggle-off fa-xl"></span>
-                        <span class="ml-2">{{ store.item.StatusId === 'Active' ? 'Active' : 'Inactive' }}</span>
-                    </button>
-                </div>
+                <select id="Language" v-model="store.item.StatusId" required
+                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
+                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
+                    <option v-for="item in statusStore.items" :value="item.StatusId">{{ item.FullName }}</option>
+                </select>
             </div>
 
             <div class="">
