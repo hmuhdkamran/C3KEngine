@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser } from '@/models';
 import { DialogBox, useSystemStore } from 'c3-library';
