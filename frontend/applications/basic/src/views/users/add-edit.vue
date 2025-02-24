@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { setFormOpen, formStatus } from '@/stores/edit-form';
-import type { IUser } from '@/models';
+import type { IUser, IUsers } from '@/models';
 import { DialogBox, useSystemStore } from 'c3-library';
 import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
+import { computed, ref, type Ref } from 'vue';
 
 const color = useSystemStore();
 const store = useRoleUserStore();
@@ -10,13 +11,19 @@ const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
 const statusStore = useSetupStatusStore();
 
-function saveUser () {
+const useritems: Ref<IUsers> = ref({ username: '', password: '', confirmPassword: '', displayName: '', language: 'en', role: '' });
+    
+    function saveUser() {
+    console.log('Saving user:', store.item);
     store.createOrUpdateItem(store.item as IUser)
-    .then(()=> {
-        store.shouldUpdate = false;
-        setFormOpen(false);
-    })
-    .catch((e) => console.log(`Error Raised: ${e}`));
+        .then(() => {
+            console.log('User saved successfully');
+            store.shouldUpdate = false;
+            setFormOpen(false);
+        })
+        .catch((e) => {
+            console.error('Error saving user:', e);
+        });
 }
 
 function close() {
@@ -33,6 +40,7 @@ function role(value: string) {
     }
 }
 
+const userItem = computed(() => store.item || ({} as IUser));
 </script>
 
 <template>
@@ -42,22 +50,22 @@ function role(value: string) {
             <p class="text-sm text-gray-500">{{ store.shouldUpdate ? 'Edit Record' : 'Add Record' }}</p>
         </template>
 
-        <form @submit.prevent="saveUser" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="mb-3">
                 <label for="DisplayName" class="text-sm font-medium text-gray-700">Name:</label>
-                <input type="text" id="DisplayName" v-model="store.item.DisplayName" required
+                <input type="text" id="DisplayName" v-model="userItem.DisplayName" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
             </div>
             <div class="mb-3">
                 <label for="Username" class="text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" id="Username" v-model="store.item.Username" required
+                <input type="email" id="Username" v-model="userItem.Username" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
             </div>
             <div class="mb-3">
                 <label for="Language" class="text-sm font-medium text-gray-700">Language:</label>
-                <select id="Language" v-model="store.item.Language" required
+                <select id="Language" v-model="userItem.Language" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
                     <option value="English">English</option>
@@ -66,7 +74,7 @@ function role(value: string) {
             </div>
             <div class="mb-3" v-if="!store.shouldUpdate">
                 <label for="Password" class="text-sm font-medium text-gray-700">Password:</label>
-                <input type="password" id="Password" v-model="store.item.Password" required
+                <input type="password" id="Password" v-model="userItem.Password" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
             </div>
@@ -78,17 +86,15 @@ function role(value: string) {
             </div>
             <div class="mb-3" v-if="!store.shouldUpdate">
                 <label for="UserRole" class="text-sm font-medium text-gray-700">User Role:</label>
-                <select id="UserRole" v-model="store.item.StatusId" required
+                <select id="UserRole" v-model="roleStore.getItems" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
-                    <option value="Admin">Admin</option>
-                    <option value="User">User</option>
-                    <option value="Guest">Guest</option>
+                    <option v-for="item in roleStore.items" :value="item.RoleId">{{ item.FullName }}</option>
                 </select>
             </div>
             <div class="mb-3" v-if="store.shouldUpdate">
                 <label for="Status" class="text-sm font-medium text-gray-700">Status:</label>
-                <select id="Language" v-model="store.item.StatusId" required
+                <select id="Language" v-model="userItem.StatusId" required
                     class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
                     :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
                     <option v-for="item in statusStore.items" :value="item.StatusId">{{ item.FullName }}</option>
@@ -105,10 +111,10 @@ function role(value: string) {
         </form>
         <template #footer>
             <div class="flex justify-end gap-3 col-span-2">
-                <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition"
+                <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition cursor-pointer"
                     @click="close()">Cancel</button>
-                <button type="submit"
-                    class="px-3 py-1.5 text-white rounded-sm hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
+                <button type="submit" @click="saveUser"
+                    class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
                     :style="{ backgroundColor: color.application.primaryColor }">Save</button>
             </div>
         </template>
