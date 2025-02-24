@@ -1,7 +1,8 @@
 {
   "redis": {
     "redis_host": "10.10.33.39",
-    "redis_port": "6379"
+    "redis_port": "6379",
+    "redis_password": ""
   },
   "ftp": {
     "server": "10.10.33.39",

@@ -58,7 +58,7 @@ async fn load_app_config() -> Result<AppConfig, Box<dyn std::error::Error>> {
 
     // Create a database pool using the async sqlx client
     let db_pool = PgPoolOptions::new()
-        .max_connections(5)
+        .max_connections(10)
         .connect(&auth_service.connection_string)
         .await
         .map_err(|e| format!("Failed to create database pool: {}", e))?;
@@ -90,7 +90,7 @@ async fn load_app_config() -> Result<AppConfig, Box<dyn std::error::Error>> {
 
 pub async fn create_db_pool(connection_string: &str) -> Result<PgPool, sqlx::Error> {
     match PgPoolOptions::new()
-        .max_connections(5)
+        .max_connections(10)
         .connect(connection_string)
         .await
     {

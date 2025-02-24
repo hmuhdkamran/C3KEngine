@@ -4,4 +4,5 @@ use serde::Deserialize;
 pub struct RedisConfig {
     pub redis_host: String,
     pub redis_port: String,
+    pub redis_password: String,
 }

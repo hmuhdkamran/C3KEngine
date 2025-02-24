@@ -1,5 +1,8 @@
-use jsonwebtoken::{errors::{ ErrorKind, Error as JError }, Algorithm, DecodingKey, Validation};
-use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use jsonwebtoken::{
+    errors::{Error as JError, ErrorKind},
+    Algorithm, DecodingKey, Validation,
+};
+use rand::{distr::Alphanumeric, rng, Rng};
 use sha2::{Digest, Sha256, Sha512};
 use std::error::Error;
 
@@ -33,7 +36,7 @@ impl SecurityUtils {
 
     /// Generates a random alphanumeric salt of the given length.
     pub fn generate_salt(length: usize) -> String {
-        thread_rng()
+        rng()
             .sample_iter(&Alphanumeric)
             .take(length)
             .map(char::from)
@@ -61,13 +64,11 @@ impl SecurityUtils {
         let alg = match algorithm.to_uppercase().as_str() {
             "SHA256" => Algorithm::HS256,
             "SHA512" => Algorithm::HS512,
-            _ => {
-                return Err(JError::from(ErrorKind::InvalidAlgorithm,))
-            }
+            _ => return Err(JError::from(ErrorKind::InvalidAlgorithm)),
         };
-    
+
         let decoding_key = DecodingKey::from_secret(secret.as_bytes());
-        let mut validation = Validation::new(alg);        
+        let mut validation = Validation::new(alg);
         validation.set_audience(&[audience]);
 
         match jsonwebtoken::decode::<JwtClaims>(token, &decoding_key, &validation) {
@@ -83,5 +84,4 @@ impl SecurityUtils {
             }
         }
     }
-    
 }
