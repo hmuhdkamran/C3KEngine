@@ -1,52 +1,95 @@
-
-.input-compact {
+.input-fancy {
   width: 100%;
-  border: 1px solid var(--primary-color);
-  transition: border-color 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #ebebeb;
+  color: #333;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-compact:hover {
-  border-bottom-color: #e2e8f0;
+.input-fancy:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  outline: none;
 }
 
-/* Default Input Style */
-.input-default {
+.input-with-icon {
   width: 100%;
-  border: 1px solid transparent;
-  transition: border-color 0.3s ease;
+  padding: 1px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* Primary Input Style */
+.input-with-icon input {
+  width: calc(100% - 36px);
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+
+.input-with-icon input:focus {
+  border-color: lightgray;
+  border-bottom-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px;
+  border-left-width: 2px;
+  border-left-color: rgb(231, 231, 231);
+  font-size: 16px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .input-primary {
   width: 100%;
-  border: 1px solid transparent;
+  padding: 3px;
+  border-radius: 4px;
   border-bottom-width: 2px;
-  border-bottom-color: var(--primary-color);
+  border-bottom-color: lightgray;
   transition: border-color 0.3s ease;
 }
 
-.input-primary:hover, .input-primary:focus {
-  border-color: lightgray; /* No border color */
-  border-bottom-color: var(--primary-color); /* Bottom border remains primary color */
-  outline: none; /* Remove any default outline */
+.input-primary:focus {
+  border-color: lightgray;
+  border-bottom-color: var(--primary-color);
+  outline: none;
 }
 
-/* Secondary Input Style */
 .input-secondary {
   width: 100%;
   border: 1px solid transparent;
   border-bottom-width: 2px;
-  border-bottom-color: var(--secondary-color); /* Use a secondary color variable */
+  border-bottom-color: var(--secondary-color);
   transition: border-color 0.3s ease;
 }
 
 .input-secondary:hover, .input-secondary:focus {
-  border-color: lightgray; /* Light gray border on hover and focus */
-  border-bottom-color: var(--secondary-color); /* Bottom border remains secondary color */
-  outline: none; /* Remove any default outline */
+  border-color: lightgray;
+  border-bottom-color: var(--secondary-color);
+  outline: none;
 }
 
-/* Disabled Input Style */
 .input-disabled {
   width: 100%;
   border: 1px solid #e2e8f0;
@@ -54,21 +97,18 @@
   cursor: not-allowed;
 }
 
-/* Error Input Style */
 .input-error {
   width: 100%;
   border: 1px solid #e53e3e;
   transition: border-color 0.3s ease;
 }
 
-/* Success Input Style */
 .input-success {
   width: 100%;
   border: 1px solid #38a169;
   transition: border-color 0.3s ease;
 }
 
-/* Focus Ring Input Style */
 .input-focus-ring:focus {
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
