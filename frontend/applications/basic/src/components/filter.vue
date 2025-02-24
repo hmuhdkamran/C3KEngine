@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useSystemStore, useTableStore } from 'c3-library';
+import { useSystemStore, useTableStore, DialogBox } from 'c3-library';
 import { setFormOpen } from '@/stores/edit-form';
 
 const store = useSystemStore();
 const table = useTableStore();
+const color = useSystemStore();
 
 const showFilter = ref(false);
+const showDialog = ref(false);
 
 const dropdownOptions = [
     { label: 'Category', options: ['Category 1', 'Category 2', 'Category 3'] },
@@ -17,25 +19,25 @@ const dropdownOptions = [
 
 const reloadTableData = () => {
 };
+
+const openDialog = () => {
+    showDialog.value = true;
+};
+
+const applyFilters = () => {
+    showDialog.value = false;
+};
+
 </script>
 
 <template>
     <div class="flex gap-1 px-4">
-        <button @click="showFilter = !showFilter"
+        <button @click="openDialog"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: store.application.primaryColor }">
             <span class="fas fa-filter fa-sm"></span>
         </button>
 
-        <div v-if="showFilter"
-            class="absolute right-0 mt-12 w-[98%] bg-white shadow-sm rounded-sm border border-gray-200 p-4 z-50">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-600">Search</label>
-                    <input type="text" class="input-primary" v-model="table.searchQuery" />
-                </div>
-            </div>
-        </div>
         <button @click="setFormOpen(true)"
             class="w-8 h-8 p-3 cursor-pointer border-gray-200 border shadow-lg flex items-center justify-center text-white rounded-full"
             :style="{ backgroundColor: store.application.primaryColor }">
@@ -48,4 +50,27 @@ const reloadTableData = () => {
             <span class="fas fa-sync-alt fa-sm"></span>
         </button>
     </div>
+
+    <DialogBox :show="showDialog" @close="showDialog = false" :showClose="false">
+        <template #default>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="input-with-icon">
+                    <span class="icon fas fa-search"></span>
+                    <input type="text" class="input-with-icon" v-model="table.searchQuery" placeholder="Search..." />
+                </div>
+            </div>
+        </template>
+        <template #footer>
+            <div class="flex justify-end gap-3 col-span-2">
+                <button @click="showDialog = false"
+                    class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition cursor-pointer">
+                    Cancel
+                </button>
+                <button @click="applyFilters" class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
+                    :style="{ backgroundColor: color.application.primaryColor }">
+                    Apply
+                </button>
+            </div>
+        </template>
+    </DialogBox>
 </template>

@@ -7,3 +7,12 @@ export interface IUser {
     Salt: string;
     StatusId: string;
 };
+
+export interface IUsers {
+    username: string;
+    password: string;
+    confirmPassword: string;
+    displayName: string;
+    language: string;
+    role: string;
+  }

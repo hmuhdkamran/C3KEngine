@@ -30,8 +30,8 @@
 }
 
 .input-with-icon input {
-  width: calc(100% - 36px);
-  padding: 5px;
+  width: 100%;
+  padding: 5px 5px 5px 45px;
   border: none;
   border-radius: 4px;
   background-color: transparent;
@@ -48,13 +48,13 @@
 
 .input-with-icon .icon {
   position: absolute;
-  right: 1px;
+  left: 1px;
   top: 50%;
   transform: translateY(-50%);
-  padding: 5px;
-  border-left-width: 2px;
-  border-left-color: rgb(231, 231, 231);
-  font-size: 16px;
+  padding: 8px;
+  border-right-width: 2px;
+  border-right-color: rgb(231, 231, 231);
+  font-size: 14px;
   pointer-events: none;
   display: flex;
   align-items: center;
