@@ -2,10 +2,8 @@
 import { defineProps, defineEmits, ref } from 'vue';
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser } from '@/models';
-import { newGuid, useSystemStore } from 'c3-library';
+import { DialogBox, useSystemStore } from 'c3-library';
 import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
-
-import DialogBox from './DialogBox.vue';
 
 const color = useSystemStore();
 const store = useRoleUserStore();
@@ -14,7 +12,7 @@ const userRoleStore = useRoleUserRoleMapStore();
 const statusStore = useSetupStatusStore();
 
 function saveUser () {
-    store.createOrUpdateItem(store.item)
+    store.createOrUpdateItem(store.item as IUser)
     .then(()=> {
         store.shouldUpdate = false;
         setFormOpen(false);

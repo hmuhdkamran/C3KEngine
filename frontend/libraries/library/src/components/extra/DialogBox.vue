@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from 'vue';
-import { circuit } from '@/assets/images/images';
+import { defineProps, defineEmits } from 'vue';
+import { circuit } from '@/assets/images/circute';
 
 const props = defineProps({
     show: {
@@ -27,8 +27,8 @@ const closeDialog = () => {
 <template>
     <Teleport to="body">
         <transition name="dialog">
-            <div v-if="show" class="dialog-overlay">
-                <div class="dialog" :style="{ width: width, maxWidth: '95%', }">
+            <div v-if="props.show" class="dialog-overlay">
+                <div class="dialog" :style="{ width: props.width, maxWidth: '95%', }">
                     <div class="dialog-header" :style="{ 
                         backgroundImage: `url(${circuit})`,
                         backgroundSize: '50% auto, 100% 100%',
@@ -37,7 +37,7 @@ const closeDialog = () => {
                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                     }" v-if="$slots.header">
                         <slot name="header" />
-                        <button v-if="showClose" class="close-btn" @click="closeDialog">×</button>
+                        <button v-if="props.showClose" class="close-btn" @click="closeDialog">×</button>
                     </div>
                     <div class="dialog-body">
                         <slot />
@@ -60,6 +60,8 @@ const closeDialog = () => {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
