@@ -46,6 +46,9 @@ export default defineConfig({
     host: process.env.VITE_APP_MICRO_SERVER,
     port: Number(process.env.VITE_APP_MICRO_PORT),
     open: false,
+    cors: {
+      origin: process.env.VITE_APP_CROSS_ORIGIN
+    },
     watch: {
       usePolling: false,
       disableGlobbing: false,
