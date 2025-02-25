@@ -2,6 +2,7 @@ use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
 use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::{create_db_pool, initialize_config, get_config}};
 use c3k_retail_service::controllers::{
+    health::health_routes,
     customer::customer_contacts::customer_contacts_routes,
     customer::customer_loyalty_points::customer_loyalty_points_routes,
     customer::customer_packages::customer_packages_routes,
@@ -150,6 +151,7 @@ async fn main() -> Result<(), std::io::Error> {
             .configure(statuses_routes)
             .configure(tax_rates_routes)
             .configure(warehouses_routes)
+            .configure(health_routes)
     });
 
     println!("App is Running on http://{}", addr);

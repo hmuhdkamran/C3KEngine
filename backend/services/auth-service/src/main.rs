@@ -1,20 +1,19 @@
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use c3k_auth_service::{controllers::{
-    role::{
+    health::health_routes, role::{
         auth_controller::auth_routes, products::products_routes,
         role_route_maps::role_route_maps_routes, roles::roles_routes, routes::routes_routes,
         user_product_maps::user_product_maps_routes, user_role_maps::user_role_maps_routes,
         users::users_routes,
-    },
-    setup::{
+    }, setup::{
         areas::areas_routes, brand_social_maps::brand_social_maps_routes, brands::brands_routes,
         building_brand_maps::building_brand_maps_routes, building_spaces::building_spaces_routes,
         buildings::buildings_routes, business::business_routes, cities::cities_routes,
         countries::countries_routes, floors::floors_routes,
         ownership_status::ownership_status_routes, socials::socials_routes,
         space_types::space_types_routes, status::status_routes,
-    },
+    }
 }, services::role::auth_service::AuthService};
 use c3k_common::{
     handler::{
@@ -106,6 +105,7 @@ async fn main() -> Result<(), std::io::Error> {
             .configure(space_types_routes)
             .configure(status_routes)
             .configure(auth_routes)
+            .configure(health_routes)
     });
 
     println!("App is Running on http://{}", addr);

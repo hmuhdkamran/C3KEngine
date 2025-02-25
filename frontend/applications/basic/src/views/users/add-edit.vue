@@ -38,6 +38,7 @@ function saveUser() {
         };
         console.log(JSON.stringify(entity));
         aut_repo.signup(entity).then(() => {
+            store.getItems();
             console.log('User saved successfully');
             store.shouldUpdate = false;
             setFormOpen(false);

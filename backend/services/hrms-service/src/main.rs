@@ -2,6 +2,7 @@ use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
 use c3k_common::{handler::service_client::ServiceCommunicator, models::config::app_config::{initialize_config, get_config, create_db_pool}};
 use c3k_hrms_service::controllers::{
+    health::health_routes,
     attendance::attendamce_exclude_employees::attendamce_exclude_employees_routes,
     attendance::attendance_policies::attendance_policies_routes,
     attendance::attendance_statuses::attendance_statuses_routes,
@@ -227,6 +228,7 @@ async fn main() -> Result<(), std::io::Error> {
             .configure(skills_routes)
             .configure(spouse_types_routes)
             .configure(statuses_routes)
+            .configure(health_routes)
     });
 
     println!("App is Running on http://{}", addr);

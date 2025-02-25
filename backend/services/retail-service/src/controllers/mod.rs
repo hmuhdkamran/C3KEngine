@@ -3,3 +3,4 @@ pub mod inventory;
 pub mod setup;
 pub mod customer;
 pub mod point_of_sale;
+pub mod health;
