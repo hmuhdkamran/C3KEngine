@@ -9,36 +9,37 @@ import {
   type IAccessToken,
   type IUser,
   useSystemStore,
-} from "c3-library";
+  type ISignupUsers,
+} from 'c3-library'
 
-import Axios, { type AxiosResponse } from "axios";
+import Axios, { type AxiosResponse } from 'axios'
 
 interface IPermission {
-  action: string;
-  subject: string;
+  action: string
+  subject: string
 }
 
 export class AuthenticationService extends StoreService {
   convertToPermissions(roles: IRouteMeta[]) {
-    const permission: Array<IPermission> = [];
+    const permission: Array<IPermission> = []
 
     roles.forEach((element: any) => {
       if (element !== undefined) {
-        permission.push({ action: "read", subject: element.RouteName });
+        permission.push({ action: 'read', subject: element.RouteName })
       }
-    });
+    })
 
-    return permission;
+    return permission
   }
 
   login(credentials: ICredential) {
     const processResponse = (token: IPayload<string>) => {
-      if (token!= null) {
-        TokenHelper.setAccessToken(`${token}`);
-        const store = useSystemStore();
+      if (token != null) {
+        TokenHelper.setAccessToken(`${token}`)
+        const store = useSystemStore()
 
-        const parsed = TokenHelper.parseUserToken(`${token}`);
-        store.updateUser(parsed);
+        const parsed = TokenHelper.parseUserToken(`${token}`)
+        store.updateUser(parsed)
 
         if (parsed.roles !== undefined) {
           // const userAbilities = this.convertToPermissions(
@@ -51,71 +52,94 @@ export class AuthenticationService extends StoreService {
           // TokenHelper.setAbilities(JSON.stringify(userAbilities));
         }
 
-        return parsed;
+        return parsed
       }
-    };
+    }
 
     return this.exec(Axios.post(`${GlobalConfig.uri.auth}/login`, credentials))
       .then((value: any) => this.processPayload(value))
-      .then((value: any) => processResponse(value as IPayload<string>)); // Type assertion
+      .then((value: any) => processResponse(value as IPayload<string>)) // Type assertion
   }
 
   logout() {
     const onSuccess = (res: AxiosResponse) => {
-      const payload: IPayload<IAccessToken> = res.data;
+      const payload: IPayload<IAccessToken> = res.data
 
-      if (payload.result.toLocaleLowerCase().startsWith("suc")) {
-        const user: IUser = Object.assign({}, DefaultUser);
+      if (payload.result.toLocaleLowerCase().startsWith('suc')) {
+        const user: IUser = Object.assign({}, DefaultUser)
 
-        TokenHelper.removeAccessToken();
+        TokenHelper.removeAccessToken()
 
-        return true;
+        return true
       } else {
-        return false;
+        return false
       }
-    };
-
-    const token = TokenHelper.getAccessToken();
-    if (token) {
-      const user = TokenHelper.parseUserToken(token);
-
-      return this.post(`${GlobalConfig.uri.auth}/logout`, { username: user.username, password: '' }, true).then(onSuccess);
     }
-    return false;
+
+    const token = TokenHelper.getAccessToken()
+    if (token) {
+      const user = TokenHelper.parseUserToken(token)
+
+      return this.post(
+        `${GlobalConfig.uri.auth}/logout`,
+        { username: user.username, password: '' },
+        true,
+      ).then(onSuccess)
+    }
+    return false
+  }
+
+  async signup(entity: ISignupUsers): Promise<boolean> {
+    try {
+      const response = await this.post(`${GlobalConfig.uri.auth}/user_signup`, entity, true)
+      return Boolean(response.data)
+    } catch (error) {
+      console.error('Signup failed:', error)
+      return false
+    }
   }
 
   allProducts() {
-    const token = TokenHelper.getAccessToken();
+    const token = TokenHelper.getAccessToken()
     if (token) {
-      const user = TokenHelper.parseUserToken(token);
+      const user = TokenHelper.parseUserToken(token)
 
       if (user.username) {
-        return this.post(`${GlobalConfig.uri.auth}/user_products`, { username: '', product: '' }, true)
-          .then((value: any) => this.processPayload(value))
+        return this.post(
+          `${GlobalConfig.uri.auth}/user_products`,
+          { username: '', product: '' },
+          true,
+        ).then((value: any) => this.processPayload(value))
       }
     }
   }
 
   userProducts() {
-    const token = TokenHelper.getAccessToken();
+    const token = TokenHelper.getAccessToken()
     if (token) {
-      const user = TokenHelper.parseUserToken(token);
+      const user = TokenHelper.parseUserToken(token)
 
       if (user.username) {
-        return this.post(`${GlobalConfig.uri.auth}/user_products`, { username: user.username, product: '' }, true)
-          .then((value: any) => this.processPayload(value))
+        return this.post(
+          `${GlobalConfig.uri.auth}/user_products`,
+          { username: user.username, product: '' },
+          true,
+        ).then((value: any) => this.processPayload(value))
       }
     }
   }
 
   userProductClaims(product: string) {
-    const token = TokenHelper.getAccessToken();
+    const token = TokenHelper.getAccessToken()
     if (token) {
-      const user = TokenHelper.parseUserToken(token);
+      const user = TokenHelper.parseUserToken(token)
 
       if (user.username) {
-        return this.post(`${GlobalConfig.uri.auth}/user_products_claims`, { username: user.username, product: product }, true)
-          .then((value: any) => this.processPayload(value))
+        return this.post(
+          `${GlobalConfig.uri.auth}/user_products_claims`,
+          { username: user.username, product: product },
+          true,
+        ).then((value: any) => this.processPayload(value))
       }
     }
   }

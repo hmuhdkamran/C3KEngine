@@ -1,29 +1,58 @@
 <script setup lang="ts">
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser, IUsers } from '@/models';
-import { DialogBox, useSystemStore } from 'c3-library';
+import { DialogBox, newGuid, useSystemStore, type ISignupUsers } from 'c3-library';
 import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
 import { computed, ref, type Ref } from 'vue';
+import { AuthenticationService } from '@/services/authentication-service';
 
 const color = useSystemStore();
 const store = useRoleUserStore();
 const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
 const statusStore = useSetupStatusStore();
+const aut_repo = new AuthenticationService();
 
-const useritems: Ref<IUsers> = ref({ username: '', password: '', confirmPassword: '', displayName: '', language: 'en', role: '' });
-    
-    function saveUser() {
-    console.log('Saving user:', store.item);
-    store.createOrUpdateItem(store.item as IUser)
-        .then(() => {
+const userItem = computed(() => store.item || ({} as IUser));
+const selectedRoles = ref<string[]>([]);
+
+const toggleRole = (roleId: string) => {
+    const index = selectedRoles.value.indexOf(roleId);
+    if (index === -1) {
+        selectedRoles.value.push(roleId);
+    } else {
+        selectedRoles.value.splice(index, 1);
+    }
+};
+
+function saveUser() {
+    if (!store.shouldUpdate) {
+        let entity: ISignupUsers = {
+            user_id: newGuid(),
+            username: userItem.value.Username as string,
+            display_name: userItem.value.DisplayName as string,
+            language: userItem.value.Language as string,
+            password: userItem.value.Password as string,
+            status_id: statusStore.items[0].StatusId as string,
+            roles: selectedRoles.value,
+        };
+        console.log(JSON.stringify(entity));
+        aut_repo.signup(entity).then(() => {
             console.log('User saved successfully');
             store.shouldUpdate = false;
             setFormOpen(false);
-        })
-        .catch((e) => {
-            console.error('Error saving user:', e);
         });
+    } else {
+        store.createOrUpdateItem(store.item as IUser)
+            .then(() => {
+                console.log('User saved successfully');
+                store.shouldUpdate = false;
+                setFormOpen(false);
+            })
+            .catch((e) => {
+                console.error('Error saving user:', e);
+            });
+    }
 }
 
 function close() {
@@ -31,16 +60,6 @@ function close() {
     setFormOpen(false)
 }
 
-function role(value: string) {
-    const find = userRoleStore.items.find(f => f.RoleId === value);
-    if (find) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-const userItem = computed(() => store.item || ({} as IUser));
 </script>
 
 <template>
@@ -103,18 +122,20 @@ const userItem = computed(() => store.item || ({} as IUser));
 
             <div class="">
                 <ul role="listbox" aria-label="role lists">
-                    <li tabindex="-1" role="option" aria-checked="false" v-for="item in roleStore.items">
-                        <input tabindex="-1" type="checkbox" :checked="role(item.RoleId)" /> {{ item.FullName }}
+                    <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
+                        <input type="checkbox" :checked="selectedRoles.includes(item.RoleId)"
+                            @change="toggleRole(item.RoleId)" />
+                        {{ item.FullName }}
                     </li>
                 </ul>
             </div>
         </form>
         <template #footer>
             <div class="flex justify-end gap-3 col-span-2">
-                <button type="button" class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition cursor-pointer"
+                <button type="button"
+                    class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition cursor-pointer"
                     @click="close()">Cancel</button>
-                <button type="submit" @click="saveUser"
-                    class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
+                <button type="submit" @click="saveUser" class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
                     :style="{ backgroundColor: color.application.primaryColor }">Save</button>
             </div>
         </template>

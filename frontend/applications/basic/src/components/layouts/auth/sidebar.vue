@@ -7,6 +7,7 @@ import { useSidebar } from '@/stores/useSidebar';
 import { useSystemStore, Drawer } from 'c3-library';
 import { menuItems } from '@/stores/menuData'
 import { sidebarStore } from '@/stores/menuStore';
+import { AuthenticationService } from '@/services/authentication-service';
 
 const { isSidebarOpen, toggleSidebar } = useSidebar();
 const openDropdown = ref<string | null>(null);
@@ -29,13 +30,17 @@ const handleClick = (parent: string, child: { name: string; link: string }) => {
 const openLogoutDialog = () => (isLogoutDialogOpen.value = true);
 const cancelLogout = () => (isLogoutDialogOpen.value = false);
 
+const auth_repo = new AuthenticationService();
+
 const confirmLogout = () => {
   isProcessingLogout.value = true;
-  setTimeout(() => {
+  let response = auth_repo.logout();
+
+  if(response) {
     isProcessingLogout.value = false;
     isLogoutDialogOpen.value = false;
     router.push('/authentication/login');
-  }, 1000);
+  }
 };
 
 const toggleDropdown = (itemName: string) => {

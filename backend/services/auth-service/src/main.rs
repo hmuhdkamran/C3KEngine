@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
-use c3k_auth_service::controllers::{
+use c3k_auth_service::{controllers::{
     role::{
         auth_controller::auth_routes, products::products_routes,
         role_route_maps::role_route_maps_routes, roles::roles_routes, routes::routes_routes,
@@ -15,7 +15,7 @@ use c3k_auth_service::controllers::{
         ownership_status::ownership_status_routes, socials::socials_routes,
         space_types::space_types_routes, status::status_routes,
     },
-};
+}, services::role::auth_service::AuthService};
 use c3k_common::{
     handler::{
         service_client::ServiceCommunicator, 
@@ -76,12 +76,14 @@ async fn main() -> Result<(), std::io::Error> {
         }
 
         let communicator = ServiceCommunicator::new(Arc::new(config.clone()));
+        let auth_service = AuthService::new(db_pool.clone(), redis_client.clone());
 
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(db_pool.clone()))
             .app_data(web::Data::new(redis_client.clone()))
-            .app_data(web::Data::new(communicator))            
+            .app_data(web::Data::new(communicator))
+            .app_data(web::Data::new(auth_service))
             .configure(users_routes)
             .configure(products_routes)
             .configure(roles_routes)

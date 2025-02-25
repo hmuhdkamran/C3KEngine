@@ -71,6 +71,17 @@ pub struct AuthModel {
     pub password: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SignupUsers {
+    pub user_id: Uuid,
+    pub username: String,
+    pub display_name: String,
+    pub language: String,
+    pub password: String,
+    pub status_id: Uuid,
+    pub roles: Vec<Uuid>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserProductModel {
     pub username: String,
