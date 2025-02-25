@@ -2,6 +2,7 @@ use actix_cors::Cors;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 use awc::Client;
 use c3k_common::{
+    handler::redis_handler::RedisHandler,
     middleware::middleware::InterHandler,
     models::config::app_config::{get_config, initialize_config, AppConfig},
 };
@@ -25,8 +26,9 @@ async fn main() -> Result<(), std::io::Error> {
         }
     };
 
-    let addr = format!("{}:{}", config.gateway.host, config.gateway.port);
+    let redis_handler = RedisHandler::new().expect("Unable to Intilize Redis");
 
+    let addr = format!("{}:{}", config.gateway.host, config.gateway.port);
     let server = HttpServer::new(move || {
         let mut cors = Cors::default()
             .allow_any_method()
@@ -40,6 +42,7 @@ async fn main() -> Result<(), std::io::Error> {
         App::new()
             .wrap(cors)
             .wrap(InterHandler)
+            .app_data(web::Data::new(Arc::new(redis_handler.clone())))
             .app_data(web::Data::new(Arc::new(config.clone())))
             .default_service(web::route().to(forward_request))
     });

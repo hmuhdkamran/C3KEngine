@@ -1,4 +1,7 @@
+use actix_web::web::Data;
+use std::collections::HashSet;
 use std::future::{ready, Ready};
+use std::sync::Arc;
 use uuid::Uuid;
 
 use actix_web::{
@@ -13,29 +16,27 @@ use actix_web::{
 
 use futures::future::LocalBoxFuture;
 
+use crate::models::config::app_config::AppConfig;
 use crate::{
     handler::redis_handler::RedisHandler,
-    models::{auth::Auth, config::app_config::get_config, constants, response::ApiResponse},
+    models::{auth::Auth, constants, response::ApiResponse},
     utilities::security_utils::SecurityUtils,
 };
 
 pub struct InterHandler;
 
 fn extract_path_data(path: &str, claim_sid: &str) -> (String, String) {
-    let path = path.strip_prefix("/api/").unwrap_or(path);
-    let path_parts: Vec<&str> = path.split('/').collect();
+    let clean_path = path.strip_prefix("/api/").unwrap_or(path);
+    let mut parts = clean_path.split('/');
 
-    let role = format!("{}-api/{}", claim_sid, path_parts[0]);
+    let first_part = parts.next().unwrap_or_default();
+    let role = format!("{}-api/{}", claim_sid, first_part);
 
-    let mut claims = String::new();
-    for (i, part) in path_parts.iter().skip(1).enumerate() {
-        if Uuid::parse_str(part).is_err() && !part.contains('"') && !part.contains('=') {
-            if i > 0 {
-                claims.push('-');
-            }
-            claims.push_str(part);
-        }
-    }
+    let claims = parts
+        .filter(|part| Uuid::parse_str(part).is_err())
+        .filter(|part| !part.contains(&['"', '='][..]))
+        .collect::<Vec<_>>()
+        .join("-");
 
     (role, claims)
 }
@@ -74,154 +75,116 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        let redis_client = match RedisHandler::new() {
-            Ok(client) => client,
-            Err(err) => {
-                return Box::pin(async move {
-                    let (request, _pl) = req.into_parts();
-                    let response = HttpResponse::InternalServerError()
-                        .json(ApiResponse::<String>::error(format!(
-                            "Internal error: {}",
-                            err
-                        )))
-                        .map_into_right_body();
-                    Ok(ServiceResponse::new(request, response))
-                });
-            }
+        // Precompute frequently used values
+        let path = req.path().to_string();
+        let method = req.method().clone();
+        let headers = req.headers().clone();
+
+        // Handle service initialization errors first
+        let redis_client = req
+            .app_data::<Data<Arc<RedisHandler>>>()
+            .expect("RedisHandler missing")
+            .get_ref();
+
+        let config = req
+            .app_data::<Data<Arc<AppConfig>>>()
+            .expect("Config missing")
+            .get_ref();
+
+        // Early exit for OPTIONS or ignored routes
+        let ignore_routes: HashSet<&'static str> =
+            constants::IGNORE_ROUTES.iter().copied().collect();
+        if method == Method::OPTIONS || ignore_routes.contains(path.as_str()) {
+            return process_request(self.service.call(req));
+        }
+
+        // Process authorization header
+        let auth_header = headers
+            .get(constants::AUTHORIZATION)
+            .and_then(|v| v.to_str().ok());
+
+        let token = match auth_header {
+            Some(h) if h.to_lowercase().starts_with("bearer ") => h.split_whitespace().nth(1),
+            _ => return unauthorized(req),
         };
 
-        let json = match get_config() {
-            Some(cfg) => cfg,
-            None => {
-                return Box::pin(async move {
-                    let (request, _pl) = req.into_parts();
-                    let response = HttpResponse::InternalServerError()
-                        .json(ApiResponse::<String>::error(
-                            "Internal error: Configuration not initialized".to_string(),
-                        ))
-                        .map_into_right_body();
-                    Ok(ServiceResponse::new(request, response))
-                });
-            }
+        let token = match token {
+            Some(t) => t,
+            None => return unauthorized(req),
         };
 
-        let mut authenticate_pass = false;
+        // Verify token
+        let claim = match SecurityUtils::verify_token(
+            token,
+            &config.token_provider.token_security_key,
+            &config.token_provider.token_audience,
+            &config.token_provider.token_security_algorithm,
+        ) {
+            Ok(c) => c,
+            Err(_) => return unauthorized(req),
+        };
 
-        let mut headers = req.headers().clone();
-        headers.append(
+        // Redis checks
+        let stored_token = match redis_client.get_key(&claim.sid) {
+            Ok(t) => t,
+            Err(e) => return error_response(req, format!("Redis error: {}", e)),
+        };
+
+        if stored_token != token {
+            return unauthorized(req);
+        }
+
+        // Path processing and authorization check
+        let (api_app, api_claim) = extract_path_data(&path, &claim.sid);
+        let app_keys: Vec<Auth> = match redis_client
+            .get_key(&api_app)
+            .and_then(|s| serde_json::from_str(&s).map_err(|e| e.into()))
+        {
+            Ok(k) => k,
+            Err(e) => return error_response(req, format!("Authorization error: {}", e)),
+        };
+
+        if !app_keys.iter().any(|k| k.route == api_claim) {
+            return unauthorized(req);
+        }
+
+        // Add security headers
+        let mut req = req;
+        req.headers_mut().insert(
             HeaderName::from_static("content-length"),
             HeaderValue::from_static("true"),
         );
 
-        if Method::OPTIONS == *req.method() {
-            authenticate_pass = true;
-        } else {
-            for ignore_route in constants::IGNORE_ROUTES.iter() {
-                if req.path() == *ignore_route {
-                    authenticate_pass = true;
-                    break;
-                }
-            }
-        }
-
-        if !authenticate_pass {
-            if let Some(authen_header) = req.headers().get(constants::AUTHORIZATION) {
-                if let Ok(authen_str) = authen_header.to_str() {
-                    if authen_str.starts_with("bearer") || authen_str.starts_with("Bearer") {
-                        let token = authen_str.replace("Bearer ", "");
-                        let claim = match SecurityUtils::verify_token(
-                            &token,
-                            &json.token_provider.token_security_key,
-                            &json.token_provider.token_audience,
-                            &json.token_provider.token_security_algorithm,
-                        ) {
-                            Ok(claim) => claim,
-                            Err(_) => {
-                                let (request, _pl) = req.into_parts();
-                                let response = HttpResponse::Unauthorized()
-                                    .json(ApiResponse::<String>::error(
-                                        constants::MESSAGE_INVALID_TOKEN.to_owned(),
-                                    ))
-                                    .map_into_right_body();
-                                return Box::pin(async {
-                                    Ok(ServiceResponse::new(request, response))
-                                });
-                            }
-                        };
-
-                        match redis_client.get_key(&claim.sid) {
-                            Ok(store_token) if token == store_token => {
-                                let (api_application, api_claim) =
-                                    extract_path_data(&req.path(), &claim.sid);
-
-                                match redis_client.get_key(&api_application) {
-                                    Ok(application_keys_str) => {
-                                        let application_keys: Vec<Auth> =
-                                            match serde_json::from_str(&application_keys_str) {
-                                                Ok(keys) => keys,
-                                                Err(err) => {
-                                                    return Box::pin(async move {
-                                                        let (request, _pl) = req.into_parts();
-                                                        let response =
-                                                            HttpResponse::InternalServerError()
-                                                                .json(ApiResponse::<String>::error(
-                                                                    format!(
-                                                                        "Invalid Claim: {}",
-                                                                        err
-                                                                    ),
-                                                                ))
-                                                                .map_into_right_body();
-                                                        Ok(ServiceResponse::new(request, response))
-                                                    });
-                                                }
-                                            };
-
-                                        authenticate_pass = application_keys
-                                            .iter()
-                                            .any(|key| key.route == api_claim);
-                                    }
-                                    Err(e) => {
-                                        eprintln!(
-                                            "Failed to get key {} from Redis: {:?}",
-                                            api_application, e
-                                        );
-                                        authenticate_pass = false;
-                                    }
-                                }
-                            }
-                            Ok(_) => {
-                                authenticate_pass = false;
-                            }
-                            Err(err) => {
-                                return Box::pin(async move {
-                                    let (request, _pl) = req.into_parts();
-                                    let response = HttpResponse::InternalServerError()
-                                        .json(ApiResponse::<String>::error(format!(
-                                            "Internal error: {}",
-                                            err
-                                        )))
-                                        .map_into_right_body();
-                                    Ok(ServiceResponse::new(request, response))
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if !authenticate_pass {
-            let (request, _pl) = req.into_parts();
-            let response = HttpResponse::Unauthorized()
-                .json(ApiResponse::<String>::error(
-                    constants::MESSAGE_INVALID_TOKEN.to_owned(),
-                ))
-                .map_into_right_body();
-            return Box::pin(async { Ok(ServiceResponse::new(request, response)) });
-        }
-
-        let res = self.service.call(req);
-
-        Box::pin(async move { res.await.map(ServiceResponse::map_into_left_body) })
+        process_request(self.service.call(req))
     }
+}
+
+// Helper functions
+fn unauthorized<B: 'static>(
+    req: ServiceRequest,
+) -> LocalBoxFuture<'static, Result<ServiceResponse<EitherBody<B>>, Error>> {
+    let (request, _) = req.into_parts();
+    let response = HttpResponse::Unauthorized()
+        .json(ApiResponse::<String>::error(
+            constants::MESSAGE_INVALID_TOKEN.to_string(),
+        ))
+        .map_into_right_body();
+    Box::pin(async { Ok(ServiceResponse::new(request, response)) })
+}
+
+fn error_response<B: 'static>(
+    req: ServiceRequest,
+    msg: String,
+) -> LocalBoxFuture<'static, Result<ServiceResponse<EitherBody<B>>, Error>> {
+    let (request, _) = req.into_parts();
+    let response = HttpResponse::InternalServerError()
+        .json(ApiResponse::<String>::error(msg))
+        .map_into_right_body();
+    Box::pin(async { Ok(ServiceResponse::new(request, response)) })
+}
+
+fn process_request<B>(
+    fut: impl std::future::Future<Output = Result<ServiceResponse<B>, Error>> + 'static,
+) -> LocalBoxFuture<'static, Result<ServiceResponse<EitherBody<B>>, Error>> {
+    Box::pin(async move { fut.await.map(|res| res.map_into_left_body()) })
 }

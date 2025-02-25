@@ -1,11 +1,11 @@
 [workspace]
 members = [
-  "services/auth-service", 
+  "services/auth-service",
   "services/hrms-service",
   "services/retail-service",
   "services/common",
-  "gate_way"
-  ]
+  "gate_way",
+]
 resolver = "2"
 
 [workspace.dependencies]
@@ -14,12 +14,12 @@ actix-cors = "0.7.0"
 awc = { version = "3.5.1", features = ["openssl"] }
 futures = "0.3.31"
 sqlx = { version = "0.8.3", features = [
-    "postgres",
-    "macros",
-    "runtime-tokio",
-    "tls-native-tls",
-    "uuid",
-    "chrono",
+  "postgres",
+  "macros",
+  "runtime-tokio",
+  "tls-native-tls",
+  "uuid",
+  "chrono",
 ] }
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.139"
