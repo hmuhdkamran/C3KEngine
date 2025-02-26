@@ -20,6 +20,12 @@ const isSmallScreen = ref(false);
 const router = useRouter();
 const store = useSystemStore();
 
+interface Item {
+  label: string;
+  icon: string;
+  link: string;
+}
+
 const setActive = (menu: { name: string; link: string }) => {
   sidebarStore.setActiveParent(menu);
 };
@@ -77,6 +83,16 @@ const toggleTooltipList = () => {
     isTooltipListOpen.value = !isTooltipListOpen.value;
   }
 };
+
+const items: Item[] = [
+  { label: 'Profile', icon: 'fa-solid fa-user', link: '/profile' },
+  { label: 'Password', icon: 'fa-solid fa-lock', link: '/password' },
+  { label: 'Feeds', icon: 'fa-solid fa-bell', link: '/feeds' },
+  { label: 'Settings', icon: 'fa-solid fa-gear', link: '/settings' },
+  { label: 'Help', icon: 'fa-solid fa-square-question', link: '/help' },
+  { label: 'Chat', icon: 'fa-solid fa-comment', link: '/chat' },
+];
+
 </script>
 
 <template>
@@ -197,7 +213,7 @@ const toggleTooltipList = () => {
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
-              <span class="fa-solid fa-question fa-sm"></span>
+              <span class="fa-solid fa-square-question fa-sm"></span>
             </button>
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Help</span>
@@ -234,26 +250,16 @@ const toggleTooltipList = () => {
     </div>
 
     <div v-if="!isSidebarOpen && isTooltipListOpen"
-      class="absolute left-full bottom-16 w-54 bg-white rounded-md shadow-lg overflow-hidden z-10">
+      class="absolute left-full bottom-16 w-48 p-1 bg-white rounded-md shadow-lg overflow-hidden z-10">
       <ul class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-        <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out"
-          @click="openLogoutDialog">
-          <span class="fa-solid fa-right-from-bracket fa-sm"></span> Logout
-        </li>
-        <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out">
-          <span class="fa-solid fa-gear fa-sm"></span> Settings
-        </li>
-        <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out">
-          <span class="fa-solid fa-question fa-sm"></span> Help
-        </li>
-        <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out">
-          <span class="fa-solid fa-comment fa-sm"></span> Chat
-        </li>
-        <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out">
-          <span class="fa-solid fa-lock fa-sm"></span> Password
-        </li>
-        <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out">
-          <span class="fa-solid fa-bell fa-sm"></span> Feeds
+        <li v-for="(item, index) in items" :key="index"
+          class="px-4 py-2 text-sm text-gray-700 transition duration-300 ease-in-out"
+          :style="{ backgroundColor: isHovered[index] ? `${store.application.primaryColor}20` : 'transparent' }"
+          @mouseover="isHovered[index] = true" @mouseout="isHovered[index] = false">
+          <router-link :to="item.link" class="flex items-center w-full">
+            <span :class="item.icon" class="mr-3 fa-md" :style="{ color: store.application.primaryColor }"></span>
+            {{ item.label }}
+          </router-link>
         </li>
       </ul>
     </div>
