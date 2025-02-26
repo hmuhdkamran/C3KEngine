@@ -178,8 +178,8 @@ const close = () => {
                 <h3 class="text-sm font-medium text-gray-700 mb-2">Roles:</h3>
                 <ul role="listbox" aria-label="role lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
-                        <FormCheckBox :id="item.RoleId" v-model="item.RoleId" :label="item.FullName" />
-                        <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
+                        <FormCheckBox :id="item.RoleId" v-model="item.RoleId" :label="item.FullName" :icon="item.Icon" />
+                        <!-- <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
                             <div class="relative">
                                 <input type="checkbox" :id="item.RoleId" :checked="selectedRoles.includes(item.RoleId)"
                                     @change="toggleRole(item.RoleId)" class="sr-only">
@@ -192,7 +192,7 @@ const close = () => {
                             <div class="ml-3 text-gray-700 font-medium">
                                 {{ item.FullName }}
                             </div>
-                        </label>
+                        </label> -->
                     </li>
                 </ul>
             </div>
@@ -202,7 +202,8 @@ const close = () => {
                 <h3 class="text-sm font-medium text-gray-700 mb-2">Products:</h3>
                 <ul role="listbox" aria-label="product lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <li v-for="item in productStore.items" :key="item.ProductId" tabindex="-1" role="option">
-                        <label :for="item.ProductId" class="flex items-center cursor-pointer my-1">
+                        <FormCheckBox :id="item.ProductId" v-model="item.ProductId" :label="item.FullName" :icon="item.Icon" />
+                        <!-- <label :for="item.ProductId" class="flex items-center cursor-pointer my-1">
                             <div class="relative">
                                 <input type="checkbox" :id="item.ProductId"
                                     :checked="selectedProducts.includes(item.ProductId)"
@@ -217,7 +218,7 @@ const close = () => {
                             <div class="ml-3 text-gray-700 font-medium">
                                 {{ item.FullName }}
                             </div>
-                        </label>
+                        </label> -->
                     </li>
                 </ul>
             </div>
