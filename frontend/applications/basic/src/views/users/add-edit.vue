@@ -3,14 +3,22 @@ import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser } from '@/models';
 import {
     FormInput, FormSelect,
-    DialogBox, newGuid, useSystemStore, requiredValidator, lengthValidator,
+    DialogBox, newGuid, useSystemStore, validate, requiredValidator, rangeValidator,
     emailValidator,
     passwordValidator,
     confirmedValidator, type ISignupUsers
 } from 'c3-library';
-import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore, useRoleProductsStore, useRoleUserProductMapsStore } from '@/stores';
-import { computed, ref, watch, reactive, onMounted } from 'vue';
+import {
+    useRoleUserStore,
+    useRoleRolesStore,
+    useRoleUserRoleMapStore,
+    useSetupStatusStore,
+    useRoleProductsStore,
+    useRoleUserProductMapsStore
+} from '@/stores';
+import { computed, ref, watch, onMounted } from 'vue';
 import { AuthenticationService } from '@/services/authentication-service';
+import FormCheckBox from './FormCheckBox.vue';
 
 // Store instances
 const color = useSystemStore();
@@ -30,33 +38,17 @@ const confirmPassword = ref('');
 
 const validationResults = ref({
     displayName: false,
+    language: false,
     Username: false,
     Password: false,
-    confirmPassword: false
-});
-
-// Form validation state
-const errors = reactive({
-    displayName: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-    roles: ''
+    confirmPassword: false,
+    statusId: false
 });
 
 const languageOptions = [
     { value: 'en-US', label: 'English' },
     { value: 'ur-PK', label: 'Urdu' }
 ];
-
-// Touch tracking to avoid showing errors before user interaction
-const touched = reactive({
-    displayName: false,
-    username: false,
-    password: false,
-    confirmPassword: false,
-    roles: false
-});
 
 // Initialize form data on mount
 onMounted(() => {
@@ -78,14 +70,11 @@ watch(() => userProductStore.items, () => {
 // Toggle selection functions
 const toggleRole = (roleId: string) => {
     const index = selectedRoles.value.indexOf(roleId);
-    touched.roles = true;
 
     if (index === -1) {
         selectedRoles.value.push(roleId);
-        validateRoles();
     } else {
         selectedRoles.value.splice(index, 1);
-        validateRoles();
     }
 };
 
@@ -98,83 +87,11 @@ const toggleProduct = (productId: string) => {
     }
 };
 
-// Validation functions using your validators
-const validateDisplayName = () => {
-    touched.displayName = true;
-    const result = requiredValidator(userItem.value.DisplayName);
-    errors.displayName = result === true ? '' : String(result);
-    return result === true;
-};
-
-const validateEmail = () => {
-    touched.username = true;
-    let result: boolean | string = requiredValidator(userItem.value.Username);
-
-    if (result === true) {
-        result = emailValidator(userItem.value.Username);
-    }
-
-    errors.username = result === true ? '' : String(result);
-    return result === true;
-};
-
-const validatePassword = () => {
-    if (!store.shouldUpdate) {
-        touched.password = true;
-        let result: boolean | string = requiredValidator(userItem.value.Password);
-
-        if (result === true) {
-            result = passwordValidator(userItem.value.Password);
-        }
-
-        errors.password = result === true ? '' : String(result);
-        return result === true;
-    }
-    return true;
-};
-
-const validateConfirmPassword = () => {
-    if (!store.shouldUpdate) {
-        touched.confirmPassword = true;
-        let result: boolean | string = requiredValidator(confirmPassword.value);
-
-        if (result === true && userItem.value.Password) {
-            result = confirmedValidator(confirmPassword.value, userItem.value.Password);
-        }
-
-        errors.confirmPassword = result === true ? '' : String(result);
-        return result === true;
-    }
-    return true;
-};
-
-const validateRoles = () => {
-    touched.roles = true;
-    const isValid = selectedRoles.value.length > 0;
-    errors.roles = isValid ? '' : 'At least one role must be selected';
-    return isValid;
-};
-
-// Comprehensive form validation
-const validateForm = () => {
-    // Mark all fields as touched to show all errors
-    Object.keys(touched).forEach(key => {
-        touched[key as keyof typeof touched] = true;
-    });
-
-    // Run all validations
-    const isNameValid = validateDisplayName();
-    const isEmailValid = validateEmail();
-    const isPasswordValid = validatePassword();
-    const isConfirmPasswordValid = validateConfirmPassword();
-    const areRolesValid = validateRoles();
-
-    return isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && areRolesValid;
-};
-
 // Form submission
 const saveUser = () => {
-    if (!validateForm()) {
+    const excludeFields = store.shouldUpdate ? ['Password', 'confirmPassword'] : [];
+
+    if (!validate(validationResults.value, excludeFields)) {
         return;
     }
 
@@ -219,12 +136,6 @@ const close = () => {
 
     store.shouldUpdate = false;
     setFormOpen(false);
-
-    // Reset validation errors and touched state
-    Object.keys(errors).forEach(key => {
-        errors[key as keyof typeof errors] = '';
-        touched[key as keyof typeof touched] = false;
-    });
 };
 </script>
 
@@ -237,15 +148,15 @@ const close = () => {
 
         <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" @submit.prevent="saveUser">
             <FormInput id="displayName" label="Name" v-model="userItem.DisplayName"
-                :validators="[requiredValidator, (value) => lengthValidator(value, 3)]" :validatorArgs="[[], [50]]"
-                required @validation="validationResults.displayName = $event" />
+                :validators="[requiredValidator, (value) => rangeValidator(value, 3, 50)]"
+                :validatorArgs="[[], [3, 50]]" required @validation="validationResults.displayName = $event" />
 
             <FormInput id="Email" label="Email" v-model="userItem.Username" type="email"
                 :validators="[requiredValidator, emailValidator]" required
                 @validation="validationResults.Username = $event" />
 
             <FormSelect id="Language" label="Language:" v-model="userItem.Language" :options="languageOptions"
-                :validators="[requiredValidator]" />
+                :validators="[requiredValidator]" @validation="validationResults.language = $event" />
 
             <FormInput v-if="!store.shouldUpdate" id="Password" label="Password" v-model="userItem.Password"
                 type="password" :validators="[requiredValidator, passwordValidator]" required
@@ -259,15 +170,15 @@ const close = () => {
                 @validation="validationResults.confirmPassword = $event" />
 
             <FormSelect v-if="store.shouldUpdate" id="StatusId" label="Status:" v-model="userItem.StatusId"
-                :options="statusStore.items" :validators="[requiredValidator]" valueKey="StatusId"
-                labelKey="FullName" />
+                :options="statusStore.items" :validators="[requiredValidator]" valueKey="StatusId" labelKey="FullName"
+                @validation="validationResults.statusId = $event" />
 
             <!-- Roles Section -->
             <div class="col-span-1 sm:col-span-2">
                 <h3 class="text-sm font-medium text-gray-700 mb-2">Roles:</h3>
-                <p v-if="touched.roles && errors.roles" class="text-red-500 text-xs mb-2">{{ errors.roles }}</p>
                 <ul role="listbox" aria-label="role lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
+                        <FormCheckBox :id="item.RoleId" v-model="item.RoleId" :label="item.FullName" />
                         <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
                             <div class="relative">
                                 <input type="checkbox" :id="item.RoleId" :checked="selectedRoles.includes(item.RoleId)"

@@ -13,11 +13,4 @@ export * from '@/composables'
 
 export * from '@/components'
 
-export {
-  requiredValidator,
-  emailValidator,
-  passwordValidator,
-  lengthValidator,
-  alphaValidator,
-  confirmedValidator,
-} from '@/helpers/validators'
+export * from '@/helpers/validators'

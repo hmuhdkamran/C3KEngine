@@ -2,7 +2,7 @@
 import { ref, watch, defineProps, defineEmits } from 'vue';
 
 // Define a type for a validator function.
-// A valid result returns `true`; otherwise it returns an error message string.
+// A valid result returns true; otherwise it returns an error message string.
 export type Validator = (value: unknown) => true | string;
 
 const props = defineProps<{
@@ -49,7 +49,10 @@ function onInput(e: Event) {
     const target = e.target as HTMLInputElement;
     internalValue.value = target.value;
     emits('update:modelValue', target.value);
-    // Optionally validate on input
+    // Mark field as touched on first input so errors display immediately.
+    if (!touched.value) {
+        touched.value = true;
+    }
     validate();
 }
 
@@ -72,5 +75,5 @@ function onBlur() {
 </template>
 
 <style scoped>
-/* Customize select styling as needed */
+/* Customize input styling as needed */
 </style>

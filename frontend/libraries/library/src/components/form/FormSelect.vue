@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue';
 
-// Validator type: returns true if valid, otherwise an error message.
+// Validator type: a valid result returns true; otherwise it returns an error message string.
 export type Validator = (value: unknown) => true | string;
 
 const props = defineProps<{
@@ -20,22 +20,23 @@ const emits = defineEmits<{
     (e: 'update:modelValue', value: string): void;
 }>();
 
-// Default keys if not provided.
-const valueKey = props.valueKey || 'value';
-const labelKey = props.labelKey || 'label';
+// Use default keys if not provided.
+const defaultValueKey = props.valueKey || 'value';
+const defaultLabelKey = props.labelKey || 'label';
 
-// Local copy of the select value.
+// Local internal value for the select control.
 const internalValue = ref(props.modelValue);
 
-// Synchronize local value with external modelValue changes.
+// Keep the local value in sync with external modelValue.
 watch(() => props.modelValue, (newVal) => {
     internalValue.value = newVal;
 });
 
-// Reactive state for inline validation.
-const error = ref('');
+// Reactive error and touched state.
+const error = ref<string>('');
 const touched = ref(false);
 
+// Validate the input using the provided validators.
 function validate() {
     if (props.validators && props.validators.length) {
         for (const validator of props.validators) {
@@ -49,13 +50,19 @@ function validate() {
     error.value = '';
 }
 
+// Handle change event.
 function onChange(e: Event) {
     const target = e.target as HTMLSelectElement;
     internalValue.value = target.value;
     emits('update:modelValue', target.value);
+    // Mark as touched on first change.
+    if (!touched.value) {
+        touched.value = true;
+    }
     validate();
 }
 
+// Handle blur event (mark as touched and validate).
 function onBlur() {
     touched.value = true;
     validate();
@@ -64,13 +71,13 @@ function onBlur() {
 // Helper functions to extract option value and label.
 function getOptionValue(option: Record<string, any> | string): string {
     return typeof option === 'object' && option !== null
-        ? String(option[valueKey])
+        ? String(option[defaultValueKey])
         : String(option);
 }
 
 function getOptionLabel(option: Record<string, any> | string): string {
     return typeof option === 'object' && option !== null
-        ? String(option[labelKey])
+        ? String(option[defaultLabelKey])
         : String(option);
 }
 </script>
