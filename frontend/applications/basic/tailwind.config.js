@@ -45,7 +45,7 @@ export default {
       colors: {
         primary: 'var(--primary-color)',
         title: 'var(--title-color)',
-        background: 'var(--background-color)',
+        secondary: 'var(--background-color)',
         sidebar: 'var(--sidebar-color)',
       },
       fontSize: {

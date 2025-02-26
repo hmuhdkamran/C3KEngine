@@ -23,7 +23,7 @@ function toggle() {
             <input type="checkbox" class="checkbox-input" :id="id" :checked="modelValue" @change="toggle" />
             <span class="checkbox-tile">
                 <span class="checkbox-icon">
-                    {{ icon }}
+                    <i :class="icon ?? icon" aria-hidden="true"></i>
                 </span>
                 <span class="checkbox-label">{{ label }}</span>
             </span>
