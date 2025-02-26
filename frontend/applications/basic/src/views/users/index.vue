@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { onMounted } from 'vue';
 import { useSystemStore, useTableStore } from 'c3-library';
-import { DataTable, newGuid, Pagination, RepositoryService } from 'c3-library';
+import { DataTable, Pagination } from 'c3-library';
 import type { IUser } from '@/models';
-import { setFormOpen, formStatus } from '@/stores/edit-form';
+import { setFormOpen } from '@/stores/edit-form';
 
 import AddEdit from './add-edit.vue';
-import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
+import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore, useRoleProductsStore, useRoleUserProductMapsStore } from '@/stores';
 
 const store = useRoleUserStore();
 const color = useSystemStore();
@@ -14,6 +14,10 @@ const tableStore = useTableStore();
 
 const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
+
+const productStore = useRoleProductsStore();
+const userProductStore = useRoleUserProductMapsStore();
+
 const statusStore = useSetupStatusStore();
 
 const columns = [
@@ -27,6 +31,7 @@ const openForm = (user: IUser | null = null) => {
   if (user) {
     store.item = { ...user };
     userRoleStore.getItems(`"UserId"='${store.item.UserId}'`);
+    userProductStore.getItems(`"UserId"='${store.item.UserId}'`);
     store.shouldUpdate = true;
     setFormOpen(true);
   }
@@ -45,6 +50,7 @@ onMounted(() => {
 
   roleStore.getItems();
   statusStore.getItems();
+  productStore.getItems();
 });
 </script>
 

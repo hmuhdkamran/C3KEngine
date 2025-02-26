@@ -80,6 +80,7 @@ pub struct SignupUsers {
     pub password: String,
     pub status_id: Uuid,
     pub roles: Vec<Uuid>,
+    pub products: Vec<Uuid>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

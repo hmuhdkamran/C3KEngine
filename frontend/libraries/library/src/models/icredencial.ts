@@ -11,4 +11,5 @@ export interface ISignupUsers {
   password: string
   status_id: string
   roles: string[]
+  products: string[]
 }
