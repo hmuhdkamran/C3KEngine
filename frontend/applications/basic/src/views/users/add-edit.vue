@@ -1,35 +1,185 @@
 <script setup lang="ts">
 import { setFormOpen, formStatus } from '@/stores/edit-form';
 import type { IUser } from '@/models';
-import { DialogBox, newGuid, useSystemStore, type ISignupUsers } from 'c3-library';
-import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
-import { computed, ref, watch, type Ref } from 'vue';
+import {
+    FormInput, FormSelect,
+    DialogBox, newGuid, useSystemStore, requiredValidator, lengthValidator,
+    emailValidator,
+    passwordValidator,
+    confirmedValidator, type ISignupUsers
+} from 'c3-library';
+import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore, useRoleProductsStore, useRoleUserProductMapsStore } from '@/stores';
+import { computed, ref, watch, reactive, onMounted } from 'vue';
 import { AuthenticationService } from '@/services/authentication-service';
 
+// Store instances
 const color = useSystemStore();
 const store = useRoleUserStore();
 const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
+const productStore = useRoleProductsStore();
+const userProductStore = useRoleUserProductMapsStore();
 const statusStore = useSetupStatusStore();
-const aut_repo = new AuthenticationService();
+const auth_service = new AuthenticationService();
 
+// Form data and validation
 const userItem = computed(() => store.item || ({} as IUser));
 const selectedRoles = ref<string[]>([]);
+const selectedProducts = ref<string[]>([]);
+const confirmPassword = ref('');
 
-watch(() => userRoleStore.items, () => selectedRoles.value = userRoleStore.items.map(i => i.RoleId), { deep: true });
+const validationResults = ref({
+    displayName: false,
+    Username: false,
+    Password: false,
+    confirmPassword: false
+});
 
+// Form validation state
+const errors = reactive({
+    displayName: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    roles: ''
+});
+
+const languageOptions = [
+    { value: 'en-US', label: 'English' },
+    { value: 'ur-PK', label: 'Urdu' }
+];
+
+// Touch tracking to avoid showing errors before user interaction
+const touched = reactive({
+    displayName: false,
+    username: false,
+    password: false,
+    confirmPassword: false,
+    roles: false
+});
+
+// Initialize form data on mount
+onMounted(() => {
+    if (store.shouldUpdate) {
+        selectedRoles.value = userRoleStore.items.map(i => i.RoleId);
+        selectedProducts.value = userProductStore.items.map(i => i.ProductId);
+    }
+});
+
+// Update selected values when store items change
+watch(() => userRoleStore.items, () => {
+    selectedRoles.value = userRoleStore.items.map(i => i.RoleId);
+}, { deep: true });
+
+watch(() => userProductStore.items, () => {
+    selectedProducts.value = userProductStore.items.map(i => i.ProductId);
+}, { deep: true });
+
+// Toggle selection functions
 const toggleRole = (roleId: string) => {
     const index = selectedRoles.value.indexOf(roleId);
+    touched.roles = true;
+
     if (index === -1) {
         selectedRoles.value.push(roleId);
+        validateRoles();
     } else {
         selectedRoles.value.splice(index, 1);
+        validateRoles();
     }
 };
 
-function saveUser() {
+const toggleProduct = (productId: string) => {
+    const index = selectedProducts.value.indexOf(productId);
+    if (index === -1) {
+        selectedProducts.value.push(productId);
+    } else {
+        selectedProducts.value.splice(index, 1);
+    }
+};
+
+// Validation functions using your validators
+const validateDisplayName = () => {
+    touched.displayName = true;
+    const result = requiredValidator(userItem.value.DisplayName);
+    errors.displayName = result === true ? '' : String(result);
+    return result === true;
+};
+
+const validateEmail = () => {
+    touched.username = true;
+    let result: boolean | string = requiredValidator(userItem.value.Username);
+
+    if (result === true) {
+        result = emailValidator(userItem.value.Username);
+    }
+
+    errors.username = result === true ? '' : String(result);
+    return result === true;
+};
+
+const validatePassword = () => {
     if (!store.shouldUpdate) {
-        let entity: ISignupUsers = {
+        touched.password = true;
+        let result: boolean | string = requiredValidator(userItem.value.Password);
+
+        if (result === true) {
+            result = passwordValidator(userItem.value.Password);
+        }
+
+        errors.password = result === true ? '' : String(result);
+        return result === true;
+    }
+    return true;
+};
+
+const validateConfirmPassword = () => {
+    if (!store.shouldUpdate) {
+        touched.confirmPassword = true;
+        let result: boolean | string = requiredValidator(confirmPassword.value);
+
+        if (result === true && userItem.value.Password) {
+            result = confirmedValidator(confirmPassword.value, userItem.value.Password);
+        }
+
+        errors.confirmPassword = result === true ? '' : String(result);
+        return result === true;
+    }
+    return true;
+};
+
+const validateRoles = () => {
+    touched.roles = true;
+    const isValid = selectedRoles.value.length > 0;
+    errors.roles = isValid ? '' : 'At least one role must be selected';
+    return isValid;
+};
+
+// Comprehensive form validation
+const validateForm = () => {
+    // Mark all fields as touched to show all errors
+    Object.keys(touched).forEach(key => {
+        touched[key as keyof typeof touched] = true;
+    });
+
+    // Run all validations
+    const isNameValid = validateDisplayName();
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+    const isConfirmPasswordValid = validateConfirmPassword();
+    const areRolesValid = validateRoles();
+
+    return isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && areRolesValid;
+};
+
+// Form submission
+const saveUser = () => {
+    if (!validateForm()) {
+        return;
+    }
+
+    if (!store.shouldUpdate) {
+        const entity: ISignupUsers = {
             user_id: newGuid(),
             username: userItem.value.Username as string,
             display_name: userItem.value.DisplayName as string,
@@ -37,32 +187,45 @@ function saveUser() {
             password: userItem.value.Password as string,
             status_id: statusStore.items[0].StatusId as string,
             roles: selectedRoles.value,
+            products: selectedProducts.value
         };
-        console.log(JSON.stringify(entity));
-        aut_repo.signup(entity).then(() => {
+
+        auth_service.signup(entity).then(() => {
             store.getItems();
             console.log('User saved successfully');
-            store.shouldUpdate = false;
-            setFormOpen(false);
+            close();
+        }).catch(error => {
+            console.error('Error creating user:', error);
+            // Handle API errors here
         });
     } else {
         store.createOrUpdateItem(store.item as IUser)
             .then(() => {
-                console.log('User saved successfully');
-                store.shouldUpdate = false;
-                setFormOpen(false);
+                close();
             })
-            .catch((e) => {
-                console.error('Error saving user:', e);
+            .catch((error) => {
+                console.error('Error updating user:', error);
             });
     }
-}
+};
 
-function close() {
+// Close form and reset
+const close = () => {
+    selectedRoles.value = [];
+    selectedProducts.value = [];
+    confirmPassword.value = '';
+
+    store.item = { UserId: '', Username: '', DisplayName: '', Language: '', Password: '', Salt: '', StatusId: '' };
+
     store.shouldUpdate = false;
-    setFormOpen(false)
-}
+    setFormOpen(false);
 
+    // Reset validation errors and touched state
+    Object.keys(errors).forEach(key => {
+        errors[key as keyof typeof errors] = '';
+        touched[key as keyof typeof touched] = false;
+    });
+};
 </script>
 
 <template>
@@ -72,66 +235,73 @@ function close() {
             <p class="text-sm text-gray-500">{{ store.shouldUpdate ? 'Edit Record' : 'Add Record' }}</p>
         </template>
 
-        <form class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="mb-3">
-                <label for="DisplayName" class="text-sm font-medium text-gray-700">Name:</label>
-                <input type="text" id="DisplayName" v-model="userItem.DisplayName" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
-            </div>
-            <div class="mb-3">
-                <label for="Username" class="text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" id="Username" v-model="userItem.Username" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
-            </div>
-            <div class="mb-3">
-                <label for="Language" class="text-sm font-medium text-gray-700">Language:</label>
-                <select id="Language" v-model="userItem.Language" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
-                    <option value="English">English</option>
-                    <option value="Urdu">Urdu</option>
-                </select>
-            </div>
-            <div class="mb-3" v-if="!store.shouldUpdate">
-                <label for="Password" class="text-sm font-medium text-gray-700">Password:</label>
-                <input type="password" id="Password" v-model="userItem.Password" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
-            </div>
-            <div class="mb-3" v-if="!store.shouldUpdate">
-                <label for="ConfirmPassword" class="text-sm font-medium text-gray-700">Confirm Password:</label>
-                <input type="password" id="ConfirmPassword" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }" />
-            </div>
-            <div class="mb-3" v-if="!store.shouldUpdate">
-                <label for="UserRole" class="text-sm font-medium text-gray-700">User Role:</label>
-                <select id="UserRole" v-model="roleStore.getItems" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
-                    <option v-for="item in roleStore.items" :value="item.RoleId">{{ item.FullName }}</option>
-                </select>
-            </div>
-            <div class="mb-3" v-if="store.shouldUpdate">
-                <label for="Status" class="text-sm font-medium text-gray-700">Status:</label>
-                <select id="Language" v-model="userItem.StatusId" required
-                    class="mt-1 block w-full p-1 rounded-sm shadow-sm focus:ring-[var(--ring-color)] focus:border-[var(--border-color)]"
-                    :style="{ '--ring-color': color.application.primaryColor, '--border-color': color.application.primaryColor }">
-                    <option v-for="item in statusStore.items" :value="item.StatusId">{{ item.FullName }}</option>
-                </select>
-            </div>
+        <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" @submit.prevent="saveUser">
+            <FormInput id="displayName" label="Name" v-model="userItem.DisplayName"
+                :validators="[requiredValidator, (value) => lengthValidator(value, 3)]" :validatorArgs="[[], [50]]"
+                required @validation="validationResults.displayName = $event" />
 
-            <div class="">
-                <ul role="listbox" aria-label="role lists">
+            <FormInput id="Email" label="Email" v-model="userItem.Username" type="email"
+                :validators="[requiredValidator, emailValidator]" required
+                @validation="validationResults.Username = $event" />
+
+            <FormSelect id="Language" label="Language:" v-model="userItem.Language" :options="languageOptions"
+                :validators="[requiredValidator]" />
+
+            <FormInput v-if="!store.shouldUpdate" id="Password" label="Password" v-model="userItem.Password"
+                type="password" :validators="[requiredValidator, passwordValidator]" required
+                @validation="validationResults.Password = $event" />
+
+            <!-- Confirm Password input -->
+            <FormInput v-if="!store.shouldUpdate" id="ConfirmPassword" label="Confirm Password"
+                v-model="confirmPassword" type="password"
+                :validators="[() => confirmedValidator(confirmPassword, userItem.Password)]"
+                :validatorArgs="[[userItem.Password]]" required
+                @validation="validationResults.confirmPassword = $event" />
+
+            <FormSelect v-if="store.shouldUpdate" id="StatusId" label="Status:" v-model="userItem.StatusId"
+                :options="statusStore.items" :validators="[requiredValidator]" valueKey="StatusId"
+                labelKey="FullName" />
+
+            <!-- Roles Section -->
+            <div class="col-span-1 sm:col-span-2">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Roles:</h3>
+                <p v-if="touched.roles && errors.roles" class="text-red-500 text-xs mb-2">{{ errors.roles }}</p>
+                <ul role="listbox" aria-label="role lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
                         <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
                             <div class="relative">
                                 <input type="checkbox" :id="item.RoleId" :checked="selectedRoles.includes(item.RoleId)"
                                     @change="toggleRole(item.RoleId)" class="sr-only">
-                                <div class="block bg-gray-600 w-14 h-6 rounded-sm"></div>
-                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"></div>
+                                <div class="block w-14 h-6 rounded-sm transition"
+                                    :class="selectedRoles.includes(item.RoleId) ? 'bg-green-500' : 'bg-gray-600'"></div>
+                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"
+                                    :style="{ 'transform': selectedRoles.includes(item.RoleId) ? 'translateX(7px)' : 'translateX(0)' }">
+                                </div>
+                            </div>
+                            <div class="ml-3 text-gray-700 font-medium">
+                                {{ item.FullName }}
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Products Section -->
+            <div class="col-span-1 sm:col-span-2 mt-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Products:</h3>
+                <ul role="listbox" aria-label="product lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <li v-for="item in productStore.items" :key="item.ProductId" tabindex="-1" role="option">
+                        <label :for="item.ProductId" class="flex items-center cursor-pointer my-1">
+                            <div class="relative">
+                                <input type="checkbox" :id="item.ProductId"
+                                    :checked="selectedProducts.includes(item.ProductId)"
+                                    @change="toggleProduct(item.ProductId)" class="sr-only">
+                                <div class="block w-14 h-6 rounded-sm transition"
+                                    :class="selectedProducts.includes(item.ProductId) ? 'bg-green-500' : 'bg-gray-600'">
+                                </div>
+                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"
+                                    :style="{ 'transform': selectedProducts.includes(item.ProductId) ? 'translateX(7px)' : 'translateX(0)' }">
+                                </div>
                             </div>
                             <div class="ml-3 text-gray-700 font-medium">
                                 {{ item.FullName }}
@@ -141,28 +311,26 @@ function close() {
                 </ul>
             </div>
         </form>
+
         <template #footer>
-            <div class="flex justify-end gap-3 col-span-2">
+            <div class="flex justify-end gap-3 mt-4">
                 <button type="button"
                     class="px-3 py-1.5 bg-gray-200 rounded-sm hover:bg-gray-300 transition cursor-pointer"
-                    @click="close()">Cancel</button>
-                <button type="submit" @click="saveUser" class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
-                    :style="{ backgroundColor: color.application.primaryColor }">Save</button>
+                    @click="close()">
+                    Cancel
+                </button>
+                <button type="button" @click="saveUser" class="px-3 py-1.5 text-white rounded-sm cursor-pointer"
+                    :style="{ backgroundColor: color.application.primaryColor }">
+                    Save
+                </button>
             </div>
         </template>
     </DialogBox>
 </template>
 
 <style scoped>
-/* Toggle A */
-input:checked~.dot {
-    transform: translateX(100%);
-    background-color: #48bb78;
-}
-
-/* Toggle B */
-input:checked~.dot {
-    transform: translateX(100%);
-    background-color: #48bb78;
+/* Use CSS transitions for smoother toggle animations */
+.dot {
+    transition: transform 0.3s ease;
 }
 </style>

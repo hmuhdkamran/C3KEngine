@@ -8,7 +8,9 @@ use std::error::Error as StdError;
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
+use crate::models::role::user_product_maps::UserProductMaps;
 use crate::models::role::user_role_maps::UserRoleMaps;
+use crate::repositories::role::user_product_maps::UserProductMapsRepository;
 use crate::repositories::role::user_role_maps::UserRoleMapsRepository;
 use crate::{
     models::role::users::Users,
@@ -197,6 +199,20 @@ impl AuthService {
             };
 
             if let Err(e) = UserRoleMapsRepository::add(self.db_pool.clone(), &temp_role).await {
+                return Err(e);
+            }
+        }
+
+        // Insert roles for the user
+        for product in &entity.products {
+            let temp_role = UserProductMaps {
+                user_product_map_id: Uuid::new_v4(),
+                product_id: *product,
+                user_id: entity.user_id,
+                status_id: entity.status_id,
+            };
+
+            if let Err(e) = UserProductMapsRepository::add(self.db_pool.clone(), &temp_role).await {
                 return Err(e);
             }
         }
