@@ -45,6 +45,18 @@ export const useSystemStore = defineStore(
       },
     )
 
+    function intilizeColors() {
+      document.documentElement.style.setProperty('--primary-color', application.value.primaryColor)
+      document.documentElement.style.setProperty('--title-color', application.value.titleColor)
+      document.documentElement.style.setProperty(
+        '--background-color',
+        application.value.backgroundColor,
+      )
+      document.documentElement.style.setProperty('--sidebar-color', application.value.sidebarColor)
+      document.documentElement.style.setProperty('--font-size', application.value.fontSize)
+      document.documentElement.style.setProperty('--font-family', application.value.fontFamily)
+    }
+
     function updateUser(usr: IUser | string) {
       if (typeof usr === 'string') user.value = TokenHelper.parseUserToken(usr)
       else user.value = usr
@@ -67,6 +79,7 @@ export const useSystemStore = defineStore(
       user,
       application,
       toggleSidebar,
+      intilizeColors,
       updateUser,
       updateToggleSidebar,
       updateApplication,

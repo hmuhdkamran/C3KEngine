@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { Notification, useNotification } from 'c3-library';
+import { Notification, useNotification, useSystemStore } from 'c3-library';
 import { computed } from 'vue';
 
 const { notifications } = useNotification();
@@ -11,6 +11,9 @@ const notificationsWithOffsets = computed(() =>
     positionOffset: index * 110
   }))
 );
+
+const store = useSystemStore()
+store.intilizeColors();
 
 </script>
 
