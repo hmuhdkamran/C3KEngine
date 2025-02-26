@@ -21,8 +21,8 @@ A scalable, maintainable, and reusable repository pattern implementation using V
 
 Extend the generic `RepositoryService` to add entity-specific API calls while retaining core CRUD operations.
 
-<details>
-<summary>role-repository.ts</summary>
+
+###role-repository.ts
 ```typescript
 import { RepositoryService } from './generic-repository';
 import { IRole } from '@/models';
@@ -48,7 +48,6 @@ export class RoleRepository extends RepositoryService<IRole> {
   }
 }
 ```
-</details>
 
 **Purpose**: 
 - Centralizes API logic for roles, adding custom endpoints alongside generic CRUD.
@@ -60,8 +59,7 @@ export class RoleRepository extends RepositoryService<IRole> {
 
 Reusable CRUD actions abstracted into a helper function for minimal code duplication across stores.
 
-<details>
-<summary>base-actions.ts</summary>
+### base-actions.ts
 ```typescript
 import type { IRepository } from '@/index';
 import { ref, Ref } from 'vue';
@@ -137,7 +135,6 @@ export function generateBaseActions<T extends Record<string, any>>(
   };
 }
 ```
-</details>
 
 **Key Features**:
 - **Responsiveness**: Uses Vue's `ref` for reactive state management.
@@ -150,8 +147,7 @@ export function generateBaseActions<T extends Record<string, any>>(
 
 Merges generic CRUD actions with entity-specific logic using Pinia.
 
-<details>
-<summary>role-store.ts</summary>
+### role-store.ts
 ```typescript
 import type { IRole } from '@/models';
 import { defineStore } from 'pinia';
@@ -226,7 +222,6 @@ export const useRoleRolesStore = defineStore('RoleRoles', () => {
   };
 });
 ```
-</details>
 
 **Advantages**:
 - **SOLID Principles**: Separation of concerns between data fetching and state management.
