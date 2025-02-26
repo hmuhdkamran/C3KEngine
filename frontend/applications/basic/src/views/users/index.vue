@@ -16,11 +16,6 @@ const roleStore = useRoleRolesStore();
 const userRoleStore = useRoleUserRoleMapStore();
 const statusStore = useSetupStatusStore();
 
-const entities = ref<IUser[]>([]);
-
-const currentPage = ref(1);
-const itemsPerPage = 10;
-
 const columns = [
   { key: 'DisplayName', label: 'Name', sort: true },
   { key: 'Username', label: 'Email', sort: true },

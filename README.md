@@ -1,165 +1,180 @@
 # C3K Engine
-## Overview
-
 This framework is designed to support a microservices architecture, providing a robust and scalable solution for managing various services within an enterprise. Each service is developed to be independent, ensuring modularity, ease of maintenance, and the flexibility to deploy and scale components independently.
 
-#### Key Features
+## Table of Contents
+1. [Overview](#overview)
+2. [Project Structure](#project-structure)
+3. [Repository Layer](#repository-layer)
+4. [Service Layer](#service-layer)
+5. [Controller Layer](#controller-layer)
+6. [API Testing with VSCode REST Client](#api-testing-with-vscode-rest-client)
+7. [Getting Started](#getting-started)
+8. [Dependencies](#dependencies)
+9. [License](#license)
 
-Modular Architecture: Each service is developed as an independent module, promoting reusability and maintainability.
-Scalability: The framework supports scaling services independently based on demand.
-Security: Authentication and authorization mechanisms are integrated to secure the services.
-Inter-Service Communication: Efficient and secure communication between services.
-Extensibility: Easily extend the framework by adding new services.
+## Overview
 
-## Services
+This project is a Rust-based web framework designed to provide a clean and modular structure for developing RESTful APIs. It uses Actix Web for the web server, SQLx for database interaction, and implements a typical three-layer architecture: Repository, Service, and Controller.
 
-### Authentication Service
-Handles user authentication and authorization across all services.
-Supports various authentication methods (e.g., OAuth, JWT).
+## Project Structure
+my_rust_framework/
+│
+├── src/
+│ ├── controllers/
+│ │ ├── role_controller.rs
+│ │ └── mod.rs
+│ ├── models/
+│ │ ├── role.rs
+│ │ └── mod.rs
+│ ├── repositories/
+│ │ ├── role_repository.rs
+│ │ └── mod.rs
+│ ├── services/
+│ │ ├── role_service.rs
+│ │ └── mod.rs
+│ ├── main.rs
+│ └── lib.rs
+├── tests/
+│ ├── global.api
+│ └── user.api
+├── Cargo.toml
+└── README.md
 
-### Business Setup Service
-Manages the core configuration and setup for businesses.
-Provides APIs for setting up business entities, roles, and permissions.
+## Repository Layer
 
-### HRMS Service
-Human Resource Management System for managing employee records, payroll, attendance, and more.
-Supports integration with other services like Payroll and Finance.
+The repository layer is responsible for interacting with the database. It contains functions to execute SQL queries and return the results. Each model has a corresponding repository.
 
-### Retail Service
-Manages retail operations including product catalog, inventory, and sales.
-Provides APIs for managing retail outlets and sales data.
-
-### Point of Sale Service
-Facilitates POS operations, integrating with the Retail Service.
-Manages sales transactions, receipts, and inventory updates.
-
-### Supply Chain Service
-Handles supply chain operations including procurement, inventory management, and logistics.
-Supports integration with vendors and suppliers.
-
-### Finance Service
-Manages financial operations including accounting, invoicing, and reporting.
-Integrates with HRMS for payroll processing and with Retail for sales reporting.
-
-### School Service
-Manages school operations including student records, attendance, and grading.
-Supports integration with Finance for fee management.
-
-### College Service
-Similar to the School Service but tailored for college-level operations.
-Provides APIs for managing courses, faculty, and student performance.
-
-### University Service
-Manages university operations, including faculties, departments, research, and student services.
-Integrates with the Finance Service for managing grants and funding.
-
-## Getting Started
-### Prerequisites
-Rust: Ensure you have the Rust programming language installed.
-Docker: Required for deploying services in containers.
-PostgreSQL/MySQL: Recommended database systems for persistent storage.
-
-## Installation
-
-### Clone the repository:
-
-```bash
-
-git clone https://github.com/hmuhdkamran/C3KEngine
-cd C3KEngine
-
-Set up the environment:
-```
-
-```bash
-cp .env.example .env
-```
-
-Build and run the services:
-
-```bash
-
-docker-compose up --build
-```
-
-### Issue with SSL in Windows
-```typescript
-git clone https://github.com/microsoft/vcpkg.git
-bootstrap-vcpkg.bat
-
-vcpkg.exe install openssl-windows:x64-windows
-or
-vcpkg.exe install openssl:x64-windows-static
-
-vcpkg.exe integrate install
-
-run set VCPKGRS_DYNAMIC=1 (or simply set it as your environment variable)
-```
-
-### Usage
-Each service exposes its own set of RESTful APIs. Documentation for each service can be found in the docs/ directory.
-The Authentication Service is required to obtain tokens for accessing other services.
-
-### Internal Service Call
-ServiceCommunicator is use to communicate with local services, it dynamically detect service from header and then prepare a call
-and get resposen
+### Example: `role_repository.rs`
 
 ```rust
-#[derive(Serialize, Deserialize)]
-struct RoleClaimsRequest {
-    user_id: String,
-}
+use sqlx::PgPool;
+use crate::models::role::Role;
 
-#[derive(Serialize, Deserialize)]
-struct MyResponse {
-    message: String,
+pub struct RoleRepository;
+
+impl RoleRepository {
+    pub async fn get_all(pool: &PgPool) -> Result<Vec<Role>, sqlx::Error> {
+        sqlx::query_as!(Role, "SELECT * FROM roles")
+            .fetch_all(pool)
+            .await
+    }
+
+    // Add other CRUD operations (get_by_filter, add, update, delete)
 }
+```
+
+## Service Layer
+
+The service layer contains the business logic of the application. It uses the repository layer to perform CRUD operations and any additional logic needed.
+
+### Example: role_service.rs
+```rust
+use sqlx::PgPool;
+use crate::models::role::Role;
+use crate::repositories::role_repository::RoleRepository;
+
+pub struct RoleService;
+
+impl RoleService {
+    pub async fn get_all(pool: PgPool) -> Result<Vec<Role>, sqlx::Error> {
+        RoleRepository::get_all(&pool).await
+    }
+
+    // Add other CRUD operations (get_by_filter, add, update, delete)
+}
+```
+
+## Controller Layer
+
+The controller layer defines the API endpoints and handles HTTP requests. It uses the service layer to perform the necessary operations and returns the appropriate HTTP responses.
+### Example: role_controller.rs
+
+```rust
+use actix_web::{delete, get, post, put, web, HttpResponse, Responder};
+use sqlx::PgPool;
+use crate::services::role_service::RoleService;
+use crate::models::role::Role;
 
 #[get("")]
-pub async fn get_all(connection: web::Data<PgPool>, connector: web::Data<ServiceCommunicator>) -> Result<impl Responder, actix_web::Error> {
-    let payload = RoleClaimsRequest { user_id: "Pakistan".to_string() };
-    let response = connector.call_service("api/auth", Method::POST, Some(payload)).await;
-    let result = connector.get_data::<MyResponse>(response).await?;
+pub async fn get_all(pool: web::Data<PgPool>) -> impl Responder {
+    match RoleService::get_all(pool.get_ref().clone()).await {
+        Ok(roles) => HttpResponse::Ok().json(roles),
+        Err(_) => HttpResponse::InternalServerError().finish(),
+    }
+}
 
-    let entities = PersonalInformationsService::get_all(connection.as_ref().clone()).await;
-    Ok(HttpResponse::Ok().json(entities))
+// Add other CRUD operations (get_by_filter, add, update, delete)
+
+pub fn role_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/api/role")
+            .service(get_all)
+            // Register other CRUD operations
+    );
 }
 ```
 
-### Removing Unnecessary Packages
-Install machete:
-```bash
-cargo install cargo-machete
+## API Testing with VSCode REST Client
+
+You can use the VSCode REST Client plugin to test the API endpoints. The requests are organized into user.api files for modularity.
+
+```rust
+@host = http://localhost:5000/api
+
+# @name login
+POST {{host}}/auth HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "USER_NAME",
+    "password": "PASSWORD"
+}
+
+### Get All Users
+GET {{host}}/role/users
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+### Get User by Id
+GET {{host}}/role/users/"UserId"='5a0dbd23-6635-4c0e-a109-c64e437a97f9'
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+### Insert User
+POST {{host}}/role/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+{
+    "user_id": "5a0dbd23-6635-4c0e-a109-c64e437a97f6",
+    "username": "admin@hmk.com",
+    "display_name": "Muhammad Kamran",
+    "language": "en-US",
+    "password": "f412d10cb133926e32b04ab07ca1c817f2e04ebf41d9399fe7d47dff52637f32",
+    "salt": "98pBTijN66n7ThTD",
+    "status_id": "5ef1874c-b462-4462-b92b-46fdd63c5ba4"
+}
+
+### Update User
+PUT {{host}}/role/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
+{
+    "user_id": "5a0dbd23-6635-4c0e-a109-c64e437a97f9",
+    "username": "admin@sefam.com",
+    "display_name": "Muhammad Kamran",
+    "language": "en-US",
+    "password": "f412d10cb133926e32b04ab07ca1c817f2e04ebf41d9399fe7d47dff52637f32",
+    "salt": "98pBTijN66n7ThTD",
+    "status_id": "5ef1874c-b462-4462-b92b-46fdd63c5ba4"
+}
+
+### Delete User
+DELETE {{host}}/role/users/5a0dbd23-6635-4c0e-a109-c64e437a97f5
+Accept: application/json
+Authorization: Bearer {{login.response.body.data}}
+
 ```
-
-To fix unused dependencies:
-```bash
-cargo machete --fix
-```
-
-Help:
-```bash
-  --with-metadata   uses cargo-metadata to figure out the dependencies' names.
-                    May be useful if some dependencies are renamed from their
-                    own Cargo.toml file (e.g. xml-rs which gets renamed xml).
-                    Try it if you get false positives!
-  --skip-target-dir don't analyze anything contained in any target/ directories
-                    encountered.
-  --fix             rewrite the Cargo.toml files to automatically remove unused
-                    dependencies. Note: all dependencies flagged by
-                    cargo-machete will be removed, including false positives.
-  --version         print version.
-```
-
-### Configuration
-Configuration files are located in the config/ directory.
-Environment variables are managed in the .env file. Adjust them according to your setup.
-
-### Contributing
-Contributions are welcome! Please fork the repository and submit a pull request.
-Author
-
-Developed by H. Muhammad Kamran.
-### License
-
-This project is licensed under the MIT License. See the LICENSE file for details.

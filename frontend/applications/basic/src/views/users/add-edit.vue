@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { setFormOpen, formStatus } from '@/stores/edit-form';
-import type { IUser, IUsers } from '@/models';
+import type { IUser } from '@/models';
 import { DialogBox, newGuid, useSystemStore, type ISignupUsers } from 'c3-library';
 import { useRoleUserStore, useRoleRolesStore, useRoleUserRoleMapStore, useSetupStatusStore } from '@/stores';
-import { computed, ref, type Ref } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import { AuthenticationService } from '@/services/authentication-service';
 
 const color = useSystemStore();
@@ -15,6 +15,8 @@ const aut_repo = new AuthenticationService();
 
 const userItem = computed(() => store.item || ({} as IUser));
 const selectedRoles = ref<string[]>([]);
+
+watch(() => userRoleStore.items, () => selectedRoles.value = userRoleStore.items.map(i => i.RoleId), { deep: true });
 
 const toggleRole = (roleId: string) => {
     const index = selectedRoles.value.indexOf(roleId);
@@ -124,9 +126,17 @@ function close() {
             <div class="">
                 <ul role="listbox" aria-label="role lists">
                     <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
-                        <input type="checkbox" :checked="selectedRoles.includes(item.RoleId)"
-                            @change="toggleRole(item.RoleId)" />
-                        {{ item.FullName }}
+                        <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
+                            <div class="relative">
+                                <input type="checkbox" :id="item.RoleId" :checked="selectedRoles.includes(item.RoleId)"
+                                    @change="toggleRole(item.RoleId)" class="sr-only">
+                                <div class="block bg-gray-600 w-14 h-6 rounded-sm"></div>
+                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"></div>
+                            </div>
+                            <div class="ml-3 text-gray-700 font-medium">
+                                {{ item.FullName }}
+                            </div>
+                        </label>
                     </li>
                 </ul>
             </div>
@@ -142,3 +152,17 @@ function close() {
         </template>
     </DialogBox>
 </template>
+
+<style scoped>
+/* Toggle A */
+input:checked~.dot {
+    transform: translateX(100%);
+    background-color: #48bb78;
+}
+
+/* Toggle B */
+input:checked~.dot {
+    transform: translateX(100%);
+    background-color: #48bb78;
+}
+</style>
