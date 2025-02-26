@@ -53,7 +53,7 @@ const confirmLogout = () => {
   isProcessingLogout.value = true;
   let response = auth_repo.logout();
 
-  if(response) {
+  if (response) {
     isProcessingLogout.value = false;
     isLogoutDialogOpen.value = false;
     router.push('/authentication/login');
@@ -77,12 +77,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', checkScreenSize);
 });
 
-const isSettingsMenuOpen = ref(false);
-
-const toggleSettingsMenu = () => {
-  isSettingsMenuOpen.value = !isSettingsMenuOpen.value;
-};
-
 const toggleTooltipList = () => {
   if (!isSidebarOpen.value) {
     isTooltipListOpen.value = !isTooltipListOpen.value;
@@ -102,7 +96,7 @@ const items: Item[] = [
 
 <template>
   <aside v-if="!isSmallScreen" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
-    class="shadow-md flex flex-col relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]"
+    class="shadow-md flex flex-col relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)] z-50"
     :style="{ backgroundColor: store.application.sidebarColor }">
     <div class="flex items-center p-3 space-x-2">
       <img :src="logo" alt="Logo" class="h-8 w-8" />
@@ -161,41 +155,37 @@ const items: Item[] = [
       </ul>
     </nav>
 
-    <div class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200"
+    <div
+      class="fixed bottom-0 left-0 p-4 bg-white border-t border-gray-200 transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]"
       :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }"
       :style="{ backgroundColor: store.application.sidebarColor }">
-      <div class="flex items-center mb-4">
+      <div class="flex items-center mb-4 transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
         <img :src="avatar" alt="User" class="rounded-full mr-2"
-          :class="{ 'w-10 h-10': isSidebarOpen, 'w-8 h-8': !isSidebarOpen }" @click="toggleTooltipList" />
+          :class="{ 'w-10 h-10': isSidebarOpen, 'w-8 h-8 cursor-pointer hover:shadow-md hover:translate-y-[-2px] transition-transform duration-300': !isSidebarOpen }"
+          @click="toggleTooltipList" />
+        <div v-if="!isSidebarOpen && isTooltipListOpen"
+          class="absolute left-full bottom-16 w-48 p-1 bg-white rounded-md shadow-lg overflow-hidden z-50">
+          <ul class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <li v-for="(item, index) in items" :key="index"
+              class="px-4 py-2 text-sm text-gray-700 transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]"
+              :style="{ backgroundColor: isHovered[index] ? `${store.application.primaryColor}20` : 'transparent' }"
+              @mouseover="isHovered[index] = true" @mouseout="isHovered[index] = false">
+              <router-link :to="item.link" class="flex items-center w-full">
+                <span :class="item.icon" class="mr-3 fa-md" :style="{ color: store.application.primaryColor }"></span>
+                {{ item.label }}
+              </router-link>
+            </li>
+          </ul>
+        </div>
         <div class="flex-1 hidden md:block whitespace-nowrap overflow-hidden text-ellipsis">
           <h3 class="text-sm font-bold">{{ userName }}</h3>
           <p class="text-sm">{{ userEmail }}</p>
         </div>
-        <button
-          class="hidden md:block text-gray-500 hover:text-gray-700 cursor-pointer p-2 rounded-full whitespace-nowrap overflow-hidden transition"
-          @click="toggleSettingsMenu">
-          <span class="fa-solid fa-ellipsis-vertical"></span>
-        </button>
       </div>
 
-      <div v-if="isSettingsMenuOpen"
-        class="absolute left-7 bottom-20 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-10">
-        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-          <a href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out"
-            role="menuitem">Profile</a>
-          <a href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out"
-            role="menuitem">Account</a>
-          <a href="#"
-            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300 ease-in-out"
-            role="menuitem">Settings</a>
-        </div>
-      </div>
-
-      <div class="flex flex-col space-y-2 mt-4">
-        <div class="flex" :class="{ 'space-x-2': isSidebarOpen, 'flex-col space-y-2': !isSidebarOpen }">
-          <div class="group relative">
+      <div class="flex flex-col space-y-2 mt-4 transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
+        <div class="flex" :class="{ 'space-x-2': isSidebarOpen, 'space-y-2': !isSidebarOpen }">
+          <div class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }"
@@ -205,7 +195,8 @@ const items: Item[] = [
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Logout</span>
           </div>
-          <div v-if="isSidebarOpen" class="group relative">
+          <div v-show="isSidebarOpen"
+            class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
@@ -214,7 +205,8 @@ const items: Item[] = [
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Settings</span>
           </div>
-          <div v-if="isSidebarOpen" class="group relative">
+          <div v-show="isSidebarOpen"
+            class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
@@ -223,7 +215,8 @@ const items: Item[] = [
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Help</span>
           </div>
-          <div v-if="isSidebarOpen" class="group relative">
+          <div v-show="isSidebarOpen"
+            class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
@@ -232,7 +225,8 @@ const items: Item[] = [
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Chat</span>
           </div>
-          <div v-if="isSidebarOpen" class="group relative">
+          <div v-show="isSidebarOpen"
+            class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
@@ -241,7 +235,8 @@ const items: Item[] = [
             <span
               class="tooltip text-xs absolute bottom-full left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">Password</span>
           </div>
-          <div v-if="isSidebarOpen" class="group relative">
+          <div v-show="isSidebarOpen"
+            class="group relative transition-all duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]">
             <button
               class="cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center hover:translate-y-[-2px] transition-transform duration-300 shadow-md border"
               :style="{ borderColor: store.application.primaryColor, backgroundColor: `${store.application.primaryColor}CC` }">
@@ -252,21 +247,6 @@ const items: Item[] = [
           </div>
         </div>
       </div>
-    </div>
-
-    <div v-if="!isSidebarOpen && isTooltipListOpen"
-      class="absolute left-full bottom-16 w-48 p-1 bg-white rounded-md shadow-lg overflow-hidden z-10">
-      <ul class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-        <li v-for="(item, index) in items" :key="index"
-          class="px-4 py-2 text-sm text-gray-700 transition duration-300 ease-in-out"
-          :style="{ backgroundColor: isHovered[index] ? `${store.application.primaryColor}20` : 'transparent' }"
-          @mouseover="isHovered[index] = true" @mouseout="isHovered[index] = false">
-          <router-link :to="item.link" class="flex items-center w-full">
-            <span :class="item.icon" class="mr-3 fa-md" :style="{ color: store.application.primaryColor }"></span>
-            {{ item.label }}
-          </router-link>
-        </li>
-      </ul>
     </div>
 
     <div v-if="isLogoutDialogOpen" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
