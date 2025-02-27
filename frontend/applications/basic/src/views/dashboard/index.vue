@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Card } from "c3-library";
 import { ref } from "vue";
 
 const stats = [
@@ -29,20 +30,21 @@ const notifications = [
 
 <template>
   <main class="flex-1 min-h-screen">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-      <div v-for="stat in stats" :key="stat.id"
-        class="p-4 rounded-lg shadow-md flex items-center hover:shadow-lg transition-shadow" :class="stat.bgColor">
-        <div class="text-4xl mr-4">{{ stat.icon }}</div>
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4">
+      <Card v-for="stat in stats" :key="stat.id" border="border-t-2 border-blue-400 rounded-tr-md" shadow="shadow-sm"
+        hoverShadow="shadow-lg" class="bg-white p-4">
         <div>
           <p class="text-lg font-semibold">{{ stat.label }}</p>
           <p class="text-2xl font-bold">{{ stat.value }}</p>
         </div>
-      </div>
+      </Card>
     </div>
 
-    <section class="container mx-auto mt-8">
-      <h2 class="text-lg font-bold text-gray-700 mb-4">Tasks Overview</h2>
-      <div class="bg-white rounded-lg shadow-md p-4">
+    <section class="container mx-auto mt-2">
+      <Card shadow="shadow-sm" hoverShadow="shadow-lg" class="bg-white p-4">
+        <template #header>
+          <h2 class="text-lg font-bold text-gray-700 mb-4">Tasks Overview</h2>
+        </template>
         <ul>
           <li v-for="task in tasks" :key="task.id"
             class="flex justify-between items-center py-3 border-b border-gray-300 last:border-b-0">
@@ -56,12 +58,14 @@ const notifications = [
             </span>
           </li>
         </ul>
-      </div>
+      </Card>
     </section>
 
-    <section class="container mx-auto mt-8">
-      <h2 class="text-lg font-bold text-gray-700 mb-4">Recent Activities</h2>
-      <div class="bg-white rounded-lg shadow-md p-4">
+    <section class="container mx-auto mt-2">
+      <Card shadow="shadow-sm" hoverShadow="shadow-lg" class="bg-white p-4">
+        <template #header>
+          <h2 class="text-lg font-bold text-gray-700 mb-4">Recent Activities</h2>
+        </template>
         <ul>
           <li v-for="activity in recentActivities" :key="activity.id"
             class="flex items-center py-3 border-b border-gray-300 last:border-b-0">
@@ -74,19 +78,22 @@ const notifications = [
             </div>
           </li>
         </ul>
-      </div>
+      </Card>
     </section>
 
-    <section class="container mx-auto mt-8">
-      <h2 class="text-lg font-bold text-gray-700 mb-4">Notifications</h2>
-      <div class="bg-white rounded-lg shadow-md p-4">
+    <section class="container mx-auto mt-2">
+      <Card shadow="shadow-sm" hoverShadow="shadow-lg" class="bg-white p-4">
+        <template #header>
+          <h2 class="text-lg font-bold text-gray-700 mb-4">Notifications</h2>
+        </template>
         <ul>
-          <li v-for="notification in notifications" :key="notification.id" class="py-3 border-b border-gray-300 last:border-b-0">
+          <li v-for="notification in notifications" :key="notification.id"
+            class="py-3 border-b border-gray-300 last:border-b-0">
             <p>{{ notification.message }}</p>
             <p class="text-xs text-gray-500">{{ notification.time }}</p>
           </li>
         </ul>
-      </div>
+      </Card>
     </section>
   </main>
 </template>

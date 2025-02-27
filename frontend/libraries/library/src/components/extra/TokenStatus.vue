@@ -47,8 +47,10 @@ const clearHandlers = () => {
 }
 
 const setHandlers = (tokenExpiresAt: Date) => {
+    tokenExpiresAt = new Date(tokenExpiresAt);
+    
     if (tokenExpiresAt) {
-        const ms = tokenExpiresAt.getTime() - new Date().getTime()
+        const ms = (tokenExpiresAt as Date).getTime() - new Date().getTime()
         const seconds = ms / 1000
 
         if (props.infoTimeout && seconds > props.infoTimeout)

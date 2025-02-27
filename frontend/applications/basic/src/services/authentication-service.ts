@@ -84,7 +84,7 @@ export class AuthenticationService extends StoreService {
         `${GlobalConfig.uri.auth}/logout`,
         { username: user.username, password: '' },
         true,
-      ).then(onSuccess)
+      ).then((response: any) => onSuccess(response.data))
     }
     return false
   }
