@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card } from "c3-library";
-import { ref } from "vue";
+import DateCard from "./DateCard.vue";
 
 const stats = [
   { id: 1, label: "Total Users", value: "1,234", icon: "👤", bgColor: "bg-gray-200" },
@@ -39,6 +39,10 @@ const notifications = [
         </div>
       </Card>
     </div>
+
+    <section class="container mx-auto mt-2">
+      <DateCard />
+    </section>
 
     <section class="container mx-auto mt-2">
       <Card shadow="shadow-sm" hoverShadow="shadow-lg" class="bg-white p-4">
