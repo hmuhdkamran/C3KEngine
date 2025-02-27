@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import './css//checkbox.css';
 @import './css/input.css';
 @import './css//variables.css';
 @import 'c3-library/style.css';

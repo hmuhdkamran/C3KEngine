@@ -123,11 +123,11 @@ const items: Item[] = [
           <transition name="dropdown">
             <ul v-if="isSidebarOpen && openDropdown === item.name" class="ml-5">
               <li v-for="child in item.children" :key="child.name" @click="handleClick(item.name, child)"
-                class="px-4 py-2 text-gray-600 rounded-md"
+                class="text-gray-600 rounded-md"
                 :style="{ backgroundColor: isHovered[child.name] ? `${store.application.primaryColor}20` : 'transparent' }"
                 @mouseover="handleMouseOver(child.name)" @mouseleave="handleMouseLeave(child.name)">
                 <router-link :to="child.link"
-                  class="flex items-center gap-2 hover:text-[${store.application.primaryColor}]">
+                  class="px-4 py-2 flex items-center gap-2 hover:text-[${store.application.primaryColor}]">
                   <span :class="child.icon" class="h-4 w-4 flex-shrink-0"
                     :style="{ color: `${store.application.primaryColor}` }"></span>
                   <span class="text-center">{{ child.name }}</span>

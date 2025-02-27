@@ -67,26 +67,6 @@ watch(() => userProductStore.items, () => {
     selectedProducts.value = userProductStore.items.map(i => i.ProductId);
 }, { deep: true });
 
-// Toggle selection functions
-const toggleRole = (roleId: string) => {
-    const index = selectedRoles.value.indexOf(roleId);
-
-    if (index === -1) {
-        selectedRoles.value.push(roleId);
-    } else {
-        selectedRoles.value.splice(index, 1);
-    }
-};
-
-const toggleProduct = (productId: string) => {
-    const index = selectedProducts.value.indexOf(productId);
-    if (index === -1) {
-        selectedProducts.value.push(productId);
-    } else {
-        selectedProducts.value.splice(index, 1);
-    }
-};
-
 // Form submission
 const saveUser = () => {
     const excludeFields = store.shouldUpdate ? ['Password', 'confirmPassword'] : [];
@@ -146,81 +126,58 @@ const close = () => {
             <p class="text-sm text-gray-500">{{ store.shouldUpdate ? 'Edit Record' : 'Add Record' }}</p>
         </template>
 
-        <form class="grid grid-cols-1 sm:grid-cols-2 gap-4" @submit.prevent="saveUser">
-            <FormInput id="displayName" label="Name" v-model="userItem.DisplayName"
-                :validators="[requiredValidator, (value) => rangeValidator(value, 3, 50)]"
-                :validatorArgs="[[], [3, 50]]" required @validation="validationResults.displayName = $event" />
+        <form class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <FormInput id="displayName" label="Name" v-model="userItem.DisplayName"
+                        :validators="[requiredValidator, (value) => rangeValidator(value, 3, 50)]"
+                        :validatorArgs="[[], [3, 50]]" required @validation="validationResults.displayName = $event" />
 
-            <FormInput id="Email" label="Email" v-model="userItem.Username" type="email"
-                :validators="[requiredValidator, emailValidator]" required
-                @validation="validationResults.Username = $event" />
+                    <FormInput id="Email" label="Email" v-model="userItem.Username" type="email"
+                        :validators="[requiredValidator, emailValidator]" required
+                        @validation="validationResults.Username = $event" />
 
-            <FormSelect id="Language" label="Language:" v-model="userItem.Language" :options="languageOptions"
-                :validators="[requiredValidator]" @validation="validationResults.language = $event" />
+                    <FormSelect id="Language" label="Language:" v-model="userItem.Language" :options="languageOptions"
+                        :validators="[requiredValidator]" @validation="validationResults.language = $event" />
 
-            <FormInput v-if="!store.shouldUpdate" id="Password" label="Password" v-model="userItem.Password"
-                type="password" :validators="[requiredValidator, passwordValidator]" required
-                @validation="validationResults.Password = $event" />
+                    <FormInput v-if="!store.shouldUpdate" id="Password" label="Password" v-model="userItem.Password"
+                        type="password" :validators="[requiredValidator, passwordValidator]" required
+                        @validation="validationResults.Password = $event" />
 
-            <!-- Confirm Password input -->
-            <FormInput v-if="!store.shouldUpdate" id="ConfirmPassword" label="Confirm Password"
-                v-model="confirmPassword" type="password"
-                :validators="[() => confirmedValidator(confirmPassword, userItem.Password)]"
-                :validatorArgs="[[userItem.Password]]" required
-                @validation="validationResults.confirmPassword = $event" />
+                    <FormInput v-if="!store.shouldUpdate" id="ConfirmPassword" label="Confirm Password"
+                        v-model="confirmPassword" type="password"
+                        :validators="[() => confirmedValidator(confirmPassword, userItem.Password)]"
+                        :validatorArgs="[[userItem.Password]]" required
+                        @validation="validationResults.confirmPassword = $event" />
 
-            <FormSelect v-if="store.shouldUpdate" id="StatusId" label="Status:" v-model="userItem.StatusId"
-                :options="statusStore.items" :validators="[requiredValidator]" valueKey="StatusId" labelKey="FullName"
-                @validation="validationResults.statusId = $event" />
-
-            <!-- Roles Section -->
-            <div class="col-span-1 sm:col-span-2">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Roles:</h3>
-                <ul role="listbox" aria-label="role lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
-                        <FormCheckBox :id="item.RoleId" v-model="item.RoleId" :label="item.FullName" :icon="item.Icon" />
-                        <!-- <label :for="item.RoleId" class="flex items-center cursor-pointer my-1">
-                            <div class="relative">
-                                <input type="checkbox" :id="item.RoleId" :checked="selectedRoles.includes(item.RoleId)"
-                                    @change="toggleRole(item.RoleId)" class="sr-only">
-                                <div class="block w-14 h-6 rounded-sm transition"
-                                    :class="selectedRoles.includes(item.RoleId) ? 'bg-green-500' : 'bg-gray-600'"></div>
-                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"
-                                    :style="{ 'transform': selectedRoles.includes(item.RoleId) ? 'translateX(7px)' : 'translateX(0)' }">
-                                </div>
-                            </div>
-                            <div class="ml-3 text-gray-700 font-medium">
-                                {{ item.FullName }}
-                            </div>
-                        </label> -->
-                    </li>
-                </ul>
+                    <FormSelect v-if="store.shouldUpdate" id="StatusId" label="Status:" v-model="userItem.StatusId"
+                        :options="statusStore.items" :validators="[requiredValidator]" valueKey="StatusId"
+                        labelKey="FullName" @validation="validationResults.statusId = $event" />
+                </div>
             </div>
 
-            <!-- Products Section -->
-            <div class="col-span-1 sm:col-span-2 mt-4">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Products:</h3>
-                <ul role="listbox" aria-label="product lists" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <li v-for="item in productStore.items" :key="item.ProductId" tabindex="-1" role="option">
-                        <FormCheckBox :id="item.ProductId" v-model="item.ProductId" :label="item.FullName" :icon="item.Icon" />
-                        <!-- <label :for="item.ProductId" class="flex items-center cursor-pointer my-1">
-                            <div class="relative">
-                                <input type="checkbox" :id="item.ProductId"
-                                    :checked="selectedProducts.includes(item.ProductId)"
-                                    @change="toggleProduct(item.ProductId)" class="sr-only">
-                                <div class="block w-14 h-6 rounded-sm transition"
-                                    :class="selectedProducts.includes(item.ProductId) ? 'bg-green-500' : 'bg-gray-600'">
-                                </div>
-                                <div class="dot absolute left-1 top-1 bg-white w-6 h-4 rounded-sm transition"
-                                    :style="{ 'transform': selectedProducts.includes(item.ProductId) ? 'translateX(7px)' : 'translateX(0)' }">
-                                </div>
-                            </div>
-                            <div class="ml-3 text-gray-700 font-medium">
-                                {{ item.FullName }}
-                            </div>
-                        </label> -->
-                    </li>
-                </ul>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-1 overflow-auto max-h-60">
+                        <h3 class="text-sm font-medium text-gray-700 py-3 sticky top-0 bg-white z-10">Roles:</h3>
+                        <ul role="listbox" aria-label="role lists" class="grid grid-cols-2 gap-2">
+                            <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
+                                <FormCheckBox :id="item.RoleId" v-model="selectedRoles" :label="item.FullName"
+                                    :value="item.RoleId" :icon="null"/>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-span-1 overflow-auto max-h-60">
+                        <h3 class="text-sm font-medium text-gray-700 py-3 sticky top-0 bg-white z-10">Products:</h3>
+                        <ul role="listbox" aria-label="product lists" class="grid grid-cols-1 gap-2">
+                            <li v-for="item in productStore.items" :key="item.ProductId" tabindex="-1" role="option">
+                                <FormCheckBox :id="item.ProductId" v-model="selectedProducts" :label="item.FullName"
+                                    :value="item.ProductId" :icon="item.Icon" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </form>
 
@@ -241,8 +198,21 @@ const close = () => {
 </template>
 
 <style scoped>
-/* Use CSS transitions for smoother toggle animations */
-.dot {
-    transition: transform 0.3s ease;
+@media (max-width: 1200px) {
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
