@@ -27,12 +27,13 @@ pub const AUTHORIZATION: &str = "Authorization";
 pub const EMPTY: &str = "";
 
 // ignore routes
-pub const IGNORE_ROUTES: [&str; 5] = [
+pub const IGNORE_ROUTES: [&str; 6] = [
     "/api/auth/login",
     "/api/auth/health_check",
     "/api/hrms/health_check",
     "/api/retail/health_check",
     "/api/auth/user_products",
+    "/api/auth/logout"
 ];
 
 // Default number of items per page

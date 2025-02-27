@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { Notification, useNotification, useSystemStore } from 'c3-library';
+import { Notification, TokenStatus, useNotification, useSystemStore } from 'c3-library';
 import { computed } from 'vue';
+import { AuthenticationService } from './services/authentication-service';
+
+const service: AuthenticationService = new AuthenticationService();
 
 const { notifications } = useNotification();
 
@@ -19,10 +22,11 @@ store.intilizeColors();
 
 <template>
   <div class="font-inter tracking-tight bg-gray-100 text-gray-900 antialiased">
+    <TokenStatus :infoTimeout="10" :warnTimeout="10" :errorTimeout="10" :logout="true" :auth="service" />
     <Notification v-for="notification in notificationsWithOffsets" :key="notification.id" :title="notification.title"
       :message="notification.message" :type="notification.type" :position="notification.position"
       :positionOffset="notification.positionOffset" :duration="3000" />
-    <router-view />
+    <RouterView />
   </div>
 </template>
 

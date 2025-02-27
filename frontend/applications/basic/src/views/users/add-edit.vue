@@ -67,6 +67,26 @@ watch(() => userProductStore.items, () => {
     selectedProducts.value = userProductStore.items.map(i => i.ProductId);
 }, { deep: true });
 
+// Toggle selection functions
+const toggleRole = (roleId: string) => {
+    const index = selectedRoles.value.indexOf(roleId);
+
+    if (index === -1) {
+        selectedRoles.value.push(roleId);
+    } else {
+        selectedRoles.value.splice(index, 1);
+    }
+};
+
+const toggleProduct = (productId: string) => {
+    const index = selectedProducts.value.indexOf(productId);
+    if (index === -1) {
+        selectedProducts.value.push(productId);
+    } else {
+        selectedProducts.value.splice(index, 1);
+    }
+};
+
 // Form submission
 const saveUser = () => {
     const excludeFields = store.shouldUpdate ? ['Password', 'confirmPassword'] : [];
@@ -162,7 +182,7 @@ const close = () => {
                         <h3 class="text-sm font-medium text-gray-700 py-3 sticky top-0 bg-white z-10">Roles:</h3>
                         <ul role="listbox" aria-label="role lists" class="grid grid-cols-2 gap-2">
                             <li v-for="item in roleStore.items" :key="item.RoleId" tabindex="-1" role="option">
-                                <FormCheckBox :id="item.RoleId" v-model="selectedRoles" :label="item.FullName"
+                                <FormCheckBox :id="item.RoleId" v-model="selectedRoles" :label="item.FullName" @update:modelValue="toggleRole(item.RoleId)"
                                     :value="item.RoleId" :icon="null"/>
                             </li>
                         </ul>
@@ -172,7 +192,7 @@ const close = () => {
                         <h3 class="text-sm font-medium text-gray-700 py-3 sticky top-0 bg-white z-10">Products:</h3>
                         <ul role="listbox" aria-label="product lists" class="grid grid-cols-1 gap-2">
                             <li v-for="item in productStore.items" :key="item.ProductId" tabindex="-1" role="option">
-                                <FormCheckBox :id="item.ProductId" v-model="selectedProducts" :label="item.FullName"
+                                <FormCheckBox :id="item.ProductId" v-model="selectedProducts" :label="item.FullName" @update:modelValue="toggleProduct(item.ProductId)"
                                     :value="item.ProductId" :icon="item.Icon" />
                             </li>
                         </ul>
