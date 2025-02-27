@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 import { circuit } from '@/assets/images/circute';
 
 const props = defineProps({
@@ -19,6 +19,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+const width = ref(window.innerWidth <= 500 ? '100%' : props.width);
+
 const closeDialog = () => {
     emit('close');
 };
@@ -28,7 +30,7 @@ const closeDialog = () => {
     <Teleport to="body">
         <transition name="dialog">
             <div v-if="props.show" class="dialog-overlay">
-                <div class="dialog" :style="{ width: props.width, maxWidth: '95%', }">
+                <div class="dialog" :style="{ width: width, maxWidth: '100%', }">
                     <div class="dialog-header" :style="{ 
                         backgroundImage: `url(${circuit})`,
                         backgroundSize: '50% auto, 100% 100%',
