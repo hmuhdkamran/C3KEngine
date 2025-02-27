@@ -65,13 +65,15 @@
   width: 100%;
   padding: 3px;
   border-radius: 4px;
+  border: 1px solid transparent;
   border-bottom-width: 2px;
   border-bottom-color: lightgray;
   transition: border-color 0.3s ease;
 }
 
 .input-primary:focus {
-  border-color: lightgray;
+  border-color: gray;
+  border-bottom-width: 2px;
   border-bottom-color: var(--primary-color);
   outline: none;
 }
