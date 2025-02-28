@@ -10,6 +10,10 @@ defineProps({
         type: String,
         required: true
     },
+    showOnCollapsed: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const { isSidebarOpen } = useSidebar();
@@ -17,13 +21,15 @@ const emit = defineEmits(['click']);
 </script>
 
 <template>
-    <div v-if="isSidebarOpen" class="sidebar-button group relative transition-all">
+    <div v-if="isSidebarOpen || (showOnCollapsed && !isSidebarOpen)"
+        class="sidebar-button group relative transition-all">
         <button
-            class="btn-action cursor-pointer w-7 h-7 text-white rounded-full flex items-center justify-center shadow-md border"
+            class="btn-action cursor-pointer hover:translate-y-[-2px] transition-transform duration-300 w-7 h-7 text-white rounded-full flex items-center justify-center shadow-md border"
             @click="emit('click')">
             <span :class="`fa-solid ${icon} fa-sm`"></span>
         </button>
-        <span class="btn-tooltip">
+        <span
+            class="tooltip text-xs absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-700 text-white px-2 py-1 rounded-md">
             {{ tooltip }}
         </span>
     </div>
@@ -33,28 +39,18 @@ const emit = defineEmits(['click']);
 .btn-action {
     border-color: var(--primary-color);
     background-color: color-mix(in srgb, var(--primary-color) 80%, transparent);
-    transition: transform 300ms;
 }
 
-.btn-action:hover {
-    transform: translateY(-2px);
-}
-
-.btn-tooltip {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+.tooltip {
+    display: none;
+    transform: scale(0.9);
     opacity: 0;
-    transition: opacity 200ms;
+    transition: all 0.3s ease-in-out;
 }
 
-.group:hover .btn-tooltip {
+.group:hover .tooltip {
+    display: block;
+    transform: scale(1);
     opacity: 1;
 }
 </style>

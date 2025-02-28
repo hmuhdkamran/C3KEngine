@@ -12,9 +12,8 @@ const emit = defineEmits(['toggle-tooltip']);
 const isTooltipListOpen = ref(false);
 
 const toggleTooltip = () => {
-    if (!isSidebarOpen) {
+    if (!isSidebarOpen.value) {
         isTooltipListOpen.value = !isTooltipListOpen.value;
-        emit('toggle-tooltip');
     }
 };
 </script>
@@ -22,13 +21,19 @@ const toggleTooltip = () => {
 <template>
     <div class="user-profile flex items-center mb-4 transition-all">
         <div class="relative">
-            <img :src="user.displayName" alt="User" class="avatar rounded-full mr-2 transition-transform"
-                :class="{ 'w-10 h-10': isSidebarOpen, 'w-8 h-8': !isSidebarOpen }" @click="toggleTooltip" />
+            <div class="avatar shadow-md rounded-full mr-2 transition-transform flex items-center justify-center"
+                :class="{ 'w-10 h-10': isSidebarOpen, 'w-8 h-8 cursor-pointer shadow-md hover:translate-y-[-2px] transition-transform duration-300': !isSidebarOpen }"
+                @click="toggleTooltip">
+                <i class="fa-regular fa-user"></i>
+            </div>
 
-            <div v-if="!isSidebarOpen && isTooltipListOpen" class="tooltip-list">
-                <ul class="py-1" role="menu" aria-orientation="vertical">
-                    <li v-for="(item, index) in items" :key="index" class="tooltip-item">
-                        <router-link :to="item.link" class="flex items-center w-full">
+            <div v-if="!isSidebarOpen && isTooltipListOpen"
+                class="absolute left-full bottom-2 w-48 p-2 bg-white rounded-md shadow-lg overflow-hidden z-50">
+                <ul role="menu" aria-orientation="vertical">
+                    <li v-for="(item, index) in items" :key="index"
+                        class="tooltip-item text-sm text-gray-700 transition-all rounded-sm duration-500 ease-[cubic-bezier(0.4, 0.0, 0.2, 1)]"
+                        >
+                        <router-link :to="item.link" class="flex items-center w-full p-2">
                             <span :class="item.icon" class="mr-3 fa-md" style="color: var(--primary-color)"></span>
                             {{ item.label }}
                         </router-link>
@@ -37,7 +42,7 @@ const toggleTooltip = () => {
             </div>
         </div>
 
-        <div v-if="isSidebarOpen" class="user-details">
+        <div v-if="isSidebarOpen" class="flex-1 hidden whitespace-nowrap overflow-hidden text-ellipsis md:block">
             <h3 class="text-sm font-bold">{{ user.displayName }}</h3>
             <p class="text-sm">{{ user.email }}</p>
         </div>
@@ -50,60 +55,11 @@ const toggleTooltip = () => {
     transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-.avatar:not(.w-10) {
-    cursor: pointer;
+.avatar {
+    border: 2px solid var(--primary-color);
 }
 
-.avatar:not(.w-10):hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transform: translateY(-2px);
-}
-
-.tooltip-list {
-    position: absolute;
-    left: 100%;
-    bottom: 4rem;
-    /* Tailwind's bottom-16 (4rem) */
-    width: 12rem;
-    /* Tailwind's w-48 (12rem) */
-    padding: 0.25rem;
-    /* Tailwind's p-1 (0.25rem) */
-    background-color: #ffffff;
-    border-radius: 0.375rem;
-    /* Tailwind's rounded-md (0.375rem) */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    /* Tailwind's shadow-lg */
-    overflow: hidden;
-    z-index: 50;
-}
-
-.tooltip-item {
-    padding-left: 1rem;
-    /* Tailwind's px-4 */
-    padding-right: 1rem;
-    padding-top: 0.5rem;
-    /* Tailwind's py-2 */
-    padding-bottom: 0.5rem;
-    font-size: 0.875rem;
-    /* Tailwind's text-sm */
-    color: #374151;
-    /* Tailwind's text-gray-700 */
-    transition: all 500ms cubic-bezier(0.4, 0.0, 0.2, 1);
-}
-
-.user-details {
-    flex: 1 1 0%;
-    display: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@media (min-width: 768px) {
-    .user-details {
-        display: block;
-    }
+.tooltip-item:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 </style>

@@ -9,7 +9,7 @@ import { AuthenticationService } from '@/services/authentication-service';
 import MenuItem from './menu-item.vue';
 import UserProfile from './user-profile.vue';
 import SidebarButton from './sidebar-button.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const { isSidebarOpen, toggleSidebar } = useSidebar();
 
@@ -20,12 +20,12 @@ const router = useRouter();
 const store = useSystemStore();
 
 const buttons = [
-  { icon: 'fa-right-from-bracket', tooltip: 'Logout', action: 'openLogoutDialog', show: true },
-  { icon: 'fa-gear', tooltip: 'Settings', show: true },
-  { icon: 'fa-square-question', tooltip: 'Help', show: true },
-  { icon: 'fa-comment', tooltip: 'Chat', show: true },
-  { icon: 'fa-lock', tooltip: 'Password', show: true },
-  { icon: 'fa-bell', tooltip: 'Feeds', show: true },
+  { icon: 'fa-right-from-bracket', tooltip: 'Logout', action: 'openLogoutDialog', show: true, showOnCollapsed: true },
+  { icon: 'fa-gear', tooltip: 'Settings', show: true, showOnCollapsed: false },
+  { icon: 'fa-square-question', tooltip: 'Help', show: true, showOnCollapsed: false },
+  { icon: 'fa-comment', tooltip: 'Chat', show: true, showOnCollapsed: false },
+  { icon: 'fa-lock', tooltip: 'Password', show: true, showOnCollapsed: false },
+  { icon: 'fa-bell', tooltip: 'Feeds', show: true, showOnCollapsed: false },
 ];
 
 interface Item {
@@ -72,17 +72,17 @@ const confirmLogout = () => {
       </h2>
     </div>
     <nav class="flex-1 mt-4">
-      <ul class="space-y-2 text-sm">
+      <ul class="text-sm">
         <menu-item v-for="item in menuItems" :key="item.name" :item="item" />
       </ul>
     </nav>
-    <div class="p-2">
+    <div class="p-4 border-t border-gray-200 fixed bottom-0 left-0">
       <UserProfile :items="items" />
       <div class="button-group">
         <div class="flex flex-col space-y-2 mt-4">
           <div class="flex" :class="{ 'space-x-2': isSidebarOpen, 'space-y-2': !isSidebarOpen }">
             <SidebarButton v-for="(btn, index) in buttons" :key="index" :icon="btn.icon" :tooltip="btn.tooltip"
-              @click="btn.action === 'openLogoutDialog' && openLogoutDialog()" />
+              :showOnCollapsed="btn.showOnCollapsed" @click="btn.action === 'openLogoutDialog' && openLogoutDialog()" />
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@ const confirmLogout = () => {
     </template>
 
     <nav class="flex-1 mt-4">
-      <ul class="space-y-2 text-sm">
+      <ul class="text-sm">
         <menu-item v-for="item in menuItems" :key="item.name" :item="item" />
       </ul>
     </nav>
